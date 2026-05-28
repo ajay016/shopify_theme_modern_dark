@@ -2,15 +2,24 @@
   "sections": {
     "main": {
       "type": "main-product",
-      "block_order": ["vendor","title","price","swatches","size","quantity","buy","description"],
+      "blocks": {
+        "vendor":   { "type": "vendor",   "settings": {} },
+        "title":    { "type": "title",    "settings": {} },
+        "price":    { "type": "price",    "settings": {} },
+        "variants": { "type": "variants", "settings": {} },
+        "quantity": { "type": "quantity", "settings": {} },
+        "atc":      { "type": "atc",      "settings": {} },
+        "desc":     { "type": "description", "settings": {} }
+      },
+      "block_order": ["vendor","title","price","variants","quantity","atc","desc"],
       "settings": {
-        "layout": "digital",
-        "thumbnail_position": "left",
-        "container_style": "boxed",
+        "layout": "standard",
+        "thumbnail_position": "none",
         "enable_zoom": false,
         "enable_lightbox": false,
-        "show_sticky_atc": false,
-        "description_style": "accordion"
+        "sticky_atc": false,
+        "show_wishlist": false,
+        "show_size_guide": false
       }
     }
   },

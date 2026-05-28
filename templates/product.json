@@ -3,39 +3,33 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "vendor": { "type": "vendor", "settings": {} },
-        "title":  { "type": "title",  "settings": {} },
-        "price":  { "type": "price",  "settings": {} },
-        "swatches": { "type": "variant_picker", "settings": { "swatch_type": "color" } },
-        "size": { "type": "variant_picker", "settings": { "swatch_type": "size_button" } },
-        "quantity": { "type": "quantity_selector", "settings": {} },
-        "buy": { "type": "buy_buttons", "settings": {} },
-        "trust": { "type": "trust_badge", "settings": {} },
-        "shipping": { "type": "shipping_info", "settings": {} },
-        "description": { "type": "description", "settings": {} }
+        "vendor":      { "type": "vendor",      "settings": {} },
+        "title":       { "type": "title",        "settings": {} },
+        "price":       { "type": "price",        "settings": {} },
+        "rating":      { "type": "rating",       "settings": {} },
+        "variants":    { "type": "variants",     "settings": {} },
+        "quantity":    { "type": "quantity",     "settings": {} },
+        "atc":         { "type": "atc",          "settings": {} },
+        "trust":       { "type": "trust_badges", "settings": {} },
+        "tabs":        { "type": "tabs",         "settings": {} }
       },
-      "block_order": ["vendor","title","price","swatches","size","quantity","buy","trust","shipping","description"],
+      "block_order": ["vendor","title","price","rating","variants","quantity","atc","trust","tabs"],
       "settings": {
-        "layout": "default",
+        "layout": "standard",
         "thumbnail_position": "left",
-        "container_style": "boxed",
         "enable_zoom": true,
         "enable_lightbox": true,
-        "show_sticky_atc": true,
-        "show_size_guide": true,
-        "show_ask_question": true,
-        "show_share": true,
-        "show_real_time_visitors": true,
-        "show_stock_countdown": true,
-        "description_style": "tabs"
+        "sticky_atc": true,
+        "show_wishlist": true,
+        "show_size_guide": true
       }
-    },
-    "recently-viewed": {
-      "type": "recently-viewed",
-      "settings": {}
     },
     "recommendations": {
       "type": "product-recommendations",
+      "settings": {}
+    },
+    "recently-viewed": {
+      "type": "recently-viewed",
       "settings": {}
     }
   },

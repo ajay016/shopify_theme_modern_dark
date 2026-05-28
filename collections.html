@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collections — MAISON NOIR</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --cream: #F5F0E8;
+    --black: #0A0A0A;
+    --charcoal: #161616;
+    --gold: #C8A96E;
+    --gold-light: #E8D4A8;
+    --gold-dim: rgba(200,169,110,0.15);
+    --ivory: #FAF8F3;
+    --muted: #6E6A66;
+    --border: rgba(200,169,110,0.18);
+    --border-strong: rgba(200,169,110,0.35);
+    --ff-display: 'Cormorant Garamond', serif;
+    --ff-body: 'Outfit', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: var(--ff-body);
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Cursor */
+  .cursor { position: fixed; top: 0; left: 0; width: 10px; height: 10px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.15s, width 0.3s, height 0.3s; }
+  .cursor-ring { position: fixed; top: 0; left: 0; width: 34px; height: 34px; border: 1px solid rgba(200,169,110,0.45); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width 0.3s, height 0.3s; }
+  .cursor.expand { transform: translate(-50%,-50%) scale(2.5); }
+  .cursor-ring.expand { width: 56px; height: 56px; }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 26px 56px;
+    background: rgba(10,10,10,0.96);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: var(--ff-display); font-size: 20px; font-weight: 500; letter-spacing: 0.35em; color: var(--cream); text-decoration: none; }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a { color: var(--cream); text-decoration: none; font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.6; transition: opacity 0.3s, color 0.3s; }
+  .nav-links a:hover, .nav-links a.active { opacity: 1; color: var(--gold); }
+  .nav-actions { display: flex; gap: 22px; align-items: center; }
+  .nav-icon { width: 20px; height: 20px; fill: none; stroke: var(--cream); stroke-width: 1.5; opacity: 0.65; transition: opacity 0.3s; cursor: pointer; }
+  .nav-icon:hover { opacity: 1; }
+  .cart-badge { position: relative; cursor: pointer; }
+  .cart-badge::after { content: '3'; position: absolute; top: -5px; right: -7px; background: var(--gold); color: var(--black); width: 14px; height: 14px; border-radius: 50%; font-size: 8px; font-weight: 500; display: flex; align-items: center; justify-content: center; font-family: var(--ff-body); }
+
+  /* Page Header */
+  .page-header {
+    padding: 160px 56px 80px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-header::before {
+    content: 'COLLECTIONS';
+    position: absolute;
+    top: 80px; right: -20px;
+    font-family: var(--ff-display);
+    font-size: clamp(100px, 14vw, 180px);
+    font-weight: 300;
+    color: rgba(200,169,110,0.04);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .breadcrumb {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 32px;
+  }
+  .breadcrumb a { color: var(--muted); text-decoration: none; transition: color 0.3s; }
+  .breadcrumb a:hover { color: var(--gold); }
+  .breadcrumb span { color: var(--gold); }
+
+  .header-inner {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 40px;
+  }
+
+  .page-title {
+    font-family: var(--ff-display);
+    font-size: clamp(52px, 7vw, 88px);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+  }
+  .page-title em { font-style: italic; color: var(--gold-light); display: block; }
+
+  .header-meta {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 16px;
+    padding-bottom: 8px;
+  }
+  .season-tag {
+    font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--gold); border: 1px solid var(--border-strong);
+    padding: 8px 18px;
+  }
+  .item-count { font-size: 12px; color: var(--muted); letter-spacing: 0.1em; }
+
+  /* Season Tabs */
+  .season-tabs {
+    display: flex; gap: 0;
+    padding: 0 56px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .season-tabs::-webkit-scrollbar { display: none; }
+
+  .season-tab {
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--muted); padding: 22px 32px;
+    cursor: pointer; border-bottom: 2px solid transparent;
+    transition: color 0.3s, border-color 0.3s;
+    white-space: nowrap; background: none; border-top: none; border-left: none; border-right: none;
+    font-family: var(--ff-body); font-weight: 300;
+  }
+  .season-tab:hover { color: var(--cream); }
+  .season-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* Toolbar */
+  .toolbar {
+    padding: 24px 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .filter-label { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-right: 8px; }
+
+  .chip {
+    padding: 8px 18px; border: 1px solid var(--border);
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); cursor: pointer; transition: all 0.25s;
+    background: transparent; font-family: var(--ff-body);
+  }
+  .chip:hover { border-color: var(--gold); color: var(--gold); }
+  .chip.active { background: var(--gold); color: var(--black); border-color: var(--gold); font-weight: 500; }
+
+  .toolbar-right { display: flex; align-items: center; gap: 20px; }
+
+  .sort-select {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--cream); font-family: var(--ff-body);
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 8px 16px; cursor: pointer; outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23C8A96E' stroke-width='1.2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    transition: border-color 0.3s;
+  }
+  .sort-select:hover { border-color: var(--gold-light); }
+  .sort-select option { background: #1c1c1c; color: var(--cream); }
+
+  .view-toggle { display: flex; gap: 4px; }
+  .view-btn {
+    width: 36px; height: 36px; border: 1px solid var(--border);
+    background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s;
+  }
+  .view-btn:hover, .view-btn.active { border-color: var(--gold); background: var(--gold-dim); }
+  .view-btn svg { width: 14px; height: 14px; fill: none; stroke: var(--muted); stroke-width: 1.5; }
+  .view-btn.active svg, .view-btn:hover svg { stroke: var(--gold); }
+
+  /* Sidebar + Grid Layout */
+  .collection-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 0;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 40px 32px;
+    position: sticky;
+    top: 80px;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .filter-section { margin-bottom: 36px; }
+  .filter-section-title {
+    font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer;
+  }
+  .filter-section-title svg { width: 12px; height: 12px; fill: none; stroke: var(--gold); stroke-width: 1.5; transition: transform 0.3s; }
+  .filter-section-title.open svg { transform: rotate(180deg); }
+
+  .filter-divider { width: 100%; height: 1px; background: var(--border); margin-bottom: 36px; }
+
+  .filter-option {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 0; cursor: pointer; transition: color 0.25s;
+  }
+  .filter-option:hover .filter-opt-label { color: var(--gold); }
+  .filter-opt-label { font-size: 12px; letter-spacing: 0.05em; color: var(--cream); opacity: 0.65; transition: all 0.25s; }
+  .filter-opt-count { font-size: 10px; color: var(--muted); }
+  .filter-option.selected .filter-opt-label { opacity: 1; color: var(--gold); }
+
+  .filter-checkbox {
+    width: 14px; height: 14px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-right: 10px; transition: all 0.2s;
+  }
+  .filter-option.selected .filter-checkbox { background: var(--gold); border-color: var(--gold); }
+  .filter-checkbox-inner { display: flex; }
+
+  .color-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+  .swatch {
+    width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+    transition: transform 0.2s; border: 2px solid transparent;
+    position: relative;
+  }
+  .swatch:hover { transform: scale(1.15); }
+  .swatch.active { border-color: var(--gold); }
+
+  .price-range { padding: 4px 0; }
+  .price-slider {
+    width: 100%; height: 2px; background: var(--border);
+    appearance: none; outline: none; margin: 16px 0 8px;
+  }
+  .price-slider::-webkit-slider-thumb { appearance: none; width: 16px; height: 16px; background: var(--gold); border-radius: 50%; cursor: pointer; }
+  .price-labels { display: flex; justify-content: space-between; }
+  .price-label { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+
+  .clear-filters {
+    font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--muted); cursor: pointer; display: flex; align-items: center; gap: 8px;
+    transition: color 0.3s; background: none; border: none; font-family: var(--ff-body); padding: 0;
+  }
+  .clear-filters:hover { color: var(--gold); }
+
+  /* Product Grid */
+  .products-area { padding: 40px 48px; }
+
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+
+  .product-card { position: relative; cursor: pointer; }
+
+  .product-image {
+    aspect-ratio: 3/4; overflow: hidden; position: relative; margin-bottom: 18px;
+  }
+
+  .product-img-bg {
+    width: 100%; height: 100%;
+    transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .product-card:hover .product-img-bg { transform: scale(1.05); }
+
+  /* Product bg variants */
+  .pb-1 { background: linear-gradient(155deg, #1a1814, #26221c, #1a1814); }
+  .pb-2 { background: linear-gradient(155deg, #141c20, #1c2830, #101820); }
+  .pb-3 { background: linear-gradient(155deg, #1c1420, #2a1c30, #181018); }
+  .pb-4 { background: linear-gradient(155deg, #10181a, #182224, #0c1416); }
+  .pb-5 { background: linear-gradient(155deg, #1e1614, #2c201a, #18100e); }
+  .pb-6 { background: linear-gradient(155deg, #181820, #222230, #121218); }
+  .pb-7 { background: linear-gradient(155deg, #141e14, #1c2a1c, #101810); }
+  .pb-8 { background: linear-gradient(155deg, #1c1a10, #28261a, #16140c); }
+
+  .product-badge {
+    position: absolute; top: 16px; left: 16px;
+    font-size: 8px; letter-spacing: 0.25em; text-transform: uppercase;
+    padding: 5px 10px; font-weight: 500; z-index: 2;
+  }
+  .badge-new { background: var(--gold); color: var(--black); }
+  .badge-ltd { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+  .badge-sale { background: #7a2020; color: #ffbaba; }
+  .badge-exc { background: transparent; border: 1px solid rgba(245,240,232,0.3); color: var(--cream); }
+
+  .product-actions {
+    position: absolute; right: 14px; top: 14px;
+    display: flex; flex-direction: column; gap: 6px;
+    opacity: 0; transform: translateX(8px);
+    transition: all 0.3s ease; z-index: 2;
+  }
+  .product-card:hover .product-actions { opacity: 1; transform: translateX(0); }
+
+  .act-btn {
+    width: 38px; height: 38px;
+    background: rgba(10,10,10,0.75); border: 1px solid rgba(200,169,110,0.25);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s; backdrop-filter: blur(4px);
+  }
+  .act-btn:hover { background: var(--gold); border-color: var(--gold); }
+  .act-btn:hover svg { stroke: var(--black); }
+  .act-btn svg { width: 15px; height: 15px; fill: none; stroke: var(--cream); stroke-width: 1.5; transition: stroke 0.2s; }
+
+  .quick-add {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(10,10,10,0.92); border-top: 1px solid var(--border);
+    padding: 13px; font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+    text-align: center; color: var(--gold);
+    opacity: 0; transform: translateY(100%);
+    transition: all 0.3s ease; cursor: pointer; backdrop-filter: blur(4px);
+  }
+  .product-card:hover .quick-add { opacity: 1; transform: translateY(0); }
+  .quick-add:hover { background: var(--gold); color: var(--black); }
+
+  .size-dots { position: absolute; bottom: 52px; left: 16px; display: flex; gap: 4px; opacity: 0; transition: opacity 0.3s; }
+  .product-card:hover .size-dots { opacity: 1; }
+  .size-dot { font-size: 8px; letter-spacing: 0.15em; color: var(--muted); background: rgba(10,10,10,0.7); padding: 3px 6px; }
+
+  .product-info { padding: 0 2px; }
+  .product-brand { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+  .product-name { font-family: var(--ff-display); font-size: 18px; font-weight: 400; line-height: 1.25; margin-bottom: 6px; letter-spacing: 0.01em; }
+  .product-material { font-size: 10.5px; color: var(--muted); letter-spacing: 0.05em; margin-bottom: 10px; }
+  .product-price { display: flex; align-items: center; gap: 10px; }
+  .price-now { font-size: 14px; font-weight: 400; color: var(--cream); letter-spacing: 0.05em; }
+  .price-was { font-size: 12px; color: var(--muted); text-decoration: line-through; }
+  .price-save { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #d07070; }
+
+  /* Featured banner */
+  .featured-banner {
+    grid-column: 1 / -1;
+    display: grid; grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--border);
+    margin-bottom: 2px;
+    overflow: hidden;
+  }
+  .feat-img {
+    min-height: 400px;
+    background: linear-gradient(135deg, #1a1614, #2e261c, #1a1614);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .feat-img::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to right, transparent 70%, rgba(10,10,10,0.6));
+  }
+  .feat-content {
+    padding: 56px; background: var(--charcoal);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .feat-eyebrow { font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+  .feat-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--gold); }
+  .feat-title { font-family: var(--ff-display); font-size: clamp(32px, 3.5vw, 50px); font-weight: 300; line-height: 1.1; margin-bottom: 16px; }
+  .feat-title em { font-style: italic; color: var(--gold-light); }
+  .feat-desc { font-size: 12.5px; line-height: 1.85; opacity: 0.55; max-width: 340px; margin-bottom: 36px; letter-spacing: 0.03em; }
+  .feat-price { font-family: var(--ff-display); font-size: 28px; color: var(--gold); font-weight: 400; margin-bottom: 32px; }
+  .feat-price span { font-size: 14px; color: var(--muted); font-family: var(--ff-body); font-weight: 300; margin-left: 8px; vertical-align: middle; }
+
+  .btn-primary { background: var(--gold); color: var(--black); border: none; padding: 15px 36px; font-family: var(--ff-body); font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; cursor: pointer; font-weight: 500; transition: background 0.3s, transform 0.2s; text-decoration: none; display: inline-block; }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: var(--cream); border: 1px solid rgba(245,240,232,0.25); padding: 15px 36px; font-family: var(--ff-body); font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; cursor: pointer; transition: border-color 0.3s, color 0.3s; text-decoration: none; display: inline-block; }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* Load more */
+  .load-more-area {
+    padding: 60px 48px 80px;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .progress-bar { width: 260px; height: 1px; background: var(--border); position: relative; }
+  .progress-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--gold); width: 37%; }
+  .progress-text { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.75s ease, transform 0.75s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.08s; }
+  .reveal-delay-2 { transition-delay: 0.16s; }
+  .reveal-delay-3 { transition-delay: 0.24s; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .collection-layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); display: none; }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .featured-banner { grid-template-columns: 1fr; }
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .page-header { padding: 120px 24px 60px; }
+    .toolbar, .season-tabs { padding: 20px 24px; }
+    .products-area { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Nav -->
+<nav>
+  <a href="fashion_homepage.html" class="nav-logo">MAISON<span>·</span>NOIR</a>
+  <ul class="nav-links">
+    <li><a href="#" class="active">Collections</a></li>
+    <li><a href="#">Women</a></li>
+    <li><a href="#">Men</a></li>
+    <li><a href="#">Accessories</a></li>
+    <li><a href="#">Editorial</a></li>
+  </ul>
+  <div class="nav-actions">
+    <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35" stroke-linecap="round"/></svg>
+    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <div class="cart-badge">
+      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="fashion_homepage.html">Home</a>
+    <span>›</span>
+    <span>Collections</span>
+  </div>
+  <div class="header-inner">
+    <h1 class="page-title reveal">
+      All
+      <em>Collections</em>
+    </h1>
+    <div class="header-meta reveal">
+      <span class="season-tag">SS 2025</span>
+      <span class="item-count">531 pieces across 12 collections</span>
+    </div>
+  </div>
+</div>
+
+<!-- Season Tabs -->
+<div class="season-tabs">
+  <button class="season-tab active">All Seasons</button>
+  <button class="season-tab">SS 2025 — Spring</button>
+  <button class="season-tab">AW 2024 — Autumn</button>
+  <button class="season-tab">SS 2024 — Spring</button>
+  <button class="season-tab">Archive</button>
+  <button class="season-tab">Capsule</button>
+  <button class="season-tab">Collaborations</button>
+</div>
+
+<!-- Filter Toolbar -->
+<div class="toolbar">
+  <div class="filter-chips">
+    <span class="filter-label">Filter:</span>
+    <button class="chip active" onclick="toggleChip(this)">All</button>
+    <button class="chip" onclick="toggleChip(this)">Women</button>
+    <button class="chip" onclick="toggleChip(this)">Men</button>
+    <button class="chip" onclick="toggleChip(this)">Unisex</button>
+    <button class="chip" onclick="toggleChip(this)">Accessories</button>
+    <button class="chip" onclick="toggleChip(this)">New In</button>
+    <button class="chip" onclick="toggleChip(this)">Sale</button>
+  </div>
+  <div class="toolbar-right">
+    <select class="sort-select">
+      <option>Sort: Featured</option>
+      <option>Price: Low to High</option>
+      <option>Price: High to Low</option>
+      <option>Newest First</option>
+      <option>Best Selling</option>
+    </select>
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="setView('grid3', this)" title="3 columns">
+        <svg viewBox="0 0 16 16"><rect x="1" y="1" width="4" height="14"/><rect x="6" y="1" width="4" height="14"/><rect x="11" y="1" width="4" height="14"/></svg>
+      </button>
+      <button class="view-btn" onclick="setView('grid4', this)" title="4 columns">
+        <svg viewBox="0 0 16 16"><rect x="0" y="1" width="3" height="14"/><rect x="4.3" y="1" width="3" height="14"/><rect x="8.7" y="1" width="3" height="14"/><rect x="13" y="1" width="3" height="14"/></svg>
+      </button>
+      <button class="view-btn" onclick="setView('grid2', this)" title="2 columns">
+        <svg viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="14"/><rect x="9" y="1" width="6" height="14"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Main Layout -->
+<div class="collection-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+      <span style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);">Filters</span>
+      <button class="clear-filters">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.2"/></svg>
+        Clear All
+      </button>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-section-title open" onclick="toggleSection(this)">
+        Category
+        <svg viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="filter-section-title open" style="display:none;"></div>
+      <div class="filter-option selected">
+        <div style="display:flex;align-items:center;">
+          <div class="filter-checkbox"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="filter-opt-label">All Items</span>
+        </div>
+        <span class="filter-opt-count">531</span>
+      </div>
+      <div class="filter-option" onclick="toggleFilter(this)">
+        <div style="display:flex;align-items:center;"><div class="filter-checkbox"></div><span class="filter-opt-label">Women's Wear</span></div>
+        <span class="filter-opt-count">218</span>
+      </div>
+      <div class="filter-option" onclick="toggleFilter(this)">
+        <div style="display:flex;align-items:center;"><div class="filter-checkbox"></div><span class="filter-opt-label">Men's Wear</span></div>
+        <span class="filter-opt-count">142</span>
+      </div>
+      <div class="filter-option" onclick="toggleFilter(this)">
+        <div style="display:flex;align-items:center;"><div class="filter-checkbox"></div><span class="filter-opt-label">Accessories</span></div>
+        <span class="filter-opt-count">98</span>
+      </div>
+      <div class="filter-option" onclick="toggleFilter(this)">
+        <div style="display:flex;align-items:center;"><div class="filter-checkbox"></div><span class="filter-opt-label">Footwear</span></div>
+        <span class="filter-opt-count">73</span>
+      </div>
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <div class="filter-section">
+      <div class="filter-section-title open" onclick="toggleSection(this)">
+        Colour
+        <svg viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="color-swatches" style="margin-top:4px;">
+        <div class="swatch active" style="background:#1a1a1a;border:1px solid #444;" title="Noir"></div>
+        <div class="swatch" style="background:#F5F0E8;" title="Ivory"></div>
+        <div class="swatch" style="background:#C8A96E;" title="Gold"></div>
+        <div class="swatch" style="background:#8B7355;" title="Camel"></div>
+        <div class="swatch" style="background:#4a3728;" title="Tobacco"></div>
+        <div class="swatch" style="background:#2d3a3a;" title="Forest"></div>
+        <div class="swatch" style="background:#5a4a6a;" title="Mauve"></div>
+        <div class="swatch" style="background:#8a2a2a;" title="Burgundy"></div>
+      </div>
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <div class="filter-section">
+      <div class="filter-section-title open" onclick="toggleSection(this)">
+        Price Range
+        <svg viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="price-range">
+        <input type="range" class="price-slider" min="0" max="5000" value="3500" id="priceSlider">
+        <div class="price-labels">
+          <span class="price-label">$0</span>
+          <span class="price-label" id="priceMax">$3,500</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <div class="filter-section">
+      <div class="filter-section-title open" onclick="toggleSection(this)">
+        Size
+        <svg viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <div class="chip" style="padding:6px 12px;font-size:10px;" onclick="toggleChip(this)">XS</div>
+        <div class="chip" style="padding:6px 12px;font-size:10px;" onclick="toggleChip(this)">S</div>
+        <div class="chip active" style="padding:6px 12px;font-size:10px;" onclick="toggleChip(this)">M</div>
+        <div class="chip" style="padding:6px 12px;font-size:10px;" onclick="toggleChip(this)">L</div>
+        <div class="chip" style="padding:6px 12px;font-size:10px;" onclick="toggleChip(this)">XL</div>
+        <div class="chip" style="padding:6px 12px;font-size:10px;" onclick="toggleChip(this)">XXL</div>
+      </div>
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <div class="filter-section">
+      <div class="filter-section-title open" onclick="toggleSection(this)">
+        Fabric
+        <svg viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="filter-option" onclick="toggleFilter(this)">
+        <div style="display:flex;align-items:center;"><div class="filter-checkbox"></div><span class="filter-opt-label">Wool & Cashmere</span></div>
+        <span class="filter-opt-count">87</span>
+      </div>
+      <div class="filter-option" onclick="toggleFilter(this)">
+        <div style="display:flex;align-items:center;"><div class="filter-checkbox"></div><span class="filter-opt-label">Silk & Satin</span></div>
+        <span class="filter-opt-count">64</span>
+      </div>
+      <div class="filter-option" onclick="toggleFilter(this)">
+        <div style="display:flex;align-items:center;"><div class="filter-checkbox"></div><span class="filter-opt-label">Cotton & Linen</span></div>
+        <span class="filter-opt-count">112</span>
+      </div>
+      <div class="filter-option" onclick="toggleFilter(this)">
+        <div style="display:flex;align-items:center;"><div class="filter-checkbox"></div><span class="filter-opt-label">Leather & Suede</span></div>
+        <span class="filter-opt-count">55</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Products -->
+  <main class="products-area">
+
+    <!-- Featured Drop Banner -->
+    <div class="featured-banner reveal">
+      <div class="feat-img">
+        <svg width="220" height="380" viewBox="0 0 220 380" fill="none" opacity="0.75">
+          <ellipse cx="110" cy="65" rx="40" ry="48" fill="rgba(200,169,110,0.08)" stroke="rgba(200,169,110,0.3)" stroke-width="1.5"/>
+          <path d="M58 125 Q48 132 44 162 L36 270 L58 278 L70 220 L75 360 L100 362 L105 268 L110 260 L115 268 L120 362 L145 360 L150 220 L162 278 L184 270 L176 162 Q172 132 162 125 L140 118 Q130 148 110 150 Q90 148 80 118 Z"
+            stroke="rgba(200,169,110,0.22)" stroke-width="1.5" fill="rgba(200,169,110,0.05)"/>
+          <rect x="70" y="218" width="80" height="10" rx="2" fill="rgba(200,169,110,0.14)" stroke="rgba(200,169,110,0.4)" stroke-width="0.8"/>
+          <line x1="95" y1="155" x2="90" y2="218" stroke="rgba(200,169,110,0.15)" stroke-width="0.6"/>
+          <line x1="125" y1="155" x2="130" y2="218" stroke="rgba(200,169,110,0.15)" stroke-width="0.6"/>
+          <circle cx="110" cy="68" r="18" fill="rgba(200,169,110,0.06)" stroke="rgba(200,169,110,0.35)" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="feat-content">
+        <p class="feat-eyebrow">Drop 01 — Exclusive</p>
+        <h2 class="feat-title">The <em>Nocturne</em><br>Coat</h2>
+        <p class="feat-desc">Hand-cut in Milan from a double-faced cashmere sourced exclusively from a family farm in Inner Mongolia. A single seam runs the length of the back — three days of work from one craftsperson.</p>
+        <div class="feat-price">$3,840 <span>or 4 × $960</span></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="#" class="btn-primary">Add to Bag</a>
+          <a href="#" class="btn-ghost">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="grid-3" id="productGrid">
+
+      <!-- Product 1 -->
+      <div class="product-card reveal">
+        <div class="product-image">
+          <div class="product-img-bg pb-1">
+            <svg width="130" height="220" viewBox="0 0 130 220" fill="none">
+              <path d="M40 22 Q40 10 65 8 Q90 10 90 22 L94 52 L74 58 L74 208 L56 208 L56 58 L36 52 Z" stroke="rgba(200,169,110,0.32)" stroke-width="1.2" fill="rgba(200,169,110,0.05)"/>
+              <path d="M36 52 L18 64 L26 170 L56 164" stroke="rgba(200,169,110,0.2)" stroke-width="1" fill="none"/>
+              <path d="M94 52 L112 64 L104 170 L74 164" stroke="rgba(200,169,110,0.2)" stroke-width="1" fill="none"/>
+            </svg>
+          </div>
+          <span class="product-badge badge-new">New In</span>
+          <div class="product-actions">
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+          <div class="size-dots"><span class="size-dot">XS</span><span class="size-dot">S</span><span class="size-dot">M</span><span class="size-dot">L</span></div>
+          <div class="quick-add">+ Add to Bag</div>
+        </div>
+        <div class="product-info">
+          <p class="product-brand">Maison Noir</p>
+          <h3 class="product-name">Boxy Wool Blazer</h3>
+          <p class="product-material">Double-faced merino wool</p>
+          <div class="product-price"><span class="price-now">$1,480</span></div>
+        </div>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="product-card reveal reveal-delay-1">
+        <div class="product-image">
+          <div class="product-img-bg pb-2">
+            <svg width="100" height="220" viewBox="0 0 100 220" fill="none">
+              <path d="M10 50 Q10 10 50 8 Q90 10 90 50 L88 75 L72 80 L72 212 L28 212 L28 80 L12 75 Z" stroke="rgba(200,169,110,0.3)" stroke-width="1.2" fill="rgba(200,169,110,0.05)"/>
+              <line x1="28" y1="130" x2="72" y2="130" stroke="rgba(200,169,110,0.18)" stroke-width="0.8"/>
+              <ellipse cx="50" cy="44" rx="20" ry="24" stroke="rgba(200,169,110,0.22)" stroke-width="1" fill="none"/>
+            </svg>
+          </div>
+          <span class="product-badge badge-exc">Exclusive</span>
+          <div class="product-actions">
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+          <div class="size-dots"><span class="size-dot">S</span><span class="size-dot">M</span><span class="size-dot">L</span></div>
+          <div class="quick-add">+ Add to Bag</div>
+        </div>
+        <div class="product-info">
+          <p class="product-brand">Maison Noir</p>
+          <h3 class="product-name">Draped Midi Dress</h3>
+          <p class="product-material">Washed silk crêpe</p>
+          <div class="product-price"><span class="price-now">$1,960</span></div>
+        </div>
+      </div>
+
+      <!-- Product 3 -->
+      <div class="product-card reveal reveal-delay-2">
+        <div class="product-image">
+          <div class="product-img-bg pb-3">
+            <svg width="120" height="180" viewBox="0 0 120 180" fill="none">
+              <path d="M15 60 Q15 18 60 15 Q105 18 105 60 L104 80 L88 86 L88 172 L32 172 L32 86 L16 80 Z" stroke="rgba(200,169,110,0.3)" stroke-width="1.2" fill="rgba(200,169,110,0.05)"/>
+              <rect x="32" y="118" width="56" height="8" rx="2" fill="rgba(200,169,110,0.12)" stroke="rgba(200,169,110,0.3)" stroke-width="0.6"/>
+              <circle cx="60" cy="55" rx="18" ry="22" stroke="rgba(200,169,110,0.22)" stroke-width="1" fill="none" cy="55"/>
+            </svg>
+          </div>
+          <span class="product-badge badge-ltd">Limited</span>
+          <div class="product-actions">
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+          <div class="size-dots"><span class="size-dot">M</span><span class="size-dot">L</span></div>
+          <div class="quick-add">+ Add to Bag</div>
+        </div>
+        <div class="product-info">
+          <p class="product-brand">Maison Noir</p>
+          <h3 class="product-name">Structured Knit Jumper</h3>
+          <p class="product-material">Scottish cashmere blend</p>
+          <div class="product-price"><span class="price-now">$840</span></div>
+        </div>
+      </div>
+
+      <!-- Product 4 -->
+      <div class="product-card reveal">
+        <div class="product-image">
+          <div class="product-img-bg pb-4">
+            <svg width="100" height="230" viewBox="0 0 100 230" fill="none">
+              <path d="M10 28 L50 18 L90 28 L90 228 L50 222 L10 228 Z" stroke="rgba(200,169,110,0.28)" stroke-width="1.2" fill="rgba(200,169,110,0.05)"/>
+              <line x1="10" y1="90" x2="90" y2="90" stroke="rgba(200,169,110,0.18)" stroke-width="0.7"/>
+              <line x1="10" y1="158" x2="90" y2="158" stroke="rgba(200,169,110,0.14)" stroke-width="0.7"/>
+              <ellipse cx="50" cy="55" rx="14" ry="18" stroke="rgba(200,169,110,0.24)" stroke-width="1" fill="none"/>
+            </svg>
+          </div>
+          <span class="product-badge badge-new">New In</span>
+          <div class="product-actions">
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+          <div class="size-dots"><span class="size-dot">XS</span><span class="size-dot">S</span><span class="size-dot">M</span><span class="size-dot">L</span><span class="size-dot">XL</span></div>
+          <div class="quick-add">+ Add to Bag</div>
+        </div>
+        <div class="product-info">
+          <p class="product-brand">Maison Noir</p>
+          <h3 class="product-name">Column Silk Skirt</h3>
+          <p class="product-material">Pure duchess satin</p>
+          <div class="product-price"><span class="price-now">$720</span></div>
+        </div>
+      </div>
+
+      <!-- Product 5 -->
+      <div class="product-card reveal reveal-delay-1">
+        <div class="product-image">
+          <div class="product-img-bg pb-5">
+            <svg width="130" height="190" viewBox="0 0 130 190" fill="none">
+              <path d="M20 55 Q20 20 65 18 Q110 20 110 55 L108 80 L88 86 L88 185 L42 185 L42 86 L22 80 Z" stroke="rgba(200,169,110,0.28)" stroke-width="1.2" fill="rgba(200,169,110,0.05)"/>
+              <path d="M22 80 L6 92 L16 170 L42 164" stroke="rgba(200,169,110,0.18)" stroke-width="0.9" fill="none"/>
+              <path d="M108 80 L124 92 L114 170 L88 164" stroke="rgba(200,169,110,0.18)" stroke-width="0.9" fill="none"/>
+              <rect x="52" y="118" width="26" height="6" rx="1" fill="rgba(200,169,110,0.15)" stroke="rgba(200,169,110,0.35)" stroke-width="0.6"/>
+            </svg>
+          </div>
+          <div class="product-actions">
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+          <div class="size-dots"><span class="size-dot">S</span><span class="size-dot">M</span><span class="size-dot">L</span><span class="size-dot">XL</span></div>
+          <div class="quick-add">+ Add to Bag</div>
+        </div>
+        <div class="product-info">
+          <p class="product-brand">Lemaire</p>
+          <h3 class="product-name">Cropped Field Jacket</h3>
+          <p class="product-material">Waxed cotton canvas</p>
+          <div class="product-price">
+            <span class="price-now">$1,140</span>
+            <span class="price-was">$1,380</span>
+            <span class="price-save">−17%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 6 -->
+      <div class="product-card reveal reveal-delay-2">
+        <div class="product-image">
+          <div class="product-img-bg pb-6">
+            <svg width="100" height="110" viewBox="0 0 100 110" fill="none">
+              <path d="M8 70 Q8 22 50 18 Q92 22 92 70 L92 95 L8 95 Z" stroke="rgba(200,169,110,0.3)" stroke-width="1.2" fill="rgba(200,169,110,0.05)"/>
+              <path d="M32 70 Q32 42 50 40 Q68 42 68 70" stroke="rgba(200,169,110,0.22)" stroke-width="1" fill="none"/>
+              <circle cx="50" cy="58" r="10" stroke="rgba(200,169,110,0.3)" stroke-width="1" fill="none"/>
+              <rect x="40" y="92" width="20" height="4" rx="1" fill="rgba(200,169,110,0.15)"/>
+            </svg>
+          </div>
+          <span class="product-badge badge-new">New In</span>
+          <div class="product-actions">
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+          <div class="quick-add">+ Add to Bag</div>
+        </div>
+        <div class="product-info">
+          <p class="product-brand">The Row</p>
+          <h3 class="product-name">Margaux Bag 15</h3>
+          <p class="product-material">Vegetable-tanned calfskin</p>
+          <div class="product-price"><span class="price-now">$3,350</span></div>
+        </div>
+      </div>
+
+      <!-- Product 7 -->
+      <div class="product-card reveal">
+        <div class="product-image">
+          <div class="product-img-bg pb-7">
+            <svg width="80" height="230" viewBox="0 0 80 230" fill="none">
+              <path d="M15 15 L40 8 L65 15 L65 225 L40 220 L15 225 Z" stroke="rgba(200,169,110,0.28)" stroke-width="1.2" fill="rgba(200,169,110,0.05)"/>
+              <line x1="15" y1="85" x2="65" y2="85" stroke="rgba(200,169,110,0.18)" stroke-width="0.7"/>
+              <line x1="15" y1="150" x2="65" y2="150" stroke="rgba(200,169,110,0.14)" stroke-width="0.7"/>
+              <path d="M28 15 L28 85" stroke="rgba(200,169,110,0.12)" stroke-width="0.5"/>
+              <path d="M52 15 L52 85" stroke="rgba(200,169,110,0.12)" stroke-width="0.5"/>
+            </svg>
+          </div>
+          <span class="product-badge badge-sale">Sale</span>
+          <div class="product-actions">
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+          <div class="size-dots"><span class="size-dot">XS</span><span class="size-dot">S</span><span class="size-dot">M</span></div>
+          <div class="quick-add">+ Add to Bag</div>
+        </div>
+        <div class="product-info">
+          <p class="product-brand">Totême</p>
+          <h3 class="product-name">Monogram Scarf Coat</h3>
+          <p class="product-material">Recycled virgin wool</p>
+          <div class="product-price">
+            <span class="price-now">$980</span>
+            <span class="price-was">$1,400</span>
+            <span class="price-save">−30%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 8 -->
+      <div class="product-card reveal reveal-delay-1">
+        <div class="product-image">
+          <div class="product-img-bg pb-8">
+            <svg width="120" height="160" viewBox="0 0 120 160" fill="none">
+              <path d="M10 72 Q10 28 60 24 Q110 28 110 72 L108 96 L90 100 L90 152 L30 152 L30 100 L12 96 Z" stroke="rgba(200,169,110,0.28)" stroke-width="1.2" fill="rgba(200,169,110,0.05)"/>
+              <circle cx="60" cy="65" rx="22" ry="28" stroke="rgba(200,169,110,0.2)" stroke-width="1" fill="none"/>
+              <line x1="30" y1="126" x2="90" y2="126" stroke="rgba(200,169,110,0.15)" stroke-width="0.7"/>
+            </svg>
+          </div>
+          <div class="product-actions">
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+          <div class="size-dots"><span class="size-dot">S</span><span class="size-dot">M</span><span class="size-dot">L</span><span class="size-dot">XL</span></div>
+          <div class="quick-add">+ Add to Bag</div>
+        </div>
+        <div class="product-info">
+          <p class="product-brand">Jacquemus</p>
+          <h3 class="product-name">Le Chouchou Pullover</h3>
+          <p class="product-material">Ribbed lambswool</p>
+          <div class="product-price"><span class="price-now">$660</span></div>
+        </div>
+      </div>
+
+      <!-- Product 9 -->
+      <div class="product-card reveal reveal-delay-2">
+        <div class="product-image">
+          <div class="product-img-bg pb-1" style="background:linear-gradient(155deg,#16181c,#222630,#12141a)">
+            <svg width="90" height="200" viewBox="0 0 90 200" fill="none">
+              <rect x="5" y="30" width="80" height="165" rx="4" stroke="rgba(200,169,110,0.28)" stroke-width="1.2" fill="rgba(200,169,110,0.05)"/>
+              <line x1="5" y1="75" x2="85" y2="75" stroke="rgba(200,169,110,0.15)" stroke-width="0.7"/>
+              <line x1="25" y1="30" x2="25" y2="75" stroke="rgba(200,169,110,0.12)" stroke-width="0.6"/>
+              <line x1="65" y1="30" x2="65" y2="75" stroke="rgba(200,169,110,0.12)" stroke-width="0.6"/>
+              <circle cx="45" cy="140" r="22" stroke="rgba(200,169,110,0.22)" stroke-width="1" fill="none"/>
+              <circle cx="45" cy="140" r="10" stroke="rgba(200,169,110,0.3)" stroke-width="0.8" fill="none"/>
+            </svg>
+          </div>
+          <span class="product-badge badge-new">New In</span>
+          <div class="product-actions">
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+          <div class="quick-add">+ Add to Bag</div>
+        </div>
+        <div class="product-info">
+          <p class="product-brand">Loewe</p>
+          <h3 class="product-name">Puzzle Fold Tote</h3>
+          <p class="product-material">Smooth glazed calfskin</p>
+          <div class="product-price"><span class="price-now">$2,150</span></div>
+        </div>
+      </div>
+
+    </div><!-- /grid -->
+
+    <!-- Load More -->
+    <div class="load-more-area">
+      <p class="progress-text">Showing 9 of 531 items</p>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+      <button class="btn-ghost" style="margin-top:8px;">Load More Pieces</button>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  });
+
+  (function animRing() {
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  document.querySelectorAll('a, button, .product-card, .chip, .swatch, .filter-option, .season-tab, .brand-name').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.classList.add('expand'); ring.classList.add('expand'); });
+    el.addEventListener('mouseleave', () => { cursor.classList.remove('expand'); ring.classList.remove('expand'); });
+  });
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Season tabs
+  document.querySelectorAll('.season-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.season-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // Filter chips
+  function toggleChip(el) {
+    el.classList.toggle('active');
+  }
+
+  // Filter toggle
+  function toggleFilter(el) {
+    el.classList.toggle('selected');
+    const cb = el.querySelector('.filter-checkbox');
+    if (el.classList.contains('selected')) {
+      cb.innerHTML = '<svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    } else {
+      cb.innerHTML = '';
+    }
+  }
+
+  // Collapsible filter sections
+  function toggleSection(el) {
+    el.classList.toggle('open');
+    let next = el.nextElementSibling;
+    while (next && !next.classList.contains('filter-section-title') && !next.classList.contains('filter-divider')) {
+      next.style.display = el.classList.contains('open') ? '' : 'none';
+      next = next.nextElementSibling;
+    }
+  }
+
+  // Color swatches
+  document.querySelectorAll('.swatch').forEach(s => {
+    s.addEventListener('click', () => s.classList.toggle('active'));
+  });
+
+  // Price slider
+  const slider = document.getElementById('priceSlider');
+  const priceMax = document.getElementById('priceMax');
+  if (slider) {
+    slider.addEventListener('input', () => {
+      priceMax.textContent = '$' + Number(slider.value).toLocaleString();
+    });
+  }
+
+  // View toggle
+  function setView(type, btn) {
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const grid = document.getElementById('productGrid');
+    grid.className = type;
+  }
+</script>
+</body>
+</html>

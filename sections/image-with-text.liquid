@@ -9,11 +9,11 @@
 
       <div class="iwt__media">
         {%- if section.settings.image -%}
+          {%- assign iwt_alt = section.settings.heading | escape -%}
           {{
             section.settings.image
             | image_url: width: 1200
-            | image_tag: class: 'iwt__img', loading: 'lazy', alt: section.settings.heading | escape,
-              widths: '600, 800, 1200'
+            | image_tag: class: 'iwt__img', loading: 'lazy', alt: iwt_alt, widths: '600, 800, 1200'
           }}
         {%- else -%}
           {{ 'lifestyle-1' | placeholder_svg_tag: 'iwt__img iwt__img--placeholder' }}

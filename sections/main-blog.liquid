@@ -18,6 +18,7 @@
         {%- for article in blog.articles -%}
           <article class="blog-card blog-card--{{ layout }}" itemscope itemtype="http://schema.org/BlogPosting">
             {%- if article.image -%}
+              {%- assign blog_card_alt = article.image.alt | default: article.title | escape -%}
               <a href="{{ article.url }}" class="blog-card__media" tabindex="-1" aria-hidden="true">
                 {{
                   article.image
@@ -25,7 +26,7 @@
                   | image_tag:
                     class: 'blog-card__img',
                     loading: 'lazy',
-                    alt: article.image.alt | default: article.title | escape,
+                    alt: blog_card_alt,
                     widths: '400, 600, 800'
                 }}
               </a>

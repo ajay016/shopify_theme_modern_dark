@@ -38,8 +38,11 @@
           </div>
         {%- endif -%}
 
-        <div class="product-gallery" id="product-gallery">
+        <div class="product-gallery" id="product-gallery" {% if enable_zoom %}data-zoom="true"{% endif %}>
           {%- for image in product.images limit: 8 -%}
+            {%- assign gallery_img_loading = 'lazy' -%}
+            {%- if forloop.first -%}{%- assign gallery_img_loading = 'eager' -%}{%- endif -%}
+            {%- assign gallery_img_alt = image.alt | default: product.title | escape -%}
             <div class="product-gallery__slide {% if forloop.first %}is-active{% endif %}" data-slide="{{ forloop.index0 }}">
               {%- if enable_lightbox -%}
                 <a href="{{ image | image_url: width: 2000 }}" class="product-gallery__lightbox-trigger" data-lightbox>
@@ -49,10 +52,9 @@
                 | image_url: width: 1200
                 | image_tag:
                   class: 'product-gallery__img',
-                  loading: forloop.first | if: 'eager', 'lazy',
-                  alt: image.alt | default: product.title | escape,
-                  widths: '600, 800, 1200',
-                  data-zoom: enable_zoom
+                  loading: gallery_img_loading,
+                  alt: gallery_img_alt,
+                  widths: '600, 800, 1200'
               }}
               {%- if enable_zoom -%}
                 <div class="zoom-hint">{{ 'products.product.zoom_hint' | t }}</div>

@@ -2,16 +2,16 @@
   <div class="container article-page__inner {% if section.settings.show_sidebar %}article-page__inner--has-sidebar{% endif %}">
     <div class="article-main">
       {%- if article.image -%}
-        <div class="article-hero">
+        {%- assign hero_img_alt = article.image.alt | default: article.title | escape -%}
+        <div class="article-hero" itemprop="image">
           {{
             article.image
             | image_url: width: 1600
             | image_tag:
               class: 'article-hero__img',
               loading: 'eager',
-              alt: article.image.alt | default: article.title | escape,
-              widths: '800, 1200, 1600',
-              itemprop: 'image'
+              alt: hero_img_alt,
+              widths: '800, 1200, 1600'
           }}
         </div>
       {%- endif -%}

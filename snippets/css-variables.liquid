@@ -1,0 +1,52 @@
+<style>
+  :root {
+    /* Brand Palette — editable in Theme Customizer → Colors */
+    --black:       {{ settings.color_black }};
+    --charcoal:    {{ settings.color_charcoal }};
+    --cream:       {{ settings.color_cream }};
+    --gold:        {{ settings.color_gold }};
+    --gold-light:  {{ settings.color_gold_light }};
+    --muted:       {{ settings.color_muted }};
+    --ivory:       {{ settings.color_ivory }};
+    --sale-text:   {{ settings.color_sale }};
+    --sale-bg:     {{ settings.color_sale_bg }};
+
+    /* Derived semi-transparent values */
+    --border:        {{ settings.color_gold | color_modify: 'alpha', 0.18 }};
+    --border-strong: {{ settings.color_gold | color_modify: 'alpha', 0.35 }};
+    --gold-dim:      {{ settings.color_gold | color_modify: 'alpha', 0.12 }};
+    --gold-glow:     {{ settings.color_gold | color_modify: 'alpha', 0.08 }};
+    --cream-faint:   {{ settings.color_cream | color_modify: 'alpha', 0.06 }};
+    --black-overlay: {{ settings.color_black | color_modify: 'alpha', 0.75 }};
+
+    /* Typography */
+    --ff-display: {{ settings.type_display_font.family }}, {{ settings.type_display_font.fallback_families }};
+    --ff-body:    {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    --fs-base:    {{ settings.type_body_size }}px;
+
+    /* Layout */
+    --container-width:   {{ settings.layout_container_width }};
+    --section-spacing:   {{ settings.layout_section_spacing }}px;
+    --side-padding:      {{ settings.layout_side_padding }}px;
+
+    /* Transitions */
+    --ease-out:  cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --ease-in:   cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    --transition: 0.3s var(--ease-out);
+
+    /* Z-index layers */
+    --z-base:    1;
+    --z-raised:  10;
+    --z-overlay: 100;
+    --z-drawer:  200;
+    --z-modal:   300;
+    --z-nav:     400;
+    --z-cursor:  9999;
+  }
+
+  {%- if settings.type_display_font.bold_variant -%}
+    {{ settings.type_display_font | font_face: font_display: 'swap' }}
+  {%- endif -%}
+  {{ settings.type_display_font | font_face: font_display: 'swap' }}
+  {{ settings.type_body_font | font_face: font_display: 'swap' }}
+</style>

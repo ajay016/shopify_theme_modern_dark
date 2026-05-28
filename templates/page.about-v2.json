@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "hero": {
+      "type": "image-with-text",
+      "settings": { "layout": "image_right", "full_height": true }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": { "layout": "v2" }
+    },
+    "stats": {
+      "type": "stats-row",
+      "settings": {}
+    }
+  },
+  "order": ["hero", "main", "stats"]
+}

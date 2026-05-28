@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "block_order": ["vendor","title","price","swatches","size","quantity","buy","trust","shipping","description"],
+      "settings": {
+        "layout": "wide",
+        "thumbnail_position": "grid_mix",
+        "container_style": "wide",
+        "enable_zoom": true,
+        "enable_lightbox": true,
+        "show_sticky_atc": true,
+        "description_style": "tabs"
+      }
+    }
+  },
+  "order": ["main"]
+}

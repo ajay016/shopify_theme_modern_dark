@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-contact",
+      "settings": { "layout": "v1" }
+    }
+  },
+  "order": ["main"]
+}

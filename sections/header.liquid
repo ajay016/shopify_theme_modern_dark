@@ -1,0 +1,388 @@
+{%- liquid
+  assign header_style    = section.settings.header_style
+  assign mega_style      = section.settings.mega_menu_style
+  assign is_transparent  = section.settings.transparent_home
+  assign is_sticky       = section.settings.sticky
+  assign menu_handle     = section.settings.menu
+  assign logo            = section.settings.logo
+  assign logo_width      = section.settings.logo_width
+  assign logo_text       = section.settings.logo_text
+  assign show_wishlist   = settings.wishlist_enabled
+  assign cart_type       = settings.cart_type
+
+  assign transparent_class = ''
+  if is_transparent and request.page_type == 'index'
+    assign transparent_class = 'is-transparent'
+  endif
+-%}
+
+<header
+  class="site-header header-{{ header_style }} {{ transparent_class }}{% if is_sticky %} is-sticky{% endif %}"
+  data-transparent="{{ is_transparent }}"
+  role="banner"
+>
+  {%- comment -%}——————————————————————————
+    STYLE V1: Logo Left | Nav Center | Actions Right
+  ——————————————————————————{%- endcomment -%}
+  {%- if header_style == 'v1' -%}
+
+    {%- render 'header-logo', logo: logo, logo_width: logo_width, logo_text: logo_text -%}
+
+    <nav class="site-nav" aria-label="{{ 'accessibility.menu' | t }}">
+      {%- for link in linklists[menu_handle].links -%}
+        {%- liquid
+          assign has_mega = false
+          for block in section.blocks
+            if block.type == 'mega_menu_item' and block.settings.menu_item == link.title
+              assign has_mega = true
+              assign mega_block = block
+            endif
+          endfor
+        -%}
+
+        {%- if link.links.size > 0 or has_mega -%}
+          <div class="has-megamenu" role="none">
+            <a
+              href="{{ link.url }}"
+              class="site-nav__link{% if link.active %} is-active{% endif %}"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >{{ link.title }}</a>
+
+            {%- render 'mega-menu',
+              link: link,
+              style: mega_style,
+              block: mega_block,
+              has_mega: has_mega
+            -%}
+          </div>
+        {%- else -%}
+          <a
+            href="{{ link.url }}"
+            class="site-nav__link{% if link.active %} is-active{% endif %}"
+          >{{ link.title }}</a>
+        {%- endif -%}
+      {%- endfor -%}
+    </nav>
+
+    {%- render 'header-actions',
+      show_wishlist: show_wishlist,
+      cart_type: cart_type
+    -%}
+
+
+  {%- comment -%}——————————————————————————
+    STYLE V2: Split nav | Centered Logo | Split nav
+  ——————————————————————————{%- endcomment -%}
+  {%- elsif header_style == 'v2' -%}
+
+    {%- assign links_left  = linklists[menu_handle].links | slice: 0, 2 -%}
+    {%- assign links_right = linklists[menu_handle].links | slice: 2, 4 -%}
+
+    <nav class="site-nav site-nav--left" aria-label="Primary left">
+      {%- for link in links_left -%}
+        <a href="{{ link.url }}" class="site-nav__link{% if link.active %} is-active{% endif %}">{{ link.title }}</a>
+      {%- endfor -%}
+    </nav>
+
+    <div class="header-v2__logo" style="text-align:center;">
+      {%- render 'header-logo', logo: logo, logo_width: logo_width, logo_text: logo_text -%}
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:flex-end;gap:24px;">
+      <nav class="site-nav site-nav--right" aria-label="Primary right">
+        {%- for link in links_right -%}
+          <a href="{{ link.url }}" class="site-nav__link{% if link.active %} is-active{% endif %}">{{ link.title }}</a>
+        {%- endfor -%}
+      </nav>
+      {%- render 'header-actions', show_wishlist: show_wishlist, cart_type: cart_type -%}
+    </div>
+
+
+  {%- comment -%}——————————————————————————
+    STYLE V3: Hamburger left | Centered Logo | Actions Right
+  ——————————————————————————{%- endcomment -%}
+  {%- elsif header_style == 'v3' -%}
+
+    <button
+      class="header-icon-btn"
+      data-open-mobile-menu
+      aria-label="{{ 'accessibility.open_nav' | t }}"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      {%- render 'icon-menu' -%}
+    </button>
+
+    {%- render 'header-logo', logo: logo, logo_width: logo_width, logo_text: logo_text -%}
+
+    {%- render 'header-actions', show_wishlist: show_wishlist, cart_type: cart_type -%}
+
+  {%- endif -%}
+</header>
+
+{%- comment -%}Mobile Menu (all header styles){%- endcomment -%}
+<div
+  id="mobile-menu-overlay"
+  class="mobile-menu-overlay"
+  aria-hidden="true"
+></div>
+
+<div
+  id="mobile-menu"
+  class="mobile-menu"
+  role="dialog"
+  aria-modal="true"
+  aria-label="{{ 'accessibility.menu' | t }}"
+  tabindex="-1"
+>
+  <div class="mobile-menu__header">
+    {%- render 'header-logo', logo: logo, logo_width: logo_width, logo_text: logo_text -%}
+    <button
+      data-close-mobile-menu
+      class="header-icon-btn"
+      aria-label="{{ 'accessibility.close_menu' | t }}"
+    >
+      {%- render 'icon-close' -%}
+    </button>
+  </div>
+
+  <ul class="mobile-menu__nav" role="list">
+    {%- for link in linklists[menu_handle].links -%}
+      <li>
+        {%- if link.links.size > 0 -%}
+          <button
+            data-toggle-submenu
+            data-toggle-submenu="mobile-sub-{{ forloop.index }}"
+            aria-expanded="false"
+            aria-controls="mobile-sub-{{ forloop.index }}"
+          >
+            {{ link.title }}
+            <svg class="submenu-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <ul id="mobile-sub-{{ forloop.index }}" class="mobile-menu__subnav" role="list">
+            {%- for childlink in link.links -%}
+              <li>
+                <a href="{{ childlink.url }}">{{ childlink.title }}</a>
+                {%- if childlink.links.size > 0 -%}
+                  <ul style="padding-left:16px;list-style:none;">
+                    {%- for grandchild in childlink.links -%}
+                      <li><a href="{{ grandchild.url }}" style="font-size:11px;opacity:0.5;display:block;padding:6px 0;color:var(--cream);">{{ grandchild.title }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- else -%}
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+
+  <div class="mobile-menu__footer">
+    <div class="site-header__actions" style="margin-bottom:24px;">
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}" class="header-icon-btn">
+          {%- render 'icon-account' -%}
+          <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;opacity:0.6;">{{ 'customer.account.title' | t }}</span>
+        </a>
+      {%- endif -%}
+    </div>
+    <div class="footer-social">
+      {%- if settings.social_instagram != blank -%}
+        <a href="{{ settings.social_instagram }}">Instagram</a>
+      {%- endif -%}
+      {%- if settings.social_pinterest != blank -%}
+        <a href="{{ settings.social_pinterest }}">Pinterest</a>
+      {%- endif -%}
+      {%- if settings.social_tiktok != blank -%}
+        <a href="{{ settings.social_tiktok }}">TikTok</a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{%- comment -%}Search Overlay{%- endcomment -%}
+<div
+  id="search-overlay"
+  class="search-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-label="{{ 'search.title' | t }}"
+>
+  <button
+    data-close-search
+    class="search-overlay__close"
+    aria-label="{{ 'accessibility.close_search' | t }}"
+  >
+    {%- render 'icon-close' -%}
+  </button>
+
+  <form class="search-overlay__field" action="{{ routes.search_url }}" method="get" role="search">
+    <input
+      type="search"
+      name="q"
+      class="search-overlay__input"
+      placeholder="{{ 'search.placeholder' | t }}"
+      autocomplete="off"
+      aria-label="{{ 'search.title' | t }}"
+    >
+    <input type="hidden" name="type" value="product">
+    <button type="submit" class="search-overlay__submit" aria-label="{{ 'general.search' | t }}">
+      {%- render 'icon-search' -%}
+    </button>
+  </form>
+
+  <div class="search-overlay__results" id="search-results" aria-live="polite">
+    <p class="search-overlay__hint">{{ 'search.placeholder' | t }}</p>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "header-section",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "select",
+      "id": "header_style",
+      "label": "Header style",
+      "options": [
+        { "value": "v1", "label": "Style 1 — Logo Left, Nav Center" },
+        { "value": "v2", "label": "Style 2 — Centered Logo, Split Nav" },
+        { "value": "v3", "label": "Style 3 — Hamburger + Centered Logo" }
+      ],
+      "default": "v1"
+    },
+    {
+      "type": "select",
+      "id": "mega_menu_style",
+      "label": "Mega menu style",
+      "options": [
+        { "value": "v1", "label": "Mega Menu 1 — Full-Width Columns" },
+        { "value": "v2", "label": "Mega Menu 2 — Compact Thumbnails" },
+        { "value": "v3", "label": "Mega Menu 3 — Flyout + Promo" }
+      ],
+      "default": "v1"
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_home",
+      "label": "Transparent on homepage",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Sticky on scroll",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo max width",
+      "min": 60, "max": 300, "step": 10, "unit": "px",
+      "default": 140
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text (fallback)",
+      "default": "MAISON·NOIR"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main menu",
+      "default": "main-menu"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "mega_menu_item",
+      "name": "Mega Menu Item",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_item",
+          "label": "Navigation link title (exact match)",
+          "info": "Must match the menu link title exactly (case-insensitive)."
+        },
+        {
+          "type": "header",
+          "content": "Featured Image / Card"
+        },
+        {
+          "type": "image_picker",
+          "id": "featured_image",
+          "label": "Featured image"
+        },
+        {
+          "type": "text",
+          "id": "featured_label",
+          "label": "Image label",
+          "default": "New Arrival"
+        },
+        {
+          "type": "text",
+          "id": "featured_title",
+          "label": "Image title",
+          "default": "SS 2025"
+        },
+        {
+          "type": "url",
+          "id": "featured_link",
+          "label": "Image link"
+        },
+        {
+          "type": "header",
+          "content": "Promo Banner (Mega Menu 3)"
+        },
+        {
+          "type": "image_picker",
+          "id": "promo_image",
+          "label": "Promo image"
+        },
+        {
+          "type": "text",
+          "id": "promo_title",
+          "label": "Promo title"
+        },
+        {
+          "type": "text",
+          "id": "promo_label",
+          "label": "Promo label",
+          "default": "Shop Now →"
+        },
+        {
+          "type": "url",
+          "id": "promo_link",
+          "label": "Promo link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header"
+    }
+  ]
+}
+{% endschema %}

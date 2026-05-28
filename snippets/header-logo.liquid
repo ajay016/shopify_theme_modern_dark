@@ -1,0 +1,19 @@
+{%- liquid
+  assign logo_url = routes.root_url
+-%}
+
+<a href="{{ logo_url }}" class="site-header__logo" aria-label="{{ shop.name }}">
+  {%- if logo != blank -%}
+    {{
+      logo
+      | image_url: width: logo_width
+      | image_tag:
+        width: logo_width,
+        height: auto,
+        loading: 'eager',
+        alt: shop.name
+    }}
+  {%- else -%}
+    {{ logo_text | default: shop.name }}
+  {%- endif -%}
+</a>

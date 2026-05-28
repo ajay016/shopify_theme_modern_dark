@@ -1,0 +1,98 @@
+{%- if section.settings.enabled -%}
+  {%- liquid
+    assign bar_style = section.settings.style
+    assign text_1 = section.settings.text_1
+    assign text_2 = section.settings.text_2
+    assign bar_link = section.settings.link
+  -%}
+
+  <div class="announcement-bar" role="banner" aria-label="Announcement">
+    {%- if bar_link != blank -%}<a href="{{ bar_link }}">{%- endif -%}
+
+    {%- if bar_style == 'ticker' -%}
+      <div class="announcement-bar__ticker-wrap" aria-live="off">
+        <div class="announcement-bar__ticker">
+          {%- comment -%}Duplicate for seamless loop{%- endcomment -%}
+          <span>{{ text_1 }}</span>
+          {%- if text_2 != blank -%}<span>{{ text_2 }}</span>{%- endif -%}
+          <span>{{ text_1 }}</span>
+          {%- if text_2 != blank -%}<span>{{ text_2 }}</span>{%- endif -%}
+        </div>
+      </div>
+
+    {%- elsif bar_style == 'rotating' -%}
+      {%- liquid
+        assign messages = text_1
+        if text_2 != blank
+          assign messages = text_1 | append: '|' | append: text_2
+        endif
+        assign messages_arr = messages | split: '|'
+        assign messages_json = messages_arr | json
+      -%}
+      <div
+        class="announcement-bar__rotating"
+        data-messages="{{ messages_json | escape }}"
+      >{{ messages_arr[0] }}</div>
+
+    {%- else -%}
+      <div class="announcement-bar__static">
+        <span>{{ text_1 }}</span>
+        {%- if text_2 != blank -%}
+          <span aria-hidden="true">✦</span>
+          <span>{{ text_2 }}</span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if bar_link != blank -%}</a>{%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "class": "announcement-bar-section",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Show announcement bar",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Bar style",
+      "options": [
+        { "value": "ticker",   "label": "Scrolling ticker" },
+        { "value": "rotating", "label": "Rotating messages" },
+        { "value": "static",   "label": "Static text" }
+      ],
+      "default": "ticker"
+    },
+    {
+      "type": "text",
+      "id": "text_1",
+      "label": "Message 1",
+      "default": "New Arrivals ✦ Free Shipping Over $500 ✦ SS 2025 Collection Now Live ✦ Exclusive Members Preview ✦ Sustainable Luxury"
+    },
+    {
+      "type": "text",
+      "id": "text_2",
+      "label": "Message 2 (rotating / ticker supplement)",
+      "info": "Optional. For ticker: appended seamlessly. For rotating: alternates with message 1."
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Bar link (optional)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar"
+    }
+  ]
+}
+{% endschema %}

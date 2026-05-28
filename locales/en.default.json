@@ -1,0 +1,257 @@
+{
+  "general": {
+    "continue_shopping": "Continue Shopping",
+    "close": "Close",
+    "open": "Open",
+    "search": "Search",
+    "loading": "Loading..."
+  },
+  "accessibility": {
+    "skip_to_text": "Skip to content",
+    "refresh_page": "Page refreshed",
+    "open_nav": "Open navigation",
+    "close_nav": "Close navigation",
+    "open_cart": "Open cart",
+    "close_cart": "Close cart",
+    "open_search": "Open search",
+    "close_search": "Close search",
+    "open_wishlist": "Open wishlist",
+    "close_wishlist": "Close wishlist",
+    "open_filters": "Open filters",
+    "close_filters": "Close filters",
+    "close_menu": "Close menu",
+    "menu": "Menu",
+    "wishlist_add": "Add to wishlist",
+    "wishlist_remove": "Remove from wishlist",
+    "quick_view": "Quick view {{ product_title }}",
+    "add_to_cart": "Add {{ product_title }} to cart",
+    "loading_new_page": "Loading",
+    "image": "Image",
+    "image_slideshow": "Image slideshow",
+    "play_slideshow": "Play slideshow",
+    "pause_slideshow": "Pause slideshow",
+    "next_slide": "Next slide",
+    "previous_slide": "Previous slide",
+    "zoom_in": "Zoom in on image",
+    "go_to_slide": "Go to slide {{ slideNumber }}"
+  },
+  "header": {
+    "search_placeholder": "Search for pieces...",
+    "account": "Account",
+    "cart": "Cart ({{ count }})"
+  },
+  "cart": {
+    "title": "Your Bag",
+    "empty": "Your bag is empty",
+    "continue_shopping": "Continue Shopping",
+    "checkout": "Proceed to Checkout",
+    "add": "Add to Bag",
+    "added": "Added to Bag",
+    "adding": "Adding...",
+    "remove": "Remove",
+    "item_count_one": "{{ count }} item",
+    "item_count_other": "{{ count }} items",
+    "free_shipping_message": "You're {{ amount }} away from free shipping",
+    "free_shipping_achieved": "You've unlocked free shipping!",
+    "quantity": "Quantity",
+    "note": "Order Note",
+    "order_discount": "Discount",
+    "order_subtotal": "Subtotal",
+    "subtotal": "Subtotal",
+    "taxes_and_shipping": "Taxes and shipping calculated at checkout",
+    "recommendations_title": "You May Also Like"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to Bag",
+      "sold_out": "Sold Out",
+      "unavailable": "Unavailable",
+      "choose_variant": "Choose options",
+      "quantity": "Quantity",
+      "quantity_minimum_message": "Min value is 1",
+      "sale_badge": "Sale",
+      "sold_out_badge": "Sold Out",
+      "new_badge": "New",
+      "limited_badge": "Limited",
+      "exclusive_badge": "Exclusive",
+      "compare_at_price": "Regular price",
+      "price": "Sale price",
+      "size_guide": "Size Guide",
+      "ask_question": "Ask a Question",
+      "share": "Share",
+      "view_full_details": "View Full Details",
+      "buy_now": "Buy Now",
+      "pickup_available": "Pickup available",
+      "pickup_unavailable": "Pickup unavailable",
+      "select_size": "Select size",
+      "select_color": "Select colour",
+      "swatches_unavailable": "Unavailable",
+      "zoom_in": "Zoom in",
+      "open_lightbox": "Open image in lightbox",
+      "real_time_visitors": "{{ count }} people are viewing this",
+      "stock_countdown": "Only {{ count }} left in stock",
+      "free_shipping_on_orders": "Free shipping on orders over {{ amount }}",
+      "returns": "Easy returns within 30 days",
+      "secure_checkout": "Secure checkout",
+      "tab_description": "Description",
+      "tab_details": "Details & Care",
+      "tab_shipping": "Shipping & Returns",
+      "tab_reviews": "Reviews"
+    },
+    "listing": {
+      "load_more": "Load More",
+      "loading": "Loading products...",
+      "no_results": "No products found",
+      "no_results_cta": "Clear all filters",
+      "filter_by": "Filter by",
+      "sort_by": "Sort by",
+      "sort_featured": "Featured",
+      "sort_price_asc": "Price: Low to High",
+      "sort_price_desc": "Price: High to Low",
+      "sort_newest": "Newest First",
+      "sort_best_selling": "Best Selling",
+      "sort_az": "A–Z",
+      "sort_za": "Z–A",
+      "grid_2": "2 Columns",
+      "grid_3": "3 Columns",
+      "grid_4": "4 Columns",
+      "grid_5": "5 Columns",
+      "list_view": "List View",
+      "clear_filters": "Clear All",
+      "showing_count_of": "Showing {{ count }} of {{ total }} items",
+      "items": "items",
+      "filters_active_one": "{{ count }} filter active",
+      "filters_active_other": "{{ count }} filters active"
+    }
+  },
+  "blog": {
+    "title": "Journal",
+    "article": {
+      "by": "By",
+      "read_more": "Read More",
+      "posted_in": "Posted in",
+      "share": "Share this article",
+      "back_to_blog": "Back to Journal",
+      "comments_count_one": "{{ count }} comment",
+      "comments_count_other": "{{ count }} comments",
+      "no_comments": "No comments yet",
+      "leave_comment": "Leave a comment",
+      "name": "Name",
+      "email": "Email",
+      "comment": "Comment",
+      "submit": "Post Comment",
+      "comment_submitted": "Comment submitted. It will appear after approval."
+    }
+  },
+  "collections": {
+    "all": {
+      "title": "All Products"
+    }
+  },
+  "quick_view": {
+    "title": "Quick View",
+    "view_full_product": "View Full Details"
+  },
+  "wishlist": {
+    "title": "Wishlist",
+    "empty": "Your wishlist is empty",
+    "empty_cta": "Start adding pieces you love",
+    "added": "Added to wishlist",
+    "removed": "Removed from wishlist"
+  },
+  "newsletter": {
+    "label": "Email address",
+    "placeholder": "Your email address",
+    "success": "Thank you for subscribing.",
+    "error": "Something went wrong. Please try again.",
+    "button": "Subscribe"
+  },
+  "search": {
+    "placeholder": "Search for pieces, collections...",
+    "title": "Search",
+    "no_results": "No results for \"{{ terms }}\"",
+    "results_count_one": "{{ count }} result for \"{{ terms }}\"",
+    "results_count_other": "{{ count }} results for \"{{ terms }}\"",
+    "clear": "Clear search"
+  },
+  "paginate": {
+    "previous": "Previous",
+    "next": "Next",
+    "current_page": "Page {{ page_number }} of {{ number_of_pages }}"
+  },
+  "contact": {
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone number",
+      "subject": "Subject",
+      "message": "Message",
+      "submit": "Send Message",
+      "success": "Thanks for reaching out. We'll get back to you shortly.",
+      "error": "Please check the form for errors"
+    }
+  },
+  "customer": {
+    "login": {
+      "title": "Sign In",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "forgot_password": "Forgot password?",
+      "no_account": "Don't have an account?",
+      "create_account": "Create one",
+      "guest_title": "Continue as Guest"
+    },
+    "register": {
+      "title": "Create Account",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create Account",
+      "have_account": "Already have an account?",
+      "sign_in": "Sign in"
+    },
+    "account": {
+      "title": "My Account",
+      "orders": "Order History",
+      "details": "Account Details",
+      "logout": "Sign Out",
+      "no_orders": "You have no orders yet.",
+      "start_shopping": "Start Shopping"
+    },
+    "recover_password": {
+      "title": "Reset Password",
+      "email": "Email",
+      "submit": "Send Reset Link",
+      "success": "We've sent you a reset email.",
+      "cancel": "Cancel"
+    },
+    "addresses": {
+      "title": "Addresses",
+      "add_new": "Add New Address",
+      "edit": "Edit",
+      "delete": "Delete",
+      "default": "Default",
+      "set_default": "Set as Default",
+      "save": "Save Address",
+      "cancel": "Cancel"
+    },
+    "order": {
+      "title": "Order {{ name }}",
+      "date": "Placed on {{ date }}",
+      "status": "Status",
+      "product": "Product",
+      "sku": "SKU",
+      "quantity": "Qty",
+      "total": "Total"
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "Page Not Found",
+      "subtitle": "The page you're looking for has moved or doesn't exist.",
+      "cta": "Return Home"
+    }
+  }
+}

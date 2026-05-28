@@ -1,0 +1,302 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Maison Noir",
+    "theme_version": "1.0.0",
+    "theme_author": "Your Studio",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      { "type": "header", "content": "Brand Palette" },
+      { "type": "color", "id": "color_black",      "label": "Background — Deep Black",  "default": "#0A0A0A" },
+      { "type": "color", "id": "color_charcoal",   "label": "Surface — Charcoal",       "default": "#161616" },
+      { "type": "color", "id": "color_cream",      "label": "Text — Cream",             "default": "#F5F0E8" },
+      { "type": "color", "id": "color_gold",       "label": "Accent — Gold",            "default": "#C8A96E" },
+      { "type": "color", "id": "color_gold_light", "label": "Accent Light — Gold",      "default": "#E8D4A8" },
+      { "type": "color", "id": "color_muted",      "label": "Muted Text",               "default": "#6E6A66" },
+      { "type": "color", "id": "color_ivory",      "label": "Ivory",                    "default": "#FAF8F3" },
+      { "type": "color", "id": "color_sale",       "label": "Sale Badge Text",          "default": "#FFBABA" },
+      { "type": "color", "id": "color_sale_bg",    "label": "Sale Badge Background",    "default": "#7A2020" }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      { "type": "header", "content": "Fonts" },
+      { "type": "font_picker", "id": "type_display_font", "label": "Display / Heading Font",  "default": "cormorant_garamond_n3" },
+      { "type": "font_picker", "id": "type_body_font",    "label": "Body Font",               "default": "assistant_n3" },
+      {
+        "type": "range",
+        "id": "type_body_size",
+        "label": "Base Font Size",
+        "min": 12, "max": 18, "step": 1, "unit": "px",
+        "default": 14
+      },
+      {
+        "type": "select",
+        "id": "type_heading_size_scale",
+        "label": "Heading Size Scale",
+        "options": [
+          { "value": "small",  "label": "Compact" },
+          { "value": "medium", "label": "Standard" },
+          { "value": "large",  "label": "Generous" }
+        ],
+        "default": "medium"
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "select",
+        "id": "layout_container_width",
+        "label": "Max Container Width",
+        "options": [
+          { "value": "1200px", "label": "Narrow (1200px)" },
+          { "value": "1440px", "label": "Standard (1440px)" },
+          { "value": "1600px", "label": "Wide (1600px)" },
+          { "value": "100%",   "label": "Full Width" }
+        ],
+        "default": "1440px"
+      },
+      {
+        "type": "range",
+        "id": "layout_section_spacing",
+        "label": "Section Vertical Spacing",
+        "min": 40, "max": 140, "step": 10, "unit": "px",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "layout_side_padding",
+        "label": "Side Padding",
+        "min": 16, "max": 80, "step": 4, "unit": "px",
+        "default": 56
+      }
+    ]
+  },
+  {
+    "name": "Header",
+    "settings": [
+      {
+        "type": "select",
+        "id": "header_style",
+        "label": "Header Style",
+        "info": "Choose the overall navigation layout.",
+        "options": [
+          { "value": "v1", "label": "Style 1 — Logo Left, Nav Center" },
+          { "value": "v2", "label": "Style 2 — Centered Logo, Split Nav" },
+          { "value": "v3", "label": "Style 3 — Hamburger Sidebar" }
+        ],
+        "default": "v1"
+      },
+      {
+        "type": "select",
+        "id": "mega_menu_style",
+        "label": "Mega Menu Style",
+        "options": [
+          { "value": "v1", "label": "Mega Menu 1 — Full-Width Columns + Featured Image" },
+          { "value": "v2", "label": "Mega Menu 2 — Compact Thumbnails Grid" },
+          { "value": "v3", "label": "Mega Menu 3 — Flyout Panel + Promo Banner" }
+        ],
+        "default": "v1"
+      },
+      { "type": "checkbox", "id": "header_transparent_home",   "label": "Transparent header on homepage hero",  "default": true },
+      { "type": "checkbox", "id": "header_sticky",              "label": "Sticky header on scroll",             "default": true },
+      { "type": "image_picker", "id": "logo",                   "label": "Logo Image" },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "label": "Logo Max Width",
+        "min": 60, "max": 300, "step": 10, "unit": "px",
+        "default": 140
+      },
+      { "type": "text", "id": "logo_text",   "label": "Logo Text (fallback if no image)", "default": "MAISON·NOIR" },
+      { "type": "link_list", "id": "menu",   "label": "Main Navigation Menu",             "default": "main-menu" }
+    ]
+  },
+  {
+    "name": "Announcement Bar",
+    "settings": [
+      { "type": "checkbox", "id": "announcement_enabled", "label": "Show announcement bar", "default": true },
+      {
+        "type": "select",
+        "id": "announcement_style",
+        "label": "Bar Style",
+        "options": [
+          { "value": "ticker",   "label": "Scrolling Ticker" },
+          { "value": "rotating", "label": "Rotating Messages" },
+          { "value": "static",   "label": "Static Text" }
+        ],
+        "default": "ticker"
+      },
+      { "type": "text", "id": "announcement_text_1", "label": "Message 1", "default": "New Arrivals ✦ Free Shipping Over $500 ✦ SS 2025 Collection Now Live" },
+      { "type": "text", "id": "announcement_text_2", "label": "Message 2 (rotating only)", "default": "Exclusive Members Preview ✦ Sustainable Luxury ✦ Complimentary Gift Wrapping" },
+      { "type": "url",  "id": "announcement_link",   "label": "Bar Link (optional)" }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart Type",
+        "options": [
+          { "value": "drawer",       "label": "Slide-in Drawer" },
+          { "value": "page",         "label": "Cart Page" },
+          { "value": "notification", "label": "Notification Only" }
+        ],
+        "default": "drawer"
+      },
+      { "type": "checkbox", "id": "cart_free_shipping_bar",       "label": "Show free shipping progress bar", "default": true },
+      { "type": "text",     "id": "cart_free_shipping_threshold", "label": "Free shipping threshold (in $)",  "default": "500" },
+      { "type": "checkbox", "id": "cart_show_recommendations",    "label": "Show product recommendations in cart", "default": true }
+    ]
+  },
+  {
+    "name": "Product Cards",
+    "settings": [
+      {
+        "type": "select",
+        "id": "product_card_style",
+        "label": "Default Card Style",
+        "options": [
+          { "value": "style-1", "label": "Style 1 — Minimal Dark" },
+          { "value": "style-2", "label": "Style 2 — Bold Border" },
+          { "value": "style-3", "label": "Style 3 — Editorial Overlay" },
+          { "value": "style-4", "label": "Style 4 — Compact" },
+          { "value": "style-5", "label": "Style 5 — Full Info" }
+        ],
+        "default": "style-1"
+      },
+      {
+        "type": "select",
+        "id": "product_card_image_ratio",
+        "label": "Image Aspect Ratio",
+        "options": [
+          { "value": "portrait",   "label": "Portrait (3/4)" },
+          { "value": "square",     "label": "Square (1/1)" },
+          { "value": "landscape",  "label": "Landscape (4/3)" }
+        ],
+        "default": "portrait"
+      },
+      {
+        "type": "select",
+        "id": "product_card_media_hover",
+        "label": "Image Hover Behaviour",
+        "options": [
+          { "value": "zoom",         "label": "Zoom In" },
+          { "value": "second_image", "label": "Show Second Image" },
+          { "value": "carousel",     "label": "Carousel Autoplay" },
+          { "value": "none",         "label": "None" }
+        ],
+        "default": "zoom"
+      },
+      { "type": "checkbox", "id": "product_card_show_vendor",    "label": "Show brand/vendor name",          "default": true },
+      { "type": "checkbox", "id": "product_card_show_material",  "label": "Show material/subtitle",          "default": true },
+      { "type": "checkbox", "id": "product_card_show_sizes",     "label": "Show sizes on hover",             "default": true },
+      { "type": "checkbox", "id": "product_card_show_wishlist",  "label": "Show wishlist button",            "default": true },
+      { "type": "checkbox", "id": "product_card_show_quickview", "label": "Show quick view button",          "default": true },
+      {
+        "type": "select",
+        "id": "product_card_quickadd_style",
+        "label": "Add to Cart Display",
+        "options": [
+          { "value": "slide_up",  "label": "Slide Up on Hover" },
+          { "value": "popup",     "label": "Popup Size Selector" },
+          { "value": "always",    "label": "Always Visible" }
+        ],
+        "default": "slide_up"
+      }
+    ]
+  },
+  {
+    "name": "Quick View",
+    "settings": [
+      { "type": "header",    "content": "Quick View Modal" },
+      { "type": "paragraph", "content": "A product details modal opens when customers click Quick View on any product card." },
+      { "type": "checkbox",  "id": "quickview_enabled",         "label": "Enable quick view",              "default": true },
+      { "type": "checkbox",  "id": "quickview_show_description","label": "Show description in quick view", "default": true },
+      { "type": "checkbox",  "id": "quickview_show_shipping",   "label": "Show shipping info",             "default": true }
+    ]
+  },
+  {
+    "name": "Wishlist",
+    "settings": [
+      { "type": "header",    "content": "Wishlist" },
+      { "type": "paragraph", "content": "Saves wishlisted products in the browser (localStorage). No account required." },
+      { "type": "checkbox",  "id": "wishlist_enabled", "label": "Enable wishlist feature", "default": true }
+    ]
+  },
+  {
+    "name": "Custom Cursor",
+    "settings": [
+      { "type": "header",    "content": "Custom Cursor" },
+      { "type": "paragraph", "content": "Replaces the browser cursor with a branded gold dot cursor. Can be disabled for accessibility." },
+      { "type": "checkbox",  "id": "custom_cursor",       "label": "Enable custom cursor",    "default": true },
+      {
+        "type": "select",
+        "id": "custom_cursor_style",
+        "label": "Cursor Style",
+        "options": [
+          { "value": "dot_ring",   "label": "Gold Dot + Lagging Ring (Default)" },
+          { "value": "dot_only",   "label": "Gold Dot Only" },
+          { "value": "crosshair",  "label": "Gold Crosshair" }
+        ],
+        "default": "dot_ring",
+        "info": "Only applies when custom cursor is enabled."
+      }
+    ]
+  },
+  {
+    "name": "Animations",
+    "settings": [
+      { "type": "checkbox", "id": "animations_scroll_reveal", "label": "Scroll reveal (fade in on scroll)", "default": true },
+      { "type": "checkbox", "id": "animations_hover",         "label": "Hover effects on cards/links",     "default": true },
+      {
+        "type": "select",
+        "id": "animations_reveal_style",
+        "label": "Reveal Animation Style",
+        "options": [
+          { "value": "fade_up",   "label": "Fade Up" },
+          { "value": "fade_in",   "label": "Fade In" },
+          { "value": "slide_in",  "label": "Slide In" }
+        ],
+        "default": "fade_up"
+      }
+    ]
+  },
+  {
+    "name": "Footer",
+    "settings": [
+      { "type": "image_picker", "id": "footer_logo",        "label": "Footer Logo (optional)" },
+      { "type": "richtext",     "id": "footer_description", "label": "Brand Description",
+        "default": "<p>Luxury fashion with a considered approach to design, craft, and the world we inhabit.</p>" },
+      { "type": "link_list",    "id": "footer_menu_1",      "label": "Footer Column 1 Menu", "default": "footer" },
+      { "type": "text",         "id": "footer_menu_1_title","label": "Column 1 Heading",     "default": "Shop" },
+      { "type": "link_list",    "id": "footer_menu_2",      "label": "Footer Column 2 Menu" },
+      { "type": "text",         "id": "footer_menu_2_title","label": "Column 2 Heading",     "default": "Brand" },
+      { "type": "link_list",    "id": "footer_menu_3",      "label": "Footer Column 3 Menu" },
+      { "type": "text",         "id": "footer_menu_3_title","label": "Column 3 Heading",     "default": "Help" },
+      { "type": "header",       "content": "Social Links" },
+      { "type": "url", "id": "social_instagram", "label": "Instagram" },
+      { "type": "url", "id": "social_pinterest", "label": "Pinterest" },
+      { "type": "url", "id": "social_tiktok",    "label": "TikTok" },
+      { "type": "url", "id": "social_facebook",  "label": "Facebook" },
+      { "type": "url", "id": "social_twitter",   "label": "X (Twitter)" },
+      { "type": "header", "content": "Payment Icons" },
+      { "type": "checkbox", "id": "footer_show_payment_icons", "label": "Show accepted payment icons", "default": true }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      { "type": "image_picker", "id": "favicon", "label": "Favicon", "info": "32×32px .png recommended" }
+    ]
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "sidebar_position": "left",
+        "filter_style": "sidebar",
+        "grid_columns": "4",
+        "container_style": "wide",
+        "title_style": "style-2",
+        "products_per_page": 16,
+        "pagination_style": "infinite"
+      }
+    }
+  },
+  "order": ["main"]
+}

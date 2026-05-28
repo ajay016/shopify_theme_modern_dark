@@ -1,0 +1,54 @@
+<section class="section stats-row" id="section-{{ section.id }}">
+  <div class="container">
+    <div class="stats-row__grid">
+      {%- for block in section.blocks -%}
+        <div class="stat-item" {{ block.shopify_attributes }}>
+          <span class="stat-item__value">{{ block.settings.value }}</span>
+          <span class="stat-item__label">{{ block.settings.label }}</span>
+          {%- if block.settings.description != blank -%}
+            <p class="stat-item__desc">{{ block.settings.description }}</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .stats-row { padding: var(--section-spacing) 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .stats-row__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 40px; text-align: center; }
+  .stat-item__value { display: block; font-family: var(--ff-display); font-size: clamp(36px, 5vw, 64px); font-weight: 300; color: var(--gold); line-height: 1; margin-bottom: 8px; }
+  .stat-item__label { display: block; font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--muted); }
+  .stat-item__desc { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+</style>
+
+{% schema %}
+{
+  "name": "Stats Row",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        { "type": "text", "id": "value",       "label": "Value",       "default": "100+" },
+        { "type": "text", "id": "label",       "label": "Label",       "default": "Global Stockists" },
+        { "type": "text", "id": "description", "label": "Description" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stats Row",
+      "blocks": [
+        { "type": "stat", "settings": { "value": "1998", "label": "Founded" } },
+        { "type": "stat", "settings": { "value": "100+", "label": "Global Stockists" } },
+        { "type": "stat", "settings": { "value": "50+", "label": "Countries" } },
+        { "type": "stat", "settings": { "value": "14", "label": "Awards" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

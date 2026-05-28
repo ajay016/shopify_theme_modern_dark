@@ -1,0 +1,109 @@
+<div class="account-page" id="section-{{ section.id }}">
+  <div class="container">
+    <div class="account-header">
+      <h1 class="account-header__title">{{ 'customer.addresses.title' | t }}</h1>
+      <a href="{{ routes.account_url }}" class="account-header__back">← {{ 'customer.account.return' | t }}</a>
+    </div>
+
+    <button class="btn-primary" data-open-new-address style="margin-bottom: 40px;">{{ 'customer.addresses.add_new' | t }}</button>
+
+    <div id="new-address-form" style="display:none;" class="address-form-wrap">
+      <h2 class="address-form__title">{{ 'customer.addresses.add_new' | t }}</h2>
+      {%- form 'customer_address', customer.new_address, class: 'address-form' -%}
+        {%- render 'address-fields', form: form -%}
+        <div class="address-form__actions">
+          <button type="submit" class="btn-primary">{{ 'customer.addresses.add' | t }}</button>
+          <button type="button" class="btn-ghost" data-close-new-address>{{ 'customer.addresses.cancel' | t }}</button>
+        </div>
+      {%- endform -%}
+    </div>
+
+    <div class="address-list">
+      {%- for address in customer.addresses -%}
+        <div class="address-card" id="address-{{ address.id }}">
+          {%- if address == customer.default_address -%}
+            <span class="address-card__badge">{{ 'customer.addresses.default' | t }}</span>
+          {%- endif -%}
+          <address>
+            {{ address.name }}<br>
+            {{ address.address1 }}<br>
+            {%- if address.address2 != blank -%}{{ address.address2 }}<br>{%- endif -%}
+            {{ address.city }}, {{ address.province }} {{ address.zip }}<br>
+            {{ address.country }}
+          </address>
+          <div class="address-card__actions">
+            <button class="act-link" data-edit-address="{{ address.id }}">{{ 'customer.addresses.edit' | t }}</button>
+            {%- form 'customer_address', address, class: 'address-delete-form' -%}
+              <input type="hidden" name="_method" value="delete">
+              <button type="submit" class="act-link act-link--danger" onclick="return confirm('{{ 'customer.addresses.delete_confirm' | t }}')">
+                {{ 'customer.addresses.delete' | t }}
+              </button>
+            {%- endform -%}
+          </div>
+          <div id="edit-address-{{ address.id }}" style="display:none;" class="address-form-wrap">
+            {%- form 'customer_address', address, class: 'address-form' -%}
+              {%- render 'address-fields', form: form -%}
+              <label class="form-field form-field--checkbox">
+                <input type="checkbox" name="address[default]" value="1" {% if address == customer.default_address %}checked{% endif %}>
+                {{ 'customer.addresses.set_default' | t }}
+              </label>
+              <div class="address-form__actions">
+                <button type="submit" class="btn-primary">{{ 'customer.addresses.update' | t }}</button>
+                <button type="button" class="btn-ghost" data-close-edit-address="{{ address.id }}">{{ 'customer.addresses.cancel' | t }}</button>
+              </div>
+            {%- endform -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .address-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+  .address-card { border: 1px solid var(--border); padding: 28px; position: relative; }
+  .address-card__badge { position: absolute; top: -1px; right: 20px; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; background: var(--gold); color: var(--black); padding: 3px 10px; }
+  .address-card address { font-style: normal; font-size: 14px; line-height: 1.8; opacity: 0.8; margin-bottom: 16px; }
+  .address-card__actions { display: flex; gap: 16px; }
+  .act-link { background: transparent; border: none; font-family: var(--ff-body); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); cursor: pointer; padding: 0; border-bottom: 1px solid var(--muted); transition: all 0.2s; }
+  .act-link:hover { color: var(--gold); border-bottom-color: var(--gold); }
+  .act-link--danger:hover { color: var(--sale-text); border-bottom-color: var(--sale-text); }
+  .address-form-wrap { grid-column: 1 / -1; margin-top: 16px; padding: 32px; border: 1px solid var(--border); }
+  .address-form__title { font-family: var(--ff-display); font-size: 22px; font-weight: 300; margin-bottom: 28px; }
+  .address-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .address-form .form-field { grid-column: span 1; }
+  .address-form .form-field:last-of-type { grid-column: span 2; }
+  .address-form__actions { grid-column: span 2; display: flex; gap: 12px; margin-top: 8px; }
+  .address-form .form-field--checkbox { grid-column: span 2; display: flex; align-items: center; gap: 10px; font-size: 13px; }
+  .account-header__back { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  .account-header__back:hover { color: var(--gold); }
+  @media (max-width: 640px) { .address-form { grid-template-columns: 1fr; } .address-form .form-field { grid-column: span 1; } .address-form__actions { grid-column: span 1; } }
+</style>
+
+<script>
+  document.querySelector('[data-open-new-address]')?.addEventListener('click', () => {
+    document.getElementById('new-address-form').style.display = '';
+  });
+  document.querySelector('[data-close-new-address]')?.addEventListener('click', () => {
+    document.getElementById('new-address-form').style.display = 'none';
+  });
+  document.querySelectorAll('[data-edit-address]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('edit-address-' + btn.dataset.editAddress).style.display = '';
+    });
+  });
+  document.querySelectorAll('[data-close-edit-address]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('edit-address-' + btn.dataset.closeEditAddress).style.display = 'none';
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Addresses",
+  "tag": "div",
+  "settings": [],
+  "presets": [{ "name": "Addresses" }]
+}
+{% endschema %}

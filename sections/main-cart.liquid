@@ -1,0 +1,171 @@
+<div class="cart-page" id="section-{{ section.id }}">
+  <div class="container">
+    <h1 class="cart-page__title">{{ 'cart.title' | t }}</h1>
+
+    {%- if cart.item_count == 0 -%}
+      <div class="cart-empty">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(200,169,110,0.3)" stroke-width="1" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <p class="cart-empty__text">{{ 'cart.empty' | t }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn-primary">{{ 'cart.continue_shopping' | t }}</a>
+      </div>
+    {%- else -%}
+      <div class="cart-page__grid">
+        <div class="cart-page__items">
+          <div class="cart-header">
+            <span>{{ 'cart.item' | t }}</span>
+            <span>{{ 'cart.price' | t }}</span>
+            <span>{{ 'cart.quantity' | t }}</span>
+            <span>{{ 'cart.total' | t }}</span>
+          </div>
+          {%- for item in cart.items -%}
+            <div class="cart-row" data-line="{{ forloop.index }}">
+              <div class="cart-row__product">
+                <a href="{{ item.url }}" class="cart-row__img-wrap">
+                  {{
+                    item.image
+                    | image_url: width: 160
+                    | image_tag: class: 'cart-row__img', loading: 'lazy', alt: item.product.title
+                  }}
+                </a>
+                <div class="cart-row__details">
+                  <a href="{{ item.url }}" class="cart-row__title">{{ item.product.title }}</a>
+                  {%- unless item.product.has_only_default_variant -%}
+                    <p class="cart-row__variant">{{ item.variant.title }}</p>
+                  {%- endunless -%}
+                  {%- if item.selling_plan_allocation -%}
+                    <p class="cart-row__plan">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+                  {%- endif -%}
+                  <button class="cart-row__remove" data-remove-item="{{ forloop.index }}" aria-label="{{ 'cart.remove' | t: title: item.product.title }}">
+                    {{ 'cart.remove' | t }}
+                  </button>
+                </div>
+              </div>
+              <div class="cart-row__price">
+                {%- if item.original_price != item.final_price -%}
+                  <span class="price-compare">{{ item.original_price | money }}</span>
+                {%- endif -%}
+                <span>{{ item.final_price | money }}</span>
+              </div>
+              <div class="cart-row__qty">
+                <div class="qty-stepper qty-stepper--sm">
+                  <button class="qty-btn" data-qty-minus data-line="{{ forloop.index }}" aria-label="{{ 'accessibility.decrease_quantity' | t }}">−</button>
+                  <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" max="99" class="qty-input" aria-label="{{ 'cart.item_quantity' | t }}">
+                  <button class="qty-btn" data-qty-plus data-line="{{ forloop.index }}" aria-label="{{ 'accessibility.increase_quantity' | t }}">+</button>
+                </div>
+              </div>
+              <div class="cart-row__total">{{ item.final_line_price | money }}</div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <div class="cart-page__summary">
+          {%- if section.settings.show_note -%}
+            <div class="cart-note">
+              <label for="cart-note" class="cart-note__label">{{ 'cart.note' | t }}</label>
+              <textarea id="cart-note" name="note" class="cart-note__input" rows="3">{{ cart.note }}</textarea>
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.show_shipping_bar -%}
+            {%- assign threshold = settings.cart_free_shipping_threshold | times: 100 -%}
+            {%- assign remaining = threshold | minus: cart.total_price -%}
+            <div class="cart-shipping-bar">
+              {%- if remaining > 0 -%}
+                <p class="cart-shipping-bar__text">
+                  {{ 'cart.free_shipping_remaining' | t: amount: remaining | money }}
+                </p>
+                <div class="cart-shipping-bar__track">
+                  <div class="cart-shipping-bar__fill" style="width:{{ cart.total_price | times: 100 | divided_by: threshold | at_most: 100 }}%"></div>
+                </div>
+              {%- else -%}
+                <p class="cart-shipping-bar__text cart-shipping-bar__text--done">{{ 'cart.free_shipping_earned' | t }}</p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          <div class="cart-summary">
+            <div class="cart-summary__row">
+              <span>{{ 'cart.subtotal' | t }}</span>
+              <span id="cart-subtotal">{{ cart.total_price | money }}</span>
+            </div>
+            <p class="cart-summary__note">{{ 'cart.taxes_note' | t }}</p>
+            <a href="{{ routes.checkout_url }}" class="btn-primary cart-checkout">{{ 'cart.checkout' | t }}</a>
+            <a href="{{ routes.all_products_collection_url }}" class="cart-continue">{{ 'cart.continue_shopping' | t }}</a>
+          </div>
+        </div>
+      </div>
+
+      {%- if section.settings.show_recommendations -%}
+        <div class="cart-upsell">
+          <h2 class="cart-upsell__title">{{ 'cart.recommendations_title' | t | default: 'You May Also Like' }}</h2>
+          <div class="product-grid product-grid--4">
+            {%- for item in cart.items limit: 1 -%}
+              {%- assign rec_handle = item.product.handle -%}
+            {%- endfor -%}
+            {%- if recommendations.performed? and recommendations.products_count > 0 -%}
+              {%- for product in recommendations.products limit: 4 -%}
+                {%- render 'product-card', product: product -%}
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .cart-page { padding: var(--section-spacing) 0; }
+  .cart-page__title { font-family: var(--ff-display); font-size: clamp(28px, 3vw, 48px); font-weight: 300; margin-bottom: 48px; }
+  .cart-empty { text-align: center; padding: 80px 20px; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+  .cart-empty__text { font-size: 16px; opacity: 0.5; }
+  .cart-page__grid { display: grid; grid-template-columns: 1fr 360px; gap: 48px; align-items: flex-start; }
+  .cart-header { display: grid; grid-template-columns: 1fr auto auto auto; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .cart-row { display: grid; grid-template-columns: 1fr auto auto auto; gap: 16px; align-items: center; padding: 24px 0; border-bottom: 1px solid var(--border); }
+  .cart-row__product { display: flex; gap: 16px; min-width: 0; }
+  .cart-row__img-wrap { flex-shrink: 0; }
+  .cart-row__img { width: 80px; height: 100px; object-fit: cover; }
+  .cart-row__title { font-size: 14px; display: block; color: var(--cream); margin-bottom: 4px; transition: color 0.2s; }
+  .cart-row__title:hover { color: var(--gold); }
+  .cart-row__variant, .cart-row__plan { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; }
+  .cart-row__remove { background: transparent; border: none; font-family: var(--ff-body); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); cursor: pointer; margin-top: 12px; padding: 0; border-bottom: 1px solid transparent; transition: all 0.2s; }
+  .cart-row__remove:hover { color: var(--gold); border-bottom-color: var(--gold); }
+  .cart-row__price, .cart-row__total { font-size: 14px; white-space: nowrap; }
+  .qty-stepper--sm { border: 1px solid var(--border); }
+  .qty-stepper--sm .qty-btn { width: 32px; height: 32px; font-size: 14px; }
+  .qty-stepper--sm .qty-input { width: 36px; font-size: 13px; }
+  .cart-note__label { display: block; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .cart-note__input { width: 100%; background: transparent; border: 1px solid var(--border); color: var(--cream); font-family: var(--ff-body); font-size: 13px; padding: 12px; resize: vertical; outline: none; }
+  .cart-note__input:focus { border-color: var(--gold); }
+  .cart-shipping-bar { margin: 24px 0; }
+  .cart-shipping-bar__text { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .cart-shipping-bar__text--done { color: var(--gold); }
+  .cart-shipping-bar__track { height: 2px; background: var(--border); border-radius: 2px; }
+  .cart-shipping-bar__fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.4s; }
+  .cart-summary { border: 1px solid var(--border); padding: 28px; }
+  .cart-summary__row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 16px; }
+  .cart-summary__note { font-size: 11px; color: var(--muted); margin-bottom: 24px; }
+  .cart-checkout { display: block; text-align: center; width: 100%; font-size: 11px; letter-spacing: 0.25em; padding: 18px; }
+  .cart-continue { display: block; text-align: center; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-top: 16px; transition: color 0.2s; }
+  .cart-continue:hover { color: var(--gold); }
+  .cart-upsell { margin-top: 80px; padding-top: 56px; border-top: 1px solid var(--border); }
+  .cart-upsell__title { font-family: var(--ff-display); font-size: 28px; font-weight: 300; margin-bottom: 32px; }
+  @media (max-width: 900px) {
+    .cart-page__grid { grid-template-columns: 1fr; }
+    .cart-header { display: none; }
+    .cart-row { grid-template-columns: 1fr; gap: 12px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "div",
+  "settings": [
+    { "type": "checkbox", "id": "show_note",            "label": "Show Order Note",          "default": true },
+    { "type": "checkbox", "id": "show_shipping_bar",    "label": "Show Free Shipping Bar",   "default": true },
+    { "type": "checkbox", "id": "show_recommendations", "label": "Show Recommendations",     "default": true }
+  ],
+  "presets": [{ "name": "Cart" }]
+}
+{% endschema %}

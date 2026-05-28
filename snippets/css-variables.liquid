@@ -1,6 +1,6 @@
 <style>
   :root {
-    /* Brand Palette — editable in Theme Customizer → Colors */
+    /* Brand Palette */
     --black:       {{ settings.color_black }};
     --charcoal:    {{ settings.color_charcoal }};
     --cream:       {{ settings.color_cream }};
@@ -19,9 +19,25 @@
     --cream-faint:   {{ settings.color_cream | color_modify: 'alpha', 0.06 }};
     --black-overlay: {{ settings.color_black | color_modify: 'alpha', 0.75 }};
 
-    /* Typography */
-    --ff-display: {{ settings.type_display_font.family }}, {{ settings.type_display_font.fallback_families }};
-    --ff-body:    {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    /* Typography — fonts loaded via Google Fonts in theme.liquid */
+    {%- liquid
+      case settings.font_pairing
+        when 'playfair_inter'
+          assign ff_display = '"Playfair Display", Georgia, serif'
+          assign ff_body    = 'Inter, system-ui, sans-serif'
+        when 'libre_raleway'
+          assign ff_display = '"Libre Baskerville", Georgia, serif'
+          assign ff_body    = 'Raleway, system-ui, sans-serif'
+        when 'dm_serif_dm_sans'
+          assign ff_display = '"DM Serif Display", Georgia, serif'
+          assign ff_body    = '"DM Sans", system-ui, sans-serif'
+        else
+          assign ff_display = '"Cormorant Garamond", Georgia, serif'
+          assign ff_body    = 'Outfit, system-ui, sans-serif'
+      endcase
+    -%}
+    --ff-display: {{ ff_display }};
+    --ff-body:    {{ ff_body }};
     --fs-base:    {{ settings.type_body_size }}px;
 
     /* Layout */
@@ -43,10 +59,4 @@
     --z-nav:     400;
     --z-cursor:  9999;
   }
-
-  {%- if settings.type_display_font.bold_variant -%}
-    {{ settings.type_display_font | font_face: font_display: 'swap' }}
-  {%- endif -%}
-  {{ settings.type_display_font | font_face: font_display: 'swap' }}
-  {{ settings.type_body_font | font_face: font_display: 'swap' }}
 </style>

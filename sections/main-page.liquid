@@ -1,0 +1,35 @@
+<div class="page-section" id="section-{{ section.id }}">
+  <div class="container">
+    <div class="page-inner {% if section.settings.narrow %}page-inner--narrow{% endif %}">
+      <h1 class="page-title">{{ page.title }}</h1>
+      <div class="page-content rte">
+        {{ page.content }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .page-section { padding: var(--section-spacing) 0; }
+  .page-inner { max-width: 860px; }
+  .page-inner--narrow { max-width: 640px; }
+  .page-title { font-family: var(--ff-display); font-size: clamp(28px, 4vw, 52px); font-weight: 300; margin-bottom: 40px; }
+  .page-content { font-size: 15px; line-height: 1.9; }
+  .page-content p { margin-bottom: 20px; opacity: 0.8; }
+  .page-content h2 { font-family: var(--ff-display); font-size: 26px; font-weight: 300; margin: 40px 0 16px; }
+  .page-content h3 { font-family: var(--ff-display); font-size: 20px; font-weight: 300; margin: 32px 0 12px; }
+  .page-content img { max-width: 100%; height: auto; }
+  .page-content a { color: var(--gold); border-bottom: 1px solid var(--border); }
+  .page-content a:hover { border-bottom-color: var(--gold); }
+</style>
+
+{% schema %}
+{
+  "name": "Page",
+  "tag": "div",
+  "settings": [
+    { "type": "checkbox", "id": "narrow", "label": "Narrow width (640px)", "default": false }
+  ],
+  "presets": [{ "name": "Page" }]
+}
+{% endschema %}

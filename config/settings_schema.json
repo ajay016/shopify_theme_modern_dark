@@ -25,9 +25,20 @@
   {
     "name": "Typography",
     "settings": [
-      { "type": "header", "content": "Fonts" },
-      { "type": "font_picker", "id": "type_display_font", "label": "Display / Heading Font",  "default": "cormorant_garamond_n3" },
-      { "type": "font_picker", "id": "type_body_font",    "label": "Body Font",               "default": "assistant_n3" },
+      { "type": "header",    "content": "Fonts" },
+      { "type": "paragraph", "content": "This theme uses Cormorant Garamond (display) and Outfit (body) loaded from Google Fonts. Choose a pairing below to switch the font combination." },
+      {
+        "type": "select",
+        "id": "font_pairing",
+        "label": "Font Pairing",
+        "options": [
+          { "value": "cormorant_outfit",  "label": "Cormorant Garamond + Outfit (Default)" },
+          { "value": "playfair_inter",    "label": "Playfair Display + Inter" },
+          { "value": "libre_raleway",     "label": "Libre Baskerville + Raleway" },
+          { "value": "dm_serif_dm_sans",  "label": "DM Serif Display + DM Sans" }
+        ],
+        "default": "cormorant_outfit"
+      },
       {
         "type": "range",
         "id": "type_body_size",

@@ -1,0 +1,182 @@
+<article class="article-page" id="section-{{ section.id }}" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="container article-page__inner {% if section.settings.show_sidebar %}article-page__inner--has-sidebar{% endif %}">
+    <div class="article-main">
+      {%- if article.image -%}
+        <div class="article-hero">
+          {{
+            article.image
+            | image_url: width: 1600
+            | image_tag:
+              class: 'article-hero__img',
+              loading: 'eager',
+              alt: article.image.alt | default: article.title | escape,
+              widths: '800, 1200, 1600',
+              itemprop: 'image'
+          }}
+        </div>
+      {%- endif -%}
+
+      <header class="article-header">
+        <nav class="breadcrumb" aria-label="breadcrumb">
+          <a href="/">{{ 'general.home' | t }}</a>
+          <span>{{ 'general.breadcrumb_separator' | t }}</span>
+          <a href="{{ blog.url }}">{{ blog.title }}</a>
+          <span>{{ 'general.breadcrumb_separator' | t }}</span>
+          <span>{{ article.title | truncate: 40 }}</span>
+        </nav>
+        {%- if article.tags.size > 0 -%}
+          <div class="article-tags">
+            {%- for tag in article.tags -%}
+              <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="blog-tag">{{ tag }}</a>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        <h1 class="article-title" itemprop="headline">{{ article.title }}</h1>
+        <div class="article-meta">
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span itemprop="name">{{ article.author }}</span>
+          </span>
+          <span class="article-meta__sep">·</span>
+          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">
+            {{ article.published_at | date: '%B %-d, %Y' }}
+          </time>
+          {%- if section.settings.show_reading_time -%}
+            {%- assign words = article.content | strip_html | split: ' ' -%}
+            {%- assign minutes = words.size | divided_by: 200 | plus: 1 -%}
+            <span class="article-meta__sep">·</span>
+            <span>{{ minutes }} {{ 'blogs.article.reading_time' | t | default: 'min read' }}</span>
+          {%- endif -%}
+        </div>
+      </header>
+
+      <div class="article-content rte" itemprop="articleBody">
+        {{ article.content }}
+      </div>
+
+      {%- if section.settings.show_share -%}
+        <div class="article-share">
+          <span>{{ 'blogs.article.share' | t | default: 'Share' }}:</span>
+          <a href="https://www.facebook.com/sharer.php?u={{ shop.url }}{{ article.url }}" target="_blank" rel="noopener" aria-label="Share on Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://twitter.com/intent/tweet?url={{ shop.url }}{{ article.url }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener" aria-label="Share on X">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+          </a>
+        </div>
+      {%- endif -%}
+
+      {%- if blog.comments_enabled? and section.settings.show_comments -%}
+        <div class="article-comments" id="comments">
+          {%- if article.comments_count > 0 -%}
+            <h2 class="article-comments__title">{{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}</h2>
+            {%- paginate article.comments by 10 -%}
+              {%- for comment in article.comments -%}
+                <div class="comment" id="comment-{{ comment.id }}">
+                  <div class="comment__meta">
+                    <span class="comment__author">{{ comment.author }}</span>
+                    <time>{{ comment.created_at | date: '%B %-d, %Y' }}</time>
+                  </div>
+                  <div class="comment__body">{{ comment.content }}</div>
+                </div>
+              {%- endfor -%}
+            {%- endpaginate -%}
+          {%- endif -%}
+          {%- form 'new_comment', article, class: 'comment-form' -%}
+            <h2 class="comment-form__title">{{ 'blogs.comments.title' | t }}</h2>
+            {%- if form.posted_successfully? -%}
+              <p class="comment-form__success">{{ 'blogs.comments.success' | t }}</p>
+            {%- endif -%}
+            {%- if form.errors -%}
+              <p class="comment-form__error">{{ 'blogs.comments.error' | t }}</p>
+            {%- endif -%}
+            <div class="comment-form__row">
+              <div class="form-field"><label for="comment-author">{{ 'blogs.comments.name' | t }}</label><input type="text" id="comment-author" name="comment[author]" required></div>
+              <div class="form-field"><label for="comment-email">{{ 'blogs.comments.email' | t }}</label><input type="email" id="comment-email" name="comment[email]" required></div>
+            </div>
+            <div class="form-field"><label for="comment-body">{{ 'blogs.comments.message' | t }}</label><textarea id="comment-body" name="comment[body]" rows="5" required></textarea></div>
+            <button type="submit" class="btn-primary">{{ 'blogs.comments.post' | t }}</button>
+          {%- endform -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_sidebar -%}
+      <aside class="article-sidebar">
+        <div class="blog-sidebar__widget">
+          <h3 class="blog-sidebar__title">{{ 'blogs.sidebar.recent' | t | default: 'Recent Posts' }}</h3>
+          <ul class="blog-sidebar__recent">
+            {%- for a in blog.articles limit: 5 -%}
+              {%- unless a == article -%}
+                <li>
+                  <a href="{{ a.url }}" class="blog-sidebar__recent-item">
+                    {%- if a.image -%}{{ a.image | image_url: width: 80 | image_tag: class: 'blog-sidebar__recent-img', loading: 'lazy', alt: a.title }}{%- endif -%}
+                    <div>
+                      <p class="blog-sidebar__recent-title">{{ a.title }}</p>
+                      <time>{{ a.published_at | date: '%b %-d, %Y' }}</time>
+                    </div>
+                  </a>
+                </li>
+              {%- endunless -%}
+            {%- endfor -%}
+          </ul>
+        </div>
+      </aside>
+    {%- endif -%}
+  </div>
+</article>
+
+<style>
+  .article-page { padding: var(--section-spacing) 0; }
+  .article-page__inner { display: grid; gap: 64px; }
+  .article-page__inner--has-sidebar { grid-template-columns: 1fr 280px; }
+  .article-hero { margin-bottom: 48px; }
+  .article-hero__img { width: 100%; max-height: 560px; object-fit: cover; display: block; }
+  .article-header { margin-bottom: 48px; }
+  .article-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .article-title { font-family: var(--ff-display); font-size: clamp(28px, 4vw, 56px); font-weight: 300; line-height: 1.1; margin: 16px 0 20px; }
+  .article-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  .article-meta__sep { color: var(--border-strong); }
+  .article-content { font-size: 15px; line-height: 1.9; max-width: 720px; }
+  .article-content h2 { font-family: var(--ff-display); font-size: 26px; font-weight: 300; margin: 40px 0 16px; }
+  .article-content h3 { font-family: var(--ff-display); font-size: 20px; font-weight: 300; margin: 32px 0 12px; }
+  .article-content p { margin-bottom: 20px; opacity: 0.8; }
+  .article-content img { max-width: 100%; height: auto; }
+  .article-share { display: flex; align-items: center; gap: 12px; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .article-share a { color: var(--muted); transition: color 0.2s; }
+  .article-share a:hover { color: var(--gold); }
+  .article-comments { margin-top: 64px; padding-top: 48px; border-top: 1px solid var(--border); }
+  .article-comments__title, .comment-form__title { font-family: var(--ff-display); font-size: 24px; font-weight: 300; margin-bottom: 32px; }
+  .comment { padding: 24px 0; border-bottom: 1px solid var(--border); }
+  .comment__meta { display: flex; gap: 12px; margin-bottom: 10px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .comment__author { color: var(--cream); }
+  .comment__body { font-size: 14px; line-height: 1.7; opacity: 0.7; }
+  .comment-form { margin-top: 48px; }
+  .comment-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .comment-form__success { color: var(--gold); margin-bottom: 24px; }
+  .comment-form__error { color: var(--sale-text); margin-bottom: 24px; }
+  .form-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .form-field label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .form-field input, .form-field textarea, .form-field select {
+    background: transparent; border: 1px solid var(--border); color: var(--cream);
+    font-family: var(--ff-body); font-size: 14px; padding: 12px 16px; outline: none; transition: border-color 0.3s; resize: vertical;
+  }
+  .form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: var(--gold); }
+  @media (max-width: 900px) {
+    .article-page__inner--has-sidebar { grid-template-columns: 1fr; }
+    .comment-form__row { grid-template-columns: 1fr; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "article",
+  "settings": [
+    { "type": "checkbox", "id": "show_sidebar",      "label": "Show Sidebar",        "default": false },
+    { "type": "checkbox", "id": "show_share",         "label": "Show Share Buttons",  "default": true },
+    { "type": "checkbox", "id": "show_comments",      "label": "Show Comments",       "default": true },
+    { "type": "checkbox", "id": "show_reading_time",  "label": "Show Reading Time",   "default": true }
+  ],
+  "presets": [{ "name": "Article" }]
+}
+{% endschema %}

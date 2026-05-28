@@ -1,0 +1,14 @@
+<div class="view-toggle" role="group" aria-label="{{ 'accessibility.view_toggle' | t }}">
+  <button class="view-toggle__btn view-toggle__btn--grid is-active" data-view="grid" aria-pressed="true" aria-label="Grid view">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+  </button>
+  <button class="view-toggle__btn view-toggle__btn--list" data-view="list" aria-pressed="false" aria-label="List view">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</div>
+
+<style>
+  .view-toggle { display: flex; gap: 4px; }
+  .view-toggle__btn { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 8px 10px; cursor: pointer; transition: all 0.2s; }
+  .view-toggle__btn.is-active, .view-toggle__btn:hover { border-color: var(--gold); color: var(--gold); }
+</style>

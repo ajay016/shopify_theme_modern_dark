@@ -1,0 +1,479 @@
+{%- liquid
+  assign layout = section.settings.layout
+-%}
+
+<section
+  class="hero hero--{{ layout }}"
+  style="min-height:{{ section.settings.min_height }}vh;"
+  aria-label="Hero banner"
+>
+
+  {%- comment -%}——— LAYOUT 1: Split — Text Left, Image Right (default editorial) ———{%- endcomment -%}
+  {%- if layout == 'split' -%}
+    <div class="hero__left">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="hero__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h1 class="hero__title">
+        {{ section.settings.heading }}
+        {%- if section.settings.heading_italic != blank -%}
+          <em>{{ section.settings.heading_italic }}</em>
+        {%- endif -%}
+        {%- if section.settings.heading_line3 != blank -%}
+          {{ section.settings.heading_line3 }}
+        {%- endif -%}
+      </h1>
+      {%- if section.settings.description != blank -%}
+        <p class="hero__desc">{{ section.settings.description }}</p>
+      {%- endif -%}
+      <div class="hero__ctas">
+        {%- if section.settings.btn1_label != blank -%}
+          <a href="{{ section.settings.btn1_link }}" class="btn btn-primary">{{ section.settings.btn1_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.btn2_label != blank -%}
+          <a href="{{ section.settings.btn2_link }}" class="btn btn-ghost">{{ section.settings.btn2_label }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+    <div class="hero__right">
+      {%- if section.settings.image != blank -%}
+        <div class="hero__img-wrapper">
+          <div class="hero__img-overlay"></div>
+          {{
+            section.settings.image
+            | image_url: width: 1400
+            | image_tag:
+              loading: 'eager',
+              fetchpriority: 'high',
+              sizes: '50vw',
+              alt: section.settings.heading | escape
+          }}
+        </div>
+      {%- else -%}
+        <div class="hero__img-placeholder"></div>
+      {%- endif -%}
+    </div>
+
+  {%- comment -%}——— LAYOUT 2: Full bleed — Centered text over full image ———{%- endcomment -%}
+  {%- elsif layout == 'fullbleed' -%}
+    {%- if section.settings.image != blank -%}
+      <div class="hero__bg">
+        {{
+          section.settings.image
+          | image_url: width: 2000
+          | image_tag:
+            loading: 'eager',
+            fetchpriority: 'high',
+            sizes: '100vw',
+            alt: section.settings.heading | escape
+        }}
+      </div>
+    {%- endif -%}
+    <div class="hero__overlay"></div>
+    <div class="hero__center">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="hero__eyebrow hero__eyebrow--center">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h1 class="hero__title hero__title--center">
+        {{ section.settings.heading }}
+        {%- if section.settings.heading_italic != blank -%}
+          <em>{{ section.settings.heading_italic }}</em>
+        {%- endif -%}
+      </h1>
+      {%- if section.settings.description != blank -%}
+        <p class="hero__desc hero__desc--center">{{ section.settings.description }}</p>
+      {%- endif -%}
+      <div class="hero__ctas hero__ctas--center">
+        {%- if section.settings.btn1_label != blank -%}
+          <a href="{{ section.settings.btn1_link }}" class="btn btn-primary">{{ section.settings.btn1_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.btn2_label != blank -%}
+          <a href="{{ section.settings.btn2_link }}" class="btn btn-ghost">{{ section.settings.btn2_label }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+
+  {%- comment -%}——— LAYOUT 3: Bold Hero — Large type, side scroll indicator ———{%- endcomment -%}
+  {%- elsif layout == 'bold' -%}
+    {%- if section.settings.image != blank -%}
+      <div class="hero__bg">
+        {{
+          section.settings.image
+          | image_url: width: 2000
+          | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '100vw', alt: ''
+        }}
+      </div>
+    {%- endif -%}
+    <div class="hero__overlay hero__overlay--light"></div>
+    <div class="hero__bold-content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="hero__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h1 class="hero__title hero__title--bold">
+        {{ section.settings.heading }}
+        {%- if section.settings.heading_italic != blank -%}
+          <em>{{ section.settings.heading_italic }}</em>
+        {%- endif -%}
+      </h1>
+      {%- if section.settings.btn1_label != blank -%}
+        <a href="{{ section.settings.btn1_link }}" class="btn btn-primary">{{ section.settings.btn1_label }}</a>
+      {%- endif -%}
+    </div>
+
+  {%- comment -%}——— LAYOUT 4: Lookbook — Large split, lifestyle imagery ———{%- endcomment -%}
+  {%- elsif layout == 'lookbook' -%}
+    <div class="hero__lookbook-grid">
+      <div class="hero__lookbook-text">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="hero__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h1 class="hero__title">
+          {{ section.settings.heading }}
+          {%- if section.settings.heading_italic != blank -%}
+            <em>{{ section.settings.heading_italic }}</em>
+          {%- endif -%}
+        </h1>
+        {%- if section.settings.description != blank -%}
+          <p class="hero__desc">{{ section.settings.description }}</p>
+        {%- endif -%}
+        <div class="hero__ctas">
+          {%- if section.settings.btn1_label != blank -%}
+            <a href="{{ section.settings.btn1_link }}" class="btn btn-primary">{{ section.settings.btn1_label }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+      <div class="hero__lookbook-images">
+        {%- if section.settings.image != blank -%}
+          {{
+            section.settings.image
+            | image_url: width: 1200
+            | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '50vw', class: 'hero__lookbook-img hero__lookbook-img--main', alt: ''
+          }}
+        {%- else -%}
+          <div class="hero__img-placeholder" style="aspect-ratio:2/3;"></div>
+        {%- endif -%}
+        {%- if section.settings.image_2 != blank -%}
+          {{
+            section.settings.image_2
+            | image_url: width: 600
+            | image_tag: loading: 'lazy', sizes: '25vw', class: 'hero__lookbook-img hero__lookbook-img--secondary', alt: ''
+          }}
+        {%- endif -%}
+      </div>
+    </div>
+
+  {%- comment -%}——— LAYOUT 5: Classic — Magazine editorial grid ———{%- endcomment -%}
+  {%- elsif layout == 'classic' -%}
+    <div class="hero__classic-grid">
+      <div class="hero__classic-img">
+        {%- if section.settings.image != blank -%}
+          {{
+            section.settings.image
+            | image_url: width: 1200
+            | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '55vw', alt: ''
+          }}
+        {%- else -%}
+          <div class="hero__img-placeholder"></div>
+        {%- endif -%}
+      </div>
+      <div class="hero__classic-content">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="hero__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h1 class="hero__title">{{ section.settings.heading }}<em>{{ section.settings.heading_italic }}</em></h1>
+        {%- if section.settings.description != blank -%}
+          <p class="hero__desc">{{ section.settings.description }}</p>
+        {%- endif -%}
+        <div class="hero__ctas">
+          {%- if section.settings.btn1_label != blank -%}
+            <a href="{{ section.settings.btn1_link }}" class="btn btn-primary">{{ section.settings.btn1_label }}</a>
+          {%- endif -%}
+          {%- if section.settings.btn2_label != blank -%}
+            <a href="{{ section.settings.btn2_link }}" class="btn btn-ghost">{{ section.settings.btn2_label }}</a>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.show_stats -%}
+          <div class="hero__stats">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'stat' -%}
+                <div class="hero__stat" {{ block.shopify_attributes }}>
+                  <span class="hero__stat-value">{{ block.settings.value }}</span>
+                  <span class="hero__stat-label">{{ block.settings.label }}</span>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%}Scroll indicator{%- endcomment -%}
+  {%- if section.settings.show_scroll -%}
+    <div class="hero__scroll" aria-hidden="true">
+      <div class="hero__scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%}Slide counter{%- endcomment -%}
+  {%- if section.settings.show_counter -%}
+    <div class="hero__counter" aria-hidden="true">
+      <strong>01</strong> / 0{{ section.settings.total_slides | default: 4 }}
+    </div>
+  {%- endif -%}
+
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--black);
+  }
+
+  /* Split layout */
+  .hero--split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .hero__left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 80px 80px;
+    z-index: 2;
+    position: relative;
+  }
+  .hero__right { position: relative; overflow: hidden; }
+  .hero__img-wrapper { width: 100%; height: 100%; }
+  .hero__img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+  .hero__img-wrapper .hero__img-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, var(--black) 0%, transparent 40%);
+    z-index: 1;
+  }
+  .hero__img-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #1a1612, #2d2417, #1a1612);
+  }
+
+  /* Full bleed + Bold layouts */
+  .hero--fullbleed, .hero--bold {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero__bg { position: absolute; inset: 0; }
+  .hero__bg img { width: 100%; height: 100%; object-fit: cover; }
+  .hero__overlay {
+    position: absolute; inset: 0;
+    background: rgba(10,10,10,0.55);
+    z-index: 1;
+  }
+  .hero__overlay--light { background: rgba(10,10,10,0.4); }
+  .hero__center, .hero__bold-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 40px var(--side-padding);
+  }
+
+  /* Lookbook layout */
+  .hero--lookbook { display: block; }
+  .hero__lookbook-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100%;
+  }
+  .hero__lookbook-text {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px;
+  }
+  .hero__lookbook-images {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 2px;
+  }
+  .hero__lookbook-img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Classic layout */
+  .hero--classic { display: block; }
+  .hero__classic-grid {
+    display: grid;
+    grid-template-columns: 55fr 45fr;
+    height: 100%;
+  }
+  .hero__classic-img { overflow: hidden; }
+  .hero__classic-img img { width: 100%; height: 100%; object-fit: cover; }
+  .hero__classic-content {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 60px;
+    background: var(--charcoal);
+  }
+
+  /* Typography */
+  .hero__eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .hero__eyebrow::before {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+  .hero__eyebrow--center { justify-content: center; }
+  .hero__eyebrow--center::before { display: none; }
+
+  .hero__title {
+    font-family: var(--ff-display);
+    font-size: clamp(56px, 7vw, 96px);
+    font-weight: 300;
+    line-height: 1.0;
+    margin-bottom: 28px;
+    letter-spacing: -0.01em;
+  }
+  .hero__title em { font-style: italic; color: var(--gold-light); display: block; }
+  .hero__title--center { text-align: center; }
+  .hero__title--bold { font-size: clamp(72px, 10vw, 140px); }
+
+  .hero__desc {
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    line-height: 1.8;
+    opacity: 0.6;
+    max-width: 340px;
+    margin-bottom: 40px;
+  }
+  .hero__desc--center { max-width: 480px; text-align: center; }
+
+  .hero__ctas { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .hero__ctas--center { justify-content: center; }
+
+  /* Scroll indicator */
+  .hero__scroll {
+    position: absolute;
+    bottom: 60px; right: 40px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    z-index: 3;
+  }
+  .hero__scroll span {
+    font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--muted); writing-mode: vertical-rl;
+  }
+  .hero__scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%   { transform: scaleY(0); transform-origin: top; }
+    50%  { transform: scaleY(1); transform-origin: top; }
+    51%  { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* Counter */
+  .hero__counter {
+    position: absolute; bottom: 32px; left: var(--side-padding);
+    font-family: var(--ff-display); font-size: 13px;
+    color: var(--muted); letter-spacing: 0.1em; z-index: 3;
+  }
+  .hero__counter strong { font-size: 18px; color: var(--gold); font-weight: 400; margin-right: 4px; }
+
+  /* Stats row */
+  .hero__stats {
+    display: flex; gap: 40px;
+    margin-top: 40px; padding-top: 40px;
+    border-top: 1px solid var(--border);
+  }
+  .hero__stat { display: flex; flex-direction: column; gap: 4px; }
+  .hero__stat-value { font-family: var(--ff-display); font-size: 28px; color: var(--gold); font-weight: 400; }
+  .hero__stat-label { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); }
+
+  @media (max-width: 900px) {
+    .hero--split { grid-template-columns: 1fr; }
+    .hero--split .hero__right { display: none; }
+    .hero--split .hero__left { padding: 120px 24px 80px; }
+    .hero__lookbook-grid, .hero__classic-grid { grid-template-columns: 1fr; }
+    .hero__lookbook-images { display: none; }
+    .hero__classic-img { height: 50vh; }
+    .hero__classic-content { padding: 48px 24px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "tag": "section",
+  "class": "hero-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "split",    "label": "1 — Split (Text Left, Image Right)" },
+        { "value": "fullbleed","label": "2 — Full Bleed Centered" },
+        { "value": "bold",     "label": "3 — Bold Hero (Video/Image BG)" },
+        { "value": "lookbook", "label": "4 — Lookbook (Lifestyle Grid)" },
+        { "value": "classic",  "label": "5 — Classic Magazine" }
+      ],
+      "default": "split"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum Height",
+      "min": 50, "max": 100, "step": 5, "unit": "vh",
+      "default": 100
+    },
+    { "type": "header",     "content": "Content" },
+    { "type": "text",       "id": "eyebrow",          "label": "Eyebrow text",       "default": "SS 2025 Collection" },
+    { "type": "text",       "id": "heading",           "label": "Heading line 1",     "default": "Timeless" },
+    { "type": "text",       "id": "heading_italic",    "label": "Heading line 2 (italic gold)", "default": "Elegance" },
+    { "type": "text",       "id": "heading_line3",     "label": "Heading line 3 (optional)" },
+    { "type": "textarea",   "id": "description",       "label": "Description",        "default": "Where heritage craftsmanship meets contemporary vision." },
+    { "type": "header",     "content": "Buttons" },
+    { "type": "text",       "id": "btn1_label",        "label": "Button 1 label",     "default": "Explore Collection" },
+    { "type": "url",        "id": "btn1_link",         "label": "Button 1 link" },
+    { "type": "text",       "id": "btn2_label",        "label": "Button 2 label",     "default": "Our Story" },
+    { "type": "url",        "id": "btn2_link",         "label": "Button 2 link" },
+    { "type": "header",     "content": "Images" },
+    { "type": "image_picker", "id": "image",           "label": "Main image" },
+    { "type": "image_picker", "id": "image_2",         "label": "Secondary image (Lookbook layout)" },
+    { "type": "header",     "content": "Extras" },
+    { "type": "checkbox",   "id": "show_scroll",       "label": "Show scroll indicator", "default": true },
+    { "type": "checkbox",   "id": "show_counter",      "label": "Show slide counter",    "default": false },
+    { "type": "checkbox",   "id": "show_stats",        "label": "Show stats row (Classic layout)", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "value", "label": "Value", "default": "2009" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Founded" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner",
+      "settings": { "layout": "split" },
+      "blocks": [
+        { "type": "stat", "settings": { "value": "2009", "label": "Founded" } },
+        { "type": "stat", "settings": { "value": "47+",  "label": "Artisans" } },
+        { "type": "stat", "settings": { "value": "32",   "label": "Countries" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

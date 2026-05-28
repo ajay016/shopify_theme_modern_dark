@@ -1,0 +1,91 @@
+<section class="section newsletter" id="section-{{ section.id }}" style="background:{{ section.settings.bg_color }}">
+  <div class="container">
+    <div class="newsletter__inner">
+      <div class="newsletter__text">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="newsletter__heading">{{ section.settings.heading }}</h2>
+        {%- if section.settings.subtext != blank -%}
+          <p class="newsletter__sub">{{ section.settings.subtext }}</p>
+        {%- endif -%}
+      </div>
+      <div class="newsletter__form-wrap">
+        {%- form 'customer', id: 'newsletter-form-' | append: section.id, class: 'newsletter__form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          {%- if form.posted_successfully? -%}
+            <p class="newsletter__success">{{ 'newsletter.success' | t }}</p>
+          {%- else -%}
+            <div class="newsletter__row">
+              <input
+                type="email"
+                name="contact[email]"
+                id="newsletter-email-{{ section.id }}"
+                placeholder="{{ section.settings.placeholder }}"
+                autocorrect="off" autocapitalize="off"
+                required
+                {%- if form.errors -%}aria-invalid="true"{%- endif -%}
+              >
+              <button type="submit" class="btn-primary">{{ section.settings.button_label }}</button>
+            </div>
+            {%- if form.errors -%}
+              <p class="newsletter__error">{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</p>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endform -%}
+        {%- if section.settings.disclaimer != blank -%}
+          <p class="newsletter__disclaimer">{{ section.settings.disclaimer }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .newsletter { padding: var(--section-spacing) 0; }
+  .newsletter__inner {
+    display: flex; align-items: center; justify-content: space-between; gap: 48px;
+    border: 1px solid var(--border); padding: 64px;
+  }
+  .newsletter__text { flex: 1; }
+  .newsletter__heading { font-family: var(--ff-display); font-size: clamp(28px, 3vw, 44px); font-weight: 300; margin: 12px 0; }
+  .newsletter__sub { font-size: 13px; opacity: 0.6; line-height: 1.7; margin-top: 12px; }
+  .newsletter__form-wrap { flex: 1; max-width: 480px; }
+  .newsletter__row { display: flex; gap: 0; }
+  .newsletter__row input[type="email"] {
+    flex: 1; background: transparent; border: 1px solid var(--border); border-right: none;
+    color: var(--cream); font-family: var(--ff-body); font-size: 13px;
+    padding: 16px 20px; outline: none; transition: border-color 0.3s;
+  }
+  .newsletter__row input[type="email"]::placeholder { color: var(--muted); }
+  .newsletter__row input[type="email"]:focus { border-color: var(--gold); }
+  .newsletter__disclaimer { font-size: 10px; letter-spacing: 0.05em; color: var(--muted); margin-top: 16px; line-height: 1.6; }
+  .newsletter__success { color: var(--gold); font-size: 13px; letter-spacing: 0.05em; }
+  .newsletter__error { color: var(--sale-text); font-size: 12px; margin-top: 8px; }
+  @media (max-width: 900px) {
+    .newsletter__inner { flex-direction: column; align-items: flex-start; padding: 40px; }
+    .newsletter__form-wrap { width: 100%; max-width: 100%; }
+  }
+  @media (max-width: 640px) {
+    .newsletter__inner { padding: 32px 24px; }
+    .newsletter__row { flex-direction: column; gap: 12px; }
+    .newsletter__row input[type="email"] { border-right: 1px solid var(--border); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "tag": "section",
+  "settings": [
+    { "type": "text",  "id": "eyebrow",       "label": "Eyebrow",         "default": "Stay Connected" },
+    { "type": "text",  "id": "heading",        "label": "Heading",         "default": "Join the Inner Circle" },
+    { "type": "text",  "id": "subtext",        "label": "Subtext",         "default": "Be the first to know about new collections, exclusive events, and private sales." },
+    { "type": "text",  "id": "placeholder",    "label": "Input Placeholder","default": "Your email address" },
+    { "type": "text",  "id": "button_label",   "label": "Button Label",    "default": "Subscribe" },
+    { "type": "text",  "id": "disclaimer",     "label": "Disclaimer Text", "default": "By subscribing you agree to our Privacy Policy." },
+    { "type": "color", "id": "bg_color",       "label": "Background Color","default": "#161616" }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

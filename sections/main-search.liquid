@@ -1,0 +1,133 @@
+{%- paginate search.results by section.settings.results_per_page -%}
+<div class="search-page" id="section-{{ section.id }}">
+  <div class="container">
+    <div class="search-page__header">
+      <h1 class="search-page__title">
+        {%- if search.performed -%}
+          {{ 'general.search.results_for' | t: terms: search.terms | escape }}
+        {%- else -%}
+          {{ 'general.search.title' | t }}
+        {%- endif -%}
+      </h1>
+    </div>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-page__form">
+      <input type="hidden" name="type" value="{{ section.settings.search_type }}">
+      <div class="search-page__input-wrap">
+        <input
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="{{ 'general.search.placeholder' | t }}"
+          aria-label="{{ 'general.search.placeholder' | t }}"
+          autocorrect="off" autocomplete="off" spellcheck="false"
+        >
+        <button type="submit" aria-label="{{ 'general.search.submit' | t }}">{%- render 'icon-search' -%}</button>
+      </div>
+    </form>
+
+    {%- if search.performed -%}
+      {%- if search.results_count == 0 -%}
+        <div class="search-no-results">
+          <p>{{ 'general.search.no_results' | t: terms: search.terms }}</p>
+        </div>
+      {%- else -%}
+        <p class="search-count">{{ 'general.search.results_count' | t: count: search.results_count }}</p>
+        <div class="product-grid product-grid--{{ section.settings.columns }}">
+          {%- for item in search.results -%}
+            {%- case item.object_type -%}
+              {%- when 'product' -%}
+                {%- render 'product-card', product: item -%}
+              {%- when 'article' -%}
+                <article class="blog-card">
+                  {%- if item.image -%}
+                    <a href="{{ item.url }}" class="blog-card__media">
+                      {{ item.image | image_url: width: 600 | image_tag: class: 'blog-card__img', loading: 'lazy', alt: item.title }}
+                    </a>
+                  {%- endif -%}
+                  <div class="blog-card__info">
+                    <p class="blog-card__meta">{{ item.published_at | date: '%B %-d, %Y' }}</p>
+                    <h2 class="blog-card__title"><a href="{{ item.url }}">{{ item.title }}</a></h2>
+                    <p class="blog-card__excerpt">{{ item.content | strip_html | truncate: 120 }}</p>
+                  </div>
+                </article>
+              {%- when 'page' -%}
+                <div class="search-page-result">
+                  <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
+                  <p>{{ item.content | strip_html | truncate: 160 }}</p>
+                </div>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="pagination" aria-label="{{ 'accessibility.pagination' | t }}">
+            {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" class="pagination__item pagination__item--prev">← {{ 'general.pagination.previous' | t }}</a>{%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}" class="pagination__item">{{ part.title }}</a>
+              {%- elsif part.title == paginate.current_page -%}
+                <span class="pagination__item pagination__item--current" aria-current="page">{{ part.title }}</span>
+              {%- else -%}
+                <span class="pagination__item pagination__item--gap">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}<a href="{{ paginate.next.url }}" class="pagination__item pagination__item--next">{{ 'general.pagination.next' | t }} →</a>{%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+{%- endpaginate -%}
+
+<style>
+  .search-page { padding: var(--section-spacing) 0; }
+  .search-page__header { text-align: center; margin-bottom: 40px; }
+  .search-page__title { font-family: var(--ff-display); font-size: clamp(24px, 3vw, 44px); font-weight: 300; }
+  .search-page__form { max-width: 640px; margin: 0 auto 48px; }
+  .search-page__input-wrap { display: flex; border: 1px solid var(--border); }
+  .search-page__input-wrap input[type="search"] {
+    flex: 1; background: transparent; border: none; color: var(--cream);
+    font-family: var(--ff-body); font-size: 15px; padding: 16px 20px; outline: none;
+  }
+  .search-page__input-wrap input[type="search"]::placeholder { color: var(--muted); }
+  .search-page__input-wrap button { background: transparent; border: none; border-left: 1px solid var(--border); color: var(--muted); padding: 0 20px; cursor: pointer; transition: color 0.2s; }
+  .search-page__input-wrap button:hover { color: var(--gold); }
+  .search-count { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 32px; }
+  .search-no-results { text-align: center; padding: 60px 0; opacity: 0.6; font-size: 15px; }
+  .search-page-result { padding: 24px 0; border-bottom: 1px solid var(--border); }
+  .search-page-result h2 { font-family: var(--ff-display); font-size: 20px; font-weight: 300; margin-bottom: 8px; }
+  .search-page-result h2 a { color: var(--cream); }
+  .search-page-result h2 a:hover { color: var(--gold); }
+  .search-page-result p { font-size: 13px; opacity: 0.6; line-height: 1.7; }
+</style>
+
+{% schema %}
+{
+  "name": "Search Results",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "select", "id": "search_type", "label": "Search Types",
+      "options": [
+        { "value": "product,article,page", "label": "Products, Articles & Pages" },
+        { "value": "product",              "label": "Products Only" },
+        { "value": "article",              "label": "Articles Only" }
+      ],
+      "default": "product,article,page"
+    },
+    {
+      "type": "select", "id": "columns", "label": "Grid Columns",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    },
+    { "type": "range", "id": "results_per_page", "label": "Results Per Page", "min": 6, "max": 24, "step": 3, "default": 12 }
+  ],
+  "presets": [{ "name": "Search Results" }]
+}
+{% endschema %}

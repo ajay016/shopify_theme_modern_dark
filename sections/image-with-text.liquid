@@ -1,0 +1,147 @@
+{% liquid
+  assign layout    = section.settings.layout
+  assign img_width = section.settings.image_width
+%}
+
+<section class="section image-with-text image-with-text--{{ layout }}" id="section-{{ section.id }}">
+  <div class="{% if section.settings.full_width %}iwt-full{% else %}container{% endif %}">
+    <div class="iwt__inner iwt__inner--{{ layout }} iwt__inner--img{{ img_width }}">
+
+      <div class="iwt__media">
+        {%- if section.settings.image -%}
+          {{
+            section.settings.image
+            | image_url: width: 1200
+            | image_tag: class: 'iwt__img', loading: 'lazy', alt: section.settings.heading | escape,
+              widths: '600, 800, 1200'
+          }}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'iwt__img iwt__img--placeholder' }}
+        {%- endif -%}
+        {%- if section.settings.caption != blank -%}
+          <p class="iwt__caption">{{ section.settings.caption }}</p>
+        {%- endif -%}
+      </div>
+
+      <div class="iwt__content">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="iwt__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="iwt__text rte">{{ section.settings.text }}</div>
+        {%- endif -%}
+
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'button' -%}
+              <a href="{{ block.settings.url }}" class="{{ block.settings.style }}" {{ block.shopify_attributes }}>
+                {{ block.settings.label }}
+              </a>
+            {%- when 'stat' -%}
+              <div class="iwt__stat" {{ block.shopify_attributes }}>
+                <span class="iwt__stat-value">{{ block.settings.value }}</span>
+                <span class="iwt__stat-label">{{ block.settings.label }}</span>
+              </div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .image-with-text { padding: var(--section-spacing) 0; }
+  .iwt__inner {
+    display: grid;
+    align-items: center;
+    gap: 64px;
+  }
+  .iwt__inner--left   { grid-template-columns: var(--img-col, 1fr) 1fr; }
+  .iwt__inner--right  { grid-template-columns: 1fr var(--img-col, 1fr); }
+  .iwt__inner--img40  { --img-col: 0.67fr; }
+  .iwt__inner--img50  { --img-col: 1fr; }
+  .iwt__inner--img60  { --img-col: 1.5fr; }
+  .iwt__inner--right .iwt__media { order: 2; }
+  .iwt__inner--right .iwt__content { order: 1; }
+  .iwt__media { position: relative; }
+  .iwt__img { width: 100%; height: auto; display: block; aspect-ratio: 4/5; object-fit: cover; }
+  .iwt__img--placeholder { background: var(--charcoal); }
+  .iwt__caption { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-top: 12px; }
+  .iwt__heading { font-family: var(--ff-display); font-size: clamp(28px, 3vw, 48px); font-weight: 300; margin: 16px 0 24px; line-height: 1.1; }
+  .iwt__text { font-size: 14px; line-height: 1.8; opacity: 0.7; }
+  .iwt__stat { margin-top: 32px; }
+  .iwt__stat-value { display: block; font-family: var(--ff-display); font-size: 40px; font-weight: 300; color: var(--gold); }
+  .iwt__stat-label { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); }
+  .iwt__content .btn-primary, .iwt__content .btn-ghost { margin-top: 32px; display: inline-block; }
+  .iwt-full .iwt__inner { gap: 0; }
+  .iwt-full .iwt__img { aspect-ratio: unset; height: 100%; min-height: 560px; }
+  @media (max-width: 900px) {
+    .iwt__inner--left, .iwt__inner--right { grid-template-columns: 1fr; gap: 40px; }
+    .iwt__inner--right .iwt__media { order: 0; }
+    .iwt__inner--right .iwt__content { order: 0; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Image with Text",
+  "tag": "section",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "image_picker", "id": "image",      "label": "Image" },
+    { "type": "text",         "id": "caption",    "label": "Image Caption" },
+    { "type": "text",         "id": "eyebrow",    "label": "Eyebrow Text" },
+    { "type": "textarea",     "id": "heading",    "label": "Heading",         "default": "Crafted with Purpose" },
+    { "type": "richtext",     "id": "text",       "label": "Text",            "default": "<p>Every piece tells a story of considered design and exceptional craft.</p>" },
+    {
+      "type": "select", "id": "layout", "label": "Image Position",
+      "options": [
+        { "value": "left",  "label": "Image Left" },
+        { "value": "right", "label": "Image Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select", "id": "image_width", "label": "Image Width",
+      "options": [
+        { "value": "40", "label": "40%" },
+        { "value": "50", "label": "50%" },
+        { "value": "60", "label": "60%" }
+      ],
+      "default": "50"
+    },
+    { "type": "checkbox", "id": "full_width", "label": "Full Width (no container)", "default": false }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        { "type": "text",   "id": "label", "label": "Label", "default": "Discover More" },
+        { "type": "url",    "id": "url",   "label": "Link" },
+        {
+          "type": "select", "id": "style", "label": "Style",
+          "options": [
+            { "value": "btn-primary", "label": "Primary (Gold)" },
+            { "value": "btn-ghost",   "label": "Ghost (Outlined)" }
+          ],
+          "default": "btn-ghost"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        { "type": "text", "id": "value", "label": "Value", "default": "100+" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Years of Craft" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Image with Text" }]
+}
+{% endschema %}

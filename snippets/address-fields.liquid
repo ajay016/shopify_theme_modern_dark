@@ -1,0 +1,45 @@
+{%- comment -%}Reusable address form fields{%- endcomment -%}
+<div class="form-field">
+  <label for="address-first-name-{{ form.id }}">{{ 'customer.addresses.first_name' | t }}</label>
+  <input type="text" id="address-first-name-{{ form.id }}" name="address[first_name]" value="{{ form.value.first_name }}" autocomplete="given-name">
+</div>
+<div class="form-field">
+  <label for="address-last-name-{{ form.id }}">{{ 'customer.addresses.last_name' | t }}</label>
+  <input type="text" id="address-last-name-{{ form.id }}" name="address[last_name]" value="{{ form.value.last_name }}" autocomplete="family-name">
+</div>
+<div class="form-field">
+  <label for="address-company-{{ form.id }}">{{ 'customer.addresses.company' | t }}</label>
+  <input type="text" id="address-company-{{ form.id }}" name="address[company]" value="{{ form.value.company }}" autocomplete="organization">
+</div>
+<div class="form-field">
+  <label for="address1-{{ form.id }}">{{ 'customer.addresses.address1' | t }}</label>
+  <input type="text" id="address1-{{ form.id }}" name="address[address1]" value="{{ form.value.address1 }}" autocomplete="address-line1">
+</div>
+<div class="form-field">
+  <label for="address2-{{ form.id }}">{{ 'customer.addresses.address2' | t }}</label>
+  <input type="text" id="address2-{{ form.id }}" name="address[address2]" value="{{ form.value.address2 }}" autocomplete="address-line2">
+</div>
+<div class="form-field">
+  <label for="address-city-{{ form.id }}">{{ 'customer.addresses.city' | t }}</label>
+  <input type="text" id="address-city-{{ form.id }}" name="address[city]" value="{{ form.value.city }}" autocomplete="address-level2">
+</div>
+<div class="form-field">
+  <label for="address-country-{{ form.id }}">{{ 'customer.addresses.country' | t }}</label>
+  <select id="address-country-{{ form.id }}" name="address[country]" data-default="{{ form.value.country }}" autocomplete="country">
+    {{ all_country_option_tags }}
+  </select>
+</div>
+<div class="form-field">
+  <label for="address-province-{{ form.id }}">{{ 'customer.addresses.province' | t }}</label>
+  <select id="address-province-{{ form.id }}" name="address[province]" data-default="{{ form.value.province }}" autocomplete="address-level1">
+    <option value="">{{ 'customer.addresses.province_select' | t }}</option>
+  </select>
+</div>
+<div class="form-field">
+  <label for="address-zip-{{ form.id }}">{{ 'customer.addresses.zip' | t }}</label>
+  <input type="text" id="address-zip-{{ form.id }}" name="address[zip]" value="{{ form.value.zip }}" autocomplete="postal-code">
+</div>
+<div class="form-field">
+  <label for="address-phone-{{ form.id }}">{{ 'customer.addresses.phone' | t }}</label>
+  <input type="tel" id="address-phone-{{ form.id }}" name="address[phone]" value="{{ form.value.phone }}" autocomplete="tel">
+</div>

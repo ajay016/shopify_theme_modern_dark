@@ -1,0 +1,120 @@
+<section class="section team-grid" id="section-{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <div class="section-head">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="section-head__title">{{ section.settings.heading }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="team-grid__members team-grid__members--{{ section.settings.columns }}">
+      {%- for block in section.blocks -%}
+        <div class="team-member" {{ block.shopify_attributes }}>
+          <div class="team-member__photo">
+            {%- if block.settings.photo -%}
+              {{
+                block.settings.photo
+                | image_url: width: 600
+                | image_tag: class: 'team-member__img', loading: 'lazy', alt: block.settings.name
+              }}
+            {%- else -%}
+              <div class="team-member__placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(200,169,110,0.2)" stroke-width="1" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+              </div>
+            {%- endif -%}
+            {%- if block.settings.social_instagram != blank or block.settings.social_linkedin != blank -%}
+              <div class="team-member__social">
+                {%- if block.settings.social_instagram != blank -%}
+                  <a href="{{ block.settings.social_instagram }}" target="_blank" rel="noopener" aria-label="Instagram">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  </a>
+                {%- endif -%}
+                {%- if block.settings.social_linkedin != blank -%}
+                  <a href="{{ block.settings.social_linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                  </a>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          </div>
+          <div class="team-member__info">
+            <p class="team-member__name">{{ block.settings.name }}</p>
+            <p class="team-member__role">{{ block.settings.role }}</p>
+            {%- if block.settings.bio != blank -%}
+              <p class="team-member__bio">{{ block.settings.bio }}</p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .team-grid { padding: var(--section-spacing) 0; }
+  .team-grid__members { display: grid; gap: 32px; }
+  .team-grid__members--3 { grid-template-columns: repeat(3, 1fr); }
+  .team-grid__members--4 { grid-template-columns: repeat(4, 1fr); }
+  .team-grid__members--5 { grid-template-columns: repeat(5, 1fr); }
+  .team-member__photo { position: relative; overflow: hidden; aspect-ratio: 3/4; background: var(--charcoal); margin-bottom: 20px; }
+  .team-member__img { width: 100%; height: 100%; object-fit: cover; }
+  .team-member__placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .team-member__social { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(10,10,10,0.8), transparent); padding: 20px 16px 12px; display: flex; gap: 12px; opacity: 0; transform: translateY(8px); transition: all 0.3s; }
+  .team-member:hover .team-member__social { opacity: 1; transform: translateY(0); }
+  .team-member__social a { color: var(--cream); transition: color 0.2s; }
+  .team-member__social a:hover { color: var(--gold); }
+  .team-member__name { font-family: var(--ff-display); font-size: 18px; font-weight: 300; margin-bottom: 4px; }
+  .team-member__role { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  .team-member__bio { font-size: 12px; line-height: 1.7; opacity: 0.6; }
+  @media (max-width: 1200px) { .team-grid__members--5 { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 900px) { .team-grid__members--3, .team-grid__members--4, .team-grid__members--5 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .team-grid__members--3, .team-grid__members--4, .team-grid__members--5 { grid-template-columns: 1fr; } }
+</style>
+
+{% schema %}
+{
+  "name": "Team Grid",
+  "tag": "section",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "text", "id": "eyebrow",  "label": "Eyebrow",  "default": "Our People" },
+    { "type": "text", "id": "heading",  "label": "Heading",  "default": "Meet the Team" },
+    {
+      "type": "select", "id": "columns", "label": "Columns",
+      "options": [
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" }
+      ],
+      "default": "4"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "member",
+      "name": "Team Member",
+      "settings": [
+        { "type": "image_picker", "id": "photo",             "label": "Photo" },
+        { "type": "text",         "id": "name",              "label": "Name",       "default": "Isabelle Moreau" },
+        { "type": "text",         "id": "role",              "label": "Role",       "default": "Creative Director" },
+        { "type": "textarea",     "id": "bio",               "label": "Bio" },
+        { "type": "url",          "id": "social_instagram",  "label": "Instagram" },
+        { "type": "url",          "id": "social_linkedin",   "label": "LinkedIn" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Team Grid",
+      "blocks": [
+        { "type": "member" },
+        { "type": "member" },
+        { "type": "member" },
+        { "type": "member" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,190 @@
+{%- comment -%}
+  Product Card Snippet
+  Accepts:
+    - product {Object}
+    - card_style {String} 'style-1' through 'style-5' (default: settings.product_card_style)
+    - image_ratio {String} 'portrait'|'square'|'landscape' (default: settings.product_card_image_ratio)
+    - media_hover {String} 'zoom'|'second_image'|'carousel'|'none'
+    - show_vendor {Boolean}
+    - show_material {Boolean}
+    - show_sizes {Boolean}
+    - show_wishlist {Boolean}
+    - show_quickview {Boolean}
+    - lazy {Boolean} lazy-load images (default true)
+{%- endcomment -%}
+
+{%- liquid
+  assign card_style   = card_style   | default: settings.product_card_style
+  assign image_ratio  = image_ratio  | default: settings.product_card_image_ratio
+  assign media_hover  = media_hover  | default: settings.product_card_media_hover
+  assign show_vendor  = show_vendor  | default: settings.product_card_show_vendor
+  assign show_sizes   = show_sizes   | default: settings.product_card_show_sizes
+  assign show_wishlist  = show_wishlist  | default: settings.product_card_show_wishlist
+  assign show_quickview = show_quickview | default: settings.product_card_show_quickview
+  assign img_loading  = 'lazy'
+  if lazy == false
+    assign img_loading = 'eager'
+  endif
+
+  assign first_variant = product.first_available_variant | default: product.variants.first
+-%}
+
+<div
+  class="product-card product-card--{{ card_style }}"
+  data-product-id="{{ product.id }}"
+>
+  {%- comment -%}— Media —{%- endcomment -%}
+  <div class="product-card__media product-card__media--{{ image_ratio }}">
+
+    {%- comment -%}Badges{%- endcomment -%}
+    {%- if product.available == false -%}
+      <span class="product-badge badge--sold-out">{{ 'products.product.sold_out_badge' | t }}</span>
+    {%- elsif product.compare_at_price > product.price -%}
+      {%- assign discount_pct = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
+      <span class="product-badge badge--sale">−{{ discount_pct }}%</span>
+    {%- elsif product.tags contains 'new' or product.tags contains 'New' -%}
+      <span class="product-badge badge--new">{{ 'products.product.new_badge' | t }}</span>
+    {%- elsif product.tags contains 'limited' or product.tags contains 'Limited' -%}
+      <span class="product-badge badge--limited">{{ 'products.product.limited_badge' | t }}</span>
+    {%- elsif product.tags contains 'exclusive' -%}
+      <span class="product-badge badge--exclusive">{{ 'products.product.exclusive_badge' | t }}</span>
+    {%- endif -%}
+
+    {%- comment -%}Primary image{%- endcomment -%}
+    <a href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+      {%- if product.featured_image -%}
+        {{
+          product.featured_image
+          | image_url: width: 800
+          | image_tag:
+            class: 'product-card__img product-card__img--primary',
+            loading: img_loading,
+            alt: product.featured_image.alt | default: product.title | escape,
+            widths: '400, 600, 800'
+        }}
+        {%- if media_hover == 'second_image' and product.images.size > 1 -%}
+          {{
+            product.images[1]
+            | image_url: width: 800
+            | image_tag:
+              class: 'product-card__img product-card__img--secondary',
+              loading: 'lazy',
+              alt: product.images[1].alt | default: product.title | escape
+          }}
+        {%- endif -%}
+      {%- else -%}
+        <div class="product-card__img product-card__img--primary" style="background:var(--charcoal);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(200,169,110,0.2)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+      {%- endif -%}
+    </a>
+
+    {%- comment -%}Hover actions (wishlist + quick view){%- endcomment -%}
+    <div class="product-card__actions" aria-label="Product actions">
+      {%- if show_wishlist and settings.wishlist_enabled -%}
+        <button
+          class="act-btn"
+          data-wishlist-id="{{ product.id }}"
+          aria-label="{{ 'accessibility.wishlist_add' | t }}"
+          aria-pressed="false"
+        >
+          {%- render 'icon-wishlist' -%}
+        </button>
+      {%- endif -%}
+
+      {%- if show_quickview and settings.quickview_enabled -%}
+        <button
+          class="act-btn"
+          data-open-quickview
+          data-product-url="{{ product.url }}"
+          aria-label="{{ 'accessibility.quick_view' | t: product_title: product.title }}"
+        >
+          {%- render 'icon-eye' -%}
+        </button>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%}Available sizes on hover{%- endcomment -%}
+    {%- if show_sizes -%}
+      {%- assign size_option = nil -%}
+      {%- for option in product.options_with_values -%}
+        {%- if option.name == 'Size' or option.name == 'size' -%}
+          {%- assign size_option = option -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if size_option -%}
+        <div class="product-card__sizes" aria-hidden="true">
+          {%- for value in size_option.values limit: 6 -%}
+            <span class="size-dot">{{ value }}</span>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- comment -%}Add to cart slide-up bar{%- endcomment -%}
+    {%- if product.variants.size == 1 and first_variant -%}
+      <button
+        class="product-card__add"
+        data-variant-id="{{ first_variant.id }}"
+        aria-label="{{ 'accessibility.add_to_cart' | t: product_title: product.title }}"
+        {%- unless first_variant.available -%}disabled{%- endunless -%}
+      >
+        {%- if first_variant.available -%}
+          {{ 'cart.add' | t }}
+        {%- else -%}
+          {{ 'products.product.sold_out' | t }}
+        {%- endif -%}
+      </button>
+    {%- else -%}
+      <a
+        href="{{ product.url }}"
+        class="product-card__add"
+        aria-label="{{ 'accessibility.add_to_cart' | t: product_title: product.title }}"
+      >{{ 'products.product.choose_variant' | t }}</a>
+    {%- endif -%}
+
+  </div>{%- comment -%}/.product-card__media{%- endcomment -%}
+
+  {%- comment -%}— Info —{%- endcomment -%}
+  <div class="product-card__info">
+    {%- if show_vendor and product.vendor != blank -%}
+      <p class="product-card__vendor">{{ product.vendor }}</p>
+    {%- endif -%}
+
+    <a href="{{ product.url }}" class="product-card__title">{{ product.title }}</a>
+
+    {%- comment -%}Material (first metafield or subtitle tag){%- endcomment -%}
+    {%- if product.metafields.custom.material != blank -%}
+      <p class="product-card__material">{{ product.metafields.custom.material }}</p>
+    {%- endif -%}
+
+    <div class="product-card__price">
+      {%- if product.compare_at_price > product.price -%}
+        <span class="price-current">{{ product.price | money }}</span>
+        <span class="price-compare">{{ product.compare_at_price | money }}</span>
+        {%- assign save_pct = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
+        <span class="price-saving">−{{ save_pct }}%</span>
+      {%- else -%}
+        <span class="price-current">{{ product.price | money }}</span>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%}Color swatches (style-5 only){%- endcomment -%}
+    {%- if card_style == 'style-5' -%}
+      {%- for option in product.options_with_values -%}
+        {%- if option.name == 'Color' or option.name == 'Colour' -%}
+          <div class="product-card__swatches">
+            {%- for value in option.values limit: 6 -%}
+              {%- assign swatch_color = value | downcase | replace: ' ', '-' -%}
+              <span
+                class="card-swatch"
+                title="{{ value }}"
+                style="background-color: {{ swatch_color }};"
+              ></span>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</div>

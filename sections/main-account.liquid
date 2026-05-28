@@ -1,0 +1,80 @@
+<div class="account-page" id="section-{{ section.id }}">
+  <div class="container">
+    <div class="account-header">
+      <h1 class="account-header__title">{{ 'customer.account.title' | t }}</h1>
+      <a href="{{ routes.account_logout_url }}" class="account-header__logout">{{ 'customer.log_out' | t }}</a>
+    </div>
+
+    <div class="account-grid">
+      <aside class="account-sidebar">
+        <nav class="account-nav">
+          <a href="{{ routes.account_url }}"         class="account-nav__item {% if request.path == routes.account_url %}is-active{% endif %}">{{ 'customer.account.orders' | t }}</a>
+          <a href="{{ routes.account_addresses_url }}" class="account-nav__item {% if request.path contains 'addresses' %}is-active{% endif %}">{{ 'customer.addresses.title' | t }}</a>
+        </nav>
+      </aside>
+
+      <div class="account-main">
+        <h2 class="account-section-title">{{ 'customer.orders.title' | t }}</h2>
+        {%- if customer.orders.size > 0 -%}
+          <table class="account-orders">
+            <thead>
+              <tr>
+                <th>{{ 'customer.orders.order_number' | t }}</th>
+                <th>{{ 'customer.orders.date' | t }}</th>
+                <th>{{ 'customer.orders.payment_status' | t }}</th>
+                <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+                <th>{{ 'customer.orders.total' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- for order in customer.orders -%}
+                <tr>
+                  <td><a href="{{ order.customer_url }}" class="account-order-link">{{ order.name }}</a></td>
+                  <td>{{ order.created_at | date: '%B %-d, %Y' }}</td>
+                  <td><span class="order-badge order-badge--{{ order.financial_status }}">{{ order.financial_status_label }}</span></td>
+                  <td><span class="order-badge order-badge--{{ order.fulfillment_status }}">{{ order.fulfillment_status_label }}</span></td>
+                  <td>{{ order.total_price | money }}</td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        {%- else -%}
+          <p class="account-empty">{{ 'customer.orders.none' | t }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="btn-ghost">{{ 'general.continue_shopping' | t }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .account-page { padding: var(--section-spacing) 0; }
+  .account-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 48px; }
+  .account-header__title { font-family: var(--ff-display); font-size: clamp(24px, 3vw, 40px); font-weight: 300; }
+  .account-header__logout { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--muted); transition: all 0.2s; }
+  .account-header__logout:hover { color: var(--gold); border-bottom-color: var(--gold); }
+  .account-grid { display: grid; grid-template-columns: 200px 1fr; gap: 48px; }
+  .account-nav { display: flex; flex-direction: column; gap: 4px; }
+  .account-nav__item { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding: 10px 0; border-bottom: 1px solid transparent; transition: all 0.2s; }
+  .account-nav__item.is-active, .account-nav__item:hover { color: var(--gold); border-bottom-color: var(--gold); }
+  .account-section-title { font-family: var(--ff-display); font-size: 22px; font-weight: 300; margin-bottom: 24px; }
+  .account-orders { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .account-orders th { text-align: left; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .account-orders td { padding: 16px 0; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--cream); opacity: 0.8; }
+  .account-order-link { color: var(--gold); }
+  .order-badge { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 8px; background: var(--charcoal); border: 1px solid var(--border); }
+  .account-empty { opacity: 0.6; margin-bottom: 24px; }
+  @media (max-width: 768px) {
+    .account-grid { grid-template-columns: 1fr; }
+    .account-orders { display: block; overflow-x: auto; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Account",
+  "tag": "div",
+  "settings": [],
+  "presets": [{ "name": "Account" }]
+}
+{% endschema %}

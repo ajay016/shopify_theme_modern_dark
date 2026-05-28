@@ -122,9 +122,10 @@
                 <div class="product-rating" {{ block.shopify_attributes }}>
                   {%- assign rating = product.metafields.reviews.rating.value -%}
                   {%- assign count  = product.metafields.reviews.rating_count.value | default: 0 -%}
+                  {%- assign rating_ceil = rating | ceil -%}
                   <div class="rating-stars" aria-label="{{ rating }} out of 5 stars">
                     {%- for i in (1..5) -%}
-                      <span class="star {% if i <= rating %}star--full{% elsif i <= rating | ceil %}star--half{% endif %}">★</span>
+                      <span class="star {% if i <= rating %}star--full{% elsif i <= rating_ceil %}star--half{% endif %}">★</span>
                     {%- endfor -%}
                   </div>
                   <span class="rating-count">({{ count }})</span>

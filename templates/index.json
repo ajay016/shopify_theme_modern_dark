@@ -37,6 +37,7 @@
     }
   },
   "order": [
+    "ticker",
     "hero",
     "categories",
     "featured-products",

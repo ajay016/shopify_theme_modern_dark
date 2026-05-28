@@ -3,9 +3,9 @@
     "main": {
       "type": "main-blog",
       "settings": {
-        "sidebar": "none",
-        "blog_style": "grid",
-        "posts_per_page": 9
+        "layout": "grid",
+        "show_sidebar": false,
+        "posts_per_page": 8
       }
     }
   },

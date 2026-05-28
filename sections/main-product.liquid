@@ -149,13 +149,15 @@
                         <div class="variant-swatches">
                           {%- for value in option.values -%}
                             {%- assign swatch_color = value | downcase | replace: ' ', '-' -%}
+                            {%- assign swatch_selected = false -%}
+                            {%- if option.selected_value == value -%}{%- assign swatch_selected = true -%}{%- endif -%}
                             <button
-                              class="variant-swatch {% if option.selected_value == value %}is-selected{% endif %}"
+                              class="variant-swatch {% if swatch_selected %}is-selected{% endif %}"
                               data-option-value="{{ value }}"
                               style="background-color: {{ swatch_color }};"
                               title="{{ value }}"
                               aria-label="{{ value }}"
-                              aria-pressed="{{ option.selected_value == value }}"
+                              aria-pressed="{{ swatch_selected }}"
                             ></button>
                           {%- endfor -%}
                         </div>
@@ -168,10 +170,12 @@
                                 {%- if variant.available -%}{%- assign is_available = true -%}{%- endif -%}
                               {%- endif -%}
                             {%- endfor -%}
+                            {%- assign pill_selected = false -%}
+                            {%- if option.selected_value == value -%}{%- assign pill_selected = true -%}{%- endif -%}
                             <button
-                              class="variant-pill {% if option.selected_value == value %}is-selected{% endif %} {% unless is_available %}is-sold-out{% endunless %}"
+                              class="variant-pill {% if pill_selected %}is-selected{% endif %} {% unless is_available %}is-sold-out{% endunless %}"
                               data-option-value="{{ value }}"
-                              aria-pressed="{{ option.selected_value == value }}"
+                              aria-pressed="{{ pill_selected }}"
                               {%- unless is_available -%}title="{{ 'products.product.sold_out' | t }}"{%- endunless -%}
                             >{{ value }}</button>
                           {%- endfor -%}

@@ -3,8 +3,8 @@
     "main": {
       "type": "main-blog",
       "settings": {
-        "sidebar": "left",
-        "blog_style": "list",
+        "layout": "list",
+        "show_sidebar": true,
         "posts_per_page": 6
       }
     }

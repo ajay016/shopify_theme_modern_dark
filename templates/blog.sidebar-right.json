@@ -3,9 +3,9 @@
     "main": {
       "type": "main-blog",
       "settings": {
-        "sidebar": "right",
-        "blog_style": "masonry",
-        "posts_per_page": 9
+        "layout": "masonry",
+        "show_sidebar": true,
+        "posts_per_page": 8
       }
     }
   },

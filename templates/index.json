@@ -25,7 +25,7 @@
       ],
       "settings": {
         "layout": "split",
-        "min_height": 100,
+        "min_height": 80,
         "eyebrow": "SS 2025 Collection",
         "heading": "Timeless",
         "heading_italic": "Elegance",
@@ -35,7 +35,7 @@
         "btn1_link": "/collections/all",
         "btn2_label": "Our Story",
         "btn2_link": "/pages/about",
-        "image": "shopify://shop_images/depositphotos_265180994-stock-photo-paris-france-march-2019-street.webp",
+        "image": "shopify://shop_images/thumb-1920-1091070.jpg",
         "image_2": "shopify://shop_images/punta-negra-czarny-jednoczesciowy-kostium-kapielowy_5.jpg",
         "show_scroll": true,
         "show_counter": true,
@@ -127,7 +127,7 @@
         "caption": "",
         "eyebrow": "The Journal",
         "heading": "The Art of\nWearing Nothing Else",
-        "text": "<p>Our Spring collection explores the intersection of structure and ease — garments engineered to move with the body while commanding a room. Crafted over eight months in our Milan atelier. dsfds</p>",
+        "text": "<p>Our Spring collection explores the intersection of structure and ease — garments engineered to move with the body while commanding a room. Crafted over eight months in our Milan atelier.</p>",
         "layout": "left",
         "image_width": "50",
         "full_width": false

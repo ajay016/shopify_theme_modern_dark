@@ -24,7 +24,7 @@
         "stat_RbAVjX"
       ],
       "settings": {
-        "layout": "classic",
+        "layout": "split",
         "min_height": 50,
         "eyebrow": "SS 2025 Collection",
         "heading": "Timeless",
@@ -35,7 +35,7 @@
         "btn1_link": "/collections/all",
         "btn2_label": "Our Story",
         "btn2_link": "/pages/about",
-        "image": "shopify://shop_images/depositphotos_265180994-stock-photo-paris-france-march-2019-street.webp",
+        "image": "shopify://shop_images/thumb-1920-1091070.jpg",
         "image_2": "shopify://shop_images/punta-negra-czarny-jednoczesciowy-kostium-kapielowy_5.jpg",
         "show_scroll": true,
         "show_counter": true,

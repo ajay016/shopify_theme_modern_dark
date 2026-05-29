@@ -38,7 +38,7 @@
     <button
       class="header-icon-btn"
       data-open-cart
-      aria-label="{{ 'header.cart' | t | replace: '{{ count }}', cart.item_count }}"
+      aria-label="{{ 'header.cart' | t: count: cart.item_count }}"
       aria-expanded="false"
       aria-controls="cart-drawer"
     >
@@ -51,7 +51,7 @@
     <a
       href="{{ routes.cart_url }}"
       class="header-icon-btn"
-      aria-label="{{ 'header.cart' | t | replace: '{{ count }}', cart.item_count }}"
+      aria-label="{{ 'header.cart' | t: count: cart.item_count }}"
     >
       {%- render 'icon-cart' -%}
       <span class="header-cart-count" aria-hidden="true">

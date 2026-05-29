@@ -25,34 +25,66 @@
       {%- endif -%}
     </div>
 
-    {%- comment -%}Nav columns{%- endcomment -%}
-    {%- for i in (1..3) -%}
-      {%- liquid
-        case i
-          when 1
-            assign menu_handle = section.settings.menu_1
-            assign menu_title  = section.settings.menu_1_title
-          when 2
-            assign menu_handle = section.settings.menu_2
-            assign menu_title  = section.settings.menu_2_title
-          when 3
-            assign menu_handle = section.settings.menu_3
-            assign menu_title  = section.settings.menu_3_title
-        endcase
-      -%}
-      {%- if menu_handle != blank -%}
-        <div class="footer-col">
-          {%- if menu_title != blank -%}
-            <h4>{{ menu_title }}</h4>
-          {%- endif -%}
-          <ul>
-            {%- for link in linklists[menu_handle].links -%}
-              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-            {%- endfor -%}
-          </ul>
-        </div>
-      {%- endif -%}
-    {%- endfor -%}
+    {%- comment -%}Nav columns — with hardcoded fallbacks when menus are not configured{%- endcomment -%}
+    {%- liquid
+      assign col1_handle = section.settings.menu_1
+      assign col1_title  = section.settings.menu_1_title | default: 'Shop'
+      assign col2_handle = section.settings.menu_2
+      assign col2_title  = section.settings.menu_2_title | default: 'Brand'
+      assign col3_handle = section.settings.menu_3
+      assign col3_title  = section.settings.menu_3_title | default: 'Help'
+    -%}
+
+    <div class="footer-col">
+      <h4>{{ col1_title }}</h4>
+      <ul>
+        {%- if col1_handle != blank and linklists[col1_handle].links.size > 0 -%}
+          {%- for link in linklists[col1_handle].links -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- endfor -%}
+        {%- else -%}
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Clothing</a></li>
+          <li><a href="#">Accessories</a></li>
+          <li><a href="#">Sale</a></li>
+          <li><a href="#">Gift Cards</a></li>
+        {%- endif -%}
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>{{ col2_title }}</h4>
+      <ul>
+        {%- if col2_handle != blank and linklists[col2_handle].links.size > 0 -%}
+          {%- for link in linklists[col2_handle].links -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- endfor -%}
+        {%- else -%}
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">Sustainability</a></li>
+          <li><a href="#">Craftsmanship</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Careers</a></li>
+        {%- endif -%}
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>{{ col3_title }}</h4>
+      <ul>
+        {%- if col3_handle != blank and linklists[col3_handle].links.size > 0 -%}
+          {%- for link in linklists[col3_handle].links -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- endfor -%}
+        {%- else -%}
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Shipping & Returns</a></li>
+          <li><a href="#">Size Guide</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        {%- endif -%}
+      </ul>
+    </div>
 
   </div>
 
@@ -63,21 +95,10 @@
     </p>
 
     <div class="footer-social">
-      {%- if section.settings.instagram != blank -%}
-        <a href="{{ section.settings.instagram }}" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
-      {%- endif -%}
-      {%- if section.settings.pinterest != blank -%}
-        <a href="{{ section.settings.pinterest }}" target="_blank" rel="noopener" aria-label="Pinterest">Pinterest</a>
-      {%- endif -%}
-      {%- if section.settings.tiktok != blank -%}
-        <a href="{{ section.settings.tiktok }}" target="_blank" rel="noopener" aria-label="TikTok">TikTok</a>
-      {%- endif -%}
-      {%- if section.settings.facebook != blank -%}
-        <a href="{{ section.settings.facebook }}" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a>
-      {%- endif -%}
-      {%- if section.settings.twitter != blank -%}
-        <a href="{{ section.settings.twitter }}" target="_blank" rel="noopener" aria-label="X (Twitter)">X</a>
-      {%- endif -%}
+      <a href="{{ section.settings.instagram | default: '#' }}" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+      <a href="{{ section.settings.pinterest | default: '#' }}" target="_blank" rel="noopener" aria-label="Pinterest">Pinterest</a>
+      <a href="{{ section.settings.tiktok | default: '#' }}" target="_blank" rel="noopener" aria-label="TikTok">TikTok</a>
+      <a href="{{ section.settings.facebook | default: '#' }}" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a>
     </div>
 
     {%- if section.settings.show_payment_icons -%}

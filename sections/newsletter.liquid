@@ -11,7 +11,8 @@
         {%- endif -%}
       </div>
       <div class="newsletter__form-wrap">
-        {%- form 'customer', id: 'newsletter-form-' | append: section.id, class: 'newsletter__form' -%}
+        {%- assign newsletter_form_id = 'newsletter-form-' | append: section.id -%}
+        {%- form 'customer', id: newsletter_form_id, class: 'newsletter__form' -%}
           <input type="hidden" name="contact[tags]" value="newsletter">
           {%- if form.posted_successfully? -%}
             <p class="newsletter__success">{{ 'newsletter.success' | t }}</p>

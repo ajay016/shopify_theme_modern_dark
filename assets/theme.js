@@ -170,6 +170,15 @@
   }
 
   async function updateCartItem(key, quantity) {
+    // Optimistic instant remove — slide out before network call
+    if (quantity === 0) {
+      const el = document.querySelector(`[data-line-key="${key}"]`);
+      if (el) {
+        el.style.cssText = 'transition:opacity 0.18s,transform 0.18s;opacity:0;transform:translateX(24px);pointer-events:none';
+        setTimeout(() => el.remove(), 190);
+      }
+    }
+
     try {
       const res = await fetch('/cart/change.js', {
         method: 'POST',
@@ -184,27 +193,47 @@
   }
 
   async function addToCart(variantId, quantity = 1, properties = {}) {
-    const res = await fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: variantId, quantity, properties })
-    });
-    if (!res.ok) throw new Error('add failed');
-    const item = await res.json();
+    // 1. Loading state on whichever ATC button was clicked
+    const btn = document.querySelector(`.pcard-btn--atc[data-variant-id="${variantId}"], button.qv-atc`);
+    if (btn) {
+      btn._origHTML = btn.innerHTML;
+      btn.innerHTML = '<span class="cart-spinner"></span>';
+      btn.disabled = true;
+    }
 
-    // Fetch the full cart state, render it, then open the drawer
-    try {
-      const cartRes = await fetch('/cart.js');
-      const cart = await cartRes.json();
-      updateCartUI(cart);
-    } catch (_) {}
-
+    // 2. Open drawer immediately with a spinner — don't make user wait
+    const body = document.getElementById('cart-drawer-items');
+    if (body) body.innerHTML = '<div class="cart-loading"><span class="cart-spinner"></span></div>';
     document.getElementById('cart-drawer')?.classList.add('is-open');
     document.getElementById('cart-overlay')?.classList.add('is-open');
     document.body.style.overflow = 'hidden';
 
-    showToast(window.theme_strings?.added_to_cart || 'Added to bag');
-    return item;
+    try {
+      // 3. Add item
+      const addRes = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: variantId, quantity, properties })
+      });
+      if (!addRes.ok) {
+        const err = await addRes.json().catch(() => ({}));
+        throw new Error(err.description || 'Could not add to bag');
+      }
+
+      // 4. Fetch full cart and render
+      const cart = await fetch('/cart.js').then(r => r.json());
+      updateCartUI(cart);
+      showToast(window.theme_strings?.added_to_cart || 'Added to bag');
+    } catch (err) {
+      console.error('Add to cart failed:', err);
+      if (body) body.innerHTML = `<div class="cart-error">${err.message || 'Something went wrong'}</div>`;
+    } finally {
+      if (btn && btn._origHTML !== undefined) {
+        btn.innerHTML = btn._origHTML;
+        btn.disabled = false;
+        delete btn._origHTML;
+      }
+    }
   }
 
   function renderCartItems(cart) {
@@ -226,7 +255,7 @@
       return;
     }
 
-    if (footer) footer.style.removeProperty('display');
+    if (footer) footer.style.display = 'block';
 
     body.innerHTML = cart.items.map(item => {
       const variantLine = item.variant_title && item.variant_title !== 'Default Title'
@@ -251,7 +280,7 @@
             <div class="cart-item__bottom">
               <span class="cart-item__price">${formatMoney(item.final_line_price)}</span>
               <button class="cart-item__remove" data-qty="0" aria-label="Remove" title="Remove">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="m19 6-.867 12.142A2 2 0 0 1 16.138 20H7.862a2 2 0 0 1-1.995-1.858L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
               </button>
             </div>
           </div>
@@ -263,10 +292,18 @@
     // Re-render the item list
     renderCartItems(cart);
 
-    // Update count badges
+    // Update count badges (header)
     document.querySelectorAll('.header-cart-count').forEach(el => {
       el.textContent = cart.item_count || '';
     });
+
+    // Update drawer header item count
+    const countEl = document.querySelector('.cart-drawer__count');
+    if (countEl) {
+      countEl.textContent = cart.item_count === 1
+        ? '1 item'
+        : `${cart.item_count || 0} items`;
+    }
 
     // Update subtotal
     const subtotalEl = document.querySelector('.cart-drawer__subtotal-price');

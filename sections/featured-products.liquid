@@ -38,7 +38,7 @@
       {%- liquid
         assign placeholder_products = 'Oversized Wool Coat — Ivory,Structured Tote in Calfskin,Column Gown in Silk Crêpe,Tailored Blazer — Charcoal' | split: ','
         assign placeholder_prices   = '$1,240,$890,$2,150,$960' | split: ','
-        assign placeholder_orig     = '',$1100,,' | split: ','
+        assign placeholder_orig     = '|$1,100||' | split: '|'
         assign placeholder_badges   = 'New In,,Limited,' | split: ','
       -%}
       <div class="product-grid product-grid--{{ columns }} fp-placeholder-grid">

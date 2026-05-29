@@ -29,9 +29,25 @@
   assign first_variant = product.first_available_variant | default: product.variants.first
 -%}
 
+{%- liquid
+  assign card_images_json = '[]'
+  if product.images.size > 1
+    assign card_images_arr = ''
+    for img in product.images limit: 6
+      assign img_url = img | image_url: width: 800
+      if forloop.first
+        assign card_images_arr = '[' | append: '"' | append: img_url | append: '"'
+      else
+        assign card_images_arr = card_images_arr | append: ',"' | append: img_url | append: '"'
+      endif
+    endfor
+    assign card_images_json = card_images_arr | append: ']'
+  endif
+-%}
 <div
   class="product-card product-card--{{ card_style }}"
   data-product-id="{{ product.id }}"
+  data-product-images="{{ card_images_json | escape }}"
 >
   {%- comment -%}— Media —{%- endcomment -%}
   <div class="product-card__media product-card__media--{{ image_ratio }}">
@@ -91,6 +107,7 @@
           aria-pressed="false"
         >
           {%- render 'icon-wishlist' -%}
+          <span>Wishlist</span>
         </button>
       {%- endif -%}
 
@@ -102,6 +119,7 @@
           aria-label="{{ 'accessibility.quick_view' | t: product_title: product.title }}"
         >
           {%- render 'icon-eye' -%}
+          <span>Quick View</span>
         </button>
       {%- endif -%}
     </div>

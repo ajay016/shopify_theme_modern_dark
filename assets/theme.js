@@ -266,42 +266,180 @@
 
 
   /* ============================================================
-     Quick View Modal
+     Quick View Modal — AJAX product JSON approach
      ============================================================ */
   function initQuickView() {
-    const modal   = document.getElementById('quick-view-modal');
     const overlay = document.getElementById('quick-view-overlay');
-    if (!modal || !overlay) return;
+    const modal   = document.getElementById('quick-view-modal');
+    if (!overlay || !modal) return;
 
-    function closeModal() {
+    function closeQV() {
       overlay.classList.remove('is-open');
       document.body.style.overflow = '';
+      modal.innerHTML = '';
     }
 
-    document.querySelector('[data-close-quickview]')?.addEventListener('click', closeModal);
-    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeQV(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeQV(); });
 
     document.addEventListener('click', async e => {
-      const qvBtn = e.target.closest('[data-open-quickview]');
-      if (!qvBtn) return;
-      const productUrl = qvBtn.dataset.productUrl;
+      const btn = e.target.closest('[data-open-quickview]');
+      if (!btn) return;
+
+      const productUrl = btn.dataset.productUrl;
       if (!productUrl) return;
 
       overlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
-      modal.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:300px;color:var(--muted);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;">Loading...</div>';
+      modal.innerHTML = `
+        <div class="qv-loading">
+          <span class="qv-loading__dot"></span>
+          <span class="qv-loading__dot"></span>
+          <span class="qv-loading__dot"></span>
+        </div>`;
 
       try {
-        const res  = await fetch(productUrl + '?view=quick-view');
-        const html = await res.text();
-        const doc  = new DOMParser().parseFromString(html, 'text/html');
-        const content = doc.getElementById('quick-view-content');
-        modal.innerHTML = content ? content.innerHTML : html;
+        const res     = await fetch(productUrl + '.js');
+        if (!res.ok) throw new Error('fetch failed');
+        const product = await res.json();
+        renderQV(product);
       } catch {
-        modal.innerHTML = '<p style="padding:40px;color:var(--muted);">Could not load product.</p>';
+        modal.innerHTML = '<p class="qv-error">Could not load product — <a href="' + productUrl + '" style="color:var(--gold)">view full page</a></p>';
       }
     });
+
+    function fmt(cents) {
+      const currency = window.Shopify?.currency?.active || 'USD';
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(cents / 100);
+    }
+
+    function renderQV(p) {
+      const allImages = p.images.map(src =>
+        'https:' + src.replace(/^https?:/, '').replace(/(\.\w+)(\?.*)?$/, '_800x$1')
+      );
+      const mainSrc = allImages[0] || '';
+
+      // Thumbnails
+      const thumbs = allImages.slice(0, 8).map((src, i) => `
+        <button class="qv-thumb ${i === 0 ? 'is-active' : ''}" data-qv-thumb="${src}">
+          <img src="${src}" alt="" loading="lazy">
+        </button>`).join('');
+
+      // Variant options — group by option name
+      let variantHtml = '';
+      if (p.variants.length > 1) {
+        variantHtml = p.options.map((optName, oi) => {
+          const values = [...new Set(p.variants.map(v => v.options[oi]))];
+          return `
+            <div class="qv-option">
+              <p class="qv-option__label">${optName}</p>
+              <div class="qv-option__values">
+                ${values.map(val => `
+                  <button class="qv-opt-btn" data-opt-index="${oi}" data-opt-value="${val}">${val}</button>
+                `).join('')}
+              </div>
+            </div>`;
+        }).join('');
+        variantHtml = `<div class="qv-variants">${variantHtml}</div>`;
+      }
+
+      const cPrice = fmt(p.price);
+      const oPrice = p.compare_at_price > p.price ? fmt(p.compare_at_price) : '';
+      const firstVariant = p.variants[0];
+
+      modal.innerHTML = `
+        <button class="qv-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+
+        <div class="qv-gallery">
+          <div class="qv-gallery__main">
+            ${mainSrc ? `<img src="${mainSrc}" class="qv-main-img" id="qv-main-img" alt="${p.title}">` : ''}
+          </div>
+          ${allImages.length > 1 ? `<div class="qv-gallery__thumbs">${thumbs}</div>` : ''}
+        </div>
+
+        <div class="qv-details">
+          ${p.vendor ? `<p class="qv-vendor">${p.vendor}</p>` : ''}
+          <h2 class="qv-title">${p.title}</h2>
+          <div class="qv-price">
+            <span class="qv-price__current" id="qv-price">${cPrice}</span>
+            ${oPrice ? `<span class="qv-price__compare">${oPrice}</span>` : ''}
+          </div>
+
+          ${variantHtml}
+
+          <button class="btn-primary qv-atc" id="qv-atc-btn"
+            data-variant-id="${firstVariant ? firstVariant.id : ''}"
+            ${firstVariant && !firstVariant.available ? 'disabled' : ''}>
+            ${firstVariant && !firstVariant.available ? 'Sold Out' : 'Add to Cart'}
+          </button>
+
+          <a href="${p.url}" class="qv-view-full">View Full Details &rarr;</a>
+        </div>`;
+
+      // — Close
+      modal.querySelector('.qv-close').addEventListener('click', closeQV);
+
+      // — Gallery thumbnails
+      const mainImg = modal.querySelector('#qv-main-img');
+      modal.querySelectorAll('[data-qv-thumb]').forEach(thumb => {
+        thumb.addEventListener('click', () => {
+          if (mainImg) { mainImg.style.opacity = '0'; setTimeout(() => { mainImg.src = thumb.dataset.qvThumb; mainImg.style.opacity = '1'; }, 150); }
+          modal.querySelectorAll('[data-qv-thumb]').forEach(t => t.classList.remove('is-active'));
+          thumb.classList.add('is-active');
+        });
+      });
+
+      // — Variant selection
+      let selectedOpts = firstVariant ? [...firstVariant.options] : [];
+
+      function syncVariant() {
+        const variant = p.variants.find(v => v.options.every((o, i) => o === selectedOpts[i]));
+        const atcBtn  = modal.querySelector('#qv-atc-btn');
+        const priceEl = modal.querySelector('#qv-price');
+        if (variant) {
+          atcBtn.dataset.variantId = variant.id;
+          atcBtn.disabled  = !variant.available;
+          atcBtn.textContent = variant.available ? 'Add to Cart' : 'Sold Out';
+          if (priceEl) priceEl.textContent = fmt(variant.price);
+        } else {
+          atcBtn.disabled = true;
+          atcBtn.textContent = 'Unavailable';
+        }
+        modal.querySelectorAll('.qv-opt-btn').forEach(b => {
+          b.classList.toggle('is-active', b.dataset.optValue === selectedOpts[parseInt(b.dataset.optIndex)]);
+        });
+      }
+
+      modal.querySelectorAll('.qv-opt-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedOpts[parseInt(btn.dataset.optIndex)] = btn.dataset.optValue;
+          syncVariant();
+        });
+      });
+      syncVariant();
+
+      // — Add to cart from modal
+      const atcBtn = modal.querySelector('#qv-atc-btn');
+      if (atcBtn) {
+        atcBtn.addEventListener('click', async () => {
+          const variantId = parseInt(atcBtn.dataset.variantId);
+          if (!variantId) return;
+          const prev = atcBtn.textContent;
+          atcBtn.textContent = 'Adding…';
+          atcBtn.disabled = true;
+          try {
+            await addToCart(variantId, 1);
+            atcBtn.textContent = '✓ Added';
+            setTimeout(() => { atcBtn.textContent = prev; atcBtn.disabled = false; }, 2000);
+          } catch {
+            atcBtn.textContent = 'Error — try again';
+            setTimeout(() => { atcBtn.textContent = prev; atcBtn.disabled = false; }, 2000);
+          }
+        });
+      }
+    }
   }
 
 

@@ -53,23 +53,25 @@
     {%- comment -%}Primary image{%- endcomment -%}
     <a href="{{ product.url }}" aria-label="{{ product.title | escape }}">
       {%- if product.featured_image -%}
+        {%- assign primary_img_alt = product.featured_image.alt | default: product.title | escape -%}
         {{
           product.featured_image
           | image_url: width: 800
           | image_tag:
             class: 'product-card__img product-card__img--primary',
             loading: img_loading,
-            alt: product.featured_image.alt | default: product.title | escape,
-            widths: '400, 600, 800'
+            alt: primary_img_alt,
+            widths: '400,600,800'
         }}
         {%- if media_hover == 'second_image' and product.images.size > 1 -%}
+          {%- assign secondary_img_alt = product.images[1].alt | default: product.title | escape -%}
           {{
             product.images[1]
             | image_url: width: 800
             | image_tag:
               class: 'product-card__img product-card__img--secondary',
               loading: 'lazy',
-              alt: product.images[1].alt | default: product.title | escape
+              alt: secondary_img_alt
           }}
         {%- endif -%}
       {%- else -%}

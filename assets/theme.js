@@ -300,6 +300,21 @@
 
       overlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
+
+      // Try embedded JSON first (works with password-protected stores, faster)
+      const card = btn.closest('.product-card');
+      const jsonScript = card && card.querySelector('.product-card__json');
+      if (jsonScript) {
+        try {
+          const product = JSON.parse(jsonScript.textContent);
+          renderQV(product, productUrl, closeQV);
+          return;
+        } catch (_) {
+          // fall through to fetch
+        }
+      }
+
+      // Fallback: AJAX fetch (works when store is public)
       modal.innerHTML = `
         <div class="qv-loading">
           <span class="qv-loading__dot"></span>
@@ -312,7 +327,7 @@
         if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
         const contentType = res.headers.get('content-type') || '';
         if (!contentType.includes('application/json')) {
-          throw new Error('Store may be password protected — the product data endpoint returned HTML instead of JSON.');
+          throw new Error('Store appears to be password protected. Log in to Shopify admin and preview the theme from there.');
         }
         const product = await res.json();
         renderQV(product, productUrl, closeQV);

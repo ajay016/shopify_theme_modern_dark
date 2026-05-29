@@ -30,24 +30,48 @@
 -%}
 
 {%- liquid
-  assign card_images_json = '[]'
-  if product.images.size > 1
-    assign card_images_arr = ''
-    for img in product.images limit: 6
-      assign img_url = img | image_url: width: 800
-      if forloop.first
-        assign card_images_arr = '[' | append: '"' | append: img_url | append: '"'
-      else
-        assign card_images_arr = card_images_arr | append: ',"' | append: img_url | append: '"'
-      endif
-    endfor
-    assign card_images_json = card_images_arr | append: ']'
-  endif
+  assign imgs_j = '['
+  for img in product.images limit: 8
+    assign img_src = img | image_url: width: 800
+    if forloop.first
+      assign imgs_j = imgs_j | append: '"' | append: img_src | append: '"'
+    else
+      assign imgs_j = imgs_j | append: ',"' | append: img_src | append: '"'
+    endif
+  endfor
+  assign imgs_j = imgs_j | append: ']'
+
+  assign vars_j = '['
+  for v in product.variants
+    assign opt1_j = v.option1 | json
+    assign opts_j = '[' | append: opt1_j
+    if v.option2 != blank
+      assign opt2_j = v.option2 | json
+      assign opts_j = opts_j | append: ',' | append: opt2_j
+    endif
+    if v.option3 != blank
+      assign opt3_j = v.option3 | json
+      assign opts_j = opts_j | append: ',' | append: opt3_j
+    endif
+    assign opts_j = opts_j | append: ']'
+    assign v_cmp = v.compare_at_price | default: 0
+    assign v_avail = 'false'
+    if v.available
+      assign v_avail = 'true'
+    endif
+    assign v_obj = '{"id":' | append: v.id | append: ',"price":' | append: v.price | append: ',"compare_at_price":' | append: v_cmp | append: ',"available":' | append: v_avail | append: ',"options":' | append: opts_j | append: '}'
+    if forloop.first
+      assign vars_j = vars_j | append: v_obj
+    else
+      assign vars_j = vars_j | append: ',' | append: v_obj
+    endif
+  endfor
+  assign vars_j = vars_j | append: ']'
 -%}
+<script type="application/json" class="product-card__json">{"id":{{ product.id }},"title":{{ product.title | json }},"vendor":{{ product.vendor | json }},"url":{{ product.url | json }},"price":{{ product.price }},"compare_at_price":{{ product.compare_at_price | default: 0 }},"body_html":{{ product.description | json }},"images":{{ imgs_j }},"options":{{ product.options | json }},"variants":{{ vars_j }}}</script>
 <div
   class="product-card product-card--{{ card_style }}"
   data-product-id="{{ product.id }}"
-  data-product-images="{{ card_images_json | escape }}"
 >
   {%- comment -%}— Media —{%- endcomment -%}
   <div class="product-card__media product-card__media--{{ image_ratio }}">
@@ -97,21 +121,36 @@
       {%- endif -%}
     </a>
 
-    {%- comment -%}Hover overlay — centered circular action buttons{%- endcomment -%}
+    {%- comment -%}Hover overlay — icon row + ATC below{%- endcomment -%}
     <div class="product-card__overlay">
       <div class="pcard-actions">
 
-        {%- if show_wishlist and settings.wishlist_enabled -%}
-          <button
-            class="pcard-btn pcard-btn--wishlist"
-            data-wishlist-id="{{ product.id }}"
-            aria-label="{{ 'accessibility.wishlist_add' | t }}"
-            aria-pressed="false"
-          >
-            {%- render 'icon-wishlist' -%}
-          </button>
-        {%- endif -%}
+        {%- comment -%}Top row: wishlist + quick view circles{%- endcomment -%}
+        <div class="pcard-actions__row">
+          {%- if show_wishlist and settings.wishlist_enabled -%}
+            <button
+              class="pcard-btn pcard-btn--wishlist"
+              data-wishlist-id="{{ product.id }}"
+              aria-label="{{ 'accessibility.wishlist_add' | t }}"
+              aria-pressed="false"
+            >
+              {%- render 'icon-wishlist' -%}
+            </button>
+          {%- endif -%}
 
+          {%- if show_quickview and settings.quickview_enabled -%}
+            <button
+              class="pcard-btn pcard-btn--qv"
+              data-open-quickview
+              data-product-url="{{ product.url }}"
+              aria-label="{{ 'accessibility.quick_view' | t: product_title: product.title }}"
+            >
+              {%- render 'icon-eye' -%}
+            </button>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%}Bottom: full-width add to cart{%- endcomment -%}
         {%- if product.variants.size == 1 and first_variant -%}
           <button
             class="pcard-btn pcard-btn--atc"
@@ -120,26 +159,13 @@
             {%- unless first_variant.available -%}disabled{%- endunless -%}
           >
             {%- render 'icon-bag' -%}
-            <span class="pcard-btn__label">
-              {%- if first_variant.available -%}Add to Bag{%- else -%}Sold Out{%- endif -%}
-            </span>
+            <span>{%- if first_variant.available -%}Add to Bag{%- else -%}Sold Out{%- endif -%}</span>
           </button>
         {%- else -%}
           <a href="{{ product.url }}" class="pcard-btn pcard-btn--atc">
             {%- render 'icon-bag' -%}
-            <span class="pcard-btn__label">Select</span>
+            <span>Select Options</span>
           </a>
-        {%- endif -%}
-
-        {%- if show_quickview and settings.quickview_enabled -%}
-          <button
-            class="pcard-btn pcard-btn--qv"
-            data-open-quickview
-            data-product-url="{{ product.url }}"
-            aria-label="{{ 'accessibility.quick_view' | t: product_title: product.title }}"
-          >
-            {%- render 'icon-eye' -%}
-          </button>
         {%- endif -%}
 
       </div>

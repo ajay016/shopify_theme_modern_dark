@@ -207,7 +207,62 @@
     return item;
   }
 
+  function renderCartItems(cart) {
+    const body = document.getElementById('cart-drawer-items');
+    if (!body) return;
+
+    const footer = document.querySelector('.cart-drawer__footer');
+
+    if (!cart.items || cart.items.length === 0) {
+      body.innerHTML = `
+        <div class="cart-drawer__empty">
+          <div class="cart-drawer__empty-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+          <h3 class="cart-drawer__empty-title">${window.theme_strings?.cart_empty || 'Your bag is empty'}</h3>
+          <a href="/collections/all" class="btn btn-ghost btn-sm">${window.theme_strings?.continue_shopping || 'Continue Shopping'}</a>
+        </div>`;
+      if (footer) footer.style.display = 'none';
+      return;
+    }
+
+    if (footer) footer.style.removeProperty('display');
+
+    body.innerHTML = cart.items.map(item => {
+      const variantLine = item.variant_title && item.variant_title !== 'Default Title'
+        ? `<p class="cart-item__variant">${item.variant_title}</p>` : '';
+      const imgHtml = item.featured_image?.url
+        ? `<img src="${item.featured_image.url}" loading="lazy" alt="${(item.product_title || '').replace(/"/g, '&quot;')}">`
+        : '';
+      const qtyMinus = Math.max(0, item.quantity - 1);
+      const qtyPlus = item.quantity + 1;
+      return `
+        <div class="cart-item" data-line-key="${item.key}">
+          <a href="${item.url}" class="cart-item__image">${imgHtml}</a>
+          <div class="cart-item__details">
+            <p class="cart-item__brand">${item.vendor || ''}</p>
+            <a href="${item.url}" class="cart-item__title">${item.product_title}</a>
+            ${variantLine}
+            <div class="cart-item__qty">
+              <button class="qty-btn" data-qty="${qtyMinus}" aria-label="Decrease quantity">−</button>
+              <span class="qty-value">${item.quantity}</span>
+              <button class="qty-btn" data-qty="${qtyPlus}" aria-label="Increase quantity">+</button>
+            </div>
+            <div class="cart-item__bottom">
+              <span class="cart-item__price">${formatMoney(item.final_line_price)}</span>
+              <button class="cart-item__remove" data-qty="0" aria-label="Remove" title="Remove">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
   function updateCartUI(cart) {
+    // Re-render the item list
+    renderCartItems(cart);
+
     // Update count badges
     document.querySelectorAll('.header-cart-count').forEach(el => {
       el.textContent = cart.item_count || '';

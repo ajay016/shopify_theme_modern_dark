@@ -51,7 +51,7 @@
     "remove": "Remove",
     "item_count_one": "{{ count }} item",
     "item_count_other": "{{ count }} items",
-    "free_shipping_message": "You're {{ amount }} away from free shipping",
+    "free_shipping_message": "You're %{amount} away from free shipping",
     "free_shipping_achieved": "You've unlocked free shipping!",
     "quantity": "Quantity",
     "note": "Order Note",

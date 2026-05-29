@@ -40,10 +40,9 @@
       {%- if pct >= 100 -%}
         <span>{{ 'cart.free_shipping_achieved' | t }}</span>
       {%- else -%}
-        {%- assign remaining = threshold | minus: cart.total_price -%}
-        <span>
-          {{ 'cart.free_shipping_message' | t: amount: remaining | money }}
-        </span>
+        {%- assign remaining_cents = threshold | minus: cart.total_price -%}
+        {%- assign remaining_money = remaining_cents | money -%}
+        <span>{{ 'cart.free_shipping_message' | t: amount: remaining_money }}</span>
       {%- endif -%}
       <div class="shipping-bar__track">
         <div class="shipping-bar__fill" style="width:{{ pct }}%;"></div>

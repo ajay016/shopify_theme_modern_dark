@@ -170,12 +170,18 @@
   }
 
   async function updateCartItem(key, quantity) {
-    // Optimistic instant remove — slide out before network call
+    // Optimistic remove: immediately hide the item, skip re-rendering it from server
+    let skipItemRender = false;
     if (quantity === 0) {
       const el = document.querySelector(`[data-line-key="${key}"]`);
       if (el) {
-        el.style.cssText = 'transition:opacity 0.18s,transform 0.18s;opacity:0;transform:translateX(24px);pointer-events:none';
-        setTimeout(() => el.remove(), 190);
+        el.style.transition = 'opacity 0.18s, transform 0.18s';
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(28px)';
+        el.style.pointerEvents = 'none';
+        skipItemRender = true;
+        // Remove from DOM after animation, regardless of server response
+        setTimeout(() => { if (el.parentNode) el.remove(); }, 200);
       }
     }
 
@@ -186,22 +192,35 @@
         body: JSON.stringify({ id: key, quantity })
       });
       const cart = await res.json();
-      updateCartUI(cart);
+
+      if (skipItemRender) {
+        // Only re-render items if cart is now truly empty (show empty state)
+        // Otherwise just update counts and totals to avoid ghost re-appearance
+        if (!cart.items || cart.items.length === 0) {
+          setTimeout(() => renderCartItems(cart), 210); // after fade animation
+        } else {
+          // More items remain — update counts/totals without re-rendering item list
+          updateCartCounters(cart);
+        }
+      } else {
+        updateCartUI(cart);
+      }
     } catch (err) {
       console.error('Cart update failed', err);
     }
   }
 
   async function addToCart(variantId, quantity = 1, properties = {}) {
-    // 1. Loading state on whichever ATC button was clicked
-    const btn = document.querySelector(`.pcard-btn--atc[data-variant-id="${variantId}"], button.qv-atc`);
+    // 1. Loading state on the ATC button
+    const btn = document.querySelector(`.pcard-btn--atc[data-variant-id="${variantId}"]`) ||
+                document.querySelector('button.qv-atc');
     if (btn) {
       btn._origHTML = btn.innerHTML;
       btn.innerHTML = '<span class="cart-spinner"></span>';
       btn.disabled = true;
     }
 
-    // 2. Open drawer immediately with a spinner — don't make user wait
+    // 2. Open drawer with spinner immediately
     const body = document.getElementById('cart-drawer-items');
     if (body) body.innerHTML = '<div class="cart-loading"><span class="cart-spinner"></span></div>';
     document.getElementById('cart-drawer')?.classList.add('is-open');
@@ -216,17 +235,39 @@
         body: JSON.stringify({ id: variantId, quantity, properties })
       });
       if (!addRes.ok) {
-        const err = await addRes.json().catch(() => ({}));
-        throw new Error(err.description || 'Could not add to bag');
+        const errData = await addRes.json().catch(() => ({}));
+        throw new Error(errData.description || 'Could not add to bag');
+      }
+      const addedItem = await addRes.json();
+
+      // 4. Show the added item immediately from the add.js response (faster feedback)
+      if (body && addedItem) {
+        const imgHtml = addedItem.featured_image?.url
+          ? `<img src="${addedItem.featured_image.url}" loading="eager" alt="">`
+          : (addedItem.image ? `<img src="${addedItem.image}" loading="eager" alt="">` : '');
+        body.innerHTML = `
+          <div class="cart-item" data-line-key="${addedItem.key}">
+            <a href="${addedItem.url}" class="cart-item__image">${imgHtml}</a>
+            <div class="cart-item__details">
+              <p class="cart-item__brand">${addedItem.vendor || ''}</p>
+              <a href="${addedItem.url}" class="cart-item__title">${addedItem.product_title}</a>
+              ${addedItem.variant_title && addedItem.variant_title !== 'Default Title' ? `<p class="cart-item__variant">${addedItem.variant_title}</p>` : ''}
+              <div class="cart-item__bottom">
+                <span class="cart-item__price">${formatMoney(addedItem.final_price)}</span>
+              </div>
+            </div>
+          </div>
+          <div class="cart-loading" style="height:40px"><span class="cart-spinner" style="width:14px;height:14px;border-width:1.5px"></span></div>`;
+        document.querySelector('.cart-drawer__footer')?.style.setProperty('display', 'block');
       }
 
-      // 4. Fetch full cart and render
+      // 5. Fetch full cart in background to reconcile all items and totals
       const cart = await fetch('/cart.js').then(r => r.json());
       updateCartUI(cart);
       showToast(window.theme_strings?.added_to_cart || 'Added to bag');
     } catch (err) {
       console.error('Add to cart failed:', err);
-      if (body) body.innerHTML = `<div class="cart-error">${err.message || 'Something went wrong'}</div>`;
+      if (body) body.innerHTML = `<div class="cart-error">${err.message || 'Something went wrong. Please try again.'}</div>`;
     } finally {
       if (btn && btn._origHTML !== undefined) {
         btn.innerHTML = btn._origHTML;
@@ -257,7 +298,10 @@
 
     if (footer) footer.style.display = 'block';
 
-    body.innerHTML = cart.items.map(item => {
+    // Filter out any zero-qty items (Shopify occasionally returns them during transition)
+    const items = cart.items.filter(item => item.quantity > 0);
+
+    body.innerHTML = items.map(item => {
       const variantLine = item.variant_title && item.variant_title !== 'Default Title'
         ? `<p class="cart-item__variant">${item.variant_title}</p>` : '';
       const imgHtml = item.featured_image?.url
@@ -288,46 +332,39 @@
     }).join('');
   }
 
-  function updateCartUI(cart) {
-    // Re-render the item list
-    renderCartItems(cart);
-
-    // Update count badges (header)
+  function updateCartCounters(cart) {
     document.querySelectorAll('.header-cart-count').forEach(el => {
       el.textContent = cart.item_count || '';
     });
-
-    // Update drawer header item count
     const countEl = document.querySelector('.cart-drawer__count');
     if (countEl) {
-      countEl.textContent = cart.item_count === 1
-        ? '1 item'
-        : `${cart.item_count || 0} items`;
+      countEl.textContent = cart.item_count === 1 ? '1 item' : `${cart.item_count || 0} items`;
     }
-
-    // Update subtotal
     const subtotalEl = document.querySelector('.cart-drawer__subtotal-price');
-    if (subtotalEl) {
-      subtotalEl.textContent = formatMoney(cart.total_price);
-    }
+    if (subtotalEl) subtotalEl.textContent = formatMoney(cart.total_price);
 
-    // Update shipping bar
     const threshold = parseFloat(document.body.dataset.freeShippingThreshold || 500) * 100;
     if (threshold > 0) {
       const pct = Math.min((cart.total_price / threshold) * 100, 100);
       const fill = document.querySelector('.shipping-bar__fill');
       if (fill) fill.style.width = pct + '%';
-
       const msg = document.querySelector('.cart-drawer__shipping-bar span');
       if (msg) {
         if (pct >= 100) {
           msg.textContent = window.theme_strings?.free_shipping_achieved || "You've unlocked free shipping!";
         } else {
           const remaining = formatMoney(threshold - cart.total_price);
-          msg.textContent = (window.theme_strings?.free_shipping_message || "You're {amount} away from free shipping").replace('{amount}', remaining);
+          const template = window.theme_strings?.free_shipping_message || "You're %{amount} away from free shipping";
+          // Use innerHTML so HTML entities from Liquid json filter render as real characters
+          msg.innerHTML = template.replace('%{amount}', `<strong>${remaining}</strong>`);
         }
       }
     }
+  }
+
+  function updateCartUI(cart) {
+    renderCartItems(cart);
+    updateCartCounters(cart);
   }
 
   function formatMoney(cents) {

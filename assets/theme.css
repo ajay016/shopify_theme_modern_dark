@@ -40,6 +40,12 @@ a { color: inherit; text-decoration: none; }
 button { font-family: inherit; }
 ul, ol { list-style: none; }
 
+/* Content area: pad below fixed header by default */
+.content-for-layout { padding-top: 80px; }
+
+/* Homepage + product templates: hero overlays header — no top padding */
+.template-index .content-for-layout { padding-top: 0; }
+
 /* Visually hidden but accessible */
 .visually-hidden {
   position: absolute;
@@ -170,13 +176,22 @@ em.gold { font-style: italic; color: var(--gold-light); }
   padding-inline: var(--side-padding, 56px);
 }
 
-.section-header {
+.section-header,
+.section-head {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
   margin-bottom: 56px;
 }
+
+.section-head__title {
+  font-family: var(--ff-display);
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: 300;
+  line-height: 1.1;
+}
+.section-head__title em { font-style: italic; color: var(--gold-light); }
 
 .section-link {
   font-size: 10px;

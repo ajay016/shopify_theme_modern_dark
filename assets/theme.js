@@ -47,6 +47,13 @@
       const scrolled = window.scrollY > 60;
       header.classList.toggle('scrolled', scrolled);
 
+      // Once user scrolls past announcement bar, snap header to top
+      if (bar) {
+        header.style.top = (scrolled || window.scrollY > bar.offsetHeight)
+          ? '0'
+          : bar.offsetHeight + 'px';
+      }
+
       if (isTransparent) {
         header.style.background = scrolled
           ? 'rgba(10,10,10,0.97)'

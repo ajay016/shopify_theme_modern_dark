@@ -1,45 +1,113 @@
-<section class="section collection-list" id="section-{{ section.id }}">
+{%- liquid
+  assign columns = section.settings.columns
+-%}
+
+<section class="section collection-list" id="section-{{ section.id }}" style="background:var(--charcoal);">
   <div class="container">
     {%- if section.settings.heading != blank -%}
-      <div class="section-head">
+      <div class="section-head clist-head">
         {%- if section.settings.subheading != blank -%}
-          <p class="eyebrow">{{ section.settings.subheading }}</p>
+          <div>
+            <p class="eyebrow">{{ section.settings.subheading }}</p>
+            <h2 class="section-head__title">{{ section.settings.heading }}</h2>
+          </div>
+        {%- else -%}
+          <h2 class="section-head__title">{{ section.settings.heading }}</h2>
         {%- endif -%}
-        <h2 class="section-head__title">{{ section.settings.heading }}</h2>
+        {%- if section.settings.view_all_label != blank and section.settings.view_all_url != blank -%}
+          <a href="{{ section.settings.view_all_url }}" class="section-link">{{ section.settings.view_all_label }}</a>
+        {%- endif -%}
       </div>
     {%- endif -%}
 
-    <div class="collection-list__grid collection-list__grid--{{ section.settings.columns }}">
+    <div class="collection-list__grid collection-list__grid--{{ columns }}">
       {%- for block in section.blocks -%}
-        {%- assign col = collections[block.settings.collection] -%}
+        {%- liquid
+          assign col = collections[block.settings.collection]
+          if col != blank
+            assign card_url = col.url
+          elsif block.settings.custom_url != blank
+            assign card_url = block.settings.custom_url
+          else
+            assign card_url = '#'
+          endif
+
+          assign card_label = block.settings.label
+          if card_label == blank and col != blank
+            assign card_label = col.title
+          endif
+          if card_label == blank
+            assign card_label = 'Collection'
+          endif
+
+          assign card_num = forloop.index
+          if card_num < 10
+            assign card_num_str = '0' | append: card_num
+          else
+            assign card_num_str = card_num | append: ''
+          endif
+        -%}
         <a
-          href="{{ col.url | default: block.settings.custom_url | default: '#' }}"
+          href="{{ card_url }}"
           class="collection-list__item"
           {{ block.shopify_attributes }}
         >
-          <div class="collection-list__media">
-            {%- if block.settings.image -%}
+          <div class="collection-list__media clist-bg-{{ forloop.index | modulo: 4 | plus: 1 }}">
+            {%- if block.settings.image != blank -%}
+              {%- assign col_img_alt = card_label | escape -%}
               {{
                 block.settings.image
                 | image_url: width: 800
-                | image_tag: class: 'collection-list__img', loading: 'lazy', alt: block.settings.label | default: col.title
+                | image_tag: class: 'collection-list__img', loading: 'lazy', alt: col_img_alt
               }}
-            {%- elsif col.featured_image -%}
+            {%- elsif col != blank and col.featured_image != blank -%}
+              {%- assign col_img_alt = card_label | escape -%}
               {{
                 col.featured_image
                 | image_url: width: 800
-                | image_tag: class: 'collection-list__img', loading: 'lazy', alt: col.title
+                | image_tag: class: 'collection-list__img', loading: 'lazy', alt: col_img_alt
               }}
             {%- else -%}
-              <div class="collection-list__placeholder">
-                {{ 'collection-' | append: forloop.index | placeholder_svg_tag: 'collection-list__img' }}
+              {%- comment -%}SVG fashion icon placeholder — cycling through 4 styles{%- endcomment -%}
+              <div class="clist-icon-wrap" aria-hidden="true">
+                {%- assign icon_mod = forloop.index | modulo: 4 | plus: 1 -%}
+                {%- if icon_mod == 1 -%}
+                  <svg width="120" height="140" viewBox="0 0 120 140" fill="none">
+                    <path d="M30 20 Q30 10 60 10 Q90 10 90 20 L95 50 L75 55 L75 130 L45 130 L45 55 L25 50 Z" stroke="rgba(200,169,110,0.6)" stroke-width="1.5" fill="none"/>
+                    <path d="M25 50 L10 60 L20 120 L45 115" stroke="rgba(200,169,110,0.4)" stroke-width="1" fill="none"/>
+                    <path d="M95 50 L110 60 L100 120 L75 115" stroke="rgba(200,169,110,0.4)" stroke-width="1" fill="none"/>
+                  </svg>
+                {%- elsif icon_mod == 2 -%}
+                  <svg width="100" height="140" viewBox="0 0 100 140" fill="none">
+                    <path d="M20 15 L50 10 L80 15 L88 45 L65 50 L65 130 L35 130 L35 50 L12 45 Z" stroke="rgba(200,169,110,0.6)" stroke-width="1.5" fill="none"/>
+                    <line x1="35" y1="80" x2="65" y2="80" stroke="rgba(200,169,110,0.3)" stroke-width="1"/>
+                    <line x1="35" y1="100" x2="65" y2="100" stroke="rgba(200,169,110,0.2)" stroke-width="0.8"/>
+                  </svg>
+                {%- elsif icon_mod == 3 -%}
+                  <svg width="120" height="100" viewBox="0 0 120 100" fill="none">
+                    <path d="M10 70 Q10 20 60 15 Q110 20 110 70 L110 90 L10 90 Z" stroke="rgba(200,169,110,0.6)" stroke-width="1.5" fill="none"/>
+                    <path d="M35 70 Q35 40 60 38 Q85 40 85 70" stroke="rgba(200,169,110,0.35)" stroke-width="1" fill="none"/>
+                    <circle cx="60" cy="60" r="8" stroke="rgba(200,169,110,0.5)" stroke-width="1" fill="none"/>
+                  </svg>
+                {%- else -%}
+                  <svg width="100" height="130" viewBox="0 0 100 130" fill="none">
+                    <ellipse cx="50" cy="50" rx="32" ry="38" stroke="rgba(200,169,110,0.6)" stroke-width="1.5" fill="none"/>
+                    <path d="M18 50 L8 90 L30 100 L50 95 L70 100 L92 90 L82 50" stroke="rgba(200,169,110,0.4)" stroke-width="1" fill="none"/>
+                    <line x1="50" y1="88" x2="50" y2="125" stroke="rgba(200,169,110,0.35)" stroke-width="1.5"/>
+                  </svg>
+                {%- endif -%}
               </div>
             {%- endif -%}
+
             <div class="collection-list__overlay">
-              <span class="collection-list__label">{{ block.settings.label | default: col.title }}</span>
+              <p class="clist-num">{{ card_num_str }}</p>
+              <h3 class="collection-list__label">{{ card_label }}</h3>
               {%- if block.settings.sublabel != blank -%}
-                <span class="collection-list__sublabel">{{ block.settings.sublabel }}</span>
+                <p class="collection-list__sublabel">{{ block.settings.sublabel }}</p>
+              {%- elsif col != blank and col.products_count > 0 -%}
+                <p class="collection-list__sublabel">{{ col.products_count }} pieces</p>
               {%- endif -%}
+              <span class="clist-cta">Discover</span>
             </div>
           </div>
         </a>
@@ -50,28 +118,135 @@
 
 <style>
   .collection-list { padding: var(--section-spacing) 0; }
-  .collection-list__grid { display: grid; gap: 16px; }
+
+  .clist-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 56px;
+  }
+
+  .section-link {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.3s;
+    flex-shrink: 0;
+  }
+  .section-link:hover { gap: 14px; }
+  .section-link::after { content: '→'; }
+
+  .collection-list__grid { display: grid; gap: 2px; }
   .collection-list__grid--2 { grid-template-columns: repeat(2, 1fr); }
   .collection-list__grid--3 { grid-template-columns: repeat(3, 1fr); }
   .collection-list__grid--4 { grid-template-columns: repeat(4, 1fr); }
-  .collection-list__item { display: block; overflow: hidden; border-radius: 2px; }
-  .collection-list__media { position: relative; aspect-ratio: 3/4; overflow: hidden; }
-  .collection-list__img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease-out); }
+
+  .collection-list__item { display: block; overflow: hidden; }
+
+  .collection-list__media {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .collection-list__item:hover .collection-list__media { transform: scale(1.06); }
+
+  /* 4 gradient backgrounds matching reference */
+  .clist-bg-1 { background: linear-gradient(160deg, #1e1a14, #2e2618, #1a1510); }
+  .clist-bg-2 { background: linear-gradient(160deg, #141820, #1c2030, #10141c); }
+  .clist-bg-3 { background: linear-gradient(160deg, #1a1420, #26182e, #141018); }
+  .clist-bg-4 { background: linear-gradient(160deg, #101818, #162020, #0c1414); }
+
+  .collection-list__img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
   .collection-list__item:hover .collection-list__img { transform: scale(1.05); }
+
+  .clist-icon-wrap {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
   .collection-list__overlay {
     position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(10,10,10,0.7) 0%, transparent 50%);
-    display: flex; flex-direction: column; justify-content: flex-end;
-    padding: 28px 24px;
+    background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 32px 28px;
+    transition: background 0.4s;
   }
-  .collection-list__label { font-family: var(--ff-display); font-size: clamp(18px, 2vw, 26px); font-weight: 300; color: var(--cream); letter-spacing: 0.05em; }
-  .collection-list__sublabel { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-top: 6px; }
+  .collection-list__item:hover .collection-list__overlay {
+    background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.2) 60%);
+  }
+
+  .clist-num {
+    font-family: var(--ff-display);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 8px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .collection-list__item:hover .clist-num { opacity: 1; transform: translateY(0); }
+
+  .collection-list__label {
+    font-family: var(--ff-display);
+    font-size: clamp(22px, 2vw, 28px);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+
+  .collection-list__sublabel {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .clist-cta {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease 0.05s, transform 0.4s ease 0.05s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .clist-cta::after { content: '→'; }
+  .collection-list__item:hover .clist-cta { opacity: 1; transform: translateY(0); }
+
   @media (max-width: 900px) {
     .collection-list__grid--4 { grid-template-columns: repeat(2, 1fr); }
     .collection-list__grid--3 { grid-template-columns: repeat(2, 1fr); }
+    .clist-head { flex-direction: column; align-items: flex-start; gap: 16px; }
   }
   @media (max-width: 640px) {
-    .collection-list__grid--2, .collection-list__grid--3, .collection-list__grid--4 { grid-template-columns: 1fr; }
+    .collection-list__grid--2,
+    .collection-list__grid--3,
+    .collection-list__grid--4 { grid-template-columns: 1fr 1fr; }
   }
 </style>
 
@@ -81,8 +256,10 @@
   "tag": "section",
   "max_blocks": 8,
   "settings": [
-    { "type": "text", "id": "heading",    "label": "Heading",     "default": "Shop by Category" },
-    { "type": "text", "id": "subheading", "label": "Eyebrow",     "default": "Explore" },
+    { "type": "text", "id": "heading",         "label": "Heading",           "default": "Shop by Category" },
+    { "type": "text", "id": "subheading",       "label": "Eyebrow",           "default": "Curated Selections" },
+    { "type": "text", "id": "view_all_label",   "label": "View All label",    "default": "All Collections" },
+    { "type": "url",  "id": "view_all_url",     "label": "View All link" },
     {
       "type": "select", "id": "columns", "label": "Columns",
       "options": [
@@ -90,7 +267,7 @@
         { "value": "3", "label": "3" },
         { "value": "4", "label": "4" }
       ],
-      "default": "3"
+      "default": "4"
     }
   ],
   "blocks": [
@@ -101,7 +278,7 @@
         { "type": "collection",   "id": "collection",  "label": "Collection" },
         { "type": "image_picker", "id": "image",       "label": "Override Image" },
         { "type": "text",         "id": "label",       "label": "Label" },
-        { "type": "text",         "id": "sublabel",    "label": "Sub-label (e.g. count)" },
+        { "type": "text",         "id": "sublabel",    "label": "Count / Sub-label" },
         { "type": "url",          "id": "custom_url",  "label": "Custom URL" }
       ]
     }
@@ -110,9 +287,10 @@
     {
       "name": "Collection List",
       "blocks": [
-        { "type": "collection_item" },
-        { "type": "collection_item" },
-        { "type": "collection_item" }
+        { "type": "collection_item", "settings": { "label": "Women's Ready-to-Wear", "sublabel": "142 pieces" } },
+        { "type": "collection_item", "settings": { "label": "Men's Tailoring", "sublabel": "98 pieces" } },
+        { "type": "collection_item", "settings": { "label": "Bags & Accessories", "sublabel": "215 pieces" } },
+        { "type": "collection_item", "settings": { "label": "Fine Jewellery", "sublabel": "76 pieces" } }
       ]
     }
   ]

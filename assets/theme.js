@@ -184,23 +184,26 @@
   }
 
   async function addToCart(variantId, quantity = 1, properties = {}) {
+    // Open drawer immediately — don't wait for server
+    document.getElementById('cart-drawer')?.classList.add('is-open');
+    document.getElementById('cart-overlay')?.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+
     const res = await fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: variantId, quantity, properties })
     });
+    if (!res.ok) throw new Error('add failed');
     const item = await res.json();
 
-    const cartRes = await fetch('/cart.js');
-    const cart = await cartRes.json();
-    updateCartUI(cart);
+    // Background: refresh full cart state for count/shipping bar
+    fetch('/cart.js')
+      .then(r => r.json())
+      .then(cart => updateCartUI(cart))
+      .catch(() => {});
+
     showToast(window.theme_strings?.added_to_cart || 'Added to bag');
-
-    // Open cart drawer
-    document.getElementById('cart-drawer')?.classList.add('is-open');
-    document.getElementById('cart-overlay')?.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-
     return item;
   }
 
@@ -245,20 +248,25 @@
      ============================================================ */
   function initCardAddToCart() {
     document.addEventListener('click', async e => {
-      const addBtn = e.target.closest('.product-card__add:not([data-has-variants])');
+      const addBtn = e.target.closest('.pcard-atc[data-variant-id]');
       if (!addBtn) return;
       const variantId = addBtn.dataset.variantId;
       if (!variantId) return;
 
-      addBtn.textContent = 'Adding...';
+      const originalText = addBtn.textContent.trim();
+      addBtn.textContent = '…';
       addBtn.disabled = true;
 
       try {
         await addToCart(variantId);
+        addBtn.textContent = '✓';
+        setTimeout(() => {
+          addBtn.textContent = originalText;
+          addBtn.disabled = false;
+        }, 1800);
       } catch {
         showToast('Could not add to bag. Please try again.');
-      } finally {
-        addBtn.textContent = 'Add to Bag';
+        addBtn.textContent = originalText;
         addBtn.disabled = false;
       }
     });

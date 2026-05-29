@@ -97,34 +97,7 @@
       {%- endif -%}
     </a>
 
-    {%- comment -%}Hover actions (wishlist + quick view){%- endcomment -%}
-    <div class="product-card__actions" aria-label="Product actions">
-      {%- if show_wishlist and settings.wishlist_enabled -%}
-        <button
-          class="act-btn"
-          data-wishlist-id="{{ product.id }}"
-          aria-label="{{ 'accessibility.wishlist_add' | t }}"
-          aria-pressed="false"
-        >
-          {%- render 'icon-wishlist' -%}
-          <span>Wishlist</span>
-        </button>
-      {%- endif -%}
-
-      {%- if show_quickview and settings.quickview_enabled -%}
-        <button
-          class="act-btn"
-          data-open-quickview
-          data-product-url="{{ product.url }}"
-          aria-label="{{ 'accessibility.quick_view' | t: product_title: product.title }}"
-        >
-          {%- render 'icon-eye' -%}
-          <span>Quick View</span>
-        </button>
-      {%- endif -%}
-    </div>
-
-    {%- comment -%}Available sizes on hover{%- endcomment -%}
+    {%- comment -%}Available sizes on hover (above the action bar){%- endcomment -%}
     {%- if show_sizes -%}
       {%- assign size_option = nil -%}
       {%- for option in product.options_with_values -%}
@@ -141,27 +114,55 @@
       {%- endif -%}
     {%- endif -%}
 
-    {%- comment -%}Add to cart slide-up bar{%- endcomment -%}
-    {%- if product.variants.size == 1 and first_variant -%}
-      <button
-        class="product-card__add"
-        data-variant-id="{{ first_variant.id }}"
-        aria-label="{{ 'accessibility.add_to_cart' | t: product_title: product.title }}"
-        {%- unless first_variant.available -%}disabled{%- endunless -%}
-      >
-        {%- if first_variant.available -%}
-          {{ 'cart.add' | t }}
-        {%- else -%}
-          {{ 'products.product.sold_out' | t }}
-        {%- endif -%}
-      </button>
-    {%- else -%}
-      <a
-        href="{{ product.url }}"
-        class="product-card__add"
-        aria-label="{{ 'accessibility.add_to_cart' | t: product_title: product.title }}"
-      >{{ 'products.product.choose_variant' | t }}</a>
-    {%- endif -%}
+    {%- comment -%}Unified action bar: [wishlist icon] | [add to bag / select] | [quick view icon]{%- endcomment -%}
+    <div class="product-card__bar">
+
+      {%- if show_wishlist and settings.wishlist_enabled -%}
+        <button
+          class="pcard-icon-btn"
+          data-wishlist-id="{{ product.id }}"
+          aria-label="{{ 'accessibility.wishlist_add' | t }}"
+          aria-pressed="false"
+        >
+          {%- render 'icon-wishlist' -%}
+        </button>
+      {%- else -%}
+        <span class="pcard-icon-btn pcard-icon-btn--ghost"></span>
+      {%- endif -%}
+
+      {%- if product.variants.size == 1 and first_variant -%}
+        <button
+          class="pcard-atc"
+          data-variant-id="{{ first_variant.id }}"
+          aria-label="{{ 'accessibility.add_to_cart' | t: product_title: product.title }}"
+          {%- unless first_variant.available -%}disabled{%- endunless -%}
+        >
+          {%- if first_variant.available -%}
+            {{ 'cart.add' | t }}
+          {%- else -%}
+            {{ 'products.product.sold_out' | t }}
+          {%- endif -%}
+        </button>
+      {%- else -%}
+        <a href="{{ product.url }}" class="pcard-atc">
+          {{- 'products.product.choose_variant' | t -}}
+        </a>
+      {%- endif -%}
+
+      {%- if show_quickview and settings.quickview_enabled -%}
+        <button
+          class="pcard-icon-btn"
+          data-open-quickview
+          data-product-url="{{ product.url }}"
+          aria-label="{{ 'accessibility.quick_view' | t: product_title: product.title }}"
+        >
+          {%- render 'icon-eye' -%}
+        </button>
+      {%- else -%}
+        <span class="pcard-icon-btn pcard-icon-btn--ghost"></span>
+      {%- endif -%}
+
+    </div>
 
   </div>{%- comment -%}/.product-card__media{%- endcomment -%}
 

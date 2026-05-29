@@ -146,6 +146,9 @@
   "collections": {
     "all": {
       "title": "All Products"
+    },
+    "general": {
+      "view_all": "View All"
     }
   },
   "quick_view": {

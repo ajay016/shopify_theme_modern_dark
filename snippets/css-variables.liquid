@@ -50,13 +50,13 @@
     --ease-in:   cubic-bezier(0.55, 0.055, 0.675, 0.19);
     --transition: 0.3s var(--ease-out);
 
-    /* Z-index layers */
+    /* Z-index layers — nav must be lower than drawers/modals */
     --z-base:    1;
     --z-raised:  10;
-    --z-overlay: 100;
-    --z-drawer:  200;
-    --z-modal:   300;
-    --z-nav:     400;
+    --z-nav:     100;
+    --z-overlay: 150;
+    --z-drawer:  400;
+    --z-modal:   500;
     --z-cursor:  9999;
   }
 </style>

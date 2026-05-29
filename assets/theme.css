@@ -1136,8 +1136,8 @@ body.has-announcement .site-header { top: 48px; }
 /* Base: shared button styles */
 .pcard-btn {
   border: 1px solid rgba(200,169,110,0.5);
-  background: rgba(8,8,8,0.85);
-  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,0.93);
+  backdrop-filter: blur(6px);
   color: var(--cream);
   display: flex;
   align-items: center;
@@ -1181,7 +1181,7 @@ body.has-announcement .site-header { top: 48px; }
   height: 44px;
   border-radius: 8px;
   border-color: rgba(200,169,110,0.75);
-  background: rgba(200,169,110,0.18);
+  background: rgba(0,0,0,0.88);
   color: var(--gold);
   gap: 8px;
   font-size: 9px;

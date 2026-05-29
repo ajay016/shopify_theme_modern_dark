@@ -68,11 +68,11 @@
   endfor
   assign vars_j = vars_j | append: ']'
 -%}
-<script type="application/json" class="product-card__json">{"id":{{ product.id }},"title":{{ product.title | json }},"vendor":{{ product.vendor | json }},"url":{{ product.url | json }},"price":{{ product.price }},"compare_at_price":{{ product.compare_at_price | default: 0 }},"body_html":{{ product.description | json }},"images":{{ imgs_j }},"options":{{ product.options | json }},"variants":{{ vars_j }}}</script>
 <div
   class="product-card product-card--{{ card_style }}"
   data-product-id="{{ product.id }}"
 >
+  <script type="application/json" class="product-card__json">{"id":{{ product.id }},"title":{{ product.title | json }},"vendor":{{ product.vendor | json }},"url":{{ product.url | json }},"price":{{ product.price }},"compare_at_price":{{ product.compare_at_price | default: 0 }},"body_html":{{ product.description | json }},"images":{{ imgs_j }},"options":{{ product.options | json }},"variants":{{ vars_j }}}</script>
   {%- comment -%}— Media —{%- endcomment -%}
   <div class="product-card__media product-card__media--{{ image_ratio }}">
 

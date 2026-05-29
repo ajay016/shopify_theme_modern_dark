@@ -10,7 +10,20 @@
   {
     "name": "Colors",
     "settings": [
-      { "type": "header", "content": "Brand Palette" },
+      {
+        "type": "select",
+        "id": "color_scheme",
+        "label": "Color Scheme",
+        "info": "Applies a preset palette. You can still override individual colors below.",
+        "options": [
+          { "value": "dark",  "label": "Dark Luxury (Default)" },
+          { "value": "light", "label": "Light / Ivory" },
+          { "value": "warm",  "label": "Warm Taupe" },
+          { "value": "custom","label": "Custom (use pickers below)" }
+        ],
+        "default": "dark"
+      },
+      { "type": "header", "content": "Custom Colors — only used when scheme is set to Custom" },
       { "type": "color", "id": "color_black",      "label": "Background — Deep Black",  "default": "#0A0A0A" },
       { "type": "color", "id": "color_charcoal",   "label": "Surface — Charcoal",       "default": "#161616" },
       { "type": "color", "id": "color_cream",      "label": "Text — Cream",             "default": "#F5F0E8" },

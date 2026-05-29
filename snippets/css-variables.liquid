@@ -1,23 +1,69 @@
 <style>
   :root {
+    /* ── Color Scheme Presets ───────────────────────────────────── */
+    {%- liquid
+      case settings.color_scheme
+        when 'light'
+          assign sc_black    = '#FFFFFF'
+          assign sc_charcoal = '#F5F2EC'
+          assign sc_cream    = '#1A1A1A'
+          assign sc_gold     = '#9B7B3F'
+          assign sc_gold_l   = '#C8A96E'
+          assign sc_muted    = '#8A8480'
+          assign sc_ivory    = '#0A0A0A'
+          assign sc_sale     = '#8B1A1A'
+          assign sc_sale_bg  = '#FFD5D5'
+        when 'warm'
+          assign sc_black    = '#1C1410'
+          assign sc_charcoal = '#2A2018'
+          assign sc_cream    = '#EDE0CC'
+          assign sc_gold     = '#C8965A'
+          assign sc_gold_l   = '#E4BF8C'
+          assign sc_muted    = '#8A7A68'
+          assign sc_ivory    = '#F5EDD8'
+          assign sc_sale     = '#FFBABA'
+          assign sc_sale_bg  = '#7A2020'
+        when 'custom'
+          assign sc_black    = settings.color_black
+          assign sc_charcoal = settings.color_charcoal
+          assign sc_cream    = settings.color_cream
+          assign sc_gold     = settings.color_gold
+          assign sc_gold_l   = settings.color_gold_light
+          assign sc_muted    = settings.color_muted
+          assign sc_ivory    = settings.color_ivory
+          assign sc_sale     = settings.color_sale
+          assign sc_sale_bg  = settings.color_sale_bg
+        else
+          assign sc_black    = '#0A0A0A'
+          assign sc_charcoal = '#161616'
+          assign sc_cream    = '#F5F0E8'
+          assign sc_gold     = '#C8A96E'
+          assign sc_gold_l   = '#E8D4A8'
+          assign sc_muted    = '#6E6A66'
+          assign sc_ivory    = '#FAF8F3'
+          assign sc_sale     = '#FFBABA'
+          assign sc_sale_bg  = '#7A2020'
+      endcase
+    -%}
+
     /* Brand Palette */
-    --black:       {{ settings.color_black }};
-    --charcoal:    {{ settings.color_charcoal }};
-    --cream:       {{ settings.color_cream }};
-    --gold:        {{ settings.color_gold }};
-    --gold-light:  {{ settings.color_gold_light }};
-    --muted:       {{ settings.color_muted }};
-    --ivory:       {{ settings.color_ivory }};
-    --sale-text:   {{ settings.color_sale }};
-    --sale-bg:     {{ settings.color_sale_bg }};
+    --black:       {{ sc_black }};
+    --charcoal:    {{ sc_charcoal }};
+    --cream:       {{ sc_cream }};
+    --gold:        {{ sc_gold }};
+    --gold-light:  {{ sc_gold_l }};
+    --muted:       {{ sc_muted }};
+    --ivory:       {{ sc_ivory }};
+    --sale-text:   {{ sc_sale }};
+    --sale-bg:     {{ sc_sale_bg }};
 
     /* Derived semi-transparent values */
-    --border:        {{ settings.color_gold | color_modify: 'alpha', 0.18 }};
-    --border-strong: {{ settings.color_gold | color_modify: 'alpha', 0.35 }};
-    --gold-dim:      {{ settings.color_gold | color_modify: 'alpha', 0.12 }};
-    --gold-glow:     {{ settings.color_gold | color_modify: 'alpha', 0.08 }};
-    --cream-faint:   {{ settings.color_cream | color_modify: 'alpha', 0.06 }};
-    --black-overlay: {{ settings.color_black | color_modify: 'alpha', 0.75 }};
+    --border:        {{ sc_gold | color_modify: 'alpha', 0.18 }};
+    --border-strong: {{ sc_gold | color_modify: 'alpha', 0.35 }};
+    --gold-dim:      {{ sc_gold | color_modify: 'alpha', 0.12 }};
+    --gold-glow:     {{ sc_gold | color_modify: 'alpha', 0.08 }};
+    --cream-faint:   {{ sc_cream | color_modify: 'alpha', 0.06 }};
+    --black-overlay: {{ sc_black | color_modify: 'alpha', 0.75 }};
 
     /* Typography — fonts loaded via Google Fonts in theme.liquid */
     {%- liquid

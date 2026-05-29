@@ -123,10 +123,11 @@
         "btn1"
       ],
       "settings": {
+        "image": "shopify://shop_images/edit1.jpg",
         "caption": "",
         "eyebrow": "The Journal",
         "heading": "The Art of\nWearing Nothing Else",
-        "text": "<p>Our Spring collection explores the intersection of structure and ease — garments engineered to move with the body while commanding a room. Crafted over eight months in our Milan atelier.</p>",
+        "text": "<p>Our Spring collection explores the intersection of structure and ease — garments engineered to move with the body while commanding a room. Crafted over eight months in our Milan atelier. dsfds</p>",
         "layout": "left",
         "image_width": "50",
         "full_width": false

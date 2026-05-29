@@ -97,71 +97,52 @@
       {%- endif -%}
     </a>
 
-    {%- comment -%}Available sizes on hover (above the action bar){%- endcomment -%}
-    {%- if show_sizes -%}
-      {%- assign size_option = nil -%}
-      {%- for option in product.options_with_values -%}
-        {%- if option.name == 'Size' or option.name == 'size' -%}
-          {%- assign size_option = option -%}
+    {%- comment -%}Hover overlay — centered circular action buttons{%- endcomment -%}
+    <div class="product-card__overlay">
+      <div class="pcard-actions">
+
+        {%- if show_wishlist and settings.wishlist_enabled -%}
+          <button
+            class="pcard-btn pcard-btn--wishlist"
+            data-wishlist-id="{{ product.id }}"
+            aria-label="{{ 'accessibility.wishlist_add' | t }}"
+            aria-pressed="false"
+          >
+            {%- render 'icon-wishlist' -%}
+          </button>
         {%- endif -%}
-      {%- endfor -%}
-      {%- if size_option -%}
-        <div class="product-card__sizes" aria-hidden="true">
-          {%- for value in size_option.values limit: 6 -%}
-            <span class="size-dot">{{ value }}</span>
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
-    {%- endif -%}
 
-    {%- comment -%}Unified action bar: [wishlist icon] | [add to bag / select] | [quick view icon]{%- endcomment -%}
-    <div class="product-card__bar">
+        {%- if product.variants.size == 1 and first_variant -%}
+          <button
+            class="pcard-btn pcard-btn--atc"
+            data-variant-id="{{ first_variant.id }}"
+            aria-label="{{ 'accessibility.add_to_cart' | t: product_title: product.title }}"
+            {%- unless first_variant.available -%}disabled{%- endunless -%}
+          >
+            {%- render 'icon-bag' -%}
+            <span class="pcard-btn__label">
+              {%- if first_variant.available -%}Add to Bag{%- else -%}Sold Out{%- endif -%}
+            </span>
+          </button>
+        {%- else -%}
+          <a href="{{ product.url }}" class="pcard-btn pcard-btn--atc">
+            {%- render 'icon-bag' -%}
+            <span class="pcard-btn__label">Select</span>
+          </a>
+        {%- endif -%}
 
-      {%- if show_wishlist and settings.wishlist_enabled -%}
-        <button
-          class="pcard-icon-btn"
-          data-wishlist-id="{{ product.id }}"
-          aria-label="{{ 'accessibility.wishlist_add' | t }}"
-          aria-pressed="false"
-        >
-          {%- render 'icon-wishlist' -%}
-        </button>
-      {%- else -%}
-        <span class="pcard-icon-btn pcard-icon-btn--ghost"></span>
-      {%- endif -%}
+        {%- if show_quickview and settings.quickview_enabled -%}
+          <button
+            class="pcard-btn pcard-btn--qv"
+            data-open-quickview
+            data-product-url="{{ product.url }}"
+            aria-label="{{ 'accessibility.quick_view' | t: product_title: product.title }}"
+          >
+            {%- render 'icon-eye' -%}
+          </button>
+        {%- endif -%}
 
-      {%- if product.variants.size == 1 and first_variant -%}
-        <button
-          class="pcard-atc"
-          data-variant-id="{{ first_variant.id }}"
-          aria-label="{{ 'accessibility.add_to_cart' | t: product_title: product.title }}"
-          {%- unless first_variant.available -%}disabled{%- endunless -%}
-        >
-          {%- if first_variant.available -%}
-            {{ 'cart.add' | t }}
-          {%- else -%}
-            {{ 'products.product.sold_out' | t }}
-          {%- endif -%}
-        </button>
-      {%- else -%}
-        <a href="{{ product.url }}" class="pcard-atc">
-          {{- 'products.product.choose_variant' | t -}}
-        </a>
-      {%- endif -%}
-
-      {%- if show_quickview and settings.quickview_enabled -%}
-        <button
-          class="pcard-icon-btn"
-          data-open-quickview
-          data-product-url="{{ product.url }}"
-          aria-label="{{ 'accessibility.quick_view' | t: product_title: product.title }}"
-        >
-          {%- render 'icon-eye' -%}
-        </button>
-      {%- else -%}
-        <span class="pcard-icon-btn pcard-icon-btn--ghost"></span>
-      {%- endif -%}
-
+      </div>
     </div>
 
   </div>{%- comment -%}/.product-card__media{%- endcomment -%}

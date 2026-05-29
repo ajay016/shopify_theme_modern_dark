@@ -1093,90 +1093,102 @@ body.has-announcement .site-header { top: 48px; }
 .badge--limited  { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
 .badge--exclusive { background: transparent; border: 1px solid rgba(245,240,232,0.3); color: var(--cream); }
 
-/* Unified bottom action bar: [♥ icon] | [Add to Bag text] | [👁 icon] */
-.product-card__bar {
+/* Hover overlay — covers full image, reveals centered action buttons */
+.product-card__overlay {
   position: absolute;
-  bottom: 0; left: 0; right: 0;
+  inset: 0;
+  background: rgba(0,0,0,0);
   display: flex;
-  align-items: stretch;
-  height: 50px;
-  background: rgba(8,8,8,0.92);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(200,169,110,0.25);
+  align-items: center;
+  justify-content: center;
   z-index: 3;
+  pointer-events: none;
+  transition: background 0.4s;
+}
+.product-card:hover .product-card__overlay {
+  background: rgba(0,0,0,0.32);
+  pointer-events: all;
+}
+
+/* Three circular action buttons — slide up from center on hover */
+.pcard-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   opacity: 0;
-  transform: translateY(100%);
-  transition: opacity 0.3s, transform 0.35s var(--ease-out);
+  transform: translateY(18px) scale(0.9);
+  transition: opacity 0.28s, transform 0.38s var(--ease-out);
 }
-.product-card:hover .product-card__bar {
+.product-card:hover .pcard-actions {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
-/* Icon buttons on either side */
-.pcard-icon-btn {
-  width: 50px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
+/* Base circle button */
+.pcard-btn {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(200,169,110,0.5);
+  background: rgba(8,8,8,0.82);
+  backdrop-filter: blur(10px);
   color: var(--cream);
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  position: relative;
-}
-.pcard-icon-btn:hover { background: rgba(200,169,110,0.12); color: var(--gold); }
-.pcard-icon-btn.is-active { color: var(--gold); }
-.pcard-icon-btn.is-active svg { fill: var(--gold); stroke: var(--gold); }
-.pcard-icon-btn svg { width: 18px; height: 18px; display: block; }
-.pcard-icon-btn--ghost { pointer-events: none; }
-
-/* Center ATC / Select Options */
-.pcard-atc {
-  flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: var(--ff-body);
-  font-size: 9px;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--gold);
-  background: transparent;
-  border: none;
-  border-left: 1px solid rgba(200,169,110,0.2);
-  border-right: 1px solid rgba(200,169,110,0.2);
+  gap: 4px;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s, color 0.2s;
-  padding: 0 8px;
-  text-align: center;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+  font-family: var(--ff-body);
+  position: relative;
 }
-.pcard-atc:hover { background: var(--gold); color: var(--black); }
-.pcard-atc:disabled { opacity: 0.4; cursor: not-allowed; }
-.pcard-atc:disabled:hover { background: transparent; color: var(--gold); }
-
-/* Size dots — float above the bar */
-.product-card__sizes {
-  position: absolute;
-  bottom: 58px; left: 14px;
-  display: flex;
-  gap: 4px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  z-index: 2;
+.pcard-btn:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--black);
+  transform: scale(1.1);
 }
-.product-card:hover .product-card__sizes { opacity: 1; }
-.size-dot {
-  font-size: 8px;
+.pcard-btn:hover svg { stroke: var(--black); }
+.pcard-btn svg { width: 18px; height: 18px; display: block; }
+.pcard-btn__label {
+  font-size: 7px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--muted);
-  background: rgba(10,10,10,0.7);
-  padding: 3px 6px;
+  white-space: nowrap;
+  line-height: 1;
+  display: none;
 }
+
+/* Wishlist — active state */
+.pcard-btn--wishlist.is-active {
+  background: rgba(200,169,110,0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.pcard-btn--wishlist.is-active svg { stroke: var(--gold); fill: var(--gold); }
+
+/* ATC — primary button, larger with gold accent + shows label */
+.pcard-btn--atc {
+  width: 64px; height: 64px;
+  border-color: rgba(200,169,110,0.75);
+  background: rgba(200,169,110,0.18);
+  color: var(--gold);
+}
+.pcard-btn--atc .pcard-btn__label { display: block; }
+.pcard-btn--atc svg { width: 20px; height: 20px; }
+.pcard-btn--atc:hover { background: var(--gold); color: var(--black); }
+.pcard-btn--atc:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+.pcard-btn--atc:disabled:hover {
+  transform: none;
+  background: rgba(200,169,110,0.18);
+  border-color: rgba(200,169,110,0.4);
+  color: var(--gold);
+}
+.pcard-btn--atc:disabled:hover svg { stroke: var(--gold); }
 
 /* Card info */
 .product-card__info { padding: 0 2px; }
@@ -1374,12 +1386,18 @@ body.has-announcement .site-header { top: 48px; }
 .qv-price__compare { font-size: 15px; color: var(--muted); text-decoration: line-through; }
 
 /* Variants */
-.qv-variants { display: flex; flex-direction: column; gap: 20px; margin-bottom: 28px; }
+.qv-variants { display: flex; flex-direction: column; gap: 20px; margin-bottom: 24px; }
 .qv-option__label {
   font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
   color: var(--muted); margin-bottom: 10px;
 }
+.qv-opt-selected {
+  color: var(--cream);
+  font-size: 9px; letter-spacing: 0.1em; text-transform: none;
+}
 .qv-option__values { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Generic option buttons */
 .qv-opt-btn {
   padding: 8px 18px;
   font-size: 11px; letter-spacing: 0.08em;
@@ -1391,6 +1409,45 @@ body.has-announcement .site-header { top: 48px; }
 }
 .qv-opt-btn:hover { border-color: rgba(200,169,110,0.5); }
 .qv-opt-btn.is-active { background: var(--gold); border-color: var(--gold); color: var(--black); font-weight: 500; }
+
+/* Size buttons — slightly wider */
+.qv-opt-btn--size {
+  min-width: 48px;
+  padding: 8px 14px;
+  text-align: center;
+}
+
+/* Color swatches */
+.qv-option__values--swatches { gap: 10px; }
+.qv-swatch-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  cursor: pointer;
+  transition: outline-color 0.2s, border-color 0.2s, transform 0.2s;
+  position: relative;
+}
+.qv-swatch-btn:hover { transform: scale(1.12); outline-color: rgba(200,169,110,0.4); }
+.qv-swatch-btn.is-active { outline-color: var(--gold); border-color: var(--gold); transform: scale(1.05); }
+
+/* Description */
+.qv-description {
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--muted);
+  margin-bottom: 24px;
+  letter-spacing: 0.02em;
+}
+
+/* Image placeholder */
+.qv-img-placeholder {
+  width: 100%; height: 100%;
+  min-height: 400px;
+  background: var(--charcoal);
+  display: flex; align-items: center; justify-content: center;
+}
 
 /* ATC */
 .qv-atc {
@@ -1429,7 +1486,9 @@ body.has-announcement .site-header { top: 48px; }
 
 .qv-error {
   grid-column: 1 / -1; grid-row: 2;
-  padding: 60px; text-align: center; color: var(--muted); font-size: 13px;
+  padding: 60px 40px; text-align: center; color: var(--cream); font-size: 13px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; min-height: 320px;
 }
 
 @media (max-width: 768px) {

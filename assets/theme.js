@@ -248,25 +248,26 @@
      ============================================================ */
   function initCardAddToCart() {
     document.addEventListener('click', async e => {
-      const addBtn = e.target.closest('.pcard-atc[data-variant-id]');
+      const addBtn = e.target.closest('.pcard-btn--atc[data-variant-id]');
       if (!addBtn) return;
       const variantId = addBtn.dataset.variantId;
       if (!variantId) return;
 
-      const originalText = addBtn.textContent.trim();
-      addBtn.textContent = '…';
+      const label = addBtn.querySelector('.pcard-btn__label');
+      const originalLabel = label ? label.textContent : '';
+      if (label) label.textContent = '…';
       addBtn.disabled = true;
 
       try {
         await addToCart(variantId);
-        addBtn.textContent = '✓';
+        if (label) label.textContent = '✓';
         setTimeout(() => {
-          addBtn.textContent = originalText;
+          if (label) label.textContent = originalLabel;
           addBtn.disabled = false;
         }, 1800);
       } catch {
         showToast('Could not add to bag. Please try again.');
-        addBtn.textContent = originalText;
+        if (label) label.textContent = originalLabel;
         addBtn.disabled = false;
       }
     });
@@ -307,12 +308,21 @@
         </div>`;
 
       try {
-        const res     = await fetch(productUrl + '.js');
-        if (!res.ok) throw new Error('fetch failed');
+        const res = await fetch(productUrl + '.js');
+        if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
+        const contentType = res.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+          throw new Error('Store may be password protected — the product data endpoint returned HTML instead of JSON.');
+        }
         const product = await res.json();
-        renderQV(product);
-      } catch {
-        modal.innerHTML = '<p class="qv-error">Could not load product — <a href="' + productUrl + '" style="color:var(--gold)">view full page</a></p>';
+        renderQV(product, productUrl, closeQV);
+      } catch (err) {
+        modal.innerHTML = `
+          <div class="qv-error">
+            <p style="margin-bottom:16px;">Unable to load product preview.</p>
+            <p style="font-size:11px;opacity:0.5;margin-bottom:24px;">${err.message}</p>
+            <a href="${productUrl}" class="btn-primary" style="display:inline-flex;align-items:center;justify-content:center;padding:14px 32px;">View Product Page</a>
+          </div>`;
       }
     });
 
@@ -321,39 +331,86 @@
       return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(cents / 100);
     }
 
-    function renderQV(p) {
+    function isColorOption(name) {
+      return /^colou?r$/i.test(name.trim());
+    }
+    function isSizeOption(name) {
+      return /^size$/i.test(name.trim());
+    }
+
+    function renderOption(optName, oi, values) {
+      if (isColorOption(optName)) {
+        const swatches = values.map(val => {
+          const css = val.toLowerCase().replace(/\s+/g, '');
+          return `<button class="qv-swatch-btn" data-opt-index="${oi}" data-opt-value="${val}"
+            title="${val}"
+            style="background-color:${css};"
+          ></button>`;
+        }).join('');
+        return `
+          <div class="qv-option">
+            <p class="qv-option__label">${optName}: <span class="qv-opt-selected" data-opt-sel="${oi}"></span></p>
+            <div class="qv-option__values qv-option__values--swatches">${swatches}</div>
+          </div>`;
+      }
+      if (isSizeOption(optName)) {
+        const btns = values.map(val =>
+          `<button class="qv-opt-btn qv-opt-btn--size" data-opt-index="${oi}" data-opt-value="${val}">${val}</button>`
+        ).join('');
+        return `
+          <div class="qv-option">
+            <p class="qv-option__label">${optName}: <span class="qv-opt-selected" data-opt-sel="${oi}"></span></p>
+            <div class="qv-option__values">${btns}</div>
+          </div>`;
+      }
+      const btns = values.map(val =>
+        `<button class="qv-opt-btn" data-opt-index="${oi}" data-opt-value="${val}">${val}</button>`
+      ).join('');
+      return `
+        <div class="qv-option">
+          <p class="qv-option__label">${optName}: <span class="qv-opt-selected" data-opt-sel="${oi}"></span></p>
+          <div class="qv-option__values">${btns}</div>
+        </div>`;
+    }
+
+    function renderQV(p, productUrl, closeQV) {
+      // Image URLs — Shopify CDN format
       const allImages = p.images.map(src =>
         'https:' + src.replace(/^https?:/, '').replace(/(\.\w+)(\?.*)?$/, '_800x$1')
       );
       const mainSrc = allImages[0] || '';
 
       // Thumbnails
-      const thumbs = allImages.slice(0, 8).map((src, i) => `
+      const thumbsHtml = allImages.slice(0, 8).map((src, i) => `
         <button class="qv-thumb ${i === 0 ? 'is-active' : ''}" data-qv-thumb="${src}">
           <img src="${src}" alt="" loading="lazy">
         </button>`).join('');
 
-      // Variant options — group by option name
+      // Variant options
       let variantHtml = '';
-      if (p.variants.length > 1) {
-        variantHtml = p.options.map((optName, oi) => {
+      if (p.options && p.options.length > 0 && !(p.options.length === 1 && p.options[0] === 'Title')) {
+        const optionsHtml = p.options.map((optName, oi) => {
           const values = [...new Set(p.variants.map(v => v.options[oi]))];
-          return `
-            <div class="qv-option">
-              <p class="qv-option__label">${optName}</p>
-              <div class="qv-option__values">
-                ${values.map(val => `
-                  <button class="qv-opt-btn" data-opt-index="${oi}" data-opt-value="${val}">${val}</button>
-                `).join('')}
-              </div>
-            </div>`;
+          return renderOption(optName, oi, values);
         }).join('');
-        variantHtml = `<div class="qv-variants">${variantHtml}</div>`;
+        variantHtml = `<div class="qv-variants">${optionsHtml}</div>`;
       }
 
+      const firstVariant = p.variants[0];
       const cPrice = fmt(p.price);
       const oPrice = p.compare_at_price > p.price ? fmt(p.compare_at_price) : '';
-      const firstVariant = p.variants[0];
+
+      // Description — strip to first 280 chars for quick view
+      let descHtml = '';
+      if (p.body_html) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = p.body_html;
+        const text = tmp.textContent.trim();
+        if (text) {
+          const short = text.length > 280 ? text.slice(0, 280).trimEnd() + '…' : text;
+          descHtml = `<p class="qv-description">${short}</p>`;
+        }
+      }
 
       modal.innerHTML = `
         <button class="qv-close" aria-label="Close">
@@ -362,9 +419,9 @@
 
         <div class="qv-gallery">
           <div class="qv-gallery__main">
-            ${mainSrc ? `<img src="${mainSrc}" class="qv-main-img" id="qv-main-img" alt="${p.title}">` : ''}
+            ${mainSrc ? `<img src="${mainSrc}" class="qv-main-img" id="qv-main-img" alt="${p.title}">` : '<div class="qv-img-placeholder"></div>'}
           </div>
-          ${allImages.length > 1 ? `<div class="qv-gallery__thumbs">${thumbs}</div>` : ''}
+          ${allImages.length > 1 ? `<div class="qv-gallery__thumbs">${thumbsHtml}</div>` : ''}
         </div>
 
         <div class="qv-details">
@@ -377,50 +434,65 @@
 
           ${variantHtml}
 
+          ${descHtml}
+
           <button class="btn-primary qv-atc" id="qv-atc-btn"
             data-variant-id="${firstVariant ? firstVariant.id : ''}"
             ${firstVariant && !firstVariant.available ? 'disabled' : ''}>
-            ${firstVariant && !firstVariant.available ? 'Sold Out' : 'Add to Cart'}
+            ${firstVariant && !firstVariant.available ? 'Sold Out' : 'Add to Bag'}
           </button>
 
-          <a href="${p.url}" class="qv-view-full">View Full Details &rarr;</a>
+          <a href="${productUrl}" class="qv-view-full">View Full Details &rarr;</a>
         </div>`;
 
-      // — Close
+      // Close button
       modal.querySelector('.qv-close').addEventListener('click', closeQV);
 
-      // — Gallery thumbnails
+      // Gallery thumbnails
       const mainImg = modal.querySelector('#qv-main-img');
       modal.querySelectorAll('[data-qv-thumb]').forEach(thumb => {
         thumb.addEventListener('click', () => {
-          if (mainImg) { mainImg.style.opacity = '0'; setTimeout(() => { mainImg.src = thumb.dataset.qvThumb; mainImg.style.opacity = '1'; }, 150); }
+          if (mainImg) {
+            mainImg.style.opacity = '0';
+            setTimeout(() => { mainImg.src = thumb.dataset.qvThumb; mainImg.style.opacity = '1'; }, 150);
+          }
           modal.querySelectorAll('[data-qv-thumb]').forEach(t => t.classList.remove('is-active'));
           thumb.classList.add('is-active');
         });
       });
 
-      // — Variant selection
+      // Variant selection state
       let selectedOpts = firstVariant ? [...firstVariant.options] : [];
 
       function syncVariant() {
         const variant = p.variants.find(v => v.options.every((o, i) => o === selectedOpts[i]));
         const atcBtn  = modal.querySelector('#qv-atc-btn');
         const priceEl = modal.querySelector('#qv-price');
+
         if (variant) {
           atcBtn.dataset.variantId = variant.id;
-          atcBtn.disabled  = !variant.available;
-          atcBtn.textContent = variant.available ? 'Add to Cart' : 'Sold Out';
+          atcBtn.disabled = !variant.available;
+          atcBtn.textContent = variant.available ? 'Add to Bag' : 'Sold Out';
           if (priceEl) priceEl.textContent = fmt(variant.price);
         } else {
           atcBtn.disabled = true;
           atcBtn.textContent = 'Unavailable';
         }
-        modal.querySelectorAll('.qv-opt-btn').forEach(b => {
-          b.classList.toggle('is-active', b.dataset.optValue === selectedOpts[parseInt(b.dataset.optIndex)]);
+
+        // Highlight selected option buttons
+        modal.querySelectorAll('[data-opt-index]').forEach(b => {
+          const oi = parseInt(b.dataset.optIndex);
+          b.classList.toggle('is-active', b.dataset.optValue === selectedOpts[oi]);
+        });
+
+        // Update selected value labels
+        modal.querySelectorAll('[data-opt-sel]').forEach(label => {
+          const oi = parseInt(label.dataset.optSel);
+          label.textContent = selectedOpts[oi] || '';
         });
       }
 
-      modal.querySelectorAll('.qv-opt-btn').forEach(btn => {
+      modal.querySelectorAll('[data-opt-index]').forEach(btn => {
         btn.addEventListener('click', () => {
           selectedOpts[parseInt(btn.dataset.optIndex)] = btn.dataset.optValue;
           syncVariant();
@@ -428,7 +500,7 @@
       });
       syncVariant();
 
-      // — Add to cart from modal
+      // ATC from modal
       const atcBtn = modal.querySelector('#qv-atc-btn');
       if (atcBtn) {
         atcBtn.addEventListener('click', async () => {

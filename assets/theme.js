@@ -184,11 +184,6 @@
   }
 
   async function addToCart(variantId, quantity = 1, properties = {}) {
-    // Open drawer immediately — don't wait for server
-    document.getElementById('cart-drawer')?.classList.add('is-open');
-    document.getElementById('cart-overlay')?.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-
     const res = await fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -197,11 +192,16 @@
     if (!res.ok) throw new Error('add failed');
     const item = await res.json();
 
-    // Background: refresh full cart state for count/shipping bar
-    fetch('/cart.js')
-      .then(r => r.json())
-      .then(cart => updateCartUI(cart))
-      .catch(() => {});
+    // Fetch the full cart state, render it, then open the drawer
+    try {
+      const cartRes = await fetch('/cart.js');
+      const cart = await cartRes.json();
+      updateCartUI(cart);
+    } catch (_) {}
+
+    document.getElementById('cart-drawer')?.classList.add('is-open');
+    document.getElementById('cart-overlay')?.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
 
     showToast(window.theme_strings?.added_to_cart || 'Added to bag');
     return item;

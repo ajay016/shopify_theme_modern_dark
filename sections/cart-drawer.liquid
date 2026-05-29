@@ -114,25 +114,23 @@
     {%- endif -%}
   </div>
 
-  {%- comment -%}Footer — subtotal + checkout{%- endcomment -%}
-  {%- if cart.item_count > 0 -%}
-    <div class="cart-drawer__footer">
-      <div class="cart-drawer__subtotal">
-        <span class="cart-drawer__subtotal-label">{{ 'cart.subtotal' | t }}</span>
-        <span class="cart-drawer__subtotal-price">{{ cart.total_price | money }}</span>
-      </div>
-      <p class="cart-drawer__taxes">{{ 'cart.taxes_and_shipping' | t }}</p>
-
-      <a
-        href="{{ routes.checkout }}"
-        class="btn btn-primary cart-drawer__checkout"
-      >{{ 'cart.checkout' | t }}</a>
-
-      <button data-close-cart class="cart-drawer__continue">
-        {{ 'cart.continue_shopping' | t }}
-      </button>
+  {%- comment -%}Footer — always in DOM, JS hides when empty{%- endcomment -%}
+  <div class="cart-drawer__footer"{% if cart.item_count == 0 %} style="display:none"{% endif %}>
+    <div class="cart-drawer__subtotal">
+      <span class="cart-drawer__subtotal-label">{{ 'cart.subtotal' | t }}</span>
+      <span class="cart-drawer__subtotal-price">{{ cart.total_price | money }}</span>
     </div>
-  {%- endif -%}
+    <p class="cart-drawer__taxes">{{ 'cart.taxes_and_shipping' | t }}</p>
+
+    <a
+      href="{{ routes.checkout }}"
+      class="btn btn-primary cart-drawer__checkout"
+    >{{ 'cart.checkout' | t }}</a>
+
+    <button data-close-cart class="cart-drawer__continue">
+      {{ 'cart.continue_shopping' | t }}
+    </button>
+  </div>
 </div>
 
 {% schema %}

@@ -35,7 +35,7 @@
         "btn1_link": "/collections/all",
         "btn2_label": "Our Story",
         "btn2_link": "/pages/about",
-        "image": "shopify://shop_images/edit17.jpg",
+        "image": "shopify://shop_images/depositphotos_265180994-stock-photo-paris-france-march-2019-street.webp",
         "image_2": "shopify://shop_images/punta-negra-czarny-jednoczesciowy-kostium-kapielowy_5.jpg",
         "show_scroll": true,
         "show_counter": true,
@@ -45,7 +45,7 @@
     "categories": {
       "type": "collection-list",
       "blocks": {
-        "collection_item_rD6WQK": {
+        "collection_item_dHUtBn": {
           "type": "collection_item",
           "settings": {
             "collection": "dresses",
@@ -83,7 +83,7 @@
         }
       },
       "block_order": [
-        "collection_item_rD6WQK",
+        "collection_item_dHUtBn",
         "cat2",
         "cat3",
         "cat4"
@@ -99,9 +99,9 @@
     "featured": {
       "type": "featured-products",
       "settings": {
-        "heading": "New Arrivals",
+        "heading": "Dresses",
         "subheading": "Handpicked",
-        "collection": "",
+        "collection": "dresses",
         "products_to_show": 3,
         "columns": "3",
         "show_view_all": true
@@ -123,10 +123,11 @@
         "btn1"
       ],
       "settings": {
+        "image": "shopify://shop_images/edit1.jpg",
         "caption": "",
         "eyebrow": "The Journal",
         "heading": "The Art of\nWearing Nothing Else",
-        "text": "<p>Our Spring collection explores the intersection of structure and ease — garments engineered to move with the body while commanding a room. Crafted over eight months in our Milan atelier.</p>",
+        "text": "<p>Our Spring collection explores the intersection of structure and ease — garments engineered to move with the body while commanding a room. Crafted over eight months in our Milan atelier. dsfds</p>",
         "layout": "left",
         "image_width": "50",
         "full_width": false

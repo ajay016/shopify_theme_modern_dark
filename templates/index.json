@@ -66,7 +66,7 @@
         "cat3": {
           "type": "collection_item",
           "settings": {
-            "collection": "",
+            "collection": "women",
             "label": "Bags & Accessories",
             "sublabel": "215 pieces",
             "custom_url": ""

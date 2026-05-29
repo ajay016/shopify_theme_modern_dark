@@ -138,6 +138,19 @@
         "marquee": false
       }
     },
+    "blog": {
+      "type": "blog-posts",
+      "settings": {
+        "eyebrow": "From the Journal",
+        "heading": "Latest Stories",
+        "view_all_label": "View All Stories",
+        "posts_to_show": 3,
+        "layout": "3",
+        "show_date": true,
+        "show_excerpt": true,
+        "show_category": true
+      }
+    },
     "testimonials": {
       "type": "testimonials",
       "blocks": {
@@ -178,6 +191,7 @@
     "stats",
     "editorial-2",
     "brands",
+    "blog",
     "testimonials",
     "newsletter"
   ]

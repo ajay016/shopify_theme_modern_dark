@@ -194,13 +194,12 @@
       const cart = await res.json();
 
       if (skipItemRender) {
-        // Only re-render items if cart is now truly empty (show empty state)
-        // Otherwise just update counts and totals to avoid ghost re-appearance
-        if (!cart.items || cart.items.length === 0) {
-          setTimeout(() => renderCartItems(cart), 210); // after fade animation
-        } else {
-          // More items remain — update counts/totals without re-rendering item list
-          updateCartCounters(cart);
+        // Always update shipping bar, subtotal and count badge immediately
+        updateCartCounters(cart);
+        // If cart is now empty, show empty state after the fade animation finishes
+        const remaining = (cart.items || []).filter(i => i.quantity > 0);
+        if (remaining.length === 0) {
+          setTimeout(() => renderCartItems(cart), 210);
         }
       } else {
         updateCartUI(cart);

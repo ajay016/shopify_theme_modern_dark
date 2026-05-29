@@ -1014,20 +1014,20 @@ body.has-announcement .site-header { top: 48px; }
 }
 .cart-item__price { font-size: 14px; color: var(--cream); letter-spacing: 0.05em; }
 .cart-item__remove {
-  width: 28px; height: 28px;
+  width: 32px; height: 32px;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  color: var(--muted);
-  background: none;
-  border: 1px solid transparent;
-  border-radius: 50%;
+  color: var(--cream);
+  background: rgba(245,240,232,0.07);
+  border: 1px solid rgba(245,240,232,0.22);
+  border-radius: 6px;
   transition: color var(--transition), border-color var(--transition), background var(--transition);
   cursor: pointer;
 }
 .cart-item__remove:hover {
-  color: var(--gold);
-  border-color: rgba(200,169,110,0.3);
-  background: rgba(200,169,110,0.06);
+  color: #ff8080;
+  border-color: rgba(255,128,128,0.45);
+  background: rgba(255,128,128,0.1);
 }
 
 .cart-drawer__footer {

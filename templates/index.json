@@ -268,7 +268,7 @@
         "eyebrow": "From the Journal",
         "heading": "Latest Stories",
         "view_all_label": "View All Stories",
-        "blog": "",
+        "blog": "news",
         "posts_to_show": 3,
         "layout": "3",
         "show_date": true,

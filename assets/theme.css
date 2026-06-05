@@ -1920,13 +1920,17 @@ body.has-announcement .site-header { top: 48px; }
 /* ============================================================
    Scroll Reveal Animations
    ============================================================ */
-.reveal {
+/* Visible by DEFAULT. The hidden state is only applied once JS "arms" the
+   element (adds .reveal-armed) — so if JS fails to run, content can never be
+   left permanently invisible. */
+.reveal { opacity: 1; transform: none; }
+.reveal.reveal-armed {
   opacity: 0;
   transform: translateY(40px);
   transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
 }
-.reveal.fade-in { transform: none; }
-.reveal.slide-in { transform: translateX(-30px); }
+.reveal.reveal-armed.fade-in { transform: none; }
+.reveal.reveal-armed.slide-in { transform: translateX(-30px); }
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0) translateX(0);

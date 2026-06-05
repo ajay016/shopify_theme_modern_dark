@@ -12,6 +12,10 @@
     const els = document.querySelectorAll('.reveal');
     if (!els.length) return;
 
+    // Arm the hidden state only now that JS is confirmed running and able to
+    // reveal. Without this, .reveal stays fully visible (see theme.css).
+    els.forEach(el => el.classList.add('reveal-armed'));
+
     const revealAll = () => els.forEach(el => el.classList.add('is-visible'));
 
     // Fallback: if IntersectionObserver is unavailable, just show everything.

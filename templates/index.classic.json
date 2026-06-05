@@ -1,0 +1,326 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero-banner",
+      "blocks": {
+        "stat_RbAVjX": {
+          "type": "stat",
+          "settings": {
+            "value": "2009",
+            "label": "Founded"
+          }
+        }
+      },
+      "block_order": [
+        "stat_RbAVjX"
+      ],
+      "settings": {
+        "layout": "split",
+        "min_height": 80,
+        "eyebrow": "SS 2025 Collection",
+        "heading": "Timeless",
+        "heading_italic": "Elegance",
+        "heading_line3": "Redefined",
+        "description": "Where heritage craftsmanship meets contemporary vision. Each piece tells a story of quiet luxury and intentional design.",
+        "btn1_label": "Explore Collection",
+        "btn1_link": "/collections/all",
+        "btn2_label": "Our Story",
+        "btn2_link": "/pages/about",
+        "image": "shopify://shop_images/thumb-1920-1091070.jpg",
+        "image_2": "shopify://shop_images/punta-negra-czarny-jednoczesciowy-kostium-kapielowy_5.jpg",
+        "show_scroll": true,
+        "show_counter": true,
+        "show_stats": false
+      }
+    },
+    "categories": {
+      "type": "collection-list",
+      "blocks": {
+        "collection_item_dHUtBn": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "dresses",
+            "label": "",
+            "sublabel": "",
+            "custom_url": ""
+          }
+        },
+        "cat2": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "",
+            "label": "Men's Tailoring",
+            "sublabel": "98 pieces",
+            "custom_url": ""
+          }
+        },
+        "cat3": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "women",
+            "label": "Bags & Accessories",
+            "sublabel": "215 pieces",
+            "custom_url": ""
+          }
+        },
+        "cat4": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "",
+            "label": "Fine Jewellery",
+            "sublabel": "76 pieces",
+            "custom_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "collection_item_dHUtBn",
+        "cat2",
+        "cat3",
+        "cat4"
+      ],
+      "settings": {
+        "heading": "Shop by Category",
+        "subheading": "Curated Selections",
+        "view_all_label": "All Collections",
+        "view_all_url": "",
+        "columns": "4"
+      }
+    },
+    "featured": {
+      "type": "featured-products",
+      "settings": {
+        "heading": "Dresses",
+        "subheading": "Handpicked",
+        "collection": "dresses",
+        "products_to_show": 3,
+        "columns": "3",
+        "show_view_all": true
+      }
+    },
+    "editorial-1": {
+      "type": "image-with-text",
+      "blocks": {
+        "btn1": {
+          "type": "button",
+          "settings": {
+            "label": "Read the Story",
+            "url": "/pages/about",
+            "style": "btn-primary"
+          }
+        }
+      },
+      "block_order": [
+        "btn1"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/edit1.jpg",
+        "caption": "",
+        "eyebrow": "The Journal",
+        "heading": "The Art of\nWearing Nothing Else",
+        "text": "<p>Our Spring collection explores the intersection of structure and ease — garments engineered to move with the body while commanding a room. Crafted over eight months in our Milan atelier.</p>",
+        "layout": "left",
+        "image_width": "50",
+        "full_width": false
+      }
+    },
+    "stats": {
+      "type": "stats-row",
+      "blocks": {
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "value": "2009",
+            "label": "Founded",
+            "description": ""
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "value": "47+",
+            "label": "Artisans",
+            "description": ""
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "value": "32",
+            "label": "Countries",
+            "description": ""
+          }
+        },
+        "s4": {
+          "type": "stat",
+          "settings": {
+            "value": "14",
+            "label": "Design Awards",
+            "description": ""
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "settings": {}
+    },
+    "editorial-2": {
+      "type": "image-with-text",
+      "blocks": {
+        "btn2": {
+          "type": "button",
+          "settings": {
+            "label": "Shop Outerwear",
+            "url": "/collections/all",
+            "style": "btn-primary"
+          }
+        }
+      },
+      "block_order": [
+        "btn2"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/comparing-black-t-shirts-on-a-clothing-rack-in-a-sun-lit-shop.jpg",
+        "caption": "",
+        "eyebrow": "The Outerwear Edit",
+        "heading": "Built for the\nCities You Move Through",
+        "text": "<p>Technical precision meets considered design. Our outerwear collection is built for the urban landscape without compromising on elegance.</p>",
+        "layout": "right",
+        "image_width": "50",
+        "full_width": false
+      }
+    },
+    "brands": {
+      "type": "brand-logos",
+      "blocks": {
+        "b1": {
+          "type": "logo",
+          "settings": {
+            "name": "Bottega",
+            "url": ""
+          }
+        },
+        "b2": {
+          "type": "logo",
+          "settings": {
+            "name": "Lemaire",
+            "url": ""
+          }
+        },
+        "b3": {
+          "type": "logo",
+          "settings": {
+            "name": "The Row",
+            "url": ""
+          }
+        },
+        "b4": {
+          "type": "logo",
+          "settings": {
+            "name": "Totême",
+            "url": ""
+          }
+        },
+        "b5": {
+          "type": "logo",
+          "settings": {
+            "name": "Jacquemus",
+            "url": ""
+          }
+        },
+        "b6": {
+          "type": "logo",
+          "settings": {
+            "name": "Loewe",
+            "url": ""
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6"
+      ],
+      "settings": {
+        "heading": "Stocked Brands & Partners",
+        "marquee": false
+      }
+    },
+    "blog": {
+      "type": "blog-posts",
+      "settings": {
+        "eyebrow": "From the Journal",
+        "heading": "Latest Stories",
+        "view_all_label": "View All Stories",
+        "blog": "news",
+        "posts_to_show": 3,
+        "layout": "3",
+        "show_date": true,
+        "show_excerpt": true,
+        "show_category": true
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "t1": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Fashion should feel like an extension of oneself — effortless, considered, and entirely one's own.",
+            "name": "Isabelle Moreau",
+            "location": "Creative Director"
+          }
+        }
+      },
+      "block_order": [
+        "t1"
+      ],
+      "settings": {
+        "eyebrow": "The Voice",
+        "heading": "A Considered Perspective",
+        "show_stars": false,
+        "columns": "1"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "eyebrow": "Stay Close",
+        "heading": "Join the Inner Circle",
+        "subtext": "Be the first to know about new collections, exclusive events, and private sales.",
+        "placeholder": "Your email address",
+        "button_label": "Subscribe",
+        "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time.",
+        "bg_color": "#161616"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "categories",
+    "featured",
+    "editorial-1",
+    "stats",
+    "editorial-2",
+    "brands",
+    "blog",
+    "testimonials",
+    "newsletter"
+  ]
+}

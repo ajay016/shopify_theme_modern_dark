@@ -10,42 +10,35 @@
   data-section-id="{{ section.id }}"
   style="--hlb-minh: {{ s.min_height }}vh;"
 >
-  {%- comment -%}—— Media —————————————————————————{%- endcomment -%}
+
+  {%- comment -%}—— Media ——{%- endcomment -%}
   <div class="hlb-media">
     {%- if s.image != blank -%}
       {{ s.image | image_url: width: 2000 | image_tag:
         loading: 'eager',
         fetchpriority: 'high',
         class: 'hlb-media__img',
-        sizes: '100vw',
-        widths: '800, 1200, 1600, 2000',
+        sizes: '(max-width:900px) 100vw, 60vw',
+        widths: '800,1200,1600,2000',
         alt: s.heading | default: 'Editorial'
       }}
     {%- else -%}
-      <img class="hlb-media__img" src="{{ fallback }}" alt="Editorial" loading="eager" />
+      <img class="hlb-media__img" src="{{ fallback }}" alt="Editorial" loading="eager" fetchpriority="high" />
     {%- endif -%}
     {%- if s.layout == 'overlay' -%}
-      <span class="hlb-media__scrim" style="opacity: {{ s.overlay | divided_by: 100.0 }};"></span>
+      <span class="hlb-media__scrim" style="--hlb-ov: {{ s.overlay | divided_by: 100.0 }};"></span>
     {%- endif -%}
   </div>
 
-  {%- comment -%}—— Secondary image (split layout) ——{%- endcomment -%}
-  {%- if s.layout == 'split' -%}
+  {%- comment -%}—— Second image (split only) ——{%- endcomment -%}
+  {%- if s.layout == 'split' and s.image_2 != blank -%}
     <div class="hlb-media hlb-media--2">
-      {%- if s.image_2 != blank -%}
-        {{ s.image_2 | image_url: width: 1400 | image_tag:
-          loading: 'eager',
-          class: 'hlb-media__img',
-          sizes: '50vw',
-          alt: 'Editorial'
-        }}
-      {%- else -%}
-        <img class="hlb-media__img" src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1400&q=85" alt="Editorial" loading="eager" />
-      {%- endif -%}
+      {{ s.image_2 | image_url: width: 900 | image_tag:
+        loading: 'lazy', class: 'hlb-media__img', sizes: '40vw', alt: 'Editorial' }}
     </div>
   {%- endif -%}
 
-  {%- comment -%}—— Content —————————————————————————{%- endcomment -%}
+  {%- comment -%}—— Content panel ——{%- endcomment -%}
   <div class="hlb-content">
     <div class="hlb-content__inner">
       {%- if s.eyebrow != blank -%}
@@ -79,36 +72,34 @@
       <span class="hlb-scroll__line"><span class="hlb-scroll__pip"></span></span>
     </div>
   {%- endif -%}
+
 </section>
 
 <style>
-  /* ── Scheme ─────────────────────────────────────── */
+  /* ── Fixed palettes — DO NOT use var(--ivory) etc. here ── */
   #section-{{ section.id }}.hlb--light {
-    --hbg: var(--ivory, #FAF8F3); --hfg: var(--black, #0A0A0A);
-    --hacc: #9B7B3F; --hmut: rgba(10,10,10,0.5);
-    --hbtn-bg: var(--black, #0A0A0A); --hbtn-fg: var(--ivory, #FAF8F3);
-    --hline: rgba(10,10,10,0.35);
+    --hbg: #FAF8F3; --hfg: #0A0A0A; --hacc: #9B7B3F;
+    --hmut: rgba(10,10,10,0.52); --hbtn-bg: #0A0A0A; --hbtn-fg: #FAF8F3;
+    --hline: rgba(10,10,10,0.25);
   }
   #section-{{ section.id }}.hlb--dark {
-    --hbg: var(--black, #0A0A0A); --hfg: var(--cream, #F5F0E8);
-    --hacc: var(--gold, #C8A96E); --hmut: rgba(245,240,232,0.6);
-    --hbtn-bg: var(--gold, #C8A96E); --hbtn-fg: var(--black, #0A0A0A);
-    --hline: rgba(245,240,232,0.4);
+    --hbg: #0A0A0A; --hfg: #F5F0E8; --hacc: #C8A96E;
+    --hmut: rgba(245,240,232,0.6); --hbtn-bg: #C8A96E; --hbtn-fg: #0A0A0A;
+    --hline: rgba(245,240,232,0.35);
   }
   #section-{{ section.id }}.hlb--warm {
-    --hbg: #F0EBE0; --hfg: #2C1F14;
-    --hacc: #8B5E3C; --hmut: rgba(44,31,20,0.55);
-    --hbtn-bg: #2C1F14; --hbtn-fg: #F0EBE0;
-    --hline: rgba(44,31,20,0.35);
+    --hbg: #F0EBE0; --hfg: #2C1F14; --hacc: #8B5E3C;
+    --hmut: rgba(44,31,20,0.52); --hbtn-bg: #2C1F14; --hbtn-fg: #F0EBE0;
+    --hline: rgba(44,31,20,0.25);
   }
   #section-{{ section.id }}.hlb--theme {
     --hbg: var(--background, #0A0A0A); --hfg: var(--foreground, #F5F0E8);
     --hacc: var(--gold, #C8A96E); --hmut: var(--muted, rgba(245,240,232,0.6));
     --hbtn-bg: var(--gold, #C8A96E); --hbtn-fg: var(--black, #0A0A0A);
-    --hline: var(--border-strong, rgba(245,240,232,0.4));
+    --hline: var(--border-strong, rgba(245,240,232,0.35));
   }
 
-  /* ── Base ───────────────────────────────────────── */
+  /* ── Structural base ── */
   #section-{{ section.id }} {
     position: relative;
     min-height: var(--hlb-minh, 92vh);
@@ -117,127 +108,143 @@
     background: var(--hbg);
   }
 
-  .hlb-media { position: relative; overflow: hidden; }
-  .hlb-media__img {
-    width: 100%; height: 100%;
-    object-fit: cover; display: block;
-    animation: hlbKen 16s ease-out forwards;
+  /* ── Media ── */
+  .hlb-section .hlb-media { position: relative; overflow: hidden; background: #1a1410; }
+  .hlb-section .hlb-media__img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    animation: hlbKen{{ section.id }} 16s ease-out forwards;
   }
-  @keyframes hlbKen { from { transform: scale(1.08); } to { transform: scale(1); } }
-
-  .hlb-media__scrim {
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(10,10,10,0.25) 0%, rgba(10,10,10,0.05) 35%, rgba(10,10,10,0.55) 100%);
-    pointer-events: none;
+  @keyframes hlbKen{{ section.id }} { from { transform: scale(1.08); } to { transform: scale(1); } }
+  .hlb-section .hlb-media__scrim {
+    position: absolute; inset: 0; pointer-events: none;
+    background: rgba(10,10,10,var(--hlb-ov,0.35));
   }
 
-  /* ── OVERLAY layout: full-bleed image, text on top ── */
-  #section-{{ section.id }}.hlb--overlay { grid-template-columns: 1fr; }
-  #section-{{ section.id }}.hlb--overlay .hlb-media { position: absolute; inset: 0; }
-  #section-{{ section.id }}.hlb--overlay .hlb-content {
-    position: relative; z-index: 2;
-    display: flex; align-items: flex-end;
-    padding: clamp(40px, 8vh, 110px) var(--side-padding, 5vw);
+  /* ═══════════════════════════════════════════════════
+     SPLIT layout — image left | text panel right
+     Always visible: text sits on solid colored panel
+  ═══════════════════════════════════════════════════ */
+  #section-{{ section.id }}.hlb--split {
+    grid-template-columns: 1.15fr 1fr;
     min-height: var(--hlb-minh, 92vh);
   }
-  #section-{{ section.id }}.hlb--overlay .hlb-content__inner { max-width: 640px; }
-  #section-{{ section.id }}.hlb--overlay .hlb-heading,
-  #section-{{ section.id }}.hlb--overlay .hlb-eyebrow,
-  #section-{{ section.id }}.hlb--overlay .hlb-desc { color: #fff; }
-  #section-{{ section.id }}.hlb--overlay .hlb-eyebrow { color: rgba(255,255,255,.85); }
-  #section-{{ section.id }}.hlb--overlay .hlb-desc { color: rgba(255,255,255,.85); }
-  #section-{{ section.id }}.hlb--overlay .hlb-heading em { color: #fff; }
-
-  /* ── SPLIT layout: image | text | image (or text + img) ── */
-  #section-{{ section.id }}.hlb--split { grid-template-columns: 1.1fr 1fr; }
-  #section-{{ section.id }}.hlb--split .hlb-media--2 { display: none; }
+  #section-{{ section.id }}.hlb--split .hlb-media { min-height: var(--hlb-minh, 92vh); }
   #section-{{ section.id }}.hlb--split .hlb-content {
-    display: flex; align-items: center;
-    padding: clamp(40px, 6vw, 100px);
     background: var(--hbg);
+    display: flex; align-items: center;
+    padding: clamp(48px, 7vw, 100px) clamp(40px, 5vw, 80px);
   }
-  #section-{{ section.id }}.hlb--split .hlb-content__inner { max-width: 520px; }
+  #section-{{ section.id }}.hlb--split .hlb-content__inner { max-width: 500px; width: 100%; }
 
-  /* ── FRAME layout: image inset on colored bg, text below image overlapping ── */
+  /* ═══════════════════════════════════════════════════
+     OVERLAY layout — full-bleed image, text bottom-left
+  ═══════════════════════════════════════════════════ */
+  #section-{{ section.id }}.hlb--overlay { grid-template-columns: 1fr; }
+  #section-{{ section.id }}.hlb--overlay .hlb-media {
+    position: absolute; inset: 0;
+  }
+  #section-{{ section.id }}.hlb--overlay .hlb-content {
+    position: relative; z-index: 2;
+    min-height: var(--hlb-minh, 92vh);
+    display: flex; align-items: flex-end;
+    padding: clamp(48px, 8vh, 110px) var(--side-padding, 5vw);
+  }
+  #section-{{ section.id }}.hlb--overlay .hlb-content__inner { max-width: 640px; }
+  /* In overlay mode, always use white text — image provides the dark bg */
+  #section-{{ section.id }}.hlb--overlay .hlb-eyebrow { color: rgba(255,255,255,0.85) !important; }
+  #section-{{ section.id }}.hlb--overlay .hlb-heading,
+  #section-{{ section.id }}.hlb--overlay .hlb-heading em { color: #fff !important; }
+  #section-{{ section.id }}.hlb--overlay .hlb-desc { color: rgba(255,255,255,0.82) !important; }
+  #section-{{ section.id }}.hlb--overlay .hlb-btn--line { border-color: rgba(255,255,255,0.5); color: #fff; }
+  #section-{{ section.id }}.hlb--overlay .hlb-scroll__txt { color: rgba(255,255,255,0.7); }
+  #section-{{ section.id }}.hlb--overlay .hlb-scroll__line { background: rgba(255,255,255,0.3); }
+
+  /* ═══════════════════════════════════════════════════
+     FRAME layout — framed image with text card overlay
+  ═══════════════════════════════════════════════════ */
   #section-{{ section.id }}.hlb--frame {
     grid-template-columns: 1fr;
-    padding: clamp(24px, 4vw, 64px);
-    place-items: stretch;
+    padding: clamp(20px, 3vw, 48px);
+    background: var(--hbg);
   }
   #section-{{ section.id }}.hlb--frame .hlb-media {
-    border-radius: 3px;
-    min-height: calc(var(--hlb-minh, 92vh) - 120px);
+    border-radius: 4px;
+    min-height: calc(var(--hlb-minh, 92vh) - 96px);
   }
   #section-{{ section.id }}.hlb--frame .hlb-content {
-    position: absolute; left: clamp(40px, 7vw, 120px); bottom: clamp(48px, 8vw, 120px);
-    z-index: 2; max-width: 560px;
+    position: absolute; left: clamp(48px, 7vw, 110px); bottom: clamp(56px, 7vw, 100px);
+    z-index: 2; max-width: 540px;
   }
+  #section-{{ section.id }}.hlb--frame .hlb-eyebrow { color: rgba(255,255,255,0.85) !important; }
   #section-{{ section.id }}.hlb--frame .hlb-heading,
-  #section-{{ section.id }}.hlb--frame .hlb-eyebrow,
-  #section-{{ section.id }}.hlb--frame .hlb-desc { color: #fff; }
-  #section-{{ section.id }}.hlb--frame .hlb-heading em { color: #fff; }
+  #section-{{ section.id }}.hlb--frame .hlb-heading em { color: #fff !important; }
+  #section-{{ section.id }}.hlb--frame .hlb-desc { color: rgba(255,255,255,0.82) !important; }
+  #section-{{ section.id }}.hlb--frame .hlb-btn--line { border-color: rgba(255,255,255,0.5); color: #fff; }
 
-  /* ── Typography ─────────────────────────────────── */
-  .hlb-eyebrow {
+  /* ── Typography — no .reveal, always visible via CSS animations ── */
+  #section-{{ section.id }} .hlb-eyebrow {
     display: inline-block;
     font-family: var(--ff-body, 'Outfit', sans-serif);
     font-size: 11px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase;
     color: var(--hacc); margin-bottom: 22px;
-    opacity: 0; animation: hlbUp .9s .2s forwards;
+    animation: hlbUp{{ section.id }} .8s .1s both;
   }
-  .hlb-heading {
+  #section-{{ section.id }} .hlb-heading {
     font-family: var(--ff-display, 'Cormorant Garamond', serif);
-    font-size: clamp(48px, 7vw, 110px); font-weight: 300; line-height: 1.02;
+    font-size: clamp(44px, 6.5vw, 100px); font-weight: 300; line-height: 1.02;
     letter-spacing: -.01em; color: var(--hfg); margin: 0;
   }
-  .hlb-heading span, .hlb-heading em { display: block; opacity: 0; animation: hlbUp 1s forwards; }
-  .hlb-heading span:nth-child(1) { animation-delay: .32s; }
-  .hlb-heading em { font-style: italic; color: var(--hacc); animation-delay: .46s; }
-  .hlb-desc {
-    font-family: var(--ff-body, 'Outfit', sans-serif);
-    font-size: clamp(14px, 1.2vw, 17px); line-height: 1.7; color: var(--hmut);
-    margin: 26px 0 0; max-width: 460px;
-    opacity: 0; animation: hlbUp 1s .6s forwards;
+  #section-{{ section.id }} .hlb-heading span { display: block; animation: hlbUp{{ section.id }} .9s .25s both; }
+  #section-{{ section.id }} .hlb-heading em {
+    display: block; font-style: italic; color: var(--hacc);
+    animation: hlbUp{{ section.id }} .9s .38s both;
   }
-  .hlb-ctas { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 38px; opacity: 0; animation: hlbUp 1s .74s forwards; }
+  #section-{{ section.id }} .hlb-desc {
+    font-family: var(--ff-body, 'Outfit', sans-serif);
+    font-size: clamp(14px, 1.15vw, 17px); line-height: 1.72; color: var(--hmut);
+    margin: 24px 0 0; max-width: 460px;
+    animation: hlbUp{{ section.id }} .9s .52s both;
+  }
+  #section-{{ section.id }} .hlb-ctas {
+    display: flex; gap: 14px; flex-wrap: wrap; margin-top: 36px;
+    animation: hlbUp{{ section.id }} .9s .66s both;
+  }
   .hlb-btn {
     display: inline-flex; align-items: center;
     font-family: var(--ff-body, 'Outfit', sans-serif);
-    font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
-    padding: 16px 34px; text-decoration: none; border-radius: 2px;
-    transition: transform .25s, background .25s, color .25s;
+    font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase;
+    padding: 15px 32px; text-decoration: none; border-radius: 2px;
+    transition: transform .22s, background .22s, color .22s;
   }
   .hlb-btn--solid { background: var(--hbtn-bg); color: var(--hbtn-fg); }
   .hlb-btn--solid:hover { transform: translateY(-2px); }
   .hlb-btn--line { border: 1px solid var(--hline); color: var(--hfg); }
-  #section-{{ section.id }}.hlb--overlay .hlb-btn--line,
-  #section-{{ section.id }}.hlb--frame .hlb-btn--line { border-color: rgba(255,255,255,.5); color: #fff; }
   .hlb-btn--line:hover { background: var(--hbtn-bg); color: var(--hbtn-fg); border-color: var(--hbtn-bg); }
 
-  @keyframes hlbUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  @keyframes hlbUp{{ section.id }} { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
 
-  /* ── Scroll cue ─────────────────────────────────── */
-  .hlb-scroll {
-    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: 12px; z-index: 3;
+  /* ── Scroll cue ── */
+  .hlb-section .hlb-scroll {
+    position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 3;
   }
-  .hlb-scroll__txt {
+  .hlb-section .hlb-scroll__txt {
     font-family: var(--ff-body, 'Outfit', sans-serif);
-    font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
-    color: var(--hmut);
+    font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: var(--hmut);
   }
-  #section-{{ section.id }}.hlb--overlay .hlb-scroll__txt,
-  #section-{{ section.id }}.hlb--frame .hlb-scroll__txt { color: rgba(255,255,255,.75); }
-  .hlb-scroll__line { width: 1px; height: 46px; background: var(--hline); position: relative; overflow: hidden; }
-  #section-{{ section.id }}.hlb--overlay .hlb-scroll__line,
-  #section-{{ section.id }}.hlb--frame .hlb-scroll__line { background: rgba(255,255,255,.4); }
-  .hlb-scroll__pip { position: absolute; top: -50%; left: 0; width: 1px; height: 50%; background: var(--hacc); animation: hlbPip 2s infinite; }
+  .hlb-section .hlb-scroll__line {
+    width: 1px; height: 44px; background: var(--hline); position: relative; overflow: hidden;
+  }
+  .hlb-section .hlb-scroll__pip {
+    position: absolute; top: -50%; left: 0; width: 1px; height: 50%;
+    background: var(--hacc); animation: hlbPip 1.8s ease-in-out infinite;
+  }
   @keyframes hlbPip { 0% { top: -50%; } 100% { top: 100%; } }
 
-  @media (max-width: 820px) {
+  @media (max-width: 860px) {
     #section-{{ section.id }}.hlb--split { grid-template-columns: 1fr; }
-    #section-{{ section.id }}.hlb--split .hlb-media { min-height: 60vh; }
-    .hlb-heading { font-size: clamp(40px, 12vw, 64px); }
+    #section-{{ section.id }}.hlb--split .hlb-media { min-height: 58vw; }
+    #section-{{ section.id }}.hlb--split .hlb-content { padding: 40px 28px 60px; }
   }
 </style>
 
@@ -260,22 +267,22 @@
     {
       "type": "select", "id": "layout", "label": "Layout",
       "options": [
+        { "value": "split",   "label": "Split — image left, text right" },
         { "value": "overlay", "label": "Full-bleed image, text overlay" },
-        { "value": "split",   "label": "Split — image + text panel" },
         { "value": "frame",   "label": "Framed image, text inset" }
       ],
-      "default": "overlay"
+      "default": "split"
     },
     { "type": "range", "id": "min_height", "label": "Minimum height", "min": 60, "max": 100, "step": 2, "unit": "vh", "default": 92 },
-    { "type": "range", "id": "overlay", "label": "Image overlay (overlay layout)", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 30 },
+    { "type": "range", "id": "overlay", "label": "Image darkness (overlay layout only)", "min": 10, "max": 80, "step": 5, "unit": "%", "default": 40 },
     { "type": "header", "content": "Images" },
     { "type": "image_picker", "id": "image",   "label": "Main image" },
-    { "type": "image_picker", "id": "image_2", "label": "Second image (split layout)" },
+    { "type": "image_picker", "id": "image_2", "label": "Second image (split layout, optional)" },
     { "type": "header", "content": "Content" },
     { "type": "text",     "id": "eyebrow",     "label": "Eyebrow",     "default": "Autumn / Winter 2025" },
     { "type": "text",     "id": "heading",     "label": "Heading (use | to italicise second part)", "default": "The New | Season" },
     { "type": "textarea", "id": "description", "label": "Description", "default": "Sculptural silhouettes cut from the season's most coveted fabrics — made to be lived in." },
-    { "type": "text", "id": "btn1_label", "label": "Primary button", "default": "Shop Collection" },
+    { "type": "text", "id": "btn1_label", "label": "Primary button",   "default": "Shop Collection" },
     { "type": "url",  "id": "btn1_link",  "label": "Primary button link" },
     { "type": "text", "id": "btn2_label", "label": "Secondary button", "default": "View Lookbook" },
     { "type": "url",  "id": "btn2_link",  "label": "Secondary button link" },

@@ -21,7 +21,7 @@
   </div>
 
   <div class="cmpb-content">
-    <div class="cmpb-content__inner reveal">
+    <div class="cmpb-content__inner">
       {%- if s.eyebrow != blank -%}<span class="cmpb-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
       {%- if s.heading != blank -%}
         <h2 class="cmpb-heading">
@@ -44,7 +44,7 @@
     position: relative; min-height: var(--cmpb-minh, 70vh);
     display: flex; overflow: hidden;
   }
-  .cmpb-media { position:absolute; inset:0; }
+  .cmpb-media { position:absolute; inset:0; background:#15110d; }
   .cmpb-img { width:100%; height:100%; object-fit:cover; display:block; }
   .cmpb-scrim { position:absolute; inset:0; background: linear-gradient(180deg, rgba(10,10,10,.2), rgba(10,10,10,.5)); }
 

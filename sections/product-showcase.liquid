@@ -82,8 +82,8 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.psc--light { --sbg:var(--ivory,#FAF8F3); --sfg:var(--black,#0A0A0A); --sacc:#9B7B3F; --smut:rgba(10,10,10,.5); --sbdr:rgba(10,10,10,.12); --ssale:#8B1A1A; }
-  #section-{{ section.id }}.psc--dark  { --sbg:var(--black,#0A0A0A); --sfg:var(--cream,#F5F0E8); --sacc:var(--gold,#C8A96E); --smut:rgba(245,240,232,.55); --sbdr:rgba(245,240,232,.1); --ssale:#E8A0A0; }
+  #section-{{ section.id }}.psc--light { --sbg:#FAF8F3; --sfg:#0A0A0A; --sacc:#9B7B3F; --smut:rgba(10,10,10,.5); --sbdr:rgba(10,10,10,.12); --ssale:#8B1A1A; }
+  #section-{{ section.id }}.psc--dark  { --sbg:#0A0A0A; --sfg:#F5F0E8; --sacc:#C8A96E; --smut:rgba(245,240,232,.55); --sbdr:rgba(245,240,232,.1); --ssale:#E8A0A0; }
   #section-{{ section.id }}.psc--warm  { --sbg:#F0EBE0; --sfg:#2C1F14; --sacc:#8B5E3C; --smut:rgba(44,31,20,.5); --sbdr:rgba(44,31,20,.13); --ssale:#8B1A1A; }
   #section-{{ section.id }}.psc--theme { --sbg:var(--background,#0A0A0A); --sfg:var(--foreground,#F5F0E8); --sacc:var(--gold,#C8A96E); --smut:var(--muted,rgba(245,240,232,.55)); --sbdr:var(--border,rgba(245,240,232,.1)); --ssale:#E8A0A0; }
 
@@ -99,7 +99,7 @@
   .psc-grid { display:grid; grid-template-columns: repeat(var(--psc-cols,4), 1fr); gap: clamp(16px,2vw,30px); }
 
   .psc-card { text-decoration:none; color:inherit; display:block; }
-  .psc-card__media { position:relative; overflow:hidden; border-radius:3px; aspect-ratio:3/4; margin-bottom:16px; }
+  .psc-card__media { position:relative; overflow:hidden; border-radius:3px; aspect-ratio:3/4; margin-bottom:16px; background:#e7e0d4; }
   .psc-card__img { width:100%; height:100%; object-fit:cover; display:block; transition: transform .8s cubic-bezier(.4,0,.2,1); }
   .psc-card:hover .psc-card__img { transform: scale(1.05); }
   .psc-card__badge { position:absolute; top:14px; left:14px; font-family:var(--ff-body,'Outfit',sans-serif); font-size:9px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; background:rgba(255,255,255,.94); color:#0A0A0A; padding:6px 11px; border-radius:2px; }

@@ -4,9 +4,9 @@
       "type": "hero-lookbook",
       "settings": {
         "scheme": "light",
-        "layout": "overlay",
-        "min_height": 94,
-        "overlay": 30,
+        "layout": "split",
+        "min_height": 92,
+        "overlay": 40,
         "eyebrow": "Autumn / Winter 2025",
         "heading": "The New | Season",
         "description": "Sculptural silhouettes cut from the season's most coveted fabrics — made to be lived in.",

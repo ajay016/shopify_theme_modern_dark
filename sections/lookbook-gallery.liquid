@@ -58,8 +58,8 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.lkb--light { --lbg:var(--ivory,#FAF8F3); --lfg:var(--black,#0A0A0A); --lacc:#9B7B3F; --lmut:rgba(10,10,10,.5); --lbdr:rgba(10,10,10,.12); }
-  #section-{{ section.id }}.lkb--dark  { --lbg:var(--black,#0A0A0A); --lfg:var(--cream,#F5F0E8); --lacc:var(--gold,#C8A96E); --lmut:rgba(245,240,232,.55); --lbdr:rgba(245,240,232,.1); }
+  #section-{{ section.id }}.lkb--light { --lbg:#FAF8F3; --lfg:#0A0A0A; --lacc:#9B7B3F; --lmut:rgba(10,10,10,.5); --lbdr:rgba(10,10,10,.12); }
+  #section-{{ section.id }}.lkb--dark  { --lbg:#0A0A0A; --lfg:#F5F0E8; --lacc:#C8A96E; --lmut:rgba(245,240,232,.55); --lbdr:rgba(245,240,232,.1); }
   #section-{{ section.id }}.lkb--warm  { --lbg:#F0EBE0; --lfg:#2C1F14; --lacc:#8B5E3C; --lmut:rgba(44,31,20,.5); --lbdr:rgba(44,31,20,.13); }
   #section-{{ section.id }}.lkb--theme { --lbg:var(--background,#0A0A0A); --lfg:var(--foreground,#F5F0E8); --lacc:var(--gold,#C8A96E); --lmut:var(--muted,rgba(245,240,232,.55)); --lbdr:var(--border,rgba(245,240,232,.1)); }
 
@@ -79,7 +79,7 @@
     grid-auto-rows: clamp(120px, 14vw, 200px);
     gap: clamp(12px, 1.4vw, 22px);
   }
-  .lkb-tile { position: relative; overflow: hidden; border-radius: 3px; text-decoration: none; display: block; }
+  .lkb-tile { position: relative; overflow: hidden; border-radius: 3px; text-decoration: none; display: block; background: #2a2a2a; }
   .lkb-tile--tall  { grid-column: span 4; grid-row: span 3; }
   .lkb-tile--wide  { grid-column: span 8; grid-row: span 2; }
   .lkb-tile--sq    { grid-column: span 4; grid-row: span 2; }

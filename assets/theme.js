@@ -12,6 +12,11 @@
     const els = document.querySelectorAll('.reveal');
     if (!els.length) return;
 
+    const revealAll = () => els.forEach(el => el.classList.add('is-visible'));
+
+    // Fallback: if IntersectionObserver is unavailable, just show everything.
+    if (!('IntersectionObserver' in window)) { revealAll(); return; }
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -19,9 +24,13 @@
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.08 });
+    }, { threshold: 0.08, rootMargin: '0px 0px -5% 0px' });
 
     els.forEach(el => observer.observe(el));
+
+    // Failsafe: never leave content permanently invisible if the observer
+    // doesn't fire (injected DOM, edge browsers, interrupted load, etc.).
+    setTimeout(revealAll, 600);
   }
 
 

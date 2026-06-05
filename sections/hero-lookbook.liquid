@@ -2,6 +2,7 @@
   assign s = section.settings
   assign scheme_class = 'hlb--' | append: s.scheme
   assign fallback = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1800&q=85'
+  assign img_alt = s.heading | default: 'Editorial'
 -%}
 
 <section
@@ -20,7 +21,7 @@
         class: 'hlb-media__img',
         sizes: '(max-width:900px) 100vw, 60vw',
         widths: '800,1200,1600,2000',
-        alt: s.heading | default: 'Editorial'
+        alt: img_alt
       }}
     {%- else -%}
       <img class="hlb-media__img" src="{{ fallback }}" alt="Editorial" loading="eager" fetchpriority="high" />

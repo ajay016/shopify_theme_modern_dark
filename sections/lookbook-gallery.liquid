@@ -36,9 +36,10 @@
         >
           <div class="lkb-tile__media">
             {%- if block.settings.image != blank -%}
+              {%- assign lkb_alt = block.settings.label | escape -%}
               {{ block.settings.image | image_url: width: 1200 | image_tag:
                 loading: 'lazy', class: 'lkb-tile__img', sizes: '(max-width:900px) 100vw, 40vw',
-                widths: '500,800,1200', alt: block.settings.label | escape }}
+                widths: '500,800,1200', alt: lkb_alt }}
             {%- else -%}
               <img class="lkb-tile__img" src="{{ img }}" alt="{{ block.settings.label | escape }}" loading="lazy" />
             {%- endif -%}

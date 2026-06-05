@@ -25,9 +25,10 @@
           <div class="edr-row__media">
             <a href="{{ block.settings.url | default: '#' }}" class="edr-row__img-link">
               {%- if block.settings.image != blank -%}
+                {%- assign edr_alt = block.settings.heading | escape -%}
                 {{ block.settings.image | image_url: width: 1400 | image_tag:
                   loading: 'lazy', class: 'edr-row__img', sizes: '(max-width: 900px) 100vw, 55vw',
-                  widths: '600, 900, 1400', alt: block.settings.heading | escape }}
+                  widths: '600,900,1400', alt: edr_alt }}
               {%- else -%}
                 <img class="edr-row__img" src="{{ fb }}" alt="{{ block.settings.heading | escape }}" loading="lazy" />
               {%- endif -%}

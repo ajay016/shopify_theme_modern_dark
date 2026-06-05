@@ -34,9 +34,10 @@
           <a href="{{ product.url }}" class="psc-card reveal">
             <div class="psc-card__media">
               {%- if product.featured_image != blank -%}
+                {%- assign psc_alt = product.title | escape -%}
                 {{ product.featured_image | image_url: width: 800 | image_tag:
                   loading: 'lazy', class: 'psc-card__img', sizes: '(max-width:900px) 50vw, 25vw',
-                  widths: '300,500,800', alt: product.title | escape }}
+                  widths: '300,500,800', alt: psc_alt }}
               {%- else -%}
                 <img class="psc-card__img" src="{{ fb[forloop.index0] | default: fb[0] }}" alt="{{ product.title | escape }}" loading="lazy" />
               {%- endif -%}

@@ -1,0 +1,310 @@
+{%- liquid
+  assign s = section.settings
+  assign scheme = s.scheme | default: 'light'
+-%}
+
+<section
+  class="htypo htypo--{{ scheme }}"
+  id="section-{{ section.id }}"
+  style="min-height:{{ s.min_height }}vh;"
+  aria-label="{{ s.heading_1 | escape }}"
+>
+  {%- comment -%}——— Top bar: season + collection tag ———{%- endcomment -%}
+  <div class="htypo__topbar">
+    {%- if s.tag_left != blank -%}
+      <span class="htypo__tag">{{ s.tag_left }}</span>
+    {%- endif -%}
+    {%- if s.tag_right != blank -%}
+      <span class="htypo__tag">{{ s.tag_right }}</span>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%}——— Massive headline ———{%- endcomment -%}
+  <div class="htypo__headline">
+    <h1 class="htypo__title">
+      {%- if s.heading_1 != blank -%}
+        <span class="htypo__line">{{ s.heading_1 }}</span>
+      {%- endif -%}
+      {%- if s.heading_2 != blank -%}
+        <span class="htypo__line htypo__line--italic">{{ s.heading_2 }}</span>
+      {%- endif -%}
+      {%- if s.heading_3 != blank -%}
+        <span class="htypo__line htypo__line--sm">{{ s.heading_3 }}</span>
+      {%- endif -%}
+    </h1>
+  </div>
+
+  {%- comment -%}——— Bottom row: eyebrow + desc + CTAs / stats ———{%- endcomment -%}
+  <div class="htypo__bottom">
+    <div class="htypo__meta">
+      {%- if s.eyebrow != blank -%}
+        <p class="htypo__eyebrow">{{ s.eyebrow }}</p>
+      {%- endif -%}
+      {%- if s.description != blank -%}
+        <p class="htypo__desc">{{ s.description }}</p>
+      {%- endif -%}
+      <div class="htypo__ctas">
+        {%- if s.btn1_label != blank -%}
+          <a href="{{ s.btn1_link | default: '#' }}" class="htypo__btn htypo__btn--solid">{{ s.btn1_label }}</a>
+        {%- endif -%}
+        {%- if s.btn2_label != blank -%}
+          <a href="{{ s.btn2_link | default: '#' }}" class="htypo__btn htypo__btn--ghost">{{ s.btn2_label }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="htypo__stats">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'stat' -%}
+            <div class="htypo__stat" {{ block.shopify_attributes }}>
+              <span class="htypo__stat-val">{{ block.settings.value }}</span>
+              <span class="htypo__stat-lbl">{{ block.settings.label }}</span>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%}——— Floating editorial image ———{%- endcomment -%}
+  {%- if s.image != blank -%}
+    <div class="htypo__float htypo__float--{{ s.image_pos }}">
+      {{
+        s.image
+        | image_url: width: 900
+        | image_tag:
+          loading: 'eager', fetchpriority: 'high',
+          class: 'htypo__float-img',
+          alt: s.heading_1 | escape
+      }}
+      {%- if s.image_caption != blank -%}
+        <p class="htypo__float-cap">{{ s.image_caption }}</p>
+      {%- endif -%}
+    </div>
+  {%- else -%}
+    <div class="htypo__float htypo__float--{{ s.image_pos }} htypo__float--ph" aria-hidden="true">
+      <svg width="120" height="180" viewBox="0 0 120 180" fill="none">
+        <path d="M38 18 Q38 8 60 6 Q82 8 82 18 L90 50 L72 56 L72 168 L48 168 L48 56 L30 50 Z" stroke="rgba(150,130,100,0.4)" stroke-width="1.2" fill="rgba(150,130,100,0.07)"/>
+        <path d="M30 50 L14 62 L20 142 L48 137" stroke="rgba(150,130,100,0.25)" stroke-width="1" fill="none"/>
+        <path d="M90 50 L106 62 L100 142 L72 137" stroke="rgba(150,130,100,0.25)" stroke-width="1" fill="none"/>
+      </svg>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%}——— Scroll cue ———{%- endcomment -%}
+  {%- if s.show_scroll -%}
+    <div class="htypo__scroll" aria-hidden="true">
+      <div class="htypo__scroll-pip"></div>
+      <div class="htypo__scroll-track"></div>
+    </div>
+  {%- endif -%}
+</section>
+
+<style>
+  /* ── Scheme variables ── */
+  #section-{{ section.id }}.htypo--light {
+    --hbg: var(--ivory, #FAF8F3); --hfg: var(--black, #0A0A0A);
+    --hacc: #9B7B3F; --hacc-l: var(--gold, #C8A96E);
+    --hmut: rgba(10,10,10,0.45); --hbdr: rgba(10,10,10,0.14);
+    --hbtn-bg: var(--black, #0A0A0A); --hbtn-fg: var(--ivory, #FAF8F3);
+  }
+  #section-{{ section.id }}.htypo--dark {
+    --hbg: var(--black); --hfg: var(--cream);
+    --hacc: var(--gold); --hacc-l: var(--gold-light);
+    --hmut: var(--muted); --hbdr: var(--border);
+    --hbtn-bg: var(--cream); --hbtn-fg: var(--black);
+  }
+  #section-{{ section.id }}.htypo--warm {
+    --hbg: #F5EDD8; --hfg: #1C1410;
+    --hacc: #C8965A; --hacc-l: #E4BF8C;
+    --hmut: rgba(28,20,16,0.45); --hbdr: rgba(200,150,90,0.25);
+    --hbtn-bg: #1C1410; --hbtn-fg: #F5EDD8;
+  }
+  #section-{{ section.id }}.htypo--theme {
+    --hbg: var(--black); --hfg: var(--cream);
+    --hacc: var(--gold); --hacc-l: var(--gold-light);
+    --hmut: var(--muted); --hbdr: var(--border);
+    --hbtn-bg: var(--cream); --hbtn-fg: var(--black);
+  }
+
+  /* ── Structure ── */
+  #section-{{ section.id }}.htypo {
+    background: var(--hbg);
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(20px, 3vw, 40px) clamp(28px, 6vw, 80px) clamp(36px, 5vw, 56px);
+    position: relative; overflow: hidden;
+  }
+
+  /* Top bar */
+  #section-{{ section.id }} .htypo__topbar {
+    display: flex; justify-content: space-between;
+    position: relative; z-index: 3;
+  }
+  #section-{{ section.id }} .htypo__tag {
+    font-family: var(--ff-body); font-size: 10px; letter-spacing: 0.4em;
+    text-transform: uppercase; color: var(--hmut);
+  }
+
+  /* Headline */
+  #section-{{ section.id }} .htypo__headline {
+    flex: 1; display: flex; align-items: flex-end;
+    padding-block: 12px 4px; position: relative; z-index: 2;
+  }
+  #section-{{ section.id }} .htypo__title {
+    font-family: var(--ff-display); font-weight: 300;
+    line-height: 0.86; letter-spacing: -0.028em;
+  }
+  #section-{{ section.id }} .htypo__line {
+    display: block;
+    font-size: clamp(72px, 17vw, 220px);
+    color: var(--hfg);
+  }
+  #section-{{ section.id }} .htypo__line--italic {
+    font-style: italic; color: var(--hacc-l);
+  }
+  #section-{{ section.id }} .htypo__line--sm {
+    font-size: clamp(24px, 4.5vw, 60px);
+    letter-spacing: 0.04em; font-style: normal;
+    color: var(--hfg); opacity: 0.55; margin-top: 8px;
+  }
+
+  /* Bottom row */
+  #section-{{ section.id }} .htypo__bottom {
+    display: flex; justify-content: space-between;
+    align-items: flex-end; gap: 40px; flex-wrap: wrap;
+    position: relative; z-index: 3;
+    padding-top: 32px; border-top: 1px solid var(--hbdr); margin-top: 24px;
+  }
+  #section-{{ section.id }} .htypo__meta { max-width: 400px; }
+  #section-{{ section.id }} .htypo__eyebrow {
+    font-size: 10px; letter-spacing: 0.36em; text-transform: uppercase;
+    color: var(--hacc); display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+  }
+  #section-{{ section.id }} .htypo__eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--hacc); }
+  #section-{{ section.id }} .htypo__desc { font-size: 13px; line-height: 1.8; color: var(--hfg); opacity: 0.68; margin-bottom: 22px; max-width: 340px; }
+  #section-{{ section.id }} .htypo__ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  #section-{{ section.id }} .htypo__btn {
+    font-family: var(--ff-body); font-size: 11px; font-weight: 500;
+    letter-spacing: 0.24em; text-transform: uppercase; padding: 14px 32px;
+    transition: all var(--transition); display: inline-block;
+  }
+  #section-{{ section.id }} .htypo__btn--solid { background: var(--hbtn-bg); color: var(--hbtn-fg); }
+  #section-{{ section.id }} .htypo__btn--solid:hover { opacity: 0.82; }
+  #section-{{ section.id }} .htypo__btn--ghost { border: 1px solid var(--hbdr); color: var(--hfg); }
+  #section-{{ section.id }} .htypo__btn--ghost:hover { border-color: var(--hfg); }
+
+  /* Stats */
+  #section-{{ section.id }} .htypo__stats { display: flex; gap: 32px; flex-shrink: 0; }
+  #section-{{ section.id }} .htypo__stat { text-align: right; }
+  #section-{{ section.id }} .htypo__stat-val { display: block; font-family: var(--ff-display); font-size: clamp(28px, 3vw, 44px); color: var(--hacc); font-weight: 400; }
+  #section-{{ section.id }} .htypo__stat-lbl { display: block; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--hfg); opacity: 0.45; }
+
+  /* Floating image */
+  #section-{{ section.id }} .htypo__float {
+    position: absolute; z-index: 1; overflow: hidden;
+    aspect-ratio: 3/4;
+  }
+  #section-{{ section.id }} .htypo__float--bottom-right { right: clamp(28px,6vw,80px); bottom: clamp(80px,12vh,160px); width: min(26vw, 300px); }
+  #section-{{ section.id }} .htypo__float--center-right { right: clamp(28px,6vw,80px); top: 50%; transform: translateY(-50%); width: min(24vw, 280px); }
+  #section-{{ section.id }} .htypo__float--top-right { right: clamp(28px,6vw,80px); top: clamp(60px,8vh,100px); width: min(22vw, 260px); }
+  #section-{{ section.id }} .htypo__float--ph {
+    background: linear-gradient(145deg, color-mix(in srgb, var(--hacc-l) 12%, var(--hbg)), color-mix(in srgb, var(--hacc-l) 5%, var(--hbg)));
+    display: flex; align-items: center; justify-content: center;
+  }
+  #section-{{ section.id }} .htypo__float-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.9s var(--ease-out); }
+  #section-{{ section.id }}:hover .htypo__float-img { transform: scale(1.04); }
+  #section-{{ section.id }} .htypo__float-cap {
+    position: absolute; bottom: 14px; left: 0; right: 0; text-align: center;
+    font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--hfg); opacity: 0.6;
+  }
+
+  /* Scroll cue */
+  #section-{{ section.id }} .htypo__scroll { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; z-index: 4; }
+  #section-{{ section.id }} .htypo__scroll-pip { width: 5px; height: 5px; border-radius: 50%; border: 1px solid var(--hmut); animation: htypoPip 2.2s ease-in-out infinite; }
+  @keyframes htypoPip { 0%,100%{opacity:1;transform:translateY(0)} 50%{opacity:0;transform:translateY(16px)} }
+  #section-{{ section.id }} .htypo__scroll-track { width: 1px; height: 36px; background: linear-gradient(to bottom, var(--hmut), transparent); }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    #section-{{ section.id }} .htypo__float--bottom-right,
+    #section-{{ section.id }} .htypo__float--center-right { width: min(32vw, 220px); }
+  }
+  @media (max-width: 768px) {
+    #section-{{ section.id }} .htypo__float { display: none; }
+    #section-{{ section.id }} .htypo__stats { display: none; }
+    #section-{{ section.id }} .htypo__line { font-size: clamp(56px, 18vw, 120px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #section-{{ section.id }} .htypo__scroll-pip,
+    #section-{{ section.id }} .htypo__float-img { animation: none; transition: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Typographic",
+  "tag": "section",
+  "class": "hero-typographic-section",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light / Ivory (default)" },
+        { "value": "dark",  "label": "Dark (like Home 1)" },
+        { "value": "warm",  "label": "Warm / Cream" },
+        { "value": "theme", "label": "Follow global theme setting" }
+      ],
+      "default": "light"
+    },
+    { "type": "range", "id": "min_height", "label": "Minimum height", "min": 70, "max": 100, "step": 5, "unit": "vh", "default": 100 },
+    { "type": "header", "content": "Top bar labels" },
+    { "type": "text", "id": "tag_left",  "label": "Left label",  "default": "Autumn / Winter 2025" },
+    { "type": "text", "id": "tag_right", "label": "Right label", "default": "Maison Noir" },
+    { "type": "header", "content": "Headline" },
+    { "type": "text", "id": "heading_1", "label": "Line 1",                    "default": "The New" },
+    { "type": "text", "id": "heading_2", "label": "Line 2 (italic accent)",    "default": "Season" },
+    { "type": "text", "id": "heading_3", "label": "Line 3 (smaller, optional)" },
+    { "type": "header", "content": "Bottom — description + buttons" },
+    { "type": "text",     "id": "eyebrow",     "label": "Eyebrow",           "default": "New Collection" },
+    { "type": "textarea", "id": "description", "label": "Description",       "default": "A study in proportion and restraint. Sculptural silhouettes cut from the season's most coveted fabrics." },
+    { "type": "text",  "id": "btn1_label", "label": "Primary button",       "default": "Shop Collection" },
+    { "type": "url",   "id": "btn1_link",  "label": "Primary button link" },
+    { "type": "text",  "id": "btn2_label", "label": "Ghost button",         "default": "Our Story" },
+    { "type": "url",   "id": "btn2_link",  "label": "Ghost button link" },
+    { "type": "header", "content": "Floating image" },
+    { "type": "image_picker", "id": "image", "label": "Editorial photo" },
+    {
+      "type": "select", "id": "image_pos", "label": "Image position",
+      "options": [
+        { "value": "bottom-right", "label": "Bottom right" },
+        { "value": "center-right", "label": "Middle right" },
+        { "value": "top-right",    "label": "Top right" }
+      ],
+      "default": "bottom-right"
+    },
+    { "type": "text", "id": "image_caption", "label": "Caption (below image, optional)" },
+    { "type": "header", "content": "Extras" },
+    { "type": "checkbox", "id": "show_scroll", "label": "Show scroll indicator", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "stat", "name": "Stat", "limit": 3,
+      "settings": [
+        { "type": "text", "id": "value", "label": "Value", "default": "2009" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Founded" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Typographic",
+      "blocks": [
+        { "type": "stat", "settings": { "value": "150+", "label": "Artisans" } },
+        { "type": "stat", "settings": { "value": "2009", "label": "Founded" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

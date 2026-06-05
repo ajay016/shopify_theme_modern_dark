@@ -1,0 +1,286 @@
+{%- liquid
+  assign s = section.settings
+  assign scheme_class = 'hlb--' | append: s.scheme
+  assign fallback = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1800&q=85'
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="hlb-section {{ scheme_class }} hlb--{{ s.layout }}"
+  data-section-id="{{ section.id }}"
+  style="--hlb-minh: {{ s.min_height }}vh;"
+>
+  {%- comment -%}—— Media —————————————————————————{%- endcomment -%}
+  <div class="hlb-media">
+    {%- if s.image != blank -%}
+      {{ s.image | image_url: width: 2000 | image_tag:
+        loading: 'eager',
+        fetchpriority: 'high',
+        class: 'hlb-media__img',
+        sizes: '100vw',
+        widths: '800, 1200, 1600, 2000',
+        alt: s.heading | default: 'Editorial'
+      }}
+    {%- else -%}
+      <img class="hlb-media__img" src="{{ fallback }}" alt="Editorial" loading="eager" />
+    {%- endif -%}
+    {%- if s.layout == 'overlay' -%}
+      <span class="hlb-media__scrim" style="opacity: {{ s.overlay | divided_by: 100.0 }};"></span>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%}—— Secondary image (split layout) ——{%- endcomment -%}
+  {%- if s.layout == 'split' -%}
+    <div class="hlb-media hlb-media--2">
+      {%- if s.image_2 != blank -%}
+        {{ s.image_2 | image_url: width: 1400 | image_tag:
+          loading: 'eager',
+          class: 'hlb-media__img',
+          sizes: '50vw',
+          alt: 'Editorial'
+        }}
+      {%- else -%}
+        <img class="hlb-media__img" src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1400&q=85" alt="Editorial" loading="eager" />
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%}—— Content —————————————————————————{%- endcomment -%}
+  <div class="hlb-content">
+    <div class="hlb-content__inner">
+      {%- if s.eyebrow != blank -%}
+        <span class="hlb-eyebrow">{{ s.eyebrow }}</span>
+      {%- endif -%}
+      {%- if s.heading != blank -%}
+        <h1 class="hlb-heading">
+          {%- assign hp = s.heading | split: '|' -%}
+          {%- for part in hp -%}
+            {%- if forloop.index == 2 -%}<em>{{ part | strip }}</em>{%- else -%}<span>{{ part | strip }}</span>{%- endif -%}
+          {%- endfor -%}
+        </h1>
+      {%- endif -%}
+      {%- if s.description != blank -%}
+        <p class="hlb-desc">{{ s.description }}</p>
+      {%- endif -%}
+      <div class="hlb-ctas">
+        {%- if s.btn1_label != blank -%}
+          <a href="{{ s.btn1_link | default: '#' }}" class="hlb-btn hlb-btn--solid">{{ s.btn1_label }}</a>
+        {%- endif -%}
+        {%- if s.btn2_label != blank -%}
+          <a href="{{ s.btn2_link | default: '#' }}" class="hlb-btn hlb-btn--line">{{ s.btn2_label }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  {%- if s.show_scroll -%}
+    <div class="hlb-scroll" aria-hidden="true">
+      <span class="hlb-scroll__txt">Scroll</span>
+      <span class="hlb-scroll__line"><span class="hlb-scroll__pip"></span></span>
+    </div>
+  {%- endif -%}
+</section>
+
+<style>
+  /* ── Scheme ─────────────────────────────────────── */
+  #section-{{ section.id }}.hlb--light {
+    --hbg: var(--ivory, #FAF8F3); --hfg: var(--black, #0A0A0A);
+    --hacc: #9B7B3F; --hmut: rgba(10,10,10,0.5);
+    --hbtn-bg: var(--black, #0A0A0A); --hbtn-fg: var(--ivory, #FAF8F3);
+    --hline: rgba(10,10,10,0.35);
+  }
+  #section-{{ section.id }}.hlb--dark {
+    --hbg: var(--black, #0A0A0A); --hfg: var(--cream, #F5F0E8);
+    --hacc: var(--gold, #C8A96E); --hmut: rgba(245,240,232,0.6);
+    --hbtn-bg: var(--gold, #C8A96E); --hbtn-fg: var(--black, #0A0A0A);
+    --hline: rgba(245,240,232,0.4);
+  }
+  #section-{{ section.id }}.hlb--warm {
+    --hbg: #F0EBE0; --hfg: #2C1F14;
+    --hacc: #8B5E3C; --hmut: rgba(44,31,20,0.55);
+    --hbtn-bg: #2C1F14; --hbtn-fg: #F0EBE0;
+    --hline: rgba(44,31,20,0.35);
+  }
+  #section-{{ section.id }}.hlb--theme {
+    --hbg: var(--background, #0A0A0A); --hfg: var(--foreground, #F5F0E8);
+    --hacc: var(--gold, #C8A96E); --hmut: var(--muted, rgba(245,240,232,0.6));
+    --hbtn-bg: var(--gold, #C8A96E); --hbtn-fg: var(--black, #0A0A0A);
+    --hline: var(--border-strong, rgba(245,240,232,0.4));
+  }
+
+  /* ── Base ───────────────────────────────────────── */
+  #section-{{ section.id }} {
+    position: relative;
+    min-height: var(--hlb-minh, 92vh);
+    display: grid;
+    overflow: hidden;
+    background: var(--hbg);
+  }
+
+  .hlb-media { position: relative; overflow: hidden; }
+  .hlb-media__img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    animation: hlbKen 16s ease-out forwards;
+  }
+  @keyframes hlbKen { from { transform: scale(1.08); } to { transform: scale(1); } }
+
+  .hlb-media__scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(10,10,10,0.25) 0%, rgba(10,10,10,0.05) 35%, rgba(10,10,10,0.55) 100%);
+    pointer-events: none;
+  }
+
+  /* ── OVERLAY layout: full-bleed image, text on top ── */
+  #section-{{ section.id }}.hlb--overlay { grid-template-columns: 1fr; }
+  #section-{{ section.id }}.hlb--overlay .hlb-media { position: absolute; inset: 0; }
+  #section-{{ section.id }}.hlb--overlay .hlb-content {
+    position: relative; z-index: 2;
+    display: flex; align-items: flex-end;
+    padding: clamp(40px, 8vh, 110px) var(--side-padding, 5vw);
+    min-height: var(--hlb-minh, 92vh);
+  }
+  #section-{{ section.id }}.hlb--overlay .hlb-content__inner { max-width: 640px; }
+  #section-{{ section.id }}.hlb--overlay .hlb-heading,
+  #section-{{ section.id }}.hlb--overlay .hlb-eyebrow,
+  #section-{{ section.id }}.hlb--overlay .hlb-desc { color: #fff; }
+  #section-{{ section.id }}.hlb--overlay .hlb-eyebrow { color: rgba(255,255,255,.85); }
+  #section-{{ section.id }}.hlb--overlay .hlb-desc { color: rgba(255,255,255,.85); }
+  #section-{{ section.id }}.hlb--overlay .hlb-heading em { color: #fff; }
+
+  /* ── SPLIT layout: image | text | image (or text + img) ── */
+  #section-{{ section.id }}.hlb--split { grid-template-columns: 1.1fr 1fr; }
+  #section-{{ section.id }}.hlb--split .hlb-media--2 { display: none; }
+  #section-{{ section.id }}.hlb--split .hlb-content {
+    display: flex; align-items: center;
+    padding: clamp(40px, 6vw, 100px);
+    background: var(--hbg);
+  }
+  #section-{{ section.id }}.hlb--split .hlb-content__inner { max-width: 520px; }
+
+  /* ── FRAME layout: image inset on colored bg, text below image overlapping ── */
+  #section-{{ section.id }}.hlb--frame {
+    grid-template-columns: 1fr;
+    padding: clamp(24px, 4vw, 64px);
+    place-items: stretch;
+  }
+  #section-{{ section.id }}.hlb--frame .hlb-media {
+    border-radius: 3px;
+    min-height: calc(var(--hlb-minh, 92vh) - 120px);
+  }
+  #section-{{ section.id }}.hlb--frame .hlb-content {
+    position: absolute; left: clamp(40px, 7vw, 120px); bottom: clamp(48px, 8vw, 120px);
+    z-index: 2; max-width: 560px;
+  }
+  #section-{{ section.id }}.hlb--frame .hlb-heading,
+  #section-{{ section.id }}.hlb--frame .hlb-eyebrow,
+  #section-{{ section.id }}.hlb--frame .hlb-desc { color: #fff; }
+  #section-{{ section.id }}.hlb--frame .hlb-heading em { color: #fff; }
+
+  /* ── Typography ─────────────────────────────────── */
+  .hlb-eyebrow {
+    display: inline-block;
+    font-family: var(--ff-body, 'Outfit', sans-serif);
+    font-size: 11px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase;
+    color: var(--hacc); margin-bottom: 22px;
+    opacity: 0; animation: hlbUp .9s .2s forwards;
+  }
+  .hlb-heading {
+    font-family: var(--ff-display, 'Cormorant Garamond', serif);
+    font-size: clamp(48px, 7vw, 110px); font-weight: 300; line-height: 1.02;
+    letter-spacing: -.01em; color: var(--hfg); margin: 0;
+  }
+  .hlb-heading span, .hlb-heading em { display: block; opacity: 0; animation: hlbUp 1s forwards; }
+  .hlb-heading span:nth-child(1) { animation-delay: .32s; }
+  .hlb-heading em { font-style: italic; color: var(--hacc); animation-delay: .46s; }
+  .hlb-desc {
+    font-family: var(--ff-body, 'Outfit', sans-serif);
+    font-size: clamp(14px, 1.2vw, 17px); line-height: 1.7; color: var(--hmut);
+    margin: 26px 0 0; max-width: 460px;
+    opacity: 0; animation: hlbUp 1s .6s forwards;
+  }
+  .hlb-ctas { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 38px; opacity: 0; animation: hlbUp 1s .74s forwards; }
+  .hlb-btn {
+    display: inline-flex; align-items: center;
+    font-family: var(--ff-body, 'Outfit', sans-serif);
+    font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
+    padding: 16px 34px; text-decoration: none; border-radius: 2px;
+    transition: transform .25s, background .25s, color .25s;
+  }
+  .hlb-btn--solid { background: var(--hbtn-bg); color: var(--hbtn-fg); }
+  .hlb-btn--solid:hover { transform: translateY(-2px); }
+  .hlb-btn--line { border: 1px solid var(--hline); color: var(--hfg); }
+  #section-{{ section.id }}.hlb--overlay .hlb-btn--line,
+  #section-{{ section.id }}.hlb--frame .hlb-btn--line { border-color: rgba(255,255,255,.5); color: #fff; }
+  .hlb-btn--line:hover { background: var(--hbtn-bg); color: var(--hbtn-fg); border-color: var(--hbtn-bg); }
+
+  @keyframes hlbUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+
+  /* ── Scroll cue ─────────────────────────────────── */
+  .hlb-scroll {
+    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 12px; z-index: 3;
+  }
+  .hlb-scroll__txt {
+    font-family: var(--ff-body, 'Outfit', sans-serif);
+    font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--hmut);
+  }
+  #section-{{ section.id }}.hlb--overlay .hlb-scroll__txt,
+  #section-{{ section.id }}.hlb--frame .hlb-scroll__txt { color: rgba(255,255,255,.75); }
+  .hlb-scroll__line { width: 1px; height: 46px; background: var(--hline); position: relative; overflow: hidden; }
+  #section-{{ section.id }}.hlb--overlay .hlb-scroll__line,
+  #section-{{ section.id }}.hlb--frame .hlb-scroll__line { background: rgba(255,255,255,.4); }
+  .hlb-scroll__pip { position: absolute; top: -50%; left: 0; width: 1px; height: 50%; background: var(--hacc); animation: hlbPip 2s infinite; }
+  @keyframes hlbPip { 0% { top: -50%; } 100% { top: 100%; } }
+
+  @media (max-width: 820px) {
+    #section-{{ section.id }}.hlb--split { grid-template-columns: 1fr; }
+    #section-{{ section.id }}.hlb--split .hlb-media { min-height: 60vh; }
+    .hlb-heading { font-size: clamp(40px, 12vw, 64px); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Lookbook",
+  "tag": "section",
+  "class": "section-hero-lookbook",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (ivory)" },
+        { "value": "dark",  "label": "Dark (black)" },
+        { "value": "warm",  "label": "Warm (sand)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "select", "id": "layout", "label": "Layout",
+      "options": [
+        { "value": "overlay", "label": "Full-bleed image, text overlay" },
+        { "value": "split",   "label": "Split — image + text panel" },
+        { "value": "frame",   "label": "Framed image, text inset" }
+      ],
+      "default": "overlay"
+    },
+    { "type": "range", "id": "min_height", "label": "Minimum height", "min": 60, "max": 100, "step": 2, "unit": "vh", "default": 92 },
+    { "type": "range", "id": "overlay", "label": "Image overlay (overlay layout)", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 30 },
+    { "type": "header", "content": "Images" },
+    { "type": "image_picker", "id": "image",   "label": "Main image" },
+    { "type": "image_picker", "id": "image_2", "label": "Second image (split layout)" },
+    { "type": "header", "content": "Content" },
+    { "type": "text",     "id": "eyebrow",     "label": "Eyebrow",     "default": "Autumn / Winter 2025" },
+    { "type": "text",     "id": "heading",     "label": "Heading (use | to italicise second part)", "default": "The New | Season" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Sculptural silhouettes cut from the season's most coveted fabrics — made to be lived in." },
+    { "type": "text", "id": "btn1_label", "label": "Primary button", "default": "Shop Collection" },
+    { "type": "url",  "id": "btn1_link",  "label": "Primary button link" },
+    { "type": "text", "id": "btn2_label", "label": "Secondary button", "default": "View Lookbook" },
+    { "type": "url",  "id": "btn2_link",  "label": "Secondary button link" },
+    { "type": "checkbox", "id": "show_scroll", "label": "Show scroll indicator", "default": true }
+  ],
+  "presets": [ { "name": "Hero Lookbook" } ]
+}
+{% endschema %}

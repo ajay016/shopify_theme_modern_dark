@@ -1,0 +1,179 @@
+{%- liquid
+  assign s = section.settings
+  assign scheme_class = 'edr--' | append: s.scheme
+  assign fallbacks = 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1300&q=85|https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?auto=format&fit=crop&w=1300&q=85|https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=1300&q=85|https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1300&q=85' | split: '|'
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="edr-section {{ scheme_class }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="edr-inner">
+
+    {%- if s.eyebrow != blank or s.heading != blank -%}
+      <div class="edr-head reveal">
+        {%- if s.eyebrow != blank -%}<span class="edr-head__eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+        {%- if s.heading != blank -%}<h2 class="edr-head__heading">{{ s.heading }}</h2>{%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="edr-rows">
+      {%- for block in section.blocks -%}
+        {%- assign fb = fallbacks[forloop.index0] | default: fallbacks[0] -%}
+        <article class="edr-row reveal" {{ block.shopify_attributes }}>
+          <div class="edr-row__media">
+            <a href="{{ block.settings.url | default: '#' }}" class="edr-row__img-link">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 1400 | image_tag:
+                  loading: 'lazy', class: 'edr-row__img', sizes: '(max-width: 900px) 100vw, 55vw',
+                  widths: '600, 900, 1400', alt: block.settings.heading | escape }}
+              {%- else -%}
+                <img class="edr-row__img" src="{{ fb }}" alt="{{ block.settings.heading | escape }}" loading="lazy" />
+              {%- endif -%}
+              {%- if block.settings.tag != blank -%}
+                <span class="edr-row__pill">{{ block.settings.tag }}</span>
+              {%- endif -%}
+            </a>
+          </div>
+
+          <div class="edr-row__body">
+            {%- if block.settings.index_label != blank -%}
+              <span class="edr-row__index">{{ block.settings.index_label }}</span>
+            {%- endif -%}
+            {%- if block.settings.eyebrow != blank -%}
+              <span class="edr-row__eyebrow">{{ block.settings.eyebrow }}</span>
+            {%- endif -%}
+            {%- if block.settings.heading != blank -%}
+              <h3 class="edr-row__heading">{{ block.settings.heading }}</h3>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <p class="edr-row__text">{{ block.settings.text }}</p>
+            {%- endif -%}
+            {%- if block.settings.btn_label != blank -%}
+              <a href="{{ block.settings.url | default: '#' }}" class="edr-row__link">
+                {{ block.settings.btn_label }}
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            {%- endif -%}
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }}.edr--light { --ebg: var(--ivory,#FAF8F3); --efg: var(--black,#0A0A0A); --eacc:#9B7B3F; --emut:rgba(10,10,10,.5); --ebdr:rgba(10,10,10,.12); }
+  #section-{{ section.id }}.edr--dark  { --ebg: var(--black,#0A0A0A); --efg: var(--cream,#F5F0E8); --eacc:var(--gold,#C8A96E); --emut:rgba(245,240,232,.55); --ebdr:rgba(245,240,232,.1); }
+  #section-{{ section.id }}.edr--warm  { --ebg:#F0EBE0; --efg:#2C1F14; --eacc:#8B5E3C; --emut:rgba(44,31,20,.5); --ebdr:rgba(44,31,20,.13); }
+  #section-{{ section.id }}.edr--theme { --ebg:var(--background,#0A0A0A); --efg:var(--foreground,#F5F0E8); --eacc:var(--gold,#C8A96E); --emut:var(--muted,rgba(245,240,232,.55)); --ebdr:var(--border,rgba(245,240,232,.1)); }
+
+  #section-{{ section.id }} { background: var(--ebg); color: var(--efg); padding: clamp(64px,8vw,130px) var(--side-padding,5vw); }
+  .edr-inner { max-width: var(--container-width,1400px); margin: 0 auto; }
+
+  .edr-head { text-align: center; margin-bottom: clamp(48px,6vw,88px); }
+  .edr-head__eyebrow { display:block; font-family: var(--ff-body,'Outfit',sans-serif); font-size:11px; font-weight:500; letter-spacing:.22em; text-transform:uppercase; color:var(--eacc); margin-bottom:14px; }
+  .edr-head__heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size:clamp(34px,4.5vw,64px); font-weight:300; line-height:1.08; margin:0; }
+
+  .edr-rows { display: flex; flex-direction: column; gap: clamp(56px,8vw,120px); }
+
+  .edr-row { display: grid; grid-template-columns: 55% 1fr; gap: clamp(32px,5vw,80px); align-items: center; }
+  .edr-row:nth-child(even) { grid-template-columns: 1fr 55%; }
+  .edr-row:nth-child(even) .edr-row__media { order: 2; }
+  .edr-row:nth-child(even) .edr-row__body  { order: 1; }
+
+  .edr-row__media { position: relative; }
+  .edr-row__img-link { display: block; position: relative; overflow: hidden; border-radius: 3px; }
+  .edr-row__img { width:100%; aspect-ratio: 4/3; object-fit: cover; display:block; transition: transform .8s cubic-bezier(.4,0,.2,1); }
+  .edr-row__img-link:hover .edr-row__img { transform: scale(1.04); }
+  .edr-row__pill {
+    position:absolute; top:18px; left:18px;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size:10px; font-weight:500; letter-spacing:.16em; text-transform:uppercase;
+    background: rgba(255,255,255,.92); color:#0A0A0A; padding:8px 14px; border-radius:2px;
+  }
+
+  .edr-row__body { max-width: 460px; }
+  .edr-row:nth-child(even) .edr-row__body { margin-left: auto; }
+  .edr-row__index { display:block; font-family: var(--ff-display,'Cormorant Garamond',serif); font-size:14px; letter-spacing:.1em; color:var(--eacc); margin-bottom:18px; }
+  .edr-row__eyebrow { display:block; font-family: var(--ff-body,'Outfit',sans-serif); font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--emut); margin-bottom:14px; }
+  .edr-row__heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size:clamp(28px,3.4vw,48px); font-weight:300; line-height:1.1; margin:0 0 18px; }
+  .edr-row__text { font-family: var(--ff-body,'Outfit',sans-serif); font-size:clamp(13px,1.1vw,16px); line-height:1.75; color:var(--emut); margin:0 0 28px; }
+  .edr-row__link { display:inline-flex; align-items:center; gap:10px; font-family:var(--ff-body,'Outfit',sans-serif); font-size:12px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--efg); text-decoration:none; padding-bottom:6px; border-bottom:1px solid var(--ebdr); transition: gap .25s, border-color .25s; }
+  .edr-row__link:hover { gap:16px; border-color: var(--eacc); color: var(--eacc); }
+  .edr-row__link svg { transition: transform .25s; }
+  .edr-row__link:hover svg { transform: translateX(3px); }
+
+  .edr-section .reveal { opacity:0; transform:translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+  .edr-section .reveal.is-visible { opacity:1; transform:none; }
+
+  @media (max-width: 820px) {
+    .edr-row, .edr-row:nth-child(even) { grid-template-columns: 1fr; }
+    .edr-row:nth-child(even) .edr-row__media { order: 1; }
+    .edr-row:nth-child(even) .edr-row__body  { order: 2; }
+    .edr-row__body, .edr-row:nth-child(even) .edr-row__body { max-width: none; margin: 0; }
+  }
+</style>
+
+<script>
+(function(){
+  var SEC='{{ section.id }}';
+  function init(root){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target);}});},{threshold:.12});
+    root.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+  }
+  function getRoot(){return document.getElementById('section-'+SEC);}
+  document.addEventListener('DOMContentLoaded',function(){var r=getRoot();if(r)init(r);});
+  document.addEventListener('shopify:section:load',function(e){if(e.detail.sectionId!==SEC)return;var r=getRoot();if(r){init(r);r.querySelectorAll('.reveal').forEach(function(el){el.classList.add('is-visible');});}});
+  document.addEventListener('shopify:section:select',function(e){if(e.detail.sectionId!==SEC)return;var r=getRoot();if(r)r.querySelectorAll('.reveal').forEach(function(el){el.classList.add('is-visible');});});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Editorial Rows",
+  "tag": "section",
+  "class": "section-editorial-rows",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (ivory)" },
+        { "value": "dark",  "label": "Dark (black)" },
+        { "value": "warm",  "label": "Warm (sand)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "light"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Section eyebrow", "default": "The Collections" },
+    { "type": "text", "id": "heading", "label": "Section heading", "default": "Edited for the Season" }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Editorial row",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "tag", "label": "Image pill (optional)", "default": "New In" },
+        { "type": "text", "id": "index_label", "label": "Index label", "default": "01 / 03" },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Women's Ready-to-Wear" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Sculptural Silhouettes" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Eight months in our Milan atelier. Every seam deliberate, every fabric considered." },
+        { "type": "text", "id": "btn_label", "label": "Link label", "default": "Explore Collection" },
+        { "type": "url", "id": "url", "label": "Link URL" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial Rows",
+      "blocks": [
+        { "type": "row", "settings": { "index_label": "01 / 03", "eyebrow": "Women's Ready-to-Wear", "heading": "Sculptural Silhouettes", "tag": "New In" } },
+        { "type": "row", "settings": { "index_label": "02 / 03", "eyebrow": "Men's Tailoring", "heading": "Precision in Motion", "tag": "Atelier" } },
+        { "type": "row", "settings": { "index_label": "03 / 03", "eyebrow": "Outerwear", "heading": "Built for Every Season", "tag": "Limited" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

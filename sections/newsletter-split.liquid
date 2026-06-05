@@ -8,13 +8,7 @@
         | image_tag: loading: 'lazy', sizes: '50vw', class: 'nls__visual-img', alt: ''
       }}
     {%- else -%}
-      <div class="nls__visual-ph" aria-hidden="true">
-        <svg width="140" height="220" viewBox="0 0 140 220" fill="none">
-          <path d="M48 22 Q48 10 70 8 Q92 10 92 22 L98 56 L80 62 L80 206 L60 206 L60 62 L42 56 Z" stroke="rgba(200,169,110,0.25)" stroke-width="1.4" fill="rgba(200,169,110,0.04)"/>
-          <path d="M42 56 L22 70 L28 180 L60 174" stroke="rgba(200,169,110,0.16)" stroke-width="1" fill="none"/>
-          <path d="M98 56 L118 70 L112 180 L80 174" stroke="rgba(200,169,110,0.16)" stroke-width="1" fill="none"/>
-        </svg>
-      </div>
+      <img class="nls__visual-img" src="https://images.unsplash.com/photo-1483118714900-540cf339fd46?auto=format&fit=crop&w=1200&q=85" alt="" loading="lazy" />
     {%- endif -%}
     <div class="nls__visual-overlay"></div>
     {%- if section.settings.visual_quote != blank -%}

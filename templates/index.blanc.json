@@ -1,26 +1,19 @@
 {
   "sections": {
     "hero": {
-      "type": "hero-typographic",
-      "blocks": {
-        "st1": { "type": "stat", "settings": { "value": "150+", "label": "Artisans" } },
-        "st2": { "type": "stat", "settings": { "value": "32",   "label": "Countries" } }
-      },
-      "block_order": ["st1", "st2"],
+      "type": "hero-lookbook",
       "settings": {
         "scheme": "light",
-        "min_height": 100,
-        "tag_left": "Autumn / Winter 2025",
-        "tag_right": "Maison Noir",
-        "heading_1": "The New",
-        "heading_2": "Season",
-        "eyebrow": "New Collection — AW 2025",
-        "description": "A study in proportion and restraint. Sculptural silhouettes cut from the season's most coveted fabrics — made to be lived in.",
+        "layout": "overlay",
+        "min_height": 94,
+        "overlay": 30,
+        "eyebrow": "Autumn / Winter 2025",
+        "heading": "The New | Season",
+        "description": "Sculptural silhouettes cut from the season's most coveted fabrics — made to be lived in.",
         "btn1_label": "Shop Collection",
         "btn1_link": "/collections/all",
-        "btn2_label": "Our Story",
-        "btn2_link": "/pages/about",
-        "image_pos": "bottom-right",
+        "btn2_label": "View Lookbook",
+        "btn2_link": "/collections/all",
         "show_scroll": true
       }
     },
@@ -31,105 +24,84 @@
         "style": "bordered",
         "separator": "diamond",
         "direction": "left",
-        "speed": 28,
-        "padding": 18,
+        "speed": 30,
+        "padding": 16,
         "pause_on_hover": true,
         "bg_color": "#FAF8F3",
         "text_color": "#0A0A0A"
       }
     },
-    "accordion": {
-      "type": "collection-accordion",
+    "rows": {
+      "type": "editorial-rows",
       "blocks": {
-        "item1": {
-          "type": "item",
-          "settings": {
-            "label": "Women's Ready-to-Wear",
-            "sub": "Sculptural silhouettes",
-            "count": "142 pieces",
-            "url": "/collections/women"
-          }
-        },
-        "item2": {
-          "type": "item",
-          "settings": {
-            "label": "Men's Tailoring",
-            "sub": "Precision craftsmanship",
-            "count": "98 pieces",
-            "url": "/collections/men"
-          }
-        },
-        "item3": {
-          "type": "item",
-          "settings": {
-            "label": "Bags & Accessories",
-            "sub": "The considered detail",
-            "count": "215 pieces",
-            "url": "/collections/accessories"
-          }
-        },
-        "item4": {
-          "type": "item",
-          "settings": {
-            "label": "Outerwear",
-            "sub": "Built for every season",
-            "count": "64 pieces",
-            "url": "/collections/outerwear"
-          }
-        }
+        "r1": { "type": "row", "settings": { "index_label": "01 / 03", "tag": "New In", "eyebrow": "Women's Ready-to-Wear", "heading": "Sculptural Silhouettes", "text": "Eight months in our Milan atelier. Every seam deliberate, every fabric considered.", "btn_label": "Explore Collection", "url": "/collections/women" } },
+        "r2": { "type": "row", "settings": { "index_label": "02 / 03", "tag": "Atelier", "eyebrow": "Men's Tailoring", "heading": "Precision in Motion", "text": "Technical precision meets considered design — engineered for the cities you move through.", "btn_label": "Explore Collection", "url": "/collections/men" } },
+        "r3": { "type": "row", "settings": { "index_label": "03 / 03", "tag": "Limited", "eyebrow": "Outerwear", "heading": "Built for Every Season", "text": "Weatherproofed wool and hand-finished detailing in pieces made to outlast the trends.", "btn_label": "Explore Collection", "url": "/collections/outerwear" } }
       },
-      "block_order": ["item1", "item2", "item3", "item4"],
+      "block_order": ["r1", "r2", "r3"],
       "settings": {
         "scheme": "light",
-        "eyebrow": "Shop by Category",
-        "heading": "Collections",
-        "cta_label": "View all collections",
-        "cta_url": "/collections"
+        "eyebrow": "The Collections",
+        "heading": "Edited for the Season"
       }
     },
-    "table": {
-      "type": "products-table",
+    "gallery": {
+      "type": "lookbook-gallery",
+      "blocks": {
+        "t1": { "type": "tile", "settings": { "size": "tall",  "tag": "Featured", "label": "The Tailoring Edit", "meta": "Explore", "url": "/collections/all" } },
+        "t2": { "type": "tile", "settings": { "size": "wide",  "label": "Outerwear", "meta": "64 pieces", "url": "/collections/outerwear" } },
+        "t3": { "type": "tile", "settings": { "size": "sq",    "label": "Knitwear", "meta": "38 pieces", "url": "/collections/all" } },
+        "t4": { "type": "tile", "settings": { "size": "sq",    "label": "Accessories", "meta": "215 pieces", "url": "/collections/accessories" } }
+      },
+      "block_order": ["t1", "t2", "t3", "t4"],
       "settings": {
         "scheme": "warm",
-        "eyebrow": "Curated Edit",
-        "heading": "This Season's Icons",
-        "products_to_show": 8,
-        "view_all_label": "View all products",
-        "col_name": "Product",
-        "col_cat": "Category",
-        "col_price": "Price"
+        "eyebrow": "The Lookbook",
+        "heading": "Autumn Editorial",
+        "cta_label": "View full lookbook",
+        "cta_url": "/collections/all"
       }
     },
-    "marquee2": {
-      "type": "marquee",
+    "showcase": {
+      "type": "product-showcase",
       "settings": {
-        "text": "Free Worldwide Shipping, 30-Day Returns, Secure Checkout, Carbon-Neutral Delivery",
-        "style": "bordered",
-        "separator": "slash",
-        "direction": "right",
-        "speed": 34,
-        "padding": 18,
-        "pause_on_hover": true,
-        "bg_color": "#F0EBE0",
-        "text_color": "#2C1F14"
+        "scheme": "light",
+        "eyebrow": "Curated Edit",
+        "heading": "This Season's Icons",
+        "products_to_show": 4,
+        "columns": 4,
+        "cta_label": "View all products",
+        "cta_url": "/collections/all"
+      }
+    },
+    "campaign": {
+      "type": "campaign-banner",
+      "settings": {
+        "min_height": 72,
+        "overlay": 42,
+        "align": "center",
+        "eyebrow": "Limited Release",
+        "heading": "The Atelier | Capsule",
+        "description": "Twelve pieces. Made to order. Available for a limited window only.",
+        "btn_label": "Shop the Capsule",
+        "btn_link": "/collections/all"
       }
     },
     "newsletter": {
-      "type": "newsletter-minimal",
+      "type": "newsletter-split",
       "settings": {
-        "scheme": "light",
-        "label": "Stay Connected",
-        "heading": "Join the | Inner Circle",
+        "visual_quote": "Fashion should feel like an extension of oneself — effortless, considered, and entirely one's own.",
+        "visual_attr": "— Isabelle Moreau, Creative Director",
+        "panel_bg": "ivory",
+        "eyebrow": "Stay Close",
+        "heading": "Join the Inner Circle",
         "subtext": "Be the first to know about new collections, exclusive events, and private sales.",
+        "perks": "Early access to new arrivals, Exclusive member discounts, Private event invitations",
         "placeholder": "Your email address",
         "btn_label": "Subscribe",
-        "success_msg": "Thank you for subscribing.",
-        "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time.",
-        "show_footer": true,
-        "footer_text": "Maison Noir — Est. 2009",
-        "footer_links": "Privacy Policy, Shipping, Returns"
+        "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time."
       }
     }
   },
-  "order": ["hero", "marquee", "accordion", "table", "marquee2", "newsletter"]
+  "order": ["hero", "marquee", "rows", "gallery", "showcase", "campaign", "newsletter"]
 }

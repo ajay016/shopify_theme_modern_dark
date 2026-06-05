@@ -245,6 +245,42 @@
   }
 </style>
 
+<script>
+  (function () {
+    var SECTION_ID = '{{ section.id }}';
+
+    function revealAll(sectionId) {
+      var root = document.getElementById('section-' + sectionId);
+      if (!root) return;
+      root.querySelectorAll('.reveal').forEach(function (el) {
+        el.classList.add('is-visible');
+      });
+    }
+
+    /* Re-reveal after Shopify editor re-renders the section */
+    document.addEventListener('shopify:section:load', function (e) {
+      if (e.detail.sectionId === SECTION_ID) revealAll(SECTION_ID);
+    });
+
+    /* Reveal when the section or a block inside it is selected in the editor */
+    document.addEventListener('shopify:section:select', function (e) {
+      if (e.detail.sectionId === SECTION_ID) revealAll(SECTION_ID);
+    });
+    document.addEventListener('shopify:block:select', function (e) {
+      if (e.detail.sectionId === SECTION_ID) revealAll(SECTION_ID);
+    });
+
+    /* In design mode: make reveals visible immediately so the editor shows content */
+    if (window.Shopify && window.Shopify.designMode) {
+      document.addEventListener('DOMContentLoaded', function () {
+        revealAll(SECTION_ID);
+      });
+      /* If DOMContentLoaded already fired */
+      if (document.readyState !== 'loading') revealAll(SECTION_ID);
+    }
+  })();
+</script>
+
 {% schema %}
 {
   "name": "Blog Posts",

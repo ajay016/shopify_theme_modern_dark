@@ -1,0 +1,240 @@
+<section class="nls" id="section-{{ section.id }}">
+  {%- comment -%}——— Left: image panel ———{%- endcomment -%}
+  <div class="nls__visual">
+    {%- if section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 1200
+        | image_tag: loading: 'lazy', sizes: '50vw', class: 'nls__visual-img', alt: ''
+      }}
+    {%- else -%}
+      <div class="nls__visual-ph" aria-hidden="true">
+        <svg width="140" height="220" viewBox="0 0 140 220" fill="none">
+          <path d="M48 22 Q48 10 70 8 Q92 10 92 22 L98 56 L80 62 L80 206 L60 206 L60 62 L42 56 Z" stroke="rgba(200,169,110,0.25)" stroke-width="1.4" fill="rgba(200,169,110,0.04)"/>
+          <path d="M42 56 L22 70 L28 180 L60 174" stroke="rgba(200,169,110,0.16)" stroke-width="1" fill="none"/>
+          <path d="M98 56 L118 70 L112 180 L80 174" stroke="rgba(200,169,110,0.16)" stroke-width="1" fill="none"/>
+        </svg>
+      </div>
+    {%- endif -%}
+    <div class="nls__visual-overlay"></div>
+    {%- if section.settings.visual_quote != blank -%}
+      <blockquote class="nls__visual-quote">
+        <p>{{ section.settings.visual_quote }}</p>
+        {%- if section.settings.visual_attr != blank -%}
+          <cite>{{ section.settings.visual_attr }}</cite>
+        {%- endif -%}
+      </blockquote>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%}——— Right: form panel ———{%- endcomment -%}
+  <div class="nls__form-panel" style="background:{% if section.settings.panel_bg == 'gold' %}var(--gold){% elsif section.settings.panel_bg == 'ivory' %}var(--ivory){% elsif section.settings.panel_bg == 'charcoal' %}var(--charcoal){% else %}var(--black){% endif %};">
+    <div class="nls__form-inner">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="nls__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="nls__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subtext != blank -%}
+        <p class="nls__sub">{{ section.settings.subtext }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.perks != blank -%}
+        <ul class="nls__perks">
+          {%- assign perk_list = section.settings.perks | split: ',' -%}
+          {%- for perk in perk_list -%}
+            <li class="nls__perk">
+              <svg width="14" height="11" viewBox="0 0 14 11" fill="none" aria-hidden="true"><path d="M1 5.5L5 9.5L13 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              {{ perk | strip }}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- assign nls_form_id = 'nls-form-' | append: section.id -%}
+      {%- form 'customer', id: nls_form_id, class: 'nls__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        {%- if form.posted_successfully? -%}
+          <p class="nls__success">{{ 'newsletter.success' | t }}</p>
+        {%- else -%}
+          <div class="nls__input-row">
+            <input
+              type="email"
+              name="contact[email]"
+              id="nls-email-{{ section.id }}"
+              placeholder="{{ section.settings.placeholder | default: 'Your email address' }}"
+              autocorrect="off" autocapitalize="off"
+              required
+              {%- if form.errors -%} aria-invalid="true"{%- endif -%}
+            >
+            <button type="submit">
+              {{ section.settings.btn_label | default: 'Subscribe' }}
+              <svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M1 5h14M11 1l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          {%- if form.errors -%}
+            <p class="nls__error">{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</p>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endform -%}
+      {%- if section.settings.disclaimer != blank -%}
+        <p class="nls__disclaimer">{{ section.settings.disclaimer }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ── Split layout ── */
+  #section-{{ section.id }}.nls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 540px;
+  }
+
+  /* ── Visual panel ── */
+  #section-{{ section.id }} .nls__visual { position: relative; overflow: hidden; }
+  #section-{{ section.id }} .nls__visual-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #section-{{ section.id }} .nls__visual-ph {
+    width: 100%; height: 100%;
+    background: radial-gradient(110% 110% at 60% 30%, #26201a, #0a0a0a);
+    display: flex; align-items: center; justify-content: center;
+  }
+  #section-{{ section.id }} .nls__visual-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 70%);
+  }
+  #section-{{ section.id }} .nls__visual-quote {
+    position: absolute; bottom: clamp(32px, 5vh, 56px); left: clamp(32px, 5vw, 56px); right: clamp(32px, 5vw, 56px);
+    z-index: 2;
+  }
+  #section-{{ section.id }} .nls__visual-quote p {
+    font-family: var(--ff-display); font-size: clamp(18px, 2.2vw, 28px); font-style: italic;
+    color: var(--cream); font-weight: 300; line-height: 1.35; margin-bottom: 14px;
+  }
+  #section-{{ section.id }} .nls__visual-quote cite {
+    font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); font-style: normal;
+  }
+
+  /* ── Form panel ── */
+  #section-{{ section.id }} .nls__form-panel {
+    display: flex; align-items: center; justify-content: center;
+  }
+  #section-{{ section.id }} .nls__form-inner {
+    width: 100%; max-width: 420px;
+    padding: clamp(48px, 7vh, 80px) clamp(32px, 5vw, 64px);
+  }
+
+  /* Eyebrow */
+  #section-{{ section.id }} .nls__eyebrow {
+    font-size: 10px; letter-spacing: 0.38em; text-transform: uppercase;
+    color: var(--gold); display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  }
+  #section-{{ section.id }} .nls__eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__eyebrow,
+  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__eyebrow { color: rgba(10,10,10,0.6); }
+  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__eyebrow::before,
+  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__eyebrow::before { background: rgba(10,10,10,0.4); }
+
+  /* Heading */
+  #section-{{ section.id }} .nls__heading {
+    font-family: var(--ff-display); font-size: clamp(28px, 3.2vw, 46px); font-weight: 300;
+    line-height: 1.1; color: var(--cream); margin-bottom: 16px;
+  }
+  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__heading,
+  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__heading { color: var(--black); }
+
+  /* Subtext */
+  #section-{{ section.id }} .nls__sub { font-size: 13px; line-height: 1.75; color: var(--cream); opacity: 0.65; margin-bottom: 24px; }
+  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__sub,
+  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__sub { color: var(--black); }
+
+  /* Perks list */
+  #section-{{ section.id }} .nls__perks { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 10px; }
+  #section-{{ section.id }} .nls__perk {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; letter-spacing: 0.04em; color: var(--cream); opacity: 0.8;
+  }
+  #section-{{ section.id }} .nls__perk svg { color: var(--gold); flex-shrink: 0; }
+  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__perk,
+  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__perk { color: var(--black); }
+  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__perk svg,
+  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__perk svg { color: var(--black); }
+
+  /* Input row */
+  #section-{{ section.id }} .nls__input-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+  #section-{{ section.id }} .nls__input-row input[type="email"] {
+    width: 100%; background: transparent;
+    border: 0; border-bottom: 1px solid var(--border-strong);
+    color: var(--cream); font-family: var(--ff-body); font-size: 14px;
+    padding: 14px 0; outline: none; transition: border-color 0.3s;
+    letter-spacing: 0.03em;
+  }
+  #section-{{ section.id }} .nls__input-row input[type="email"]::placeholder { color: var(--muted); }
+  #section-{{ section.id }} .nls__input-row input[type="email"]:focus { border-bottom-color: var(--gold); }
+  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] input[type="email"],
+  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] input[type="email"] { color: var(--black); border-bottom-color: rgba(10,10,10,0.35); }
+  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] input[type="email"]::placeholder,
+  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] input[type="email"]::placeholder { color: rgba(10,10,10,0.5); }
+  #section-{{ section.id }} .nls__input-row button {
+    display: inline-flex; align-items: center; gap: 10px; justify-content: center;
+    width: 100%; padding: 16px 24px;
+    background: var(--gold); color: var(--black);
+    font-family: var(--ff-body); font-size: 11px; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase;
+    border: none; cursor: pointer; transition: background var(--transition), transform 0.2s;
+  }
+  #section-{{ section.id }} .nls__input-row button:hover { background: var(--gold-light); transform: translateY(-1px); }
+  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__input-row button { background: var(--black); color: var(--gold); }
+  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__input-row button:hover { background: #111; }
+
+  /* Feedback */
+  #section-{{ section.id }} .nls__success { color: var(--gold); font-size: 13px; letter-spacing: 0.06em; }
+  #section-{{ section.id }} .nls__error   { color: var(--sale-text); font-size: 12px; margin-top: 8px; }
+  #section-{{ section.id }} .nls__disclaimer { font-size: 11px; line-height: 1.6; color: var(--cream); opacity: 0.45; margin-top: 14px; }
+  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__disclaimer,
+  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__disclaimer { color: var(--black); }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    #section-{{ section.id }}.nls { grid-template-columns: 1fr; min-height: unset; }
+    #section-{{ section.id }} .nls__visual { height: 55vw; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Newsletter Split",
+  "tag": "section",
+  "class": "newsletter-split-section",
+  "settings": [
+    { "type": "header", "content": "Visual panel (left)" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text",  "id": "visual_quote", "label": "Quote text (over image)",  "default": "Fashion is the armour to survive the reality of everyday life." },
+    { "type": "text",  "id": "visual_attr",  "label": "Quote attribution",        "default": "— Bill Cunningham" },
+
+    { "type": "header", "content": "Form panel (right)" },
+    {
+      "type": "select", "id": "panel_bg", "label": "Panel background",
+      "options": [
+        { "value": "black",    "label": "Black" },
+        { "value": "charcoal", "label": "Charcoal" },
+        { "value": "gold",     "label": "Gold" },
+        { "value": "ivory",    "label": "Ivory / Light" }
+      ],
+      "default": "charcoal"
+    },
+    { "type": "text",     "id": "eyebrow",     "label": "Eyebrow",      "default": "Stay Close" },
+    { "type": "text",     "id": "heading",     "label": "Heading",      "default": "Join the Inner Circle" },
+    { "type": "textarea", "id": "subtext",     "label": "Subtext",      "default": "Be the first to know about new collections, exclusive events, and private sales." },
+    { "type": "text",     "id": "perks",       "label": "Perk list (comma-separated)", "default": "Early access to new arrivals, Exclusive member discounts, Private event invitations" },
+    { "type": "text",     "id": "placeholder", "label": "Input placeholder",       "default": "Your email address" },
+    { "type": "text",     "id": "btn_label",   "label": "Button label",            "default": "Subscribe" },
+    { "type": "text",     "id": "disclaimer",  "label": "Disclaimer",              "default": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time." }
+  ],
+  "presets": [
+    { "name": "Newsletter Split" }
+  ]
+}
+{% endschema %}

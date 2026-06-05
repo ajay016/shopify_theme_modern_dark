@@ -1,0 +1,358 @@
+{%- liquid
+  assign s = section.settings
+-%}
+
+<section
+  class="hmos hmos--{{ s.panel_style }}"
+  id="section-{{ section.id }}"
+  aria-label="{{ s.heading_1 | escape }}"
+  style="min-height:{{ s.min_height }}vh;"
+>
+  {%- comment -%}——— Panel 1: Text column ———{%- endcomment -%}
+  <div class="hmos__text">
+    <div class="hmos__text-top">
+      {%- if s.eyebrow != blank -%}
+        <p class="hmos__eyebrow">{{ s.eyebrow }}</p>
+      {%- endif -%}
+      <h1 class="hmos__title">
+        {%- if s.heading_1 != blank -%}
+          <span class="hmos__tline">{{ s.heading_1 }}</span>
+        {%- endif -%}
+        {%- if s.heading_2 != blank -%}
+          <em class="hmos__tline hmos__tline--italic">{{ s.heading_2 }}</em>
+        {%- endif -%}
+        {%- if s.heading_3 != blank -%}
+          <span class="hmos__tline hmos__tline--sub">{{ s.heading_3 }}</span>
+        {%- endif -%}
+      </h1>
+      {%- if s.description != blank -%}
+        <p class="hmos__desc">{{ s.description }}</p>
+      {%- endif -%}
+    </div>
+    <div class="hmos__text-bottom">
+      <div class="hmos__ctas">
+        {%- if s.btn1_label != blank -%}
+          <a href="{{ s.btn1_link | default: '#' }}" class="btn btn-primary">{{ s.btn1_label }}</a>
+        {%- endif -%}
+        {%- if s.btn2_label != blank -%}
+          <a href="{{ s.btn2_link | default: '#' }}" class="btn btn-ghost btn-sm">{{ s.btn2_label }}</a>
+        {%- endif -%}
+      </div>
+      {%- if section.blocks.size > 0 -%}
+        <div class="hmos__stats">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'stat' -%}
+              <div class="hmos__stat" {{ block.shopify_attributes }}>
+                <span class="hmos__stat-val">{{ block.settings.value }}</span>
+                <span class="hmos__stat-lbl">{{ block.settings.label }}</span>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      {%- if s.season_label != blank -%}
+        <p class="hmos__season">{{ s.season_label }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%}——— Panel 2: Centre hero image ———{%- endcomment -%}
+  <div class="hmos__center">
+    {%- if s.image != blank -%}
+      {{
+        s.image
+        | image_url: width: 1400
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          sizes: '(max-width:900px) 100vw, 42vw',
+          class: 'hmos__center-img',
+          alt: s.heading_1 | escape
+      }}
+    {%- else -%}
+      <div class="hmos__ph hmos__ph--center" aria-hidden="true">
+        <svg width="200" height="340" viewBox="0 0 200 340" fill="none">
+          <path d="M72 30 Q72 14 100 12 Q128 14 128 30 L140 80 L114 88 L114 318 L86 318 L86 88 L60 80 Z" stroke="rgba(200,169,110,0.28)" stroke-width="1.5" fill="rgba(200,169,110,0.04)"/>
+          <path d="M60 80 L30 100 L40 272 L86 260" stroke="rgba(200,169,110,0.18)" stroke-width="1" fill="none"/>
+          <path d="M140 80 L170 100 L160 272 L114 260" stroke="rgba(200,169,110,0.18)" stroke-width="1" fill="none"/>
+          <line x1="86" y1="180" x2="114" y2="180" stroke="rgba(200,169,110,0.15)" stroke-width="0.8"/>
+        </svg>
+      </div>
+    {%- endif -%}
+    {%- if s.show_index -%}
+      <div class="hmos__index" aria-hidden="true">
+        <strong>01</strong><span> / 0{{ s.total_slides | default: 4 }}</span>
+      </div>
+    {%- endif -%}
+    {%- if s.show_scroll -%}
+      <div class="hmos__scroll" aria-hidden="true">
+        <div class="hmos__scroll-line"></div>
+        <span>Scroll</span>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%}——— Panel 3: Stacked editorial images ———{%- endcomment -%}
+  <div class="hmos__stack">
+    <a href="{{ s.link1_url | default: '#' }}" class="hmos__cell hmos__cell--top">
+      {%- if s.image_2 != blank -%}
+        {{
+          s.image_2
+          | image_url: width: 800
+          | image_tag: loading: 'lazy', sizes: '28vw', class: 'hmos__cell-img', alt: s.link1_label | default: '' | escape
+        }}
+      {%- else -%}
+        <div class="hmos__ph hmos__ph--s1"></div>
+      {%- endif -%}
+      <div class="hmos__cell-info">
+        {%- if s.link1_count != blank -%}
+          <span class="hmos__cell-count">{{ s.link1_count }}</span>
+        {%- endif -%}
+        <span class="hmos__cell-name">{{ s.link1_label | default: 'Explore' }}</span>
+        <span class="hmos__cell-arrow" aria-hidden="true">→</span>
+      </div>
+    </a>
+    <a href="{{ s.link2_url | default: '#' }}" class="hmos__cell hmos__cell--btm">
+      {%- if s.image_3 != blank -%}
+        {{
+          s.image_3
+          | image_url: width: 800
+          | image_tag: loading: 'lazy', sizes: '28vw', class: 'hmos__cell-img', alt: s.link2_label | default: '' | escape
+        }}
+      {%- else -%}
+        <div class="hmos__ph hmos__ph--s2"></div>
+      {%- endif -%}
+      <div class="hmos__cell-info">
+        {%- if s.link2_count != blank -%}
+          <span class="hmos__cell-count">{{ s.link2_count }}</span>
+        {%- endif -%}
+        <span class="hmos__cell-name">{{ s.link2_label | default: 'Explore' }}</span>
+        <span class="hmos__cell-arrow" aria-hidden="true">→</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<style>
+  /* ── Core grid ── */
+  #section-{{ section.id }}.hmos {
+    display: grid;
+    grid-template-columns: 30% 1fr 28%;
+    grid-template-rows: 1fr;
+    gap: 2px;
+    background: var(--black);
+    overflow: hidden;
+  }
+
+  /* ── Panel 1: Text ── */
+  #section-{{ section.id }} .hmos__text {
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: clamp(44px, 6vh, 84px) clamp(24px, 3vw, 52px);
+    position: relative; z-index: 1;
+  }
+  #section-{{ section.id }}.hmos--charcoal .hmos__text { background: var(--charcoal); }
+  #section-{{ section.id }}.hmos--black    .hmos__text { background: var(--black); }
+  #section-{{ section.id }}.hmos--gold     .hmos__text { background: var(--gold); }
+  #section-{{ section.id }}.hmos--ivory    .hmos__text { background: var(--ivory); }
+
+  /* Text colour inversion for light panels */
+  #section-{{ section.id }}.hmos--gold  .hmos__eyebrow,
+  #section-{{ section.id }}.hmos--ivory .hmos__eyebrow { color: rgba(10,10,10,0.7); }
+  #section-{{ section.id }}.hmos--gold  .hmos__eyebrow::before,
+  #section-{{ section.id }}.hmos--ivory .hmos__eyebrow::before { background: rgba(10,10,10,0.4); }
+  #section-{{ section.id }}.hmos--gold  .hmos__tline,
+  #section-{{ section.id }}.hmos--ivory .hmos__tline { color: var(--black); }
+  #section-{{ section.id }}.hmos--gold  .hmos__tline--italic,
+  #section-{{ section.id }}.hmos--ivory .hmos__tline--italic { color: rgba(10,10,10,0.75); }
+  #section-{{ section.id }}.hmos--gold  .hmos__desc,
+  #section-{{ section.id }}.hmos--ivory .hmos__desc { color: var(--black); }
+  #section-{{ section.id }}.hmos--gold  .hmos__season,
+  #section-{{ section.id }}.hmos--ivory .hmos__season { color: var(--black); }
+  #section-{{ section.id }}.hmos--gold  .hmos__stat-val,
+  #section-{{ section.id }}.hmos--ivory .hmos__stat-val { color: var(--black); }
+  #section-{{ section.id }}.hmos--gold  .hmos__stat-lbl,
+  #section-{{ section.id }}.hmos--ivory .hmos__stat-lbl { color: rgba(10,10,10,0.6); }
+
+  /* Eyebrow */
+  #section-{{ section.id }} .hmos__eyebrow {
+    font-size: 10px; letter-spacing: 0.38em; text-transform: uppercase;
+    color: var(--gold); display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+  }
+  #section-{{ section.id }} .hmos__eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--gold); flex-shrink: 0; }
+
+  /* Title */
+  #section-{{ section.id }} .hmos__title { font-family: var(--ff-display); font-weight: 300; margin-bottom: 24px; }
+  #section-{{ section.id }} .hmos__tline { display: block; font-size: clamp(36px, 4.8vw, 68px); line-height: 1.0; color: var(--cream); }
+  #section-{{ section.id }} .hmos__tline--italic { font-style: italic; color: var(--gold-light); }
+  #section-{{ section.id }} .hmos__tline--sub { font-size: clamp(14px, 1.6vw, 20px); letter-spacing: 0.12em; opacity: 0.65; margin-top: 8px; font-style: normal; color: var(--cream); }
+
+  /* Description */
+  #section-{{ section.id }} .hmos__desc { font-size: 13px; line-height: 1.85; opacity: 0.65; max-width: 260px; margin-bottom: 0; }
+
+  /* CTAs */
+  #section-{{ section.id }} .hmos__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+
+  /* Inline stats */
+  #section-{{ section.id }} .hmos__stats { display: flex; gap: 28px; margin-bottom: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+  #section-{{ section.id }} .hmos__stat { display: flex; flex-direction: column; gap: 4px; }
+  #section-{{ section.id }} .hmos__stat-val { font-family: var(--ff-display); font-size: clamp(22px, 2.2vw, 30px); color: var(--gold); font-weight: 400; }
+  #section-{{ section.id }} .hmos__stat-lbl { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--cream); opacity: 0.55; }
+
+  /* Season label */
+  #section-{{ section.id }} .hmos__season { font-size: 9px; letter-spacing: 0.42em; text-transform: uppercase; color: var(--cream); opacity: 0.45; }
+
+  /* ── Panel 2: Centre image ── */
+  #section-{{ section.id }} .hmos__center { position: relative; overflow: hidden; }
+  #section-{{ section.id }} .hmos__center-img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 1.1s var(--ease-out);
+  }
+  #section-{{ section.id }}:hover .hmos__center-img { transform: scale(1.04); }
+
+  /* Index label */
+  #section-{{ section.id }} .hmos__index {
+    position: absolute; bottom: 28px; left: 28px; z-index: 2;
+    font-family: var(--ff-display); font-size: 13px; color: var(--muted); letter-spacing: 0.08em;
+  }
+  #section-{{ section.id }} .hmos__index strong { font-size: 20px; color: var(--cream); font-weight: 400; margin-right: 4px; }
+
+  /* Scroll indicator */
+  #section-{{ section.id }} .hmos__scroll {
+    position: absolute; bottom: 28px; right: 24px; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  #section-{{ section.id }} .hmos__scroll span { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); writing-mode: vertical-rl; }
+  #section-{{ section.id }} .hmos__scroll-line {
+    width: 1px; height: 52px; background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: hmosScrollLine 2s ease-in-out infinite;
+  }
+  @keyframes hmosScrollLine {
+    0%   { transform: scaleY(0); transform-origin: top; }
+    50%  { transform: scaleY(1); transform-origin: top; }
+    51%  { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* ── Panel 3: Stacked images ── */
+  #section-{{ section.id }} .hmos__stack { display: grid; grid-template-rows: 58% 42%; gap: 2px; }
+  #section-{{ section.id }} .hmos__cell { position: relative; overflow: hidden; display: block; }
+  #section-{{ section.id }} .hmos__cell-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.8s var(--ease-out); }
+  #section-{{ section.id }} .hmos__cell:hover .hmos__cell-img { transform: scale(1.07); }
+
+  /* Cell info overlay */
+  #section-{{ section.id }} .hmos__cell-info {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.08) 55%);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 22px 20px;
+    opacity: 0; transition: opacity 0.38s;
+  }
+  #section-{{ section.id }} .hmos__cell:hover .hmos__cell-info { opacity: 1; }
+  #section-{{ section.id }} .hmos__cell-count { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+  #section-{{ section.id }} .hmos__cell-name { font-family: var(--ff-display); font-size: clamp(16px, 1.8vw, 22px); color: var(--cream); font-weight: 300; margin-bottom: 12px; line-height: 1.2; }
+  #section-{{ section.id }} .hmos__cell-arrow { font-size: 18px; color: var(--gold); display: block; transform: translateX(-6px); transition: transform 0.3s; }
+  #section-{{ section.id }} .hmos__cell:hover .hmos__cell-arrow { transform: translateX(0); }
+
+  /* ── Placeholder fills ── */
+  #section-{{ section.id }} .hmos__ph { width: 100%; height: 100%; }
+  #section-{{ section.id }} .hmos__ph--center {
+    background: radial-gradient(ellipse at 50% 30%, var(--charcoal) 0%, var(--black) 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  #section-{{ section.id }} .hmos__ph--s1 { background: linear-gradient(145deg, #1c1814, #282214); }
+  #section-{{ section.id }} .hmos__ph--s2 { background: linear-gradient(145deg, #141822, #1a2030); }
+
+  /* ── Responsive ── */
+  @media (max-width: 1100px) {
+    #section-{{ section.id }}.hmos { grid-template-columns: 28% 1fr 26%; }
+  }
+  @media (max-width: 900px) {
+    #section-{{ section.id }}.hmos {
+      grid-template-columns: 1fr !important;
+      grid-template-rows: auto;
+    }
+    #section-{{ section.id }} .hmos__text { min-height: 62vw; padding-block: 60px 48px; }
+    #section-{{ section.id }} .hmos__center { height: 70vw; }
+    #section-{{ section.id }} .hmos__stack { grid-template-rows: 1fr 1fr; height: 60vw; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #section-{{ section.id }} .hmos__scroll-line { animation: none; }
+    #section-{{ section.id }} .hmos__center-img,
+    #section-{{ section.id }} .hmos__cell-img { transition: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Mosaic",
+  "tag": "section",
+  "class": "hero-mosaic-section",
+  "settings": [
+    {
+      "type": "select", "id": "panel_style", "label": "Text panel colour",
+      "options": [
+        { "value": "charcoal", "label": "Charcoal (default)" },
+        { "value": "black",    "label": "Deep black" },
+        { "value": "gold",     "label": "Gold" },
+        { "value": "ivory",    "label": "Ivory / Light" }
+      ],
+      "default": "charcoal"
+    },
+    { "type": "range", "id": "min_height", "label": "Minimum height", "min": 60, "max": 100, "step": 5, "unit": "vh", "default": 95 },
+
+    { "type": "header", "content": "Text panel — content" },
+    { "type": "text",     "id": "eyebrow",      "label": "Eyebrow",             "default": "Autumn / Winter 2025" },
+    { "type": "text",     "id": "heading_1",    "label": "Heading line 1",      "default": "New Season" },
+    { "type": "text",     "id": "heading_2",    "label": "Heading line 2 (italic gold)", "default": "Arrivals" },
+    { "type": "text",     "id": "heading_3",    "label": "Heading line 3 (small, optional)" },
+    { "type": "textarea", "id": "description",  "label": "Description",         "default": "A study in proportion and restraint. Sculptural silhouettes cut from the season's most coveted fabrics." },
+    { "type": "text",     "id": "season_label", "label": "Season label (bottom)", "default": "Maison Noir — Est. 2009" },
+
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "btn1_label", "label": "Primary button", "default": "Shop Collection" },
+    { "type": "url",  "id": "btn1_link",  "label": "Primary button link" },
+    { "type": "text", "id": "btn2_label", "label": "Ghost button",   "default": "Our Story" },
+    { "type": "url",  "id": "btn2_link",  "label": "Ghost button link" },
+
+    { "type": "header", "content": "Centre image" },
+    { "type": "image_picker", "id": "image", "label": "Hero image" },
+
+    { "type": "header", "content": "Right panel — top image" },
+    { "type": "image_picker", "id": "image_2",     "label": "Top image" },
+    { "type": "text",         "id": "link1_label", "label": "Collection name",  "default": "Women's RTW" },
+    { "type": "text",         "id": "link1_count", "label": "Item count",       "default": "142 pieces" },
+    { "type": "url",          "id": "link1_url",   "label": "Link URL" },
+
+    { "type": "header", "content": "Right panel — bottom image" },
+    { "type": "image_picker", "id": "image_3",     "label": "Bottom image" },
+    { "type": "text",         "id": "link2_label", "label": "Collection name",  "default": "Accessories" },
+    { "type": "text",         "id": "link2_count", "label": "Item count",       "default": "215 pieces" },
+    { "type": "url",          "id": "link2_url",   "label": "Link URL" },
+
+    { "type": "header", "content": "Extras" },
+    { "type": "checkbox", "id": "show_index",  "label": "Show slide counter (01 / 04)", "default": true },
+    { "type": "range",    "id": "total_slides","label": "Total slides (counter)",       "min": 2, "max": 9, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "show_scroll", "label": "Show scroll indicator",        "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "limit": 3,
+      "settings": [
+        { "type": "text", "id": "value", "label": "Value", "default": "2009" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Founded" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Mosaic",
+      "blocks": [
+        { "type": "stat", "settings": { "value": "150+", "label": "Artisans" } },
+        { "type": "stat", "settings": { "value": "32",   "label": "Countries" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

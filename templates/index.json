@@ -1,31 +1,33 @@
 {
   "sections": {
     "hero": {
-      "type": "hero-modern",
+      "type": "hero-mosaic",
       "blocks": {
-        "stat_1": { "type": "stat", "settings": { "value": "150+", "label": "Artisans" } },
-        "stat_2": { "type": "stat", "settings": { "value": "32",   "label": "Countries" } },
-        "stat_3": { "type": "stat", "settings": { "value": "2009", "label": "Founded" } }
+        "st1": { "type": "stat", "settings": { "value": "150+", "label": "Artisans" } },
+        "st2": { "type": "stat", "settings": { "value": "32", "label": "Countries" } }
       },
-      "block_order": ["stat_1", "stat_2", "stat_3"],
+      "block_order": ["st1", "st2"],
       "settings": {
-        "text_align": "left",
-        "min_height": 100,
+        "panel_style": "charcoal",
+        "min_height": 95,
         "eyebrow": "Autumn / Winter 2025",
-        "heading_top": "The New",
-        "heading": "Modern",
-        "heading_italic": "Wardrobe",
+        "heading_1": "New Season",
+        "heading_2": "Arrivals",
+        "heading_3": "",
         "description": "A study in proportion and restraint. Sculptural silhouettes cut from the season's most coveted fabrics — made to be lived in.",
-        "btn1_label": "Shop the Collection",
+        "season_label": "Maison Noir — Est. 2009",
+        "btn1_label": "Shop Collection",
         "btn1_link": "/collections/all",
-        "btn2_label": "Discover the Story",
+        "btn2_label": "Our Story",
         "btn2_link": "/pages/about",
-        "overlay_opacity": 55,
-        "side_label": "Maison Noir",
-        "side_label_right": "Est. 2009",
-        "show_badge": true,
-        "badge_text": "EXPLORE — THE COLLECTION — ",
-        "ticker_text": "Free Worldwide Shipping, Handcrafted in Milan, Responsibly Sourced, New Season Arrivals",
+        "link1_label": "Women's Ready-to-Wear",
+        "link1_count": "142 pieces",
+        "link1_url": "/collections/women",
+        "link2_label": "Bags & Accessories",
+        "link2_count": "215 pieces",
+        "link2_url": "/collections/accessories",
+        "show_index": true,
+        "total_slides": 4,
         "show_scroll": true
       }
     },
@@ -33,30 +35,63 @@
       "type": "marquee",
       "settings": {
         "text": "New Arrivals, Atelier Crafted, Quiet Luxury, Made to Last, Limited Editions",
-        "style": "serif",
+        "style": "caps",
         "separator": "star",
         "direction": "left",
-        "speed": 30,
-        "padding": 22,
+        "speed": 28,
+        "padding": 18,
         "pause_on_hover": true,
         "bg_color": "#C8A96E",
         "text_color": "#0A0A0A"
       }
     },
-    "categories": {
-      "type": "collection-list",
+    "bento": {
+      "type": "editorial-bento",
       "blocks": {
-        "c1": { "type": "collection_item", "settings": { "label": "Women's Ready-to-Wear", "sublabel": "142 pieces" } },
-        "c2": { "type": "collection_item", "settings": { "label": "Men's Tailoring", "sublabel": "98 pieces" } },
-        "c3": { "type": "collection_item", "settings": { "label": "Bags & Accessories", "sublabel": "215 pieces" } }
+        "stat1": {
+          "type": "stat",
+          "settings": {
+            "eyebrow": "Since",
+            "value": "2009",
+            "label": "Founded",
+            "description": "Atelier craftsmanship for the considered wardrobe.",
+            "bg": "gold"
+          }
+        },
+        "coll1": {
+          "type": "collection",
+          "settings": {
+            "label": "Men's Tailoring",
+            "count": "98 pieces",
+            "custom_url": "/collections/all"
+          }
+        },
+        "text1": {
+          "type": "text_cta",
+          "settings": {
+            "eyebrow": "Our Craft",
+            "heading": "Built for the Cities You Move Through",
+            "text": "<p>Technical precision meets considered design. Each piece engineered for the urban landscape without compromising on elegance.</p>",
+            "btn_label": "Discover More",
+            "btn_url": "/pages/about",
+            "btn_style": "btn btn-primary",
+            "bg": "charcoal"
+          }
+        }
       },
-      "block_order": ["c1", "c2", "c3"],
+      "block_order": ["stat1", "coll1", "text1"],
       "settings": {
-        "heading": "Explore the Edits",
-        "subheading": "By Category",
-        "view_all_label": "All Collections",
-        "view_all_url": "/collections",
-        "columns": "3"
+        "layout": "left-featured",
+        "section_bg": "black",
+        "vertical_spacing": 0,
+        "eyebrow": "",
+        "heading": "",
+        "featured_eyebrow": "The Season's Edit",
+        "featured_heading": "Wear the Collection",
+        "featured_text": "Eight months in our Milan atelier. Every seam deliberate. Every fabric considered.",
+        "featured_cta": "Discover Now",
+        "featured_cta_url": "/collections/all",
+        "overlay_pos": "bottom-left"
       }
     },
     "slider": {
@@ -71,22 +106,6 @@
         "view_all_label": "View All"
       }
     },
-    "editorial": {
-      "type": "image-with-text",
-      "blocks": {
-        "btn1": { "type": "button", "settings": { "label": "Read the Story", "url": "/pages/about", "style": "btn-primary" } }
-      },
-      "block_order": ["btn1"],
-      "settings": {
-        "caption": "",
-        "eyebrow": "The Journal",
-        "heading": "Engineered for\nMovement & Meaning",
-        "text": "<p>Each piece begins as a question of proportion. Over eight months in our Milan atelier, we refine every seam until form and function become indistinguishable.</p>",
-        "layout": "left",
-        "image_width": "55",
-        "full_width": false
-      }
-    },
     "marquee2": {
       "type": "marquee",
       "settings": {
@@ -99,54 +118,34 @@
         "pause_on_hover": true
       }
     },
-    "testimonials": {
-      "type": "testimonials",
-      "blocks": {
-        "t1": { "type": "testimonial", "settings": { "quote": "Fashion should feel like an extension of oneself — effortless, considered, and entirely one's own.", "name": "Isabelle Moreau", "location": "Creative Director" } }
-      },
-      "block_order": ["t1"],
-      "settings": {
-        "eyebrow": "The Voice",
-        "heading": "A Considered Perspective",
-        "show_stars": false,
-        "columns": "1"
-      }
-    },
     "blog": {
       "type": "blog-posts",
       "settings": {
         "eyebrow": "From the Journal",
         "heading": "Latest Stories",
         "view_all_label": "View All Stories",
-        "posts_to_show": 3,
-        "layout": "3",
+        "posts_to_show": 2,
+        "layout": "list",
         "show_date": true,
         "show_excerpt": true,
         "show_category": true
       }
     },
     "newsletter": {
-      "type": "newsletter",
+      "type": "newsletter-split",
       "settings": {
+        "visual_quote": "Fashion should feel like an extension of oneself — effortless, considered, and entirely one's own.",
+        "visual_attr": "— Isabelle Moreau, Creative Director",
+        "panel_bg": "charcoal",
         "eyebrow": "Stay Close",
         "heading": "Join the Inner Circle",
         "subtext": "Be the first to know about new collections, exclusive events, and private sales.",
+        "perks": "Early access to new arrivals, Exclusive member discounts, Private event invitations",
         "placeholder": "Your email address",
-        "button_label": "Subscribe",
-        "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time.",
-        "bg_color": "#161616"
+        "btn_label": "Subscribe",
+        "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time."
       }
     }
   },
-  "order": [
-    "hero",
-    "marquee",
-    "categories",
-    "slider",
-    "editorial",
-    "marquee2",
-    "testimonials",
-    "blog",
-    "newsletter"
-  ]
+  "order": ["hero", "marquee", "bento", "slider", "marquee2", "blog", "newsletter"]
 }

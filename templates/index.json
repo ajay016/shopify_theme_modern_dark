@@ -77,8 +77,8 @@
     "campaign": {
       "type": "campaign-banner",
       "settings": {
-        "min_height": 72,
-        "overlay": 42,
+        "min_height": 70,
+        "overlay": 40,
         "align": "center",
         "eyebrow": "Limited Release",
         "heading": "The Atelier | Capsule",

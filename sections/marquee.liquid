@@ -1,0 +1,128 @@
+{%- liquid
+  assign s = section.settings
+  assign items = s.text | split: ','
+  assign dir_class = 'is-ltr'
+  if s.direction == 'right'
+    assign dir_class = 'is-rtl'
+  endif
+-%}
+
+<section
+  class="marquee {{ dir_class }} marquee--{{ s.style }}"
+  id="section-{{ section.id }}"
+  style="
+    --mq-bg: {% if s.bg_color == blank %}var(--gold){% else %}{{ s.bg_color }}{% endif %};
+    --mq-fg: {% if s.text_color == blank %}var(--black){% else %}{{ s.text_color }}{% endif %};
+    --mq-duration: {{ s.speed }}s;
+    padding-block: {{ s.padding }}px;
+  "
+  aria-label="{{ items | first | strip | escape }}"
+>
+  <div class="marquee__track" aria-hidden="true">
+    {%- comment -%}Duplicate the set so the loop is seamless{%- endcomment -%}
+    {%- for n in (1..2) -%}
+      {%- for item in items -%}
+        <span class="marquee__item">{{ item | strip }}</span>
+        <span class="marquee__sep">
+          {%- case s.separator -%}
+            {%- when 'star' -%}✦
+            {%- when 'dot' -%}●
+            {%- when 'slash' -%}/
+            {%- when 'diamond' -%}◆
+            {%- else -%}—
+          {%- endcase -%}
+        </span>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }}.marquee {
+    overflow: hidden;
+    background: var(--mq-bg);
+    white-space: nowrap;
+  }
+  #section-{{ section.id }}.marquee--bordered {
+    background: transparent;
+    border-block: 1px solid var(--border);
+  }
+  #section-{{ section.id }}.marquee--bordered .marquee__item,
+  #section-{{ section.id }}.marquee--bordered .marquee__sep { color: var(--cream); }
+  #section-{{ section.id }}.marquee--bordered .marquee__sep { color: var(--gold); }
+
+  #section-{{ section.id }} .marquee__track {
+    display: inline-flex; align-items: center; width: max-content;
+    animation: mqScroll-{{ section.id }} var(--mq-duration) linear infinite;
+  }
+  #section-{{ section.id }}.is-rtl .marquee__track { animation-direction: reverse; }
+  #section-{{ section.id }}.marquee:hover .marquee__track { animation-play-state: {% if s.pause_on_hover %}paused{% else %}running{% endif %}; }
+
+  #section-{{ section.id }} .marquee__item {
+    font-family: {% if s.style == 'serif' %}var(--ff-display){% else %}var(--ff-body){% endif %};
+    {% if s.style == 'serif' %}font-style: italic; font-size: clamp(20px, 2.4vw, 34px); letter-spacing: 0.02em;{% else %}font-size: clamp(12px, 1.4vw, 16px); letter-spacing: 0.32em; text-transform: uppercase; font-weight: 500;{% endif %}
+    color: var(--mq-fg);
+  }
+  #section-{{ section.id }} .marquee__sep {
+    color: var(--mq-fg);
+    margin: 0 clamp(20px, 3vw, 44px);
+    opacity: 0.55;
+    font-size: {% if s.style == 'serif' %}16px{% else %}11px{% endif %};
+  }
+
+  @keyframes mqScroll-{{ section.id }} {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #section-{{ section.id }} .marquee__track { animation: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Marquee",
+  "tag": "section",
+  "class": "marquee-wrapper",
+  "settings": [
+    { "type": "text", "id": "text", "label": "Items (comma-separated)", "default": "Free Worldwide Shipping, Handcrafted in Milan, New Season Arrivals, Responsibly Sourced" },
+    {
+      "type": "select", "id": "style", "label": "Style",
+      "options": [
+        { "value": "caps",     "label": "Uppercase (sans)" },
+        { "value": "serif",    "label": "Italic serif" },
+        { "value": "bordered", "label": "Bordered (transparent bg)" }
+      ],
+      "default": "caps"
+    },
+    {
+      "type": "select", "id": "separator", "label": "Separator",
+      "options": [
+        { "value": "star",    "label": "✦ Star" },
+        { "value": "dot",     "label": "● Dot" },
+        { "value": "diamond", "label": "◆ Diamond" },
+        { "value": "slash",   "label": "/ Slash" },
+        { "value": "dash",    "label": "— Dash" }
+      ],
+      "default": "star"
+    },
+    {
+      "type": "select", "id": "direction", "label": "Direction",
+      "options": [
+        { "value": "left",  "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    { "type": "range", "id": "speed", "label": "Duration (lower = faster)", "min": 10, "max": 60, "step": 2, "unit": "s", "default": 28 },
+    { "type": "range", "id": "padding", "label": "Vertical padding", "min": 8, "max": 48, "step": 2, "unit": "px", "default": 18 },
+    { "type": "checkbox", "id": "pause_on_hover", "label": "Pause on hover", "default": true },
+    { "type": "header", "content": "Colors (leave blank to use theme palette)" },
+    { "type": "color", "id": "bg_color",   "label": "Background", "default": "#C8A96E" },
+    { "type": "color", "id": "text_color", "label": "Text",       "default": "#0A0A0A" }
+  ],
+  "presets": [
+    { "name": "Marquee" }
+  ]
+}
+{% endschema %}

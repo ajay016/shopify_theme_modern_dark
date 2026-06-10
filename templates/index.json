@@ -101,6 +101,7 @@
         "scheme": "light",
         "eyebrow": "New This Week",
         "heading": "The Latest Arrivals",
+        "collection": "dresses",
         "products_to_show": 8,
         "cta_label": "Shop All New Arrivals",
         "cta_url": "/collections/all"

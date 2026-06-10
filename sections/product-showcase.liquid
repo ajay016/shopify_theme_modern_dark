@@ -130,6 +130,7 @@
               </div>
 
               {%- if product.variants.size == 1 and first_variant -%}
+                {%- comment -%}Single variant — add straight to the cart{%- endcomment -%}
                 <button
                   class="psc-atc pcard-btn--atc"
                   data-variant-id="{{ first_variant.id }}"
@@ -137,6 +138,12 @@
                 >
                   {%- render 'icon-bag' -%}
                   <span class="pcard-btn__label">{% if first_variant.available %}Add to Bag{% else %}Sold Out{% endif %}</span>
+                </button>
+              {%- elsif show_qv -%}
+                {%- comment -%}Multiple variants — quick-add via the quick view popup{%- endcomment -%}
+                <button class="psc-atc" data-open-quickview data-product-url="{{ product.url }}">
+                  {%- render 'icon-bag' -%}
+                  <span class="pcard-btn__label">Add to Bag</span>
                 </button>
               {%- else -%}
                 <a href="{{ product.url }}" class="psc-atc">
@@ -183,10 +190,17 @@
                 {%- endif -%}
               </div>
 
-              <a href="/collections/all" class="psc-atc">
-                {%- render 'icon-bag' -%}
-                <span class="pcard-btn__label">Add to Bag</span>
-              </a>
+              {%- if show_qv -%}
+                <button class="psc-atc" data-open-quickview data-product-url="/collections/all">
+                  {%- render 'icon-bag' -%}
+                  <span class="pcard-btn__label">Add to Bag</span>
+                </button>
+              {%- else -%}
+                <a href="/collections/all" class="psc-atc">
+                  {%- render 'icon-bag' -%}
+                  <span class="pcard-btn__label">Add to Bag</span>
+                </a>
+              {%- endif -%}
             </div>
 
             <div class="psc-card__info">

@@ -223,6 +223,12 @@
   }
 
   async function addToCart(variantId, quantity = 1, properties = {}) {
+    // Demo products (variant id 0) can't be carted — explain instead of failing.
+    if (!variantId || String(variantId) === '0') {
+      showToast('Demo product — connect a collection in the theme editor to enable the cart.');
+      return;
+    }
+
     // 1. Loading state on the ATC button
     const btn = document.querySelector(`.pcard-btn--atc[data-variant-id="${variantId}"]`) ||
                 document.querySelector('button.qv-atc');
@@ -667,7 +673,7 @@
       if (atcBtn) {
         atcBtn.addEventListener('click', async () => {
           const variantId = parseInt(atcBtn.dataset.variantId);
-          if (!variantId) return;
+          if (!variantId) { addToCart(variantId); return; } // demo product → toast
           const prev = atcBtn.textContent;
           atcBtn.textContent = 'Adding…';
           atcBtn.disabled = true;

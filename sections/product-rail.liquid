@@ -1,0 +1,235 @@
+{%- liquid
+  assign s = section.settings
+  assign col = collections[s.collection]
+
+  assign demo_names = 'Sculpted Wool Coat,Bias-Cut Slip Dress,Pointed Leather Heels,Structured Tote,Merino Roll Neck,Tailored Trouser,Silk Twill Scarf,Tortoise Eyewear' | split: ','
+  assign demo_prices = '€890,€420,€380,€640,€260,€310,€150,€220' | split: ','
+  assign demo_cats = 'Outerwear,Dresses,Footwear,Leather Goods,Knitwear,Tailoring,Accessories,Eyewear' | split: ','
+  assign d1 = 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=700&q=80'
+  assign d2 = 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=700&q=80'
+  assign d3 = 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=700&q=80'
+  assign d4 = 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=700&q=80'
+  assign d5 = 'https://images.unsplash.com/photo-1520975954732-35dd22299614?auto=format&fit=crop&w=700&q=80'
+  assign d6 = 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=700&q=80'
+  assign d7 = 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?auto=format&fit=crop&w=700&q=80'
+  assign d8 = 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=700&q=80'
+  assign demo_imgs_str = d1 | append: '||' | append: d2 | append: '||' | append: d3 | append: '||' | append: d4 | append: '||' | append: d5 | append: '||' | append: d6 | append: '||' | append: d7 | append: '||' | append: d8
+  assign demo_imgs = demo_imgs_str | split: '||'
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="prl-section prl--{{ s.scheme }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="prl-head reveal">
+    <div>
+      {%- if s.eyebrow != blank -%}<span class="prl-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="prl-heading">{{ s.heading }}</h2>{%- endif -%}
+    </div>
+    <div class="prl-nav">
+      <button type="button" class="prl-nav__btn" data-prl-prev aria-label="Previous">
+        <svg width="20" height="10" viewBox="0 0 22 10" fill="none"><path d="M21 5H2M6 1L2 5l4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" class="prl-nav__btn" data-prl-next aria-label="Next">
+        <svg width="20" height="10" viewBox="0 0 22 10" fill="none"><path d="M1 5h19M16 1l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="prl-track" data-prl-track>
+    {%- if col != blank and col.products.size > 0 -%}
+      {%- for product in col.products limit: s.products_to_show -%}
+        {%- assign p_alt = product.title | escape -%}
+        <a href="{{ product.url }}" class="prl-card reveal">
+          <div class="prl-card__media">
+            {%- if product.featured_image != blank -%}
+              {{ product.featured_image | image_url: width: 700 | image_tag:
+                loading: 'lazy', class: 'prl-card__img', sizes: '(max-width:900px) 64vw, 24vw',
+                widths: '350,500,700', alt: p_alt }}
+            {%- else -%}
+              <img class="prl-card__img" src="{{ demo_imgs[forloop.index0] | default: d1 }}" alt="{{ p_alt }}" loading="lazy" />
+            {%- endif -%}
+            <span class="prl-card__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          </div>
+          <div class="prl-card__info">
+            <span class="prl-card__cat">{{ product.type | default: 'Atelier' }}</span>
+            <span class="prl-card__name">{{ product.title }}</span>
+            <span class="prl-card__price">{{ product.price | money }}</span>
+          </div>
+        </a>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in (1..8) limit: s.products_to_show -%}
+        {%- assign idx = forloop.index0 -%}
+        <a href="/collections/all" class="prl-card reveal">
+          <div class="prl-card__media">
+            <img class="prl-card__img" src="{{ demo_imgs[idx] }}" alt="{{ demo_names[idx] }}" loading="lazy" />
+            <span class="prl-card__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          </div>
+          <div class="prl-card__info">
+            <span class="prl-card__cat">{{ demo_cats[idx] }}</span>
+            <span class="prl-card__name">{{ demo_names[idx] }}</span>
+            <span class="prl-card__price">{{ demo_prices[idx] }}</span>
+          </div>
+        </a>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+
+  {%- if s.cta_label != blank -%}
+    <div class="prl-foot reveal">
+      <a href="{{ s.cta_url | default: '/collections/all' }}" class="prl-cta">{{ s.cta_label }}</a>
+    </div>
+  {%- endif -%}
+</section>
+
+<style>
+  #section-{{ section.id }}.prl--light { --pbg:#F4EFE6; --pfg:#1C1814; --pacc:#A4552F; --pmut:rgba(28,24,20,.55); --pbdr:rgba(28,24,20,.16); }
+  #section-{{ section.id }}.prl--dark  { --pbg:#14100C; --pfg:#F2EDE4; --pacc:#D9986B; --pmut:rgba(242,237,228,.6); --pbdr:rgba(242,237,228,.2); }
+  #section-{{ section.id }}.prl--warm  { --pbg:#E7DCCB; --pfg:#2A2118; --pacc:#8E4F2A; --pmut:rgba(42,33,24,.55); --pbdr:rgba(42,33,24,.2); }
+  #section-{{ section.id }}.prl--theme {
+    --pbg:var(--background,#14100C); --pfg:var(--foreground,#F2EDE4);
+    --pacc:var(--gold,#C8A96E); --pmut:var(--muted,rgba(242,237,228,.6));
+    --pbdr:var(--border-strong,rgba(242,237,228,.2));
+  }
+
+  #section-{{ section.id }} {
+    background: var(--pbg);
+    padding: clamp(64px, 9vw, 120px) 0;
+  }
+  .prl-head {
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
+    padding: 0 var(--side-padding, 5vw);
+    margin-bottom: clamp(32px, 5vw, 56px);
+  }
+  .prl-eyebrow {
+    display: block;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 11px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--pacc); margin-bottom: 14px;
+  }
+  .prl-heading {
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: clamp(32px, 4.4vw, 60px); font-weight: 300; line-height: 1.05;
+    color: var(--pfg); margin: 0;
+  }
+  .prl-nav { display: flex; gap: 10px; }
+  .prl-nav__btn {
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 1px solid var(--pbdr); background: transparent; color: var(--pfg);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background .25s, color .25s, border-color .25s;
+  }
+  .prl-nav__btn:hover { background: var(--pfg); color: var(--pbg); border-color: var(--pfg); }
+
+  .prl-track {
+    display: flex; gap: clamp(18px, 2.2vw, 30px);
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+    padding: 0 var(--side-padding, 5vw) 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .prl-track::-webkit-scrollbar { display: none; }
+
+  .prl-card {
+    flex: 0 0 auto; width: clamp(240px, 24vw, 320px);
+    scroll-snap-align: start; text-decoration: none;
+  }
+  .prl-card__media {
+    position: relative; aspect-ratio: 3 / 4;
+    overflow: hidden; border-radius: 3px; background: #cbbfa9;
+  }
+  .prl-card__img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform .6s ease;
+  }
+  .prl-card:hover .prl-card__img { transform: scale(1.05); }
+  .prl-card__num {
+    position: absolute; top: 12px; right: 14px;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 10px; font-weight: 500; letter-spacing: .2em;
+    color: rgba(255,255,255,.9);
+    text-shadow: 0 1px 8px rgba(0,0,0,.4);
+  }
+  .prl-card__info { padding: 16px 2px 0; }
+  .prl-card__cat {
+    display: block;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 9px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--pacc); margin-bottom: 6px;
+  }
+  .prl-card__name {
+    display: block;
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: clamp(18px, 1.5vw, 22px); font-weight: 400;
+    color: var(--pfg);
+  }
+  .prl-card__price {
+    display: block; margin-top: 6px;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 12px; font-weight: 400; letter-spacing: .06em;
+    color: var(--pmut);
+  }
+
+  .prl-foot { text-align: center; margin-top: clamp(36px, 5vw, 52px); }
+  .prl-cta {
+    display: inline-block;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--pbg); background: var(--pfg);
+    padding: 16px 38px; border-radius: 2px; text-decoration: none;
+    transition: transform .25s, background .25s, color .25s;
+  }
+  .prl-cta:hover { transform: translateY(-2px); background: var(--pacc); color: #fff; }
+
+  @media (max-width: 700px) {
+    .prl-nav { display: none; }
+    .prl-card { width: 64vw; }
+  }
+</style>
+
+<script>
+(function(){
+  var SEC = '{{ section.id }}';
+  function init(root){
+    var track = root.querySelector('[data-prl-track]');
+    if (!track) return;
+    var step = 360;
+    var prev = root.querySelector('[data-prl-prev]');
+    var next = root.querySelector('[data-prl-next]');
+    if (prev) prev.addEventListener('click', function(){ track.scrollBy({ left: -step, behavior: 'smooth' }); });
+    if (next) next.addEventListener('click', function(){ track.scrollBy({ left: step, behavior: 'smooth' }); });
+  }
+  function getRoot(){ return document.getElementById('section-' + SEC); }
+  document.addEventListener('DOMContentLoaded', function(){ var r = getRoot(); if (r) init(r); });
+  document.addEventListener('shopify:section:load', function(e){ if (e.detail.sectionId !== SEC) return; var r = getRoot(); if (r) init(r); });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Product Rail",
+  "tag": "section",
+  "class": "section-product-rail",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (sand)" },
+        { "value": "dark",  "label": "Dark (espresso)" },
+        { "value": "warm",  "label": "Warm (deep sand)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "light"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "New This Week" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Latest Arrivals" },
+    { "type": "collection", "id": "collection", "label": "Collection (demo items shown if empty)" },
+    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 4, "max": 8, "step": 1, "default": 8 },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Shop All New Arrivals" },
+    { "type": "url",  "id": "cta_url",   "label": "Button link" }
+  ],
+  "presets": [ { "name": "Product Rail" } ]
+}
+{% endschema %}

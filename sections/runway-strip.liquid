@@ -1,0 +1,199 @@
+{%- liquid
+  assign s = section.settings
+  assign fb1 = 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=700&q=80'
+  assign fb2 = 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=700&q=80'
+  assign fb3 = 'https://images.unsplash.com/photo-1496217590455-aa63a8350eea?auto=format&fit=crop&w=700&q=80'
+  assign fb4 = 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=700&q=80'
+  assign fb5 = 'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=700&q=80'
+  assign fb6 = 'https://images.unsplash.com/photo-1495385794356-15371f348c31?auto=format&fit=crop&w=700&q=80'
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="rwy-section rwy--{{ s.scheme }}{% if s.pause_on_hover %} rwy--pausable{% endif %}"
+  data-section-id="{{ section.id }}"
+  style="--rwy-h: {{ s.strip_height }}px; --rwy-speed: {{ s.speed }}s;"
+>
+  <div class="rwy-head reveal">
+    {%- if s.eyebrow != blank -%}<span class="rwy-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+    {%- if s.heading != blank -%}<h2 class="rwy-heading">{{ s.heading }}</h2>{%- endif -%}
+  </div>
+
+  <div class="rwy-strip">
+    <div class="rwy-track">
+      {%- for i in (1..2) -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            case forloop.index
+              when 1
+                assign fb = fb1
+              when 2
+                assign fb = fb2
+              when 3
+                assign fb = fb3
+              when 4
+                assign fb = fb4
+              when 5
+                assign fb = fb5
+              else
+                assign fb = fb6
+            endcase
+            assign look_alt = block.settings.caption | escape
+          -%}
+          <figure class="rwy-look" {% if i == 1 %}{{ block.shopify_attributes }}{% endif %} {% if i == 2 %}aria-hidden="true"{% endif %}>
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 700 | image_tag:
+                loading: 'lazy', class: 'rwy-look__img', sizes: '340px',
+                widths: '400,700', alt: look_alt }}
+            {%- else -%}
+              <img class="rwy-look__img" src="{{ fb }}" alt="{{ look_alt }}" loading="lazy" />
+            {%- endif -%}
+            {%- if block.settings.caption != blank -%}
+              <figcaption class="rwy-look__cap">
+                <span class="rwy-look__num">Look {{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+                {{ block.settings.caption }}
+              </figcaption>
+            {%- endif -%}
+          </figure>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {%- if s.cta_label != blank -%}
+    <div class="rwy-foot reveal">
+      <a href="{{ s.cta_url | default: '#' }}" class="rwy-cta">
+        {{ s.cta_label }}
+        <svg width="20" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true"><path d="M1 5h19M16 1l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  {%- endif -%}
+</section>
+
+<style>
+  #section-{{ section.id }}.rwy--light { --rbg:#F4EFE6; --rfg:#1C1814; --racc:#A4552F; --rmut:rgba(28,24,20,.55); }
+  #section-{{ section.id }}.rwy--dark  { --rbg:#14100C; --rfg:#F2EDE4; --racc:#D9986B; --rmut:rgba(242,237,228,.6); }
+  #section-{{ section.id }}.rwy--warm  { --rbg:#E7DCCB; --rfg:#2A2118; --racc:#8E4F2A; --rmut:rgba(42,33,24,.55); }
+  #section-{{ section.id }}.rwy--theme {
+    --rbg:var(--background,#14100C); --rfg:var(--foreground,#F2EDE4);
+    --racc:var(--gold,#C8A96E); --rmut:var(--muted,rgba(242,237,228,.6));
+  }
+
+  #section-{{ section.id }} {
+    background: var(--rbg);
+    padding: clamp(64px, 9vw, 120px) 0;
+    overflow: hidden;
+  }
+  .rwy-head { text-align: center; padding: 0 var(--side-padding, 5vw); margin-bottom: clamp(36px, 5vw, 60px); }
+  .rwy-eyebrow {
+    display: inline-block;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 11px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--racc); margin-bottom: 14px;
+  }
+  .rwy-heading {
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: clamp(32px, 4.4vw, 60px); font-weight: 300; line-height: 1.05;
+    color: var(--rfg); margin: 0;
+  }
+
+  .rwy-strip { width: 100%; overflow: hidden; }
+  .rwy-track {
+    display: flex; gap: clamp(14px, 1.8vw, 24px);
+    width: max-content;
+    animation: rwyScroll{{ section.id }} var(--rwy-speed, 40s) linear infinite;
+  }
+  #section-{{ section.id }}.rwy--pausable .rwy-strip:hover .rwy-track { animation-play-state: paused; }
+
+  .rwy-look {
+    margin: 0; position: relative; flex: 0 0 auto;
+    height: var(--rwy-h, 420px); aspect-ratio: 3 / 4;
+    overflow: hidden; border-radius: 3px;
+    background: #2a221a;
+  }
+  .rwy-look__img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .7s ease; }
+  .rwy-look:hover .rwy-look__img { transform: scale(1.05); }
+  .rwy-look__cap {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 28px 16px 14px;
+    background: linear-gradient(180deg, rgba(20,16,12,0), rgba(20,16,12,.66));
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 11px; font-weight: 400; letter-spacing: .08em;
+    color: rgba(255,255,255,.92);
+  }
+  .rwy-look__num {
+    display: block; font-size: 9px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
+    color: rgba(255,255,255,.65); margin-bottom: 4px;
+  }
+
+  .rwy-foot { text-align: center; margin-top: clamp(36px, 5vw, 56px); }
+  .rwy-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--rfg); text-decoration: none;
+    border-bottom: 1px solid var(--racc); padding-bottom: 8px;
+    transition: color .25s, gap .25s;
+  }
+  .rwy-cta:hover { color: var(--racc); gap: 16px; }
+
+  @keyframes rwyScroll{{ section.id }} {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rwy-track { animation: none; }
+    .rwy-strip { overflow-x: auto; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Runway Strip",
+  "tag": "section",
+  "class": "section-runway-strip",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (sand)" },
+        { "value": "dark",  "label": "Dark (espresso)" },
+        { "value": "warm",  "label": "Warm (deep sand)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "dark"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Straight from the Runway" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Autumn / Winter Looks" },
+    { "type": "range", "id": "strip_height", "label": "Image height", "min": 300, "max": 520, "step": 20, "unit": "px", "default": 420 },
+    { "type": "range", "id": "speed", "label": "Scroll duration (lower = faster)", "min": 20, "max": 80, "step": 5, "unit": "s", "default": 45 },
+    { "type": "checkbox", "id": "pause_on_hover", "label": "Pause on hover", "default": true },
+    { "type": "text", "id": "cta_label", "label": "Link label", "default": "View the Full Show" },
+    { "type": "url",  "id": "cta_url",   "label": "Link URL" }
+  ],
+  "blocks": [
+    {
+      "type": "look", "name": "Runway look",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "caption", "label": "Caption", "default": "Wool overcoat, camel" }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Runway Strip",
+      "blocks": [
+        { "type": "look", "settings": { "caption": "Wool overcoat, camel" } },
+        { "type": "look", "settings": { "caption": "Slip dress, bone silk" } },
+        { "type": "look", "settings": { "caption": "Boxy blazer, pinstripe" } },
+        { "type": "look", "settings": { "caption": "Oversized shades, tort" } },
+        { "type": "look", "settings": { "caption": "Leather jacket, espresso" } },
+        { "type": "look", "settings": { "caption": "Street tailoring, sand" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

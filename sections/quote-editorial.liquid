@@ -1,0 +1,105 @@
+{%- liquid
+  assign s = section.settings
+  assign fallback = 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=400&q=80'
+  assign img_alt = s.author | escape
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="qte-section qte--{{ s.scheme }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="qte-inner reveal">
+    <span class="qte-mark" aria-hidden="true">&ldquo;</span>
+    {%- if s.quote != blank -%}
+      <blockquote class="qte-quote">{{ s.quote }}</blockquote>
+    {%- endif -%}
+    <div class="qte-attr">
+      <span class="qte-avatar">
+        {%- if s.image != blank -%}
+          {{ s.image | image_url: width: 400 | image_tag: loading: 'lazy', class: 'qte-avatar__img', sizes: '64px', alt: img_alt }}
+        {%- else -%}
+          <img class="qte-avatar__img" src="{{ fallback }}" alt="{{ img_alt }}" loading="lazy" />
+        {%- endif -%}
+      </span>
+      <span class="qte-attr__txt">
+        {%- if s.author != blank -%}<span class="qte-author">{{ s.author }}</span>{%- endif -%}
+        {%- if s.role != blank -%}<span class="qte-role">{{ s.role }}</span>{%- endif -%}
+      </span>
+    </div>
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }}.qte--light { --qbg:#F4EFE6; --qfg:#1C1814; --qacc:#A4552F; --qmut:rgba(28,24,20,.55); }
+  #section-{{ section.id }}.qte--dark  { --qbg:#14100C; --qfg:#F2EDE4; --qacc:#D9986B; --qmut:rgba(242,237,228,.6); }
+  #section-{{ section.id }}.qte--warm  { --qbg:#E7DCCB; --qfg:#2A2118; --qacc:#8E4F2A; --qmut:rgba(42,33,24,.55); }
+  #section-{{ section.id }}.qte--theme {
+    --qbg:var(--background,#14100C); --qfg:var(--foreground,#F2EDE4);
+    --qacc:var(--gold,#C8A96E); --qmut:var(--muted,rgba(242,237,228,.6));
+  }
+
+  #section-{{ section.id }} {
+    background: var(--qbg);
+    padding: clamp(72px, 11vw, 150px) var(--side-padding, 5vw);
+  }
+  .qte-inner { max-width: 880px; margin: 0 auto; text-align: center; }
+  .qte-mark {
+    display: block;
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: clamp(72px, 8vw, 120px); line-height: .6;
+    color: var(--qacc); margin-bottom: 18px;
+  }
+  .qte-quote {
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: clamp(26px, 3.6vw, 52px); font-weight: 300; font-style: italic; line-height: 1.3;
+    color: var(--qfg); margin: 0;
+  }
+  .qte-attr {
+    display: inline-flex; align-items: center; gap: 16px;
+    margin-top: clamp(30px, 4vw, 44px);
+  }
+  .qte-avatar {
+    width: 56px; height: 56px; border-radius: 50%; overflow: hidden;
+    background: #cbbfa9; flex: 0 0 auto;
+  }
+  .qte-avatar__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .qte-attr__txt { text-align: left; }
+  .qte-author {
+    display: block;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 13px; font-weight: 500; letter-spacing: .06em;
+    color: var(--qfg);
+  }
+  .qte-role {
+    display: block; margin-top: 3px;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 10px; font-weight: 400; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--qmut);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Quote Editorial",
+  "tag": "section",
+  "class": "section-quote-editorial",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (sand)" },
+        { "value": "dark",  "label": "Dark (espresso)" },
+        { "value": "warm",  "label": "Warm (deep sand)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "warm"
+    },
+    { "type": "textarea", "id": "quote", "label": "Quote", "default": "Style is the only thing you can't buy. It's not in a shopping bag — it's how you wear what you choose to keep." },
+    { "type": "image_picker", "id": "image", "label": "Portrait" },
+    { "type": "text", "id": "author", "label": "Author", "default": "Isabelle Moreau" },
+    { "type": "text", "id": "role", "label": "Role", "default": "Creative Director" }
+  ],
+  "presets": [ { "name": "Quote Editorial" } ]
+}
+{% endschema %}

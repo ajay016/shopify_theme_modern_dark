@@ -1,0 +1,213 @@
+{%- liquid
+  assign s = section.settings
+  assign fallback = 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=85'
+  assign img_alt = s.heading_top | default: 'Editorial'
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="hed-section hed--{{ s.scheme }}"
+  data-section-id="{{ section.id }}"
+  style="--hed-minh: {{ s.min_height }}vh;"
+>
+  {%- if s.meta_left != blank -%}
+    <span class="hed-meta hed-meta--left" aria-hidden="true">{{ s.meta_left }}</span>
+  {%- endif -%}
+  {%- if s.meta_right != blank -%}
+    <span class="hed-meta hed-meta--right" aria-hidden="true">{{ s.meta_right }}</span>
+  {%- endif -%}
+
+  <div class="hed-inner">
+    {%- if s.eyebrow != blank -%}
+      <span class="hed-eyebrow">{{ s.eyebrow }}</span>
+    {%- endif -%}
+
+    {%- if s.heading_top != blank -%}
+      <h1 class="hed-title">{{ s.heading_top }}</h1>
+    {%- endif -%}
+
+    <div class="hed-stage">
+      <div class="hed-stage__media">
+        {%- if s.image != blank -%}
+          {{ s.image | image_url: width: 1000 | image_tag:
+            loading: 'eager', fetchpriority: 'high', class: 'hed-stage__img',
+            sizes: '(max-width:900px) 86vw, 38vw', widths: '500,750,1000', alt: img_alt }}
+        {%- else -%}
+          <img class="hed-stage__img" src="{{ fallback }}" alt="{{ img_alt | escape }}" loading="eager" fetchpriority="high" />
+        {%- endif -%}
+      </div>
+      {%- if s.heading_accent != blank -%}
+        <span class="hed-accent" aria-hidden="true"><em>{{ s.heading_accent }}</em></span>
+      {%- endif -%}
+    </div>
+
+    {%- if s.description != blank -%}
+      <p class="hed-desc">{{ s.description }}</p>
+    {%- endif -%}
+
+    <div class="hed-ctas">
+      {%- if s.btn1_label != blank -%}
+        <a href="{{ s.btn1_link | default: '#' }}" class="hed-btn hed-btn--solid">{{ s.btn1_label }}</a>
+      {%- endif -%}
+      {%- if s.btn2_label != blank -%}
+        <a href="{{ s.btn2_link | default: '#' }}" class="hed-btn hed-btn--line">{{ s.btn2_label }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ── Fixed palettes (Atelier) ── */
+  #section-{{ section.id }}.hed--light {
+    --hbg:#F4EFE6; --hfg:#1C1814; --hacc:#A4552F;
+    --hmut:rgba(28,24,20,.55); --hbdr:rgba(28,24,20,.18);
+    --hbtn-bg:#1C1814; --hbtn-fg:#F4EFE6;
+  }
+  #section-{{ section.id }}.hed--dark {
+    --hbg:#14100C; --hfg:#F2EDE4; --hacc:#D9986B;
+    --hmut:rgba(242,237,228,.6); --hbdr:rgba(242,237,228,.3);
+    --hbtn-bg:#D9986B; --hbtn-fg:#14100C;
+  }
+  #section-{{ section.id }}.hed--warm {
+    --hbg:#E7DCCB; --hfg:#2A2118; --hacc:#8E4F2A;
+    --hmut:rgba(42,33,24,.55); --hbdr:rgba(42,33,24,.22);
+    --hbtn-bg:#2A2118; --hbtn-fg:#E7DCCB;
+  }
+  #section-{{ section.id }}.hed--theme {
+    --hbg:var(--background,#14100C); --hfg:var(--foreground,#F2EDE4);
+    --hacc:var(--gold,#C8A96E); --hmut:var(--muted,rgba(242,237,228,.6));
+    --hbdr:var(--border-strong,rgba(242,237,228,.3));
+    --hbtn-bg:var(--gold,#C8A96E); --hbtn-fg:var(--black,#0A0A0A);
+  }
+
+  #section-{{ section.id }} {
+    position: relative;
+    min-height: var(--hed-minh, 95vh);
+    background: var(--hbg);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    padding: clamp(96px, 12vh, 140px) var(--side-padding, 5vw) clamp(56px, 8vh, 96px);
+  }
+
+  .hed-inner { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+
+  .hed-eyebrow {
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 11px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--hacc); margin-bottom: clamp(18px, 3vh, 32px);
+    animation: hedUp{{ section.id }} .8s .05s both;
+  }
+
+  .hed-title {
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: clamp(54px, 10.5vw, 168px); font-weight: 300; line-height: .92;
+    letter-spacing: .02em; text-transform: uppercase;
+    color: var(--hfg); margin: 0 0 clamp(-30px, -2.4vw, -56px);
+    position: relative; z-index: 2;
+    animation: hedUp{{ section.id }} .9s .18s both;
+  }
+
+  .hed-stage { position: relative; z-index: 1; }
+  .hed-stage__media {
+    width: clamp(260px, 34vw, 460px);
+    aspect-ratio: 3 / 4;
+    overflow: hidden; border-radius: 3px;
+    background: #cbbfa9; /* never blank while image loads */
+    animation: hedFade{{ section.id }} 1.1s .1s both;
+  }
+  .hed-stage__img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    animation: hedKen{{ section.id }} 14s ease-out forwards;
+  }
+  .hed-accent {
+    position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%);
+    z-index: 3; white-space: nowrap; pointer-events: none;
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: clamp(48px, 8.4vw, 132px); font-weight: 300; line-height: 1;
+    color: var(--hacc);
+    text-shadow: 0 1px 28px rgba(20,16,12,.18);
+    animation: hedUp{{ section.id }} 1s .42s both;
+  }
+  .hed-accent em { font-style: italic; }
+
+  .hed-desc {
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: clamp(14px, 1.15vw, 17px); line-height: 1.72;
+    color: var(--hmut); max-width: 520px;
+    margin: clamp(26px, 4vh, 44px) 0 0;
+    animation: hedUp{{ section.id }} .9s .55s both;
+  }
+
+  .hed-ctas { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 32px; animation: hedUp{{ section.id }} .9s .68s both; }
+  .hed-btn {
+    display: inline-flex; align-items: center;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase;
+    padding: 15px 32px; text-decoration: none; border-radius: 2px;
+    transition: transform .22s, background .22s, color .22s, border-color .22s;
+  }
+  .hed-btn--solid { background: var(--hbtn-bg); color: var(--hbtn-fg); }
+  .hed-btn--solid:hover { transform: translateY(-2px); }
+  .hed-btn--line { border: 1px solid var(--hbdr); color: var(--hfg); }
+  .hed-btn--line:hover { background: var(--hbtn-bg); color: var(--hbtn-fg); border-color: var(--hbtn-bg); }
+
+  .hed-meta {
+    position: absolute; top: 50%; z-index: 2;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 10px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--hmut); writing-mode: vertical-rl;
+  }
+  .hed-meta--left  { left: clamp(16px, 2.6vw, 44px); transform: translateY(-50%) rotate(180deg); }
+  .hed-meta--right { right: clamp(16px, 2.6vw, 44px); transform: translateY(-50%); }
+
+  @keyframes hedUp{{ section.id }}   { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+  @keyframes hedFade{{ section.id }} { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes hedKen{{ section.id }}  { from { transform: scale(1.07); } to { transform: scale(1); } }
+
+  /* keep .hed-accent centered transform separate from animation transform */
+  .hed-accent { animation-name: hedAccent{{ section.id }}; }
+  @keyframes hedAccent{{ section.id }} {
+    from { opacity: 0; transform: translate(-50%, -42%); }
+    to   { opacity: 1; transform: translate(-50%, -50%); }
+  }
+
+  @media (max-width: 860px) {
+    .hed-meta { display: none; }
+    .hed-title { margin-bottom: -16px; }
+    .hed-stage__media { width: min(86vw, 420px); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Editorial",
+  "tag": "section",
+  "class": "section-hero-editorial",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (sand)" },
+        { "value": "dark",  "label": "Dark (espresso)" },
+        { "value": "warm",  "label": "Warm (deep sand)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "light"
+    },
+    { "type": "range", "id": "min_height", "label": "Minimum height", "min": 60, "max": 100, "step": 5, "unit": "vh", "default": 95 },
+    { "type": "image_picker", "id": "image", "label": "Center image" },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Atelier Collection" },
+    { "type": "text", "id": "heading_top", "label": "Headline (behind image)", "default": "Wear The" },
+    { "type": "text", "id": "heading_accent", "label": "Accent word (over image, italic)", "default": "Moment" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "A study in warm minimalism — fluid tailoring and artisanal fabrics for the season in between." },
+    { "type": "text", "id": "meta_left", "label": "Side label left", "default": "Nº 03 — Atelier Issue" },
+    { "type": "text", "id": "meta_right", "label": "Side label right", "default": "Autumn / Winter 2025" },
+    { "type": "text", "id": "btn1_label", "label": "Primary button", "default": "Shop the Collection" },
+    { "type": "url",  "id": "btn1_link",  "label": "Primary button link" },
+    { "type": "text", "id": "btn2_label", "label": "Secondary button", "default": "Discover the Story" },
+    { "type": "url",  "id": "btn2_link",  "label": "Secondary button link" }
+  ],
+  "presets": [ { "name": "Hero Editorial" } ]
+}
+{% endschema %}

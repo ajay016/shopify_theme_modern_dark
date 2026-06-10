@@ -1,0 +1,132 @@
+{%- liquid
+  assign s = section.settings
+  assign fb1 = 'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?auto=format&fit=crop&w=500&q=80'
+  assign fb2 = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=500&q=80'
+  assign fb3 = 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=500&q=80'
+  assign parts = s.text | split: '|'
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="stm-section stm--{{ s.scheme }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="stm-inner reveal">
+    {%- if s.eyebrow != blank -%}
+      <span class="stm-eyebrow">{{ s.eyebrow }}</span>
+    {%- endif -%}
+
+    <p class="stm-text">
+      {%- for part in parts -%}
+        <span class="stm-word">{{ part | strip }}</span>
+        {%- unless forloop.last -%}
+          {%- liquid
+            assign slot = forloop.index
+            if slot == 1
+              assign pic = s.image_1
+              assign pfb = fb1
+            elsif slot == 2
+              assign pic = s.image_2
+              assign pfb = fb2
+            else
+              assign pic = s.image_3
+              assign pfb = fb3
+            endif
+          -%}
+          <span class="stm-pill">
+            {%- if pic != blank -%}
+              {{ pic | image_url: width: 500 | image_tag: loading: 'lazy', class: 'stm-pill__img', sizes: '160px', alt: '' }}
+            {%- else -%}
+              <img class="stm-pill__img" src="{{ pfb }}" alt="" loading="lazy" />
+            {%- endif -%}
+          </span>
+        {%- endunless -%}
+      {%- endfor -%}
+    </p>
+
+    {%- if s.cta_label != blank -%}
+      <a class="stm-cta" href="{{ s.cta_url | default: '#' }}">
+        {{ s.cta_label }}
+        <svg width="20" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true"><path d="M1 5h19M16 1l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }}.stm--light { --sbg:#F4EFE6; --sfg:#1C1814; --sacc:#A4552F; --smut:rgba(28,24,20,.55); }
+  #section-{{ section.id }}.stm--dark  { --sbg:#14100C; --sfg:#F2EDE4; --sacc:#D9986B; --smut:rgba(242,237,228,.6); }
+  #section-{{ section.id }}.stm--warm  { --sbg:#E7DCCB; --sfg:#2A2118; --sacc:#8E4F2A; --smut:rgba(42,33,24,.55); }
+  #section-{{ section.id }}.stm--theme {
+    --sbg:var(--background,#14100C); --sfg:var(--foreground,#F2EDE4);
+    --sacc:var(--gold,#C8A96E); --smut:var(--muted,rgba(242,237,228,.6));
+  }
+
+  #section-{{ section.id }} {
+    background: var(--sbg);
+    padding: clamp(72px, 11vw, 150px) var(--side-padding, 5vw);
+  }
+  .stm-inner { max-width: 1080px; margin: 0 auto; text-align: center; }
+  .stm-eyebrow {
+    display: inline-block;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 11px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--sacc); margin-bottom: 30px;
+  }
+  .stm-text {
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: clamp(30px, 4.6vw, 64px); font-weight: 300; line-height: 1.28;
+    color: var(--sfg); margin: 0;
+  }
+  .stm-word { font-style: normal; }
+  .stm-pill {
+    display: inline-block; vertical-align: middle;
+    width: clamp(72px, 8.5vw, 132px); height: clamp(44px, 5.2vw, 80px);
+    border-radius: 999px; overflow: hidden; margin: 0 .35em;
+    background: #cbbfa9;
+    transform: rotate(-3deg);
+    transition: transform .35s ease;
+  }
+  .stm-pill:nth-of-type(odd) { transform: rotate(3deg); }
+  .stm-inner:hover .stm-pill { transform: rotate(0deg); }
+  .stm-pill__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .stm-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-top: clamp(30px, 4vw, 48px);
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--sfg); text-decoration: none;
+    border-bottom: 1px solid var(--sacc); padding-bottom: 8px;
+    transition: color .25s, gap .25s;
+  }
+  .stm-cta:hover { color: var(--sacc); gap: 16px; }
+</style>
+
+{% schema %}
+{
+  "name": "Statement Inline Images",
+  "tag": "section",
+  "class": "section-statement-inline",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (sand)" },
+        { "value": "dark",  "label": "Dark (espresso)" },
+        { "value": "warm",  "label": "Warm (deep sand)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "light"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Philosophy" },
+    { "type": "text", "id": "text", "label": "Statement (use | where images should appear)", "default": "Considered pieces | crafted by hand | for the life | you actually live." },
+    { "type": "image_picker", "id": "image_1", "label": "Inline image 1" },
+    { "type": "image_picker", "id": "image_2", "label": "Inline image 2" },
+    { "type": "image_picker", "id": "image_3", "label": "Inline image 3" },
+    { "type": "text", "id": "cta_label", "label": "Link label", "default": "About the Maison" },
+    { "type": "url",  "id": "cta_url",   "label": "Link URL" }
+  ],
+  "presets": [ { "name": "Statement Inline Images" } ]
+}
+{% endschema %}

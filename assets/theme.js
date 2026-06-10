@@ -425,6 +425,7 @@
 
     function closeQV() {
       overlay.classList.remove('is-open');
+      overlay.removeAttribute('data-qv-scheme');
       document.body.style.overflow = '';
       modal.innerHTML = '';
     }
@@ -439,11 +440,16 @@
       const productUrl = btn.dataset.productUrl;
       if (!productUrl) return;
 
+      // Adopt the color scheme of the section the card lives in (Home #2/#3
+      // sections set data-qv-scheme="light|dark|warm"); default is the dark modal.
+      const schemeHost = btn.closest('[data-qv-scheme]');
+      if (schemeHost) overlay.setAttribute('data-qv-scheme', schemeHost.getAttribute('data-qv-scheme'));
+
       overlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
 
       // Try embedded JSON first (works with password-protected stores, faster)
-      const card = btn.closest('.product-card');
+      const card = btn.closest('.product-card, [data-pcard]');
       const jsonScript = card && card.querySelector('.product-card__json');
       if (jsonScript) {
         try {

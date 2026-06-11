@@ -133,7 +133,7 @@
   #section-{{ section.id }}.hlb--split .hlb-content {
     background: var(--hbg);
     display: flex; align-items: center;
-    padding: clamp(48px, 7vw, 100px) clamp(40px, 5vw, 80px);
+    padding: clamp(48px, 7vw, 100px) var(--side-padding, 5vw);
   }
   #section-{{ section.id }}.hlb--split .hlb-content__inner { max-width: 500px; width: 100%; }
 

@@ -222,8 +222,8 @@
   #section-{{ section.id }}.psc--warm  { --sbg:#F0EBE0; --sfg:#2C1F14; --sacc:#8B5E3C; --smut:rgba(44,31,20,.5); --sbdr:rgba(44,31,20,.13); --ssale:#8B1A1A; }
   #section-{{ section.id }}.psc--theme { --sbg:var(--background,#0A0A0A); --sfg:var(--foreground,#F5F0E8); --sacc:var(--gold,#C8A96E); --smut:var(--muted,rgba(245,240,232,.55)); --sbdr:var(--border,rgba(245,240,232,.1)); --ssale:#E8A0A0; }
 
-  #section-{{ section.id }} { background: var(--sbg); color: var(--sfg); padding: clamp(64px,8vw,120px) var(--side-padding,5vw); }
-  .psc-inner { max-width: var(--container-width,1400px); margin: 0 auto; }
+  #section-{{ section.id }} { background: var(--sbg); color: var(--sfg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }
+  .psc-inner { max-width: var(--container-width,1440px); margin: 0 auto; }
 
   .psc-head { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom: clamp(36px,4vw,56px); }
   .psc-head__eyebrow { display:block; font-family:var(--ff-body,'Outfit',sans-serif); font-size:11px; font-weight:500; letter-spacing:.22em; text-transform:uppercase; color:var(--sacc); margin-bottom:12px; }

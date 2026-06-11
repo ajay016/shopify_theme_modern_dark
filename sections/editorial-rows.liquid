@@ -71,8 +71,8 @@
   #section-{{ section.id }}.edr--warm  { --ebg:#F0EBE0; --efg:#2C1F14; --eacc:#8B5E3C; --emut:rgba(44,31,20,.5); --ebdr:rgba(44,31,20,.13); }
   #section-{{ section.id }}.edr--theme { --ebg:var(--background,#0A0A0A); --efg:var(--foreground,#F5F0E8); --eacc:var(--gold,#C8A96E); --emut:var(--muted,rgba(245,240,232,.55)); --ebdr:var(--border,rgba(245,240,232,.1)); }
 
-  #section-{{ section.id }} { background: var(--ebg); color: var(--efg); padding: clamp(64px,8vw,130px) var(--side-padding,5vw); }
-  .edr-inner { max-width: var(--container-width,1400px); margin: 0 auto; }
+  #section-{{ section.id }} { background: var(--ebg); color: var(--efg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }
+  .edr-inner { max-width: var(--container-width,1440px); margin: 0 auto; }
 
   .edr-head { text-align: center; margin-bottom: clamp(48px,6vw,88px); }
   .edr-head__eyebrow { display:block; font-family: var(--ff-body,'Outfit',sans-serif); font-size:11px; font-weight:500; letter-spacing:.22em; text-transform:uppercase; color:var(--eacc); margin-bottom:14px; }

@@ -49,7 +49,7 @@
   .cmpb-img { width:100%; height:100%; object-fit:cover; display:block; }
   .cmpb-scrim { position:absolute; inset:0; background: linear-gradient(180deg, rgba(10,10,10,.2), rgba(10,10,10,.5)); }
 
-  .cmpb-content { position:relative; z-index:2; display:flex; width:100%; padding: clamp(48px,8vw,120px) var(--side-padding,5vw); }
+  .cmpb-content { position:relative; z-index:2; display:flex; width:100%; padding: var(--section-spacing,80px) var(--side-padding,5vw); }
   #section-{{ section.id }}.cmpb--center .cmpb-content { align-items:center; justify-content:center; text-align:center; }
   #section-{{ section.id }}.cmpb--left   .cmpb-content { align-items:center; justify-content:flex-start; }
   #section-{{ section.id }}.cmpb--bottom .cmpb-content { align-items:flex-end; justify-content:flex-start; }

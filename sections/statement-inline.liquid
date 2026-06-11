@@ -64,9 +64,9 @@
 
   #section-{{ section.id }} {
     background: var(--sbg);
-    padding: clamp(72px, 11vw, 150px) var(--side-padding, 5vw);
+    padding: var(--section-spacing, 80px) var(--side-padding, 5vw);
   }
-  .stm-inner { max-width: 1080px; margin: 0 auto; text-align: center; }
+  .stm-inner { max-width: var(--container-width, 1440px); margin: 0 auto; text-align: center; }
   .stm-eyebrow {
     display: inline-block;
     font-family: var(--ff-body,'Outfit',sans-serif);

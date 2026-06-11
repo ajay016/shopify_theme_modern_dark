@@ -1,5 +1,15 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
+    "color_scheme": "dark",
     "color_black": "#0A0A0A",
     "color_charcoal": "#161616",
     "color_cream": "#F5F0E8",
@@ -9,15 +19,18 @@
     "color_ivory": "#FAF8F3",
     "color_sale": "#FFBABA",
     "color_sale_bg": "#7A2020",
-    "layout_container_width": "1440px",
+    "font_pairing": "cormorant_outfit",
+    "type_body_size": 14,
+    "type_heading_size_scale": "medium",
+    "layout_container_width": "1200px",
     "layout_section_spacing": 100,
     "layout_side_padding": 56,
     "header_style": "v1",
     "mega_menu_style": "v1",
     "header_transparent_home": true,
     "header_sticky": true,
-    "logo_text": "MAISON·NOIR",
     "logo_width": 140,
+    "logo_text": "MAISON·NOIR",
     "menu": "main-menu",
     "announcement_enabled": true,
     "announcement_style": "ticker",
@@ -45,12 +58,59 @@
     "animations_scroll_reveal": true,
     "animations_hover": true,
     "animations_reveal_style": "fade_up",
-    "footer_description": "<p>Luxury fashion with a considered approach to design, craft, and the world we inhabit.<\/p>",
+    "footer_description": "<p>Luxury fashion with a considered approach to design, craft, and the world we inhabit.</p>",
     "footer_menu_1": "footer",
     "footer_menu_1_title": "Shop",
     "footer_menu_2_title": "Brand",
     "footer_menu_3_title": "Help",
-    "footer_show_payment_icons": true
+    "footer_show_payment_icons": true,
+    "sections": {
+      "announcement-bar": {
+        "type": "announcement-bar",
+        "settings": {
+          "enabled": true,
+          "style": "ticker",
+          "text_1": "New Arrivals ✦ Free Shipping Over $500 ✦ SS 2025 Collection Now Live ✦ Exclusive Members Preview ✦ Sustainable Luxury",
+          "text_2": "",
+          "link": ""
+        }
+      },
+      "header": {
+        "type": "header",
+        "settings": {
+          "header_style": "v1",
+          "mega_menu_style": "v1",
+          "transparent_home": true,
+          "sticky": true,
+          "logo_width": 140,
+          "logo_text": "MAISON·NOIR",
+          "menu": "main-menu"
+        }
+      },
+      "cart-drawer": {
+        "type": "cart-drawer",
+        "settings": {}
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "description": "<p>Luxury fashion with a considered approach to design, craft, and the world we inhabit.</p>",
+          "menu_1": "footer",
+          "menu_1_title": "Shop",
+          "menu_2": "",
+          "menu_2_title": "Brand",
+          "menu_3": "",
+          "menu_3_title": "Help",
+          "instagram": "",
+          "pinterest": "",
+          "tiktok": "",
+          "facebook": "",
+          "twitter": "",
+          "show_payment_icons": true
+        }
+      }
+    },
+    "content_for_index": []
   },
   "presets": {}
 }

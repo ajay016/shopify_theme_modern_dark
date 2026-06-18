@@ -76,7 +76,7 @@
 
   .edr-head { text-align: center; margin-bottom: clamp(48px,6vw,88px); }
   .edr-head__eyebrow { display:block; font-family: var(--ff-body,'Outfit',sans-serif); font-size:11px; font-weight:500; letter-spacing:.22em; text-transform:uppercase; color:var(--eacc); margin-bottom:14px; }
-  .edr-head__heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size:clamp(34px,4.5vw,64px); font-weight:300; line-height:1.08; margin:0; }
+  .edr-head__heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size:calc(clamp(34px,4.5vw,64px) * var(--heading-scale,1)); font-weight:300; line-height:1.08; margin:0; }
 
   .edr-rows { display: flex; flex-direction: column; gap: clamp(56px,8vw,120px); }
 
@@ -99,7 +99,7 @@
   .edr-row:nth-child(even) .edr-row__body { margin-left: auto; }
   .edr-row__index { display:block; font-family: var(--ff-display,'Cormorant Garamond',serif); font-size:14px; letter-spacing:.1em; color:var(--eacc); margin-bottom:18px; }
   .edr-row__eyebrow { display:block; font-family: var(--ff-body,'Outfit',sans-serif); font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--emut); margin-bottom:14px; }
-  .edr-row__heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size:clamp(28px,3.4vw,48px); font-weight:300; line-height:1.1; margin:0 0 18px; }
+  .edr-row__heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size:calc(clamp(28px,3.4vw,48px) * var(--heading-scale,1)); font-weight:300; line-height:1.1; margin:0 0 18px; }
   .edr-row__text { font-family: var(--ff-body,'Outfit',sans-serif); font-size:clamp(13px,1.1vw,16px); line-height:1.75; color:var(--emut); margin:0 0 28px; }
   .edr-row__link { display:inline-flex; align-items:center; gap:10px; font-family:var(--ff-body,'Outfit',sans-serif); font-size:12px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--efg); text-decoration:none; padding-bottom:6px; border-bottom:1px solid var(--ebdr); transition: gap .25s, border-color .25s; }
   .edr-row__link:hover { gap:16px; border-color: var(--eacc); color: var(--eacc); }

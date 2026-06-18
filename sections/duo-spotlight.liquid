@@ -67,7 +67,7 @@
     --dmut:var(--muted,rgba(242,237,228,.6));
   }
 
-  #section-{{ section.id }} { position: relative; background: var(--dbg); }
+  #section-{{ section.id }} { position: relative; background: var(--dbg); padding: var(--section-spacing, 80px) 0; }
   .duo-grid { display: grid; grid-template-columns: 1fr 1fr; }
   .duo-panel {
     position: relative; display: block; overflow: hidden;
@@ -113,7 +113,7 @@
   }
   .duo-card__heading {
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(26px, 2.6vw, 38px); font-weight: 300; line-height: 1.12;
+    font-size: calc(clamp(26px, 2.6vw, 38px) * var(--heading-scale, 1)); font-weight: 300; line-height: 1.12;
     color: var(--dfg); margin: 0;
   }
   .duo-card__text {

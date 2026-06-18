@@ -75,7 +75,7 @@
   }
   .stm-text {
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(30px, 4.6vw, 64px); font-weight: 300; line-height: 1.28;
+    font-size: calc(clamp(30px, 4.6vw, 64px) * var(--heading-scale, 1)); font-weight: 300; line-height: 1.28;
     color: var(--sfg); margin: 0;
   }
   .stm-word { font-style: normal; }

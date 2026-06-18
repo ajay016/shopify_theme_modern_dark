@@ -89,7 +89,7 @@
   }
   .sgl-heading {
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(30px, 4vw, 54px); font-weight: 300; line-height: 1.05;
+    font-size: calc(clamp(30px, 4vw, 54px) * var(--heading-scale, 1)); font-weight: 300; line-height: 1.05;
     color: var(--gfg); margin: 0;
   }
   .sgl-follow {

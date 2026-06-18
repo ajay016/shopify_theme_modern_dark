@@ -89,6 +89,17 @@
     --ff-display: {{ ff_display }};
     --ff-body:    {{ ff_body }};
     --fs-base:    {{ settings.type_body_size }}px;
+    {%- liquid
+      case settings.type_heading_size_scale
+        when 'small'
+          assign heading_scale = '0.80'
+        when 'large'
+          assign heading_scale = '1.24'
+        else
+          assign heading_scale = '1'
+      endcase
+    -%}
+    --heading-scale: {{ heading_scale }};
 
     /* Layout */
     --container-width:   {{ settings.layout_container_width }};

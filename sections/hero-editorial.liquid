@@ -100,7 +100,7 @@
 
   .hed-title {
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(54px, 10.5vw, 168px); font-weight: 300; line-height: .92;
+    font-size: calc(clamp(54px, 10.5vw, 168px) * var(--heading-scale, 1)); font-weight: 300; line-height: .92;
     letter-spacing: .02em; text-transform: uppercase;
     color: var(--hfg); margin: 0 0 clamp(-30px, -2.4vw, -56px);
     position: relative; z-index: 2;
@@ -123,7 +123,7 @@
     position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%);
     z-index: 3; white-space: nowrap; pointer-events: none;
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(48px, 8.4vw, 132px); font-weight: 300; line-height: 1;
+    font-size: calc(clamp(48px, 8.4vw, 132px) * var(--heading-scale, 1)); font-weight: 300; line-height: 1;
     color: var(--hacc);
     text-shadow: 0 1px 28px rgba(20,16,12,.18);
     animation: hedUp{{ section.id }} 1s .42s both;

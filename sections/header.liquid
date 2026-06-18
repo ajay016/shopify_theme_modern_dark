@@ -1,12 +1,12 @@
 {%- liquid
-  assign header_style    = section.settings.header_style
-  assign mega_style      = section.settings.mega_menu_style
-  assign is_transparent  = section.settings.transparent_home
-  assign is_sticky       = section.settings.sticky
-  assign menu_handle     = section.settings.menu
-  assign logo            = section.settings.logo
-  assign logo_width      = section.settings.logo_width
-  assign logo_text       = section.settings.logo_text
+  assign header_style    = settings.header_style
+  assign mega_style      = settings.mega_menu_style
+  assign is_transparent  = settings.header_transparent_home
+  assign is_sticky       = settings.header_sticky
+  assign menu_handle     = settings.menu
+  assign logo            = settings.logo
+  assign logo_width      = settings.logo_width
+  assign logo_text       = settings.logo_text
   assign show_wishlist   = settings.wishlist_enabled
   assign cart_type       = settings.cart_type
 
@@ -247,70 +247,8 @@
   "limit": 1,
   "settings": [
     {
-      "type": "select",
-      "id": "header_style",
-      "label": "Header style",
-      "options": [
-        { "value": "v1", "label": "Style 1 — Logo Left, Nav Center" },
-        { "value": "v2", "label": "Style 2 — Centered Logo, Split Nav" },
-        { "value": "v3", "label": "Style 3 — Hamburger + Centered Logo" }
-      ],
-      "default": "v1"
-    },
-    {
-      "type": "select",
-      "id": "mega_menu_style",
-      "label": "Mega menu style",
-      "options": [
-        { "value": "v1", "label": "Mega Menu 1 — Full-Width Columns" },
-        { "value": "v2", "label": "Mega Menu 2 — Compact Thumbnails" },
-        { "value": "v3", "label": "Mega Menu 3 — Flyout + Promo" }
-      ],
-      "default": "v1"
-    },
-    {
-      "type": "checkbox",
-      "id": "transparent_home",
-      "label": "Transparent on homepage",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "sticky",
-      "label": "Sticky on scroll",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "Logo"
-    },
-    {
-      "type": "image_picker",
-      "id": "logo",
-      "label": "Logo image"
-    },
-    {
-      "type": "range",
-      "id": "logo_width",
-      "label": "Logo max width",
-      "min": 60, "max": 300, "step": 10, "unit": "px",
-      "default": 140
-    },
-    {
-      "type": "text",
-      "id": "logo_text",
-      "label": "Logo text (fallback)",
-      "default": "MAISON·NOIR"
-    },
-    {
-      "type": "header",
-      "content": "Navigation"
-    },
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "Main menu",
-      "default": "main-menu"
+      "type": "paragraph",
+      "content": "Configure header style, logo, navigation, and transparency in Theme Settings → Header."
     }
   ],
   "blocks": [

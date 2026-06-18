@@ -1,9 +1,9 @@
-{%- if section.settings.enabled -%}
+{%- if settings.announcement_enabled -%}
   {%- liquid
-    assign bar_style = section.settings.style
-    assign text_1 = section.settings.text_1
-    assign text_2 = section.settings.text_2
-    assign bar_link = section.settings.link
+    assign bar_style = settings.announcement_style
+    assign text_1 = settings.announcement_text_1
+    assign text_2 = settings.announcement_text_2
+    assign bar_link = settings.announcement_link
   -%}
 
   <div class="announcement-bar" role="banner" aria-label="Announcement">
@@ -55,38 +55,8 @@
   "limit": 1,
   "settings": [
     {
-      "type": "checkbox",
-      "id": "enabled",
-      "label": "Show announcement bar",
-      "default": true
-    },
-    {
-      "type": "select",
-      "id": "style",
-      "label": "Bar style",
-      "options": [
-        { "value": "ticker",   "label": "Scrolling ticker" },
-        { "value": "rotating", "label": "Rotating messages" },
-        { "value": "static",   "label": "Static text" }
-      ],
-      "default": "ticker"
-    },
-    {
-      "type": "text",
-      "id": "text_1",
-      "label": "Message 1",
-      "default": "New Arrivals ✦ Free Shipping Over $500 ✦ SS 2025 Collection Now Live ✦ Exclusive Members Preview ✦ Sustainable Luxury"
-    },
-    {
-      "type": "text",
-      "id": "text_2",
-      "label": "Message 2 (rotating / ticker supplement)",
-      "info": "Optional. For ticker: appended seamlessly. For rotating: alternates with message 1."
-    },
-    {
-      "type": "url",
-      "id": "link",
-      "label": "Bar link (optional)"
+      "type": "paragraph",
+      "content": "Configure the announcement bar (on/off, style, text) in Theme Settings → Announcement Bar."
     }
   ],
   "presets": [

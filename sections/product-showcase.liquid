@@ -217,9 +217,9 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.psc--light { --sbg:#FAF8F3; --sfg:#0A0A0A; --sacc:#9B7B3F; --smut:rgba(10,10,10,.5); --sbdr:rgba(10,10,10,.12); --ssale:#8B1A1A; }
-  #section-{{ section.id }}.psc--dark  { --sbg:#0A0A0A; --sfg:#F5F0E8; --sacc:#C8A96E; --smut:rgba(245,240,232,.55); --sbdr:rgba(245,240,232,.1); --ssale:#E8A0A0; }
-  #section-{{ section.id }}.psc--warm  { --sbg:#F0EBE0; --sfg:#2C1F14; --sacc:#8B5E3C; --smut:rgba(44,31,20,.5); --sbdr:rgba(44,31,20,.13); --ssale:#8B1A1A; }
+  #section-{{ section.id }}.psc--light { --sbg:#FAF8F3; --sfg:#0A0A0A; --sacc:var(--gold,#9B7B3F); --smut:rgba(10,10,10,.5); --sbdr:rgba(10,10,10,.12); --ssale:#8B1A1A; }
+  #section-{{ section.id }}.psc--dark  { --sbg:#0A0A0A; --sfg:#F5F0E8; --sacc:var(--gold,#C8A96E); --smut:rgba(245,240,232,.55); --sbdr:rgba(245,240,232,.1); --ssale:#E8A0A0; }
+  #section-{{ section.id }}.psc--warm  { --sbg:#F0EBE0; --sfg:#2C1F14; --sacc:var(--gold,#8B5E3C); --smut:rgba(44,31,20,.5); --sbdr:rgba(44,31,20,.13); --ssale:#8B1A1A; }
   #section-{{ section.id }}.psc--theme { --sbg:var(--background,#0A0A0A); --sfg:var(--foreground,#F5F0E8); --sacc:var(--gold,#C8A96E); --smut:var(--muted,rgba(245,240,232,.55)); --sbdr:var(--border,rgba(245,240,232,.1)); --ssale:#E8A0A0; }
 
   #section-{{ section.id }} { background: var(--sbg); color: var(--sfg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }

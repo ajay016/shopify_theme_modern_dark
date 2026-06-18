@@ -64,9 +64,9 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.sgl--light { --gbg:#F4EFE6; --gfg:#1C1814; --gacc:#A4552F; --gmut:rgba(28,24,20,.55); --gbdr:rgba(28,24,20,.16); }
-  #section-{{ section.id }}.sgl--dark  { --gbg:#14100C; --gfg:#F2EDE4; --gacc:#D9986B; --gmut:rgba(242,237,228,.6); --gbdr:rgba(242,237,228,.2); }
-  #section-{{ section.id }}.sgl--warm  { --gbg:#E7DCCB; --gfg:#2A2118; --gacc:#8E4F2A; --gmut:rgba(42,33,24,.55); --gbdr:rgba(42,33,24,.2); }
+  #section-{{ section.id }}.sgl--light { --gbg:#F4EFE6; --gfg:#1C1814; --gacc:var(--gold,#A4552F); --gmut:rgba(28,24,20,.55); --gbdr:rgba(28,24,20,.16); }
+  #section-{{ section.id }}.sgl--dark  { --gbg:#14100C; --gfg:#F2EDE4; --gacc:var(--gold,#D9986B); --gmut:rgba(242,237,228,.6); --gbdr:rgba(242,237,228,.2); }
+  #section-{{ section.id }}.sgl--warm  { --gbg:#E7DCCB; --gfg:#2A2118; --gacc:var(--gold,#8E4F2A); --gmut:rgba(42,33,24,.55); --gbdr:rgba(42,33,24,.2); }
   #section-{{ section.id }}.sgl--theme {
     --gbg:var(--background,#14100C); --gfg:var(--foreground,#F2EDE4);
     --gacc:var(--gold,#C8A96E); --gmut:var(--muted,rgba(242,237,228,.6));

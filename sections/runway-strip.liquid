@@ -71,9 +71,9 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.rwy--light { --rbg:#F4EFE6; --rfg:#1C1814; --racc:#A4552F; --rmut:rgba(28,24,20,.55); }
-  #section-{{ section.id }}.rwy--dark  { --rbg:#14100C; --rfg:#F2EDE4; --racc:#D9986B; --rmut:rgba(242,237,228,.6); }
-  #section-{{ section.id }}.rwy--warm  { --rbg:#E7DCCB; --rfg:#2A2118; --racc:#8E4F2A; --rmut:rgba(42,33,24,.55); }
+  #section-{{ section.id }}.rwy--light { --rbg:#F4EFE6; --rfg:#1C1814; --racc:var(--gold,#A4552F); --rmut:rgba(28,24,20,.55); }
+  #section-{{ section.id }}.rwy--dark  { --rbg:#14100C; --rfg:#F2EDE4; --racc:var(--gold,#D9986B); --rmut:rgba(242,237,228,.6); }
+  #section-{{ section.id }}.rwy--warm  { --rbg:#E7DCCB; --rfg:#2A2118; --racc:var(--gold,#8E4F2A); --rmut:rgba(42,33,24,.55); }
   #section-{{ section.id }}.rwy--theme {
     --rbg:var(--background,#14100C); --rfg:var(--foreground,#F2EDE4);
     --racc:var(--gold,#C8A96E); --rmut:var(--muted,rgba(242,237,228,.6));

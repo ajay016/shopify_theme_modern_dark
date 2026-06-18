@@ -72,9 +72,9 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.arc--light { --abg:#F4EFE6; --afg:#1C1814; --aacc:#A4552F; --amut:rgba(28,24,20,.55); --abdr:rgba(28,24,20,.16); }
-  #section-{{ section.id }}.arc--dark  { --abg:#14100C; --afg:#F2EDE4; --aacc:#D9986B; --amut:rgba(242,237,228,.6); --abdr:rgba(242,237,228,.2); }
-  #section-{{ section.id }}.arc--warm  { --abg:#E7DCCB; --afg:#2A2118; --aacc:#8E4F2A; --amut:rgba(42,33,24,.55); --abdr:rgba(42,33,24,.2); }
+  #section-{{ section.id }}.arc--light { --abg:#F4EFE6; --afg:#1C1814; --aacc:var(--gold,#A4552F); --amut:rgba(28,24,20,.55); --abdr:rgba(28,24,20,.16); }
+  #section-{{ section.id }}.arc--dark  { --abg:#14100C; --afg:#F2EDE4; --aacc:var(--gold,#D9986B); --amut:rgba(242,237,228,.6); --abdr:rgba(242,237,228,.2); }
+  #section-{{ section.id }}.arc--warm  { --abg:#E7DCCB; --afg:#2A2118; --aacc:var(--gold,#8E4F2A); --amut:rgba(42,33,24,.55); --abdr:rgba(42,33,24,.2); }
   #section-{{ section.id }}.arc--theme {
     --abg:var(--background,#14100C); --afg:var(--foreground,#F2EDE4);
     --aacc:var(--gold,#C8A96E); --amut:var(--muted,rgba(242,237,228,.6));

@@ -79,17 +79,17 @@
 <style>
   /* ── Fixed palettes — DO NOT use var(--ivory) etc. here ── */
   #section-{{ section.id }}.hlb--light {
-    --hbg: #FAF8F3; --hfg: #0A0A0A; --hacc: #9B7B3F;
+    --hbg: #FAF8F3; --hfg: #0A0A0A; --hacc: var(--gold,#9B7B3F);
     --hmut: rgba(10,10,10,0.52); --hbtn-bg: #0A0A0A; --hbtn-fg: #FAF8F3;
     --hline: rgba(10,10,10,0.25);
   }
   #section-{{ section.id }}.hlb--dark {
-    --hbg: #0A0A0A; --hfg: #F5F0E8; --hacc: #C8A96E;
+    --hbg: #0A0A0A; --hfg: #F5F0E8; --hacc: var(--gold,#C8A96E);
     --hmut: rgba(245,240,232,0.6); --hbtn-bg: #C8A96E; --hbtn-fg: #0A0A0A;
     --hline: rgba(245,240,232,0.35);
   }
   #section-{{ section.id }}.hlb--warm {
-    --hbg: #F0EBE0; --hfg: #2C1F14; --hacc: #8B5E3C;
+    --hbg: #F0EBE0; --hfg: #2C1F14; --hacc: var(--gold,#8B5E3C);
     --hmut: rgba(44,31,20,0.52); --hbtn-bg: #2C1F14; --hbtn-fg: #F0EBE0;
     --hline: rgba(44,31,20,0.25);
   }

@@ -63,8 +63,10 @@
 </head>
 
 <body
-  class="template-{{ request.page_type }}"
+  class="template-{{ request.page_type }}{% unless settings.animations_hover %} anim-hover-off{% endunless %}"
   data-cursor-style="{{ settings.custom_cursor_style }}"
+  data-scroll-reveal="{{ settings.animations_scroll_reveal }}"
+  data-reveal-style="{{ settings.animations_reveal_style }}"
   data-free-shipping-threshold="{{ settings.cart_free_shipping_threshold }}"
 >
 
@@ -139,7 +141,11 @@
       custom_cursor:    {{ settings.custom_cursor | json }},
       wishlist_enabled: {{ settings.wishlist_enabled | json }},
       quickview_enabled:{{ settings.quickview_enabled | json }},
-      animations:       {{ settings.animations_scroll_reveal | json }}
+      quickview_show_description: {{ settings.quickview_show_description | json }},
+      quickview_show_shipping:    {{ settings.quickview_show_shipping | json }},
+      animations:       {{ settings.animations_scroll_reveal | json }},
+      animations_hover: {{ settings.animations_hover | json }},
+      reveal_style:     {{ settings.animations_reveal_style | json }}
     };
   </script>
 

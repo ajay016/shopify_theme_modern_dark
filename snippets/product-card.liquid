@@ -17,6 +17,7 @@
   assign card_style   = card_style   | default: settings.product_card_style
   assign image_ratio  = image_ratio  | default: settings.product_card_image_ratio
   assign media_hover  = media_hover  | default: settings.product_card_media_hover
+  assign quickadd_style = quickadd_style | default: settings.product_card_quickadd_style
   assign show_vendor  = show_vendor  | default: settings.product_card_show_vendor
   assign show_sizes   = show_sizes   | default: settings.product_card_show_sizes
   assign show_wishlist  = show_wishlist  | default: settings.product_card_show_wishlist
@@ -71,6 +72,7 @@
 <div
   class="product-card product-card--{{ card_style }}"
   data-product-id="{{ product.id }}"
+  data-quickadd="{{ quickadd_style }}"
 >
   <script type="application/json" class="product-card__json">{"id":{{ product.id }},"title":{{ product.title | json }},"vendor":{{ product.vendor | json }},"url":{{ product.url | json }},"price":{{ product.price }},"compare_at_price":{{ product.compare_at_price | default: 0 }},"body_html":{{ product.description | json }},"images":{{ imgs_j }},"options":{{ product.options | json }},"variants":{{ vars_j }}}</script>
   {%- comment -%}— Media —{%- endcomment -%}
@@ -150,8 +152,20 @@
           {%- endif -%}
         </div>
 
-        {%- comment -%}Bottom: full-width add to cart{%- endcomment -%}
-        {%- if product.variants.size == 1 and first_variant -%}
+        {%- comment -%}Bottom: full-width add to cart.
+          "popup" mode opens the Quick View modal (with size/variant selector)
+          rather than adding directly or jumping to the product page.{%- endcomment -%}
+        {%- if quickadd_style == 'popup' and settings.quickview_enabled -%}
+          <button
+            class="pcard-btn pcard-btn--atc"
+            data-open-quickview
+            data-product-url="{{ product.url }}"
+            aria-label="{{ 'accessibility.add_to_cart' | t: product_title: product.title }}"
+          >
+            {%- render 'icon-bag' -%}
+            <span>Add to Bag</span>
+          </button>
+        {%- elsif product.variants.size == 1 and first_variant -%}
           <button
             class="pcard-btn pcard-btn--atc"
             data-variant-id="{{ first_variant.id }}"

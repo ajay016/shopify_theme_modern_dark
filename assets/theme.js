@@ -12,9 +12,20 @@
     const els = document.querySelectorAll('.reveal');
     if (!els.length) return;
 
+    // Respect the "Scroll reveal" theme setting — when off, leave everything
+    // visible (.reveal is visible by default) and skip arming entirely.
+    if (document.body.dataset.scrollReveal === 'false') return;
+
+    // Map the "Reveal Animation Style" setting to its modifier class.
+    const styleMap = { fade_in: 'fade-in', slide_in: 'slide-in' };
+    const revealStyleClass = styleMap[document.body.dataset.revealStyle];
+
     // Arm the hidden state only now that JS is confirmed running and able to
     // reveal. Without this, .reveal stays fully visible (see theme.css).
-    els.forEach(el => el.classList.add('reveal-armed'));
+    els.forEach(el => {
+      if (revealStyleClass) el.classList.add(revealStyleClass);
+      el.classList.add('reveal-armed');
+    });
 
     const revealAll = () => els.forEach(el => el.classList.add('is-visible'));
 
@@ -54,10 +65,10 @@
     setHeaderOffset();
     window.addEventListener('resize', setHeaderOffset);
 
-    const isTransparent = header.dataset.transparent === 'true';
-
     window.addEventListener('scroll', () => {
       const scrolled = window.scrollY > 60;
+      // Drives the solid/transparent backdrop entirely via CSS classes so the
+      // "Transparent" and "Sticky" settings stay independent (see theme.css).
       header.classList.toggle('scrolled', scrolled);
 
       // Once user scrolls past announcement bar, snap header to top
@@ -65,12 +76,6 @@
         header.style.top = (scrolled || window.scrollY > bar.offsetHeight)
           ? '0'
           : bar.offsetHeight + 'px';
-      }
-
-      if (isTransparent) {
-        header.style.background = scrolled
-          ? 'rgba(10,10,10,0.97)'
-          : 'linear-gradient(to bottom, rgba(10,10,10,0.95), transparent)';
       }
     }, { passive: true });
   }
@@ -568,9 +573,11 @@
       const cPrice = fmt(p.price);
       const oPrice = p.compare_at_price > p.price ? fmt(p.compare_at_price) : '';
 
-      // Description — strip to first 280 chars for quick view
+      const qvSettings = window.theme_settings || {};
+
+      // Description — strip to first 280 chars for quick view (setting-gated)
       let descHtml = '';
-      if (p.body_html) {
+      if (qvSettings.quickview_show_description !== false && p.body_html) {
         const tmp = document.createElement('div');
         tmp.innerHTML = p.body_html;
         const text = tmp.textContent.trim();
@@ -578,6 +585,16 @@
           const short = text.length > 280 ? text.slice(0, 280).trimEnd() + '…' : text;
           descHtml = `<p class="qv-description">${short}</p>`;
         }
+      }
+
+      // Shipping / returns note (setting-gated)
+      let shippingHtml = '';
+      if (qvSettings.quickview_show_shipping) {
+        shippingHtml = `
+          <p class="qv-shipping">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" width="15" height="15" aria-hidden="true"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7M5.5 19a2 2 0 1 0 0-.01M18.5 19a2 2 0 1 0 0-.01"/></svg>
+            Complimentary shipping &amp; easy returns
+          </p>`;
       }
 
       modal.innerHTML = `
@@ -603,6 +620,8 @@
           ${variantHtml}
 
           ${descHtml}
+
+          ${shippingHtml}
 
           <button class="btn-primary qv-atc" id="qv-atc-btn"
             data-variant-id="${firstVariant ? firstVariant.id : ''}"

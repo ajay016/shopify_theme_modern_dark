@@ -4,9 +4,9 @@
     {%- comment -%}Brand column{%- endcomment -%}
     <div class="footer-brand">
       <a href="{{ routes.root_url }}" class="site-header__logo">
-        {%- if section.settings.logo != blank -%}
+        {%- if settings.footer_logo != blank -%}
           {{
-            section.settings.logo
+            settings.footer_logo
             | image_url: width: 160
             | image_tag: loading: 'lazy', alt: shop.name
           }}
@@ -20,19 +20,19 @@
           {{ settings.logo_text | default: shop.name }}
         {%- endif -%}
       </a>
-      {%- if section.settings.description != blank -%}
-        <div class="footer-brand__desc">{{ section.settings.description }}</div>
+      {%- if settings.footer_description != blank -%}
+        <div class="footer-brand__desc">{{ settings.footer_description }}</div>
       {%- endif -%}
     </div>
 
     {%- comment -%}Nav columns — with hardcoded fallbacks when menus are not configured{%- endcomment -%}
     {%- liquid
-      assign col1_handle = section.settings.menu_1
-      assign col1_title  = section.settings.menu_1_title | default: 'Shop'
-      assign col2_handle = section.settings.menu_2
-      assign col2_title  = section.settings.menu_2_title | default: 'Brand'
-      assign col3_handle = section.settings.menu_3
-      assign col3_title  = section.settings.menu_3_title | default: 'Help'
+      assign col1_handle = settings.footer_menu_1
+      assign col1_title  = settings.footer_menu_1_title | default: 'Shop'
+      assign col2_handle = settings.footer_menu_2
+      assign col2_title  = settings.footer_menu_2_title | default: 'Brand'
+      assign col3_handle = settings.footer_menu_3
+      assign col3_title  = settings.footer_menu_3_title | default: 'Help'
     -%}
 
     <div class="footer-col">
@@ -95,13 +95,14 @@
     </p>
 
     <div class="footer-social">
-      <a href="{{ section.settings.instagram | default: '#' }}" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
-      <a href="{{ section.settings.pinterest | default: '#' }}" target="_blank" rel="noopener" aria-label="Pinterest">Pinterest</a>
-      <a href="{{ section.settings.tiktok | default: '#' }}" target="_blank" rel="noopener" aria-label="TikTok">TikTok</a>
-      <a href="{{ section.settings.facebook | default: '#' }}" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a>
+      {%- if settings.social_instagram != blank -%}<a href="{{ settings.social_instagram }}" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>{%- endif -%}
+      {%- if settings.social_pinterest != blank -%}<a href="{{ settings.social_pinterest }}" target="_blank" rel="noopener" aria-label="Pinterest">Pinterest</a>{%- endif -%}
+      {%- if settings.social_tiktok != blank -%}<a href="{{ settings.social_tiktok }}" target="_blank" rel="noopener" aria-label="TikTok">TikTok</a>{%- endif -%}
+      {%- if settings.social_facebook != blank -%}<a href="{{ settings.social_facebook }}" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a>{%- endif -%}
+      {%- if settings.social_twitter != blank -%}<a href="{{ settings.social_twitter }}" target="_blank" rel="noopener" aria-label="X (Twitter)">X</a>{%- endif -%}
     </div>
 
-    {%- if section.settings.show_payment_icons -%}
+    {%- if settings.footer_show_payment_icons -%}
       <div class="footer-payment">
         {%- for type in shop.enabled_payment_types -%}
           {{ type | payment_type_svg_tag: class: 'icon payment-icon' }}
@@ -118,40 +119,8 @@
   "limit": 1,
   "settings": [
     {
-      "type": "image_picker",
-      "id": "logo",
-      "label": "Footer logo (optional, overrides global logo)"
-    },
-    {
-      "type": "richtext",
-      "id": "description",
-      "label": "Brand description",
-      "default": "<p>Luxury fashion with a considered approach to design, craft, and the world we inhabit.</p>"
-    },
-    {
-      "type": "header",
-      "content": "Navigation Columns"
-    },
-    { "type": "link_list", "id": "menu_1", "label": "Column 1 menu", "default": "footer" },
-    { "type": "text",      "id": "menu_1_title", "label": "Column 1 heading", "default": "Shop" },
-    { "type": "link_list", "id": "menu_2", "label": "Column 2 menu" },
-    { "type": "text",      "id": "menu_2_title", "label": "Column 2 heading", "default": "Brand" },
-    { "type": "link_list", "id": "menu_3", "label": "Column 3 menu" },
-    { "type": "text",      "id": "menu_3_title", "label": "Column 3 heading", "default": "Help" },
-    {
-      "type": "header",
-      "content": "Social Links"
-    },
-    { "type": "url", "id": "instagram", "label": "Instagram" },
-    { "type": "url", "id": "pinterest", "label": "Pinterest" },
-    { "type": "url", "id": "tiktok",    "label": "TikTok" },
-    { "type": "url", "id": "facebook",  "label": "Facebook" },
-    { "type": "url", "id": "twitter",   "label": "X (Twitter)" },
-    {
-      "type": "checkbox",
-      "id": "show_payment_icons",
-      "label": "Show payment icons",
-      "default": true
+      "type": "paragraph",
+      "content": "Configure the footer logo, brand description, navigation columns, social links, and payment icons in Theme Settings → Footer."
     }
   ],
   "presets": [

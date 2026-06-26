@@ -11,9 +11,10 @@
 
   let mx = 0, my = 0, rx = 0, ry = 0;
 
-  // Apply cursor style variant from data attribute
+  // Apply cursor style variant from data attribute. The crosshair and dot-only
+  // styles have no lagging ring; only dot_ring uses it.
   const style = document.body.dataset.cursorStyle || 'dot_ring';
-  if (style === 'dot_only') ring.style.display = 'none';
+  if (style === 'dot_only' || style === 'crosshair') ring.style.display = 'none';
 
   document.addEventListener('mousemove', e => {
     mx = e.clientX;

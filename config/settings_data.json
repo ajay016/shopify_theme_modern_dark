@@ -54,38 +54,26 @@
     "quickview_show_shipping": true,
     "wishlist_enabled": true,
     "custom_cursor": true,
-    "custom_cursor_style": "dot_ring",
+    "custom_cursor_style": "crosshair",
     "animations_scroll_reveal": true,
     "animations_hover": true,
     "animations_reveal_style": "fade_up",
-    "footer_description": "<p>Luxury fashion with a considered approach to design, craft, and the world we inhabit.</p>",
+    "footer_logo": "shopify://shop_images/pngwing.com.png",
+    "footer_description": "<p>Luxury fashion with a considered approach to design, craft, and the world we inha</p>",
     "footer_menu_1": "footer",
-    "footer_menu_1_title": "Shop",
+    "footer_menu_1_title": "",
     "footer_menu_2_title": "Brand",
     "footer_menu_3_title": "Help",
     "footer_show_payment_icons": true,
+    "favicon": "shopify://shop_images/pngwing.com.png",
     "sections": {
       "announcement-bar": {
         "type": "announcement-bar",
-        "settings": {
-          "enabled": true,
-          "style": "ticker",
-          "text_1": "New Arrivals ✦ Free Shipping Over $500 ✦ SS 2025 Collection Now Live ✦ Exclusive Members Preview ✦ Sustainable Luxury",
-          "text_2": "",
-          "link": ""
-        }
+        "settings": {}
       },
       "header": {
         "type": "header",
-        "settings": {
-          "header_style": "v1",
-          "mega_menu_style": "v1",
-          "transparent_home": true,
-          "sticky": true,
-          "logo_width": 140,
-          "logo_text": "MAISON·NOIR",
-          "menu": "main-menu"
-        }
+        "settings": {}
       },
       "cart-drawer": {
         "type": "cart-drawer",

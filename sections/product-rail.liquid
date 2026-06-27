@@ -1,19 +1,9 @@
 {%- liquid
   assign s = section.settings
   assign col = collections[s.collection]
-  assign hover = settings.product_card_media_hover | default: 'zoom'
-  assign show_wl = false
-  if settings.wishlist_enabled and settings.product_card_show_wishlist
-    assign show_wl = true
-  endif
-  assign show_qv = false
-  if settings.quickview_enabled and settings.product_card_show_quickview
-    assign show_qv = true
-  endif
 
   assign demo_names = 'Sculpted Wool Coat,Bias-Cut Slip Dress,Pointed Leather Heels,Structured Tote,Merino Roll Neck,Tailored Trouser,Silk Twill Scarf,Tortoise Eyewear' | split: ','
   assign demo_prices = '€890,€420,€380,€640,€260,€310,€150,€220' | split: ','
-  assign demo_cents = '89000,42000,38000,64000,26000,31000,15000,22000' | split: ','
   assign demo_cats = 'Outerwear,Dresses,Footwear,Leather Goods,Knitwear,Tailoring,Accessories,Eyewear' | split: ','
   assign d1 = 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=700&q=80'
   assign d2 = 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=700&q=80'
@@ -51,167 +41,19 @@
   <div class="prl-track" data-prl-track>
     {%- if col != blank and col.products.size > 0 -%}
       {%- for product in col.products limit: s.products_to_show -%}
-        {%- liquid
-          assign p_alt = product.title | escape
-          assign first_variant = product.first_available_variant | default: product.variants.first
-
-          assign imgs_j = '['
-          for img in product.images limit: 8
-            assign img_src = img | image_url: width: 800
-            if forloop.first
-              assign imgs_j = imgs_j | append: '"' | append: img_src | append: '"'
-            else
-              assign imgs_j = imgs_j | append: ',"' | append: img_src | append: '"'
-            endif
-          endfor
-          assign imgs_j = imgs_j | append: ']'
-
-          assign vars_j = '['
-          for v in product.variants
-            assign opt1_j = v.option1 | json
-            assign opts_j = '[' | append: opt1_j
-            if v.option2 != blank
-              assign opt2_j = v.option2 | json
-              assign opts_j = opts_j | append: ',' | append: opt2_j
-            endif
-            if v.option3 != blank
-              assign opt3_j = v.option3 | json
-              assign opts_j = opts_j | append: ',' | append: opt3_j
-            endif
-            assign opts_j = opts_j | append: ']'
-            assign v_cmp = v.compare_at_price | default: 0
-            assign v_avail = 'false'
-            if v.available
-              assign v_avail = 'true'
-            endif
-            assign v_obj = '{"id":' | append: v.id | append: ',"price":' | append: v.price | append: ',"compare_at_price":' | append: v_cmp | append: ',"available":' | append: v_avail | append: ',"options":' | append: opts_j | append: '}'
-            if forloop.first
-              assign vars_j = vars_j | append: v_obj
-            else
-              assign vars_j = vars_j | append: ',' | append: v_obj
-            endif
-          endfor
-          assign vars_j = vars_j | append: ']'
-        -%}
-        <div class="prl-card reveal" data-pcard data-product-id="{{ product.id }}">
-          <script type="application/json" class="product-card__json">{"id":{{ product.id }},"title":{{ product.title | json }},"vendor":{{ product.vendor | json }},"url":{{ product.url | json }},"price":{{ product.price }},"compare_at_price":{{ product.compare_at_price | default: 0 }},"body_html":{{ product.description | json }},"images":{{ imgs_j }},"options":{{ product.options | json }},"variants":{{ vars_j }}}</script>
-
-          <div class="prl-card__media prl-hov--{{ hover }}">
-            <a href="{{ product.url }}" class="prl-card__imglink" aria-label="{{ p_alt }}">
-              {%- if product.featured_image != blank -%}
-                {{ product.featured_image | image_url: width: 700 | image_tag:
-                  loading: 'lazy', class: 'prl-card__img prl-img--a', sizes: '(max-width:900px) 64vw, 24vw',
-                  widths: '350,500,700', alt: p_alt }}
-                {%- if hover == 'second_image' and product.images.size > 1 -%}
-                  {{ product.images[1] | image_url: width: 700 | image_tag:
-                    loading: 'lazy', class: 'prl-card__img prl-img--b', alt: p_alt }}
-                {%- endif -%}
-                {%- if hover == 'carousel' and product.images.size > 1 -%}
-                  {%- for img in product.images offset: 1 limit: 2 -%}
-                    {{ img | image_url: width: 700 | image_tag:
-                      loading: 'lazy', class: 'prl-card__img prl-img--cycle', alt: p_alt }}
-                  {%- endfor -%}
-                {%- endif -%}
-              {%- else -%}
-                <img class="prl-card__img prl-img--a" src="{{ demo_imgs[forloop.index0] | default: d1 }}" alt="{{ p_alt }}" loading="lazy" />
-              {%- endif -%}
-            </a>
-            <span class="prl-card__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
-
-            {%- if product.available == false -%}
-              <span class="prl-card__badge">Sold Out</span>
-            {%- elsif product.compare_at_price > product.price -%}
-              <span class="prl-card__badge prl-card__badge--sale">Sale</span>
-            {%- endif -%}
-
-            <div class="prl-card__icons">
-              {%- if show_wl -%}
-                <button class="prl-icon-btn" data-wishlist-id="{{ product.id }}" aria-label="Add to wishlist" aria-pressed="false">
-                  {%- render 'icon-wishlist' -%}
-                </button>
-              {%- endif -%}
-              {%- if show_qv -%}
-                <button class="prl-icon-btn" data-open-quickview data-product-url="{{ product.url }}" aria-label="Quick view {{ p_alt }}">
-                  {%- render 'icon-eye' -%}
-                </button>
-              {%- endif -%}
-            </div>
-
-            {%- if product.variants.size == 1 and first_variant -%}
-              {%- comment -%}Single variant — add straight to the cart{%- endcomment -%}
-              <button
-                class="prl-atc pcard-btn--atc"
-                data-variant-id="{{ first_variant.id }}"
-                {% unless first_variant.available %}disabled{% endunless %}
-              >
-                {%- render 'icon-bag' -%}
-                <span class="pcard-btn__label">{% if first_variant.available %}Add to Bag{% else %}Sold Out{% endif %}</span>
-              </button>
-            {%- elsif show_qv -%}
-              {%- comment -%}Multiple variants — quick-add via the quick view popup{%- endcomment -%}
-              <button class="prl-atc" data-open-quickview data-product-url="{{ product.url }}">
-                {%- render 'icon-bag' -%}
-                <span class="pcard-btn__label">Add to Bag</span>
-              </button>
-            {%- else -%}
-              <a href="{{ product.url }}" class="prl-atc">
-                {%- render 'icon-bag' -%}
-                <span class="pcard-btn__label">Select Options</span>
-              </a>
-            {%- endif -%}
-          </div>
-
-          <div class="prl-card__info">
-            <span class="prl-card__cat">{{ product.type | default: 'Atelier' }}</span>
-            <span class="prl-card__name"><a href="{{ product.url }}">{{ product.title }}</a></span>
-            <span class="prl-card__price">{{ product.price | money }}</span>
-          </div>
-        </div>
+        {%- render 'product-card', product: product, scheme: s.scheme, rail: true, number: forloop.index -%}
       {%- endfor -%}
     {%- else -%}
       {%- for i in (1..8) limit: s.products_to_show -%}
         {%- assign idx = forloop.index0 -%}
-        <div class="prl-card reveal" data-pcard>
-          <script type="application/json" class="product-card__json">{"id":0,"title":{{ demo_names[idx] | json }},"vendor":"Maison Noir","url":"/collections/all","price":{{ demo_cents[idx] }},"compare_at_price":0,"body_html":"From the Atelier collection — natural fabrics, finished by hand. Demo product: connect a collection in the theme editor to show your own.","images":["{{ demo_imgs[idx] }}"],"options":["Title"],"variants":[{"id":0,"price":{{ demo_cents[idx] }},"compare_at_price":0,"available":true,"options":["Default Title"]}]}</script>
-
-          <div class="prl-card__media prl-hov--{{ hover }}">
-            <a href="/collections/all" class="prl-card__imglink" aria-label="{{ demo_names[idx] | escape }}">
-              <img class="prl-card__img prl-img--a" src="{{ demo_imgs[idx] }}" alt="{{ demo_names[idx] }}" loading="lazy" />
-            </a>
-            <span class="prl-card__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
-
-            <div class="prl-card__icons">
-              {%- if show_wl -%}
-                <button class="prl-icon-btn" data-wishlist-id="demo-prl-{{ idx }}" aria-label="Add to wishlist" aria-pressed="false">
-                  {%- render 'icon-wishlist' -%}
-                </button>
-              {%- endif -%}
-              {%- if show_qv -%}
-                <button class="prl-icon-btn" data-open-quickview data-product-url="/collections/all" aria-label="Quick view {{ demo_names[idx] | escape }}">
-                  {%- render 'icon-eye' -%}
-                </button>
-              {%- endif -%}
-            </div>
-
-            {%- if show_qv -%}
-              <button class="prl-atc" data-open-quickview data-product-url="/collections/all">
-                {%- render 'icon-bag' -%}
-                <span class="pcard-btn__label">Add to Bag</span>
-              </button>
-            {%- else -%}
-              <a href="/collections/all" class="prl-atc">
-                {%- render 'icon-bag' -%}
-                <span class="pcard-btn__label">Add to Bag</span>
-              </a>
-            {%- endif -%}
-          </div>
-
-          <div class="prl-card__info">
-            <span class="prl-card__cat">{{ demo_cats[idx] }}</span>
-            <span class="prl-card__name"><a href="/collections/all">{{ demo_names[idx] }}</a></span>
-            <span class="prl-card__price">{{ demo_prices[idx] }}</span>
-          </div>
-        </div>
+        {%- render 'product-card',
+            scheme: s.scheme, rail: true,
+            demo_index: idx,
+            demo_title: demo_names[idx],
+            demo_price: demo_prices[idx],
+            demo_category: demo_cats[idx],
+            demo_image: demo_imgs[idx],
+            demo_url: '/collections/all' -%}
       {%- endfor -%}
     {%- endif -%}
   </div>
@@ -224,13 +66,12 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.prl--light { --pbg:#F4EFE6; --pfg:#1C1814; --pacc:var(--gold,#A4552F); --pmut:rgba(28,24,20,.55); --pbdr:rgba(28,24,20,.16); --psale:#8B1A1A; }
-  #section-{{ section.id }}.prl--dark  { --pbg:#14100C; --pfg:#F2EDE4; --pacc:var(--gold,#D9986B); --pmut:rgba(242,237,228,.6); --pbdr:rgba(242,237,228,.2); --psale:#E8A0A0; }
-  #section-{{ section.id }}.prl--warm  { --pbg:#E7DCCB; --pfg:#2A2118; --pacc:var(--gold,#8E4F2A); --pmut:rgba(42,33,24,.55); --pbdr:rgba(42,33,24,.2); --psale:#8B1A1A; }
+  #section-{{ section.id }}.prl--light { --pbg:#F4EFE6; --pfg:#1C1814; --pacc:var(--gold,#A4552F); --pbdr:rgba(28,24,20,.16); }
+  #section-{{ section.id }}.prl--dark  { --pbg:#14100C; --pfg:#F2EDE4; --pacc:var(--gold,#D9986B); --pbdr:rgba(242,237,228,.2); }
+  #section-{{ section.id }}.prl--warm  { --pbg:#E7DCCB; --pfg:#2A2118; --pacc:var(--gold,#8E4F2A); --pbdr:rgba(42,33,24,.2); }
   #section-{{ section.id }}.prl--theme {
     --pbg:var(--background,#14100C); --pfg:var(--foreground,#F2EDE4);
-    --pacc:var(--gold,#C8A96E); --pmut:var(--muted,rgba(242,237,228,.6));
-    --pbdr:var(--border-strong,rgba(242,237,228,.2)); --psale:#E8A0A0;
+    --pacc:var(--gold,#C8A96E); --pbdr:var(--border-strong,rgba(242,237,228,.2));
   }
 
   #section-{{ section.id }} {
@@ -271,111 +112,6 @@
   }
   .prl-track::-webkit-scrollbar { display: none; }
 
-  .prl-card {
-    flex: 0 0 auto; width: clamp(240px, 24vw, 320px);
-    scroll-snap-align: start;
-  }
-  .prl-card__media {
-    position: relative; aspect-ratio: 3 / 4;
-    overflow: hidden; border-radius: 3px; background: #cbbfa9;
-  }
-  .prl-card__imglink { display:block; position:absolute; inset:0; }
-  .prl-card__img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
-
-  /* — Hover behavior: zoom — */
-  .prl-img--a { transition: transform .6s ease, opacity .45s ease; }
-  .prl-hov--zoom:hover .prl-img--a { transform: scale(1.05); }
-  /* — Hover behavior: second image — */
-  .prl-img--b { opacity:0; transition: opacity .45s ease; }
-  .prl-hov--second_image:hover .prl-img--b { opacity:1; }
-  .prl-hov--second_image:has(.prl-img--b):hover .prl-img--a { opacity:0; }
-  .prl-hov--second_image:not(:has(.prl-img--b)):hover .prl-img--a { transform: scale(1.05); }
-  /* — Hover behavior: carousel (JS cycles .is-on) — */
-  .prl-img--cycle { opacity:0; transition: opacity .4s ease; }
-  .prl-img--cycle.is-on { opacity:1; }
-  .prl-hov--carousel:not(:has(.prl-img--cycle)):hover .prl-img--a { transform: scale(1.05); }
-
-  .prl-card__num {
-    position: absolute; top: 12px; right: 14px; z-index: 3;
-    font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 10px; font-weight: 500; letter-spacing: .2em;
-    color: rgba(255,255,255,.9);
-    text-shadow: 0 1px 8px rgba(0,0,0,.4);
-    transition: opacity .25s ease;
-  }
-  .prl-card:hover .prl-card__num { opacity: 0; }
-  .prl-card__badge {
-    position:absolute; top:12px; left:12px; z-index:3;
-    font-family:var(--ff-body,'Outfit',sans-serif); font-size:9px; font-weight:600;
-    letter-spacing:.14em; text-transform:uppercase;
-    background:rgba(255,255,255,.94); color:#1C1814; padding:6px 11px; border-radius:2px;
-  }
-  .prl-card__badge--sale { background:var(--psale); color:#fff; }
-
-  /* — Icon stack (wishlist / quick view) — */
-  .prl-card__icons {
-    position:absolute; top:12px; right:12px; z-index:4;
-    display:flex; flex-direction:column; gap:8px;
-  }
-  .prl-icon-btn {
-    width:38px; height:38px; border-radius:50%;
-    background:rgba(244,239,230,.96); color:#1C1814;
-    border:none; cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-    opacity:0; transform:translateX(10px);
-    transition: opacity .3s ease, transform .3s ease, background .25s, color .25s;
-    box-shadow: 0 4px 14px rgba(20,16,12,.16);
-  }
-  .prl-card:hover .prl-icon-btn { opacity:1; transform:none; }
-  .prl-card__icons .prl-icon-btn:nth-child(2) { transition-delay:.05s; }
-  .prl-icon-btn:hover { background:#1C1814; color:#F4EFE6; }
-  .prl-icon-btn.is-active { background:var(--pacc); color:#fff; opacity:1; transform:none; }
-  .prl-icon-btn svg { width:16px; height:16px; pointer-events:none; }
-
-  /* — Slide-up Add to Bag — */
-  .prl-atc {
-    position:absolute; left:12px; right:12px; bottom:12px; z-index:4;
-    display:flex; align-items:center; justify-content:center; gap:9px;
-    font-family:var(--ff-body,'Outfit',sans-serif); font-size:11px; font-weight:500;
-    letter-spacing:.14em; text-transform:uppercase;
-    background:rgba(28,24,20,.94); color:#F4EFE6;
-    padding:13px; border:none; border-radius:2px; cursor:pointer; text-decoration:none;
-    opacity:0; transform:translateY(12px);
-    transition: opacity .3s ease, transform .3s ease, background .25s;
-  }
-  .prl-card:hover .prl-atc { opacity:1; transform:none; }
-  .prl-atc:hover { background:var(--pacc); }
-  .prl-atc:disabled { opacity:.45; cursor:not-allowed; }
-  .prl-atc svg { width:15px; height:15px; }
-
-  @media (hover: none) {
-    .prl-icon-btn, .prl-card:hover .prl-icon-btn { opacity:1; transform:none; }
-    .prl-atc, .prl-card:hover .prl-atc { opacity:1; transform:none; }
-    .prl-card__num { opacity:0; }
-  }
-
-  .prl-card__info { padding: 16px 2px 0; }
-  .prl-card__cat {
-    display: block;
-    font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 9px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
-    color: var(--pacc); margin-bottom: 6px;
-  }
-  .prl-card__name {
-    display: block;
-    font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(18px, 1.5vw, 22px); font-weight: 400;
-    color: var(--pfg);
-  }
-  .prl-card__name a { color: var(--pfg); text-decoration: none; }
-  .prl-card__name a:hover { color: var(--pacc); }
-  .prl-card__price {
-    display: block; margin-top: 6px;
-    font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 12px; font-weight: 400; letter-spacing: .06em;
-    color: var(--pmut);
-  }
-
   .prl-foot { text-align: center; margin-top: clamp(36px, 5vw, 52px); }
   .prl-cta {
     display: inline-block;
@@ -389,7 +125,6 @@
 
   @media (max-width: 700px) {
     .prl-nav { display: none; }
-    .prl-card { width: 64vw; }
   }
 </style>
 
@@ -405,29 +140,9 @@
     if (prev) prev.addEventListener('click', function(){ track.scrollBy({ left: -step, behavior: 'smooth' }); });
     if (next) next.addEventListener('click', function(){ track.scrollBy({ left: step, behavior: 'smooth' }); });
   }
-  function initCarousel(root){
-    root.querySelectorAll('.prl-hov--carousel').forEach(function(media){
-      var cycles = media.querySelectorAll('.prl-img--cycle');
-      if (!cycles.length) return;
-      var timer = null, idx = -1;
-      media.addEventListener('mouseenter', function(){
-        if (timer) return;
-        timer = setInterval(function(){
-          cycles.forEach(function(c){ c.classList.remove('is-on'); });
-          idx = (idx + 1) % (cycles.length + 1);
-          if (idx < cycles.length) cycles[idx].classList.add('is-on');
-        }, 900);
-      });
-      media.addEventListener('mouseleave', function(){
-        clearInterval(timer); timer = null; idx = -1;
-        cycles.forEach(function(c){ c.classList.remove('is-on'); });
-      });
-    });
-  }
-  function init(root){ initNav(root); initCarousel(root); }
   function getRoot(){ return document.getElementById('section-' + SEC); }
-  document.addEventListener('DOMContentLoaded', function(){ var r = getRoot(); if (r) init(r); });
-  document.addEventListener('shopify:section:load', function(e){ if (e.detail.sectionId !== SEC) return; var r = getRoot(); if (r) init(r); });
+  document.addEventListener('DOMContentLoaded', function(){ var r = getRoot(); if (r) initNav(r); });
+  document.addEventListener('shopify:section:load', function(e){ if (e.detail.sectionId !== SEC) return; var r = getRoot(); if (r) initNav(r); });
 })();
 </script>
 
@@ -447,7 +162,7 @@
       ],
       "default": "light"
     },
-    { "type": "paragraph", "content": "Wishlist, quick view and image hover behavior follow Theme settings → Product Cards." },
+    { "type": "paragraph", "content": "Card design, image ratio, hover behaviour, wishlist and quick view all follow Theme settings → Product Cards." },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "New This Week" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "The Latest Arrivals" },
     { "type": "collection", "id": "collection", "label": "Collection (demo items shown if empty)" },

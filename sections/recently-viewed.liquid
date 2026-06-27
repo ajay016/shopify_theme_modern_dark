@@ -39,16 +39,16 @@
         if (data && data.product) {
           const p = data.product;
           const card = document.createElement('div');
-          card.className = 'product-card product-card--style-1';
+          card.className = 'product-card pcard pcard--theme pcard--{{ settings.product_card_style | default: 'atelier' }} pcard--align-{{ settings.product_card_text_align | default: 'left' }} pcard--rad-{{ settings.product_card_radius | default: 'subtle' }}';
           card.innerHTML = `
-            <div class="product-card__media product-card__media--portrait">
-              <a href="/products/${p.handle}" aria-label="${p.title}">
-                ${p.images[0] ? `<img class="product-card__img product-card__img--primary" src="${p.images[0].src}" alt="${p.title}" loading="lazy">` : ''}
+            <div class="pcard__media pcard__media--{{ settings.product_card_image_ratio | default: 'portrait' }} pcard__media--hov-none">
+              <a href="/products/${p.handle}" class="pcard__imglink" aria-label="${p.title}">
+                ${p.images[0] ? `<img class="pcard__img pcard__img--a" src="${p.images[0].src}" alt="${p.title}" loading="lazy">` : ''}
               </a>
             </div>
-            <div class="product-card__info">
-              <a href="/products/${p.handle}" class="product-card__title">${p.title}</a>
-              <div class="product-card__price"><span class="price-current">${window.MaisonNoir ? window.MaisonNoir.formatMoney(p.variants[0].price) : '$' + (p.variants[0].price / 100).toFixed(2)}</span></div>
+            <div class="pcard__info">
+              <span class="pcard__name"><a href="/products/${p.handle}">${p.title}</a></span>
+              <span class="pcard__price">${window.MaisonNoir ? window.MaisonNoir.formatMoney(p.variants[0].price) : '$' + (p.variants[0].price / 100).toFixed(2)}</span>
             </div>`;
           grid.appendChild(card);
         }

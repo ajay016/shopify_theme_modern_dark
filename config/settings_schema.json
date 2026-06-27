@@ -189,14 +189,35 @@
         "type": "select",
         "id": "product_card_style",
         "label": "Default Card Style",
+        "info": "The base look used for every product card across the whole site (homepages, collections, search).",
         "options": [
-          { "value": "style-1", "label": "Style 1 — Minimal Dark" },
-          { "value": "style-2", "label": "Style 2 — Bold Border" },
-          { "value": "style-3", "label": "Style 3 — Editorial Overlay" },
-          { "value": "style-4", "label": "Style 4 — Compact" },
-          { "value": "style-5", "label": "Style 5 — Full Info" }
+          { "value": "atelier",  "label": "Atelier — eyebrow, name & price" },
+          { "value": "minimal",  "label": "Minimal — name & price only" },
+          { "value": "overlay",  "label": "Editorial — info over image" },
+          { "value": "bordered", "label": "Bordered — framed card" }
         ],
-        "default": "style-1"
+        "default": "atelier"
+      },
+      {
+        "type": "select",
+        "id": "product_card_text_align",
+        "label": "Text Alignment",
+        "options": [
+          { "value": "left",   "label": "Left" },
+          { "value": "center", "label": "Center" }
+        ],
+        "default": "left"
+      },
+      {
+        "type": "select",
+        "id": "product_card_radius",
+        "label": "Image Corner Radius",
+        "options": [
+          { "value": "none",    "label": "None (square corners)" },
+          { "value": "subtle",  "label": "Subtle" },
+          { "value": "rounded", "label": "Rounded" }
+        ],
+        "default": "subtle"
       },
       {
         "type": "select",
@@ -221,7 +242,10 @@
         ],
         "default": "zoom"
       },
-      { "type": "checkbox", "id": "product_card_show_vendor",    "label": "Show brand/vendor name",          "default": true },
+      { "type": "checkbox", "id": "product_card_show_category",  "label": "Show category/type eyebrow",      "default": true },
+      { "type": "checkbox", "id": "product_card_show_vendor",    "label": "Show brand/vendor (if no category)", "default": true },
+      { "type": "checkbox", "id": "product_card_show_number",    "label": "Show index number badge",         "default": true },
+      { "type": "checkbox", "id": "product_card_show_price_compare", "label": "Show compare-at (sale) price", "default": true },
       { "type": "checkbox", "id": "product_card_show_material",  "label": "Show material/subtitle",          "default": true },
       { "type": "checkbox", "id": "product_card_show_sizes",     "label": "Show sizes on hover",             "default": true },
       { "type": "checkbox", "id": "product_card_show_wishlist",  "label": "Show wishlist button",            "default": true },

@@ -40,7 +40,7 @@
     "cart_free_shipping_bar": true,
     "cart_free_shipping_threshold": "500",
     "cart_show_recommendations": true,
-    "product_card_style": "style-1",
+    "product_card_style": "atelier",
     "product_card_image_ratio": "portrait",
     "product_card_media_hover": "zoom",
     "product_card_show_vendor": true,

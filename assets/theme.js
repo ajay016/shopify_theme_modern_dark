@@ -405,7 +405,7 @@
       const variantId = addBtn.dataset.variantId;
       if (!variantId) return;
 
-      const label = addBtn.querySelector('.pcard-btn__label');
+      const label = addBtn.querySelector('.pcard-atc__label, .pcard-btn__label');
       const originalLabel = label ? label.textContent : '';
       if (label) label.textContent = '…';
       addBtn.disabled = true;
@@ -422,6 +422,36 @@
         if (label) label.textContent = originalLabel;
         addBtn.disabled = false;
       }
+    });
+  }
+
+
+  /* ============================================================
+     Product card — carousel autoplay on hover
+     Cycles the extra .pcard__img--cycle images while the pointer is
+     over a card whose media uses the "carousel" hover behaviour.
+     Works for every unified product card on the page (home + collection).
+     ============================================================ */
+  function initCardCarousel(root) {
+    const scope = root || document;
+    scope.querySelectorAll('.pcard__media--hov-carousel').forEach(media => {
+      if (media.dataset.carouselBound) return;
+      const cycles = media.querySelectorAll('.pcard__img--cycle');
+      if (!cycles.length) return;
+      media.dataset.carouselBound = '1';
+      let timer = null, idx = -1;
+      media.addEventListener('mouseenter', () => {
+        if (timer) return;
+        timer = setInterval(() => {
+          cycles.forEach(c => c.classList.remove('is-on'));
+          idx = (idx + 1) % (cycles.length + 1);
+          if (idx < cycles.length) cycles[idx].classList.add('is-on');
+        }, 900);
+      });
+      media.addEventListener('mouseleave', () => {
+        clearInterval(timer); timer = null; idx = -1;
+        cycles.forEach(c => c.classList.remove('is-on'));
+      });
     });
   }
 
@@ -953,6 +983,7 @@
     initSearch();
     initCartDrawer();
     initCardAddToCart();
+    initCardCarousel();
     initQuickView();
     initWishlist();
     initFilters();
@@ -962,5 +993,8 @@
     initAnnouncementRotation();
     initMegaMenu();
   });
+
+  // Re-bind hover carousels when a section is re-rendered in the theme editor.
+  document.addEventListener('shopify:section:load', e => initCardCarousel(e.target));
 
 })();

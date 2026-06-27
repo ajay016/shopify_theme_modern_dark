@@ -51,8 +51,8 @@
             assign p_badge  = placeholder_badges[pi]
             assign bg_mod   = i | modulo: 3 | plus: 1
           -%}
-          <div class="product-card fp-card">
-            <div class="fp-card__media fp-bg-{{ bg_mod }}">
+          <div class="product-card fp-card product-card--{{ settings.product_card_style }}">
+            <div class="fp-card__media product-card__media product-card__media--{{ settings.product_card_image_ratio }} fp-bg-{{ bg_mod }}">
               {%- if i == 1 -%}
                 <svg width="160" height="260" viewBox="0 0 160 260" fill="none" aria-hidden="true">
                   <path d="M55 30 Q55 15 80 12 Q105 15 105 30 L110 65 L90 70 L90 240 L70 240 L70 70 L50 65 Z" stroke="rgba(200,169,110,0.35)" stroke-width="1.2" fill="rgba(200,169,110,0.05)"/>
@@ -102,9 +102,9 @@
               <div class="fp-quick-add">+ Add to Cart</div>
             </div>
 
-            <div class="fp-card__info">
+            <div class="fp-card__info product-card__info">
               <p class="fp-card__brand">{{ shop.name }}</p>
-              <h3 class="fp-card__name">{{ p_name }}</h3>
+              <h3 class="fp-card__name product-card__title">{{ p_name }}</h3>
               <div class="fp-card__price">
                 <span class="price-current">{{ p_price }}</span>
                 {%- if p_orig != blank -%}
@@ -132,7 +132,8 @@
   /* Placeholder product cards */
   .fp-card { position: relative; cursor: pointer; }
   .fp-card__media {
-    aspect-ratio: 3/4;
+    /* aspect-ratio is driven by the global Product Card "Image Aspect Ratio"
+       setting via the .product-card__media--{ratio} class (see theme.css) */
     overflow: hidden;
     position: relative;
     display: flex;

@@ -1,0 +1,226 @@
+{%- liquid
+  assign s = section.settings
+  assign fallback = 'https://images.unsplash.com/photo-1485231183945-fffde7cc051e?auto=format&fit=crop&w=1100&q=85'
+  assign img_alt = s.heading_line1 | default: 'Editorial'
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="hno-section hno--{{ s.scheme }}"
+  data-section-id="{{ section.id }}"
+  style="--hno-minh: {{ s.min_height }}vh;"
+>
+  <div class="hno-topbar">
+    {%- if s.meta_left != blank -%}<span>{{ s.meta_left }}</span>{%- endif -%}
+    {%- if s.meta_center != blank -%}<span class="hno-topbar__c">{{ s.meta_center }}</span>{%- endif -%}
+    {%- if s.meta_right != blank -%}<span>{{ s.meta_right }}</span>{%- endif -%}
+  </div>
+
+  <div class="hno-grid">
+    <div class="hno-copy">
+      {%- if s.eyebrow != blank -%}<span class="hno-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+      <h1 class="hno-title">
+        {%- if s.heading_line1 != blank -%}<span class="hno-title__l">{{ s.heading_line1 }}</span>{%- endif -%}
+        {%- if s.heading_line2 != blank -%}<span class="hno-title__l hno-title__l--em"><em>{{ s.heading_line2 }}</em></span>{%- endif -%}
+        {%- if s.heading_line3 != blank -%}<span class="hno-title__l">{{ s.heading_line3 }}</span>{%- endif -%}
+      </h1>
+      {%- if s.description != blank -%}<p class="hno-desc">{{ s.description }}</p>{%- endif -%}
+      <div class="hno-ctas">
+        {%- if s.btn1_label != blank -%}<a href="{{ s.btn1_link | default: '#' }}" class="hno-btn hno-btn--solid">{{ s.btn1_label }}</a>{%- endif -%}
+        {%- if s.btn2_label != blank -%}<a href="{{ s.btn2_link | default: '#' }}" class="hno-btn hno-btn--line">{{ s.btn2_label }} <span aria-hidden="true">&#8599;</span></a>{%- endif -%}
+      </div>
+    </div>
+
+    <div class="hno-media">
+      <div class="hno-media__frame">
+        {%- if s.image != blank -%}
+          {{ s.image | image_url: width: 1100 | image_tag:
+            loading: 'eager', fetchpriority: 'high', class: 'hno-media__img',
+            sizes: '(max-width:900px) 92vw, 46vw', widths: '600,900,1100', alt: img_alt }}
+        {%- else -%}
+          <img class="hno-media__img" src="{{ fallback }}" alt="{{ img_alt | escape }}" loading="eager" fetchpriority="high" />
+        {%- endif -%}
+        {%- if s.tag_label != blank -%}
+          <span class="hno-tag">
+            <span class="hno-tag__dot"></span>{{ s.tag_label }}
+          </span>
+        {%- endif -%}
+        {%- if s.index_label != blank -%}<span class="hno-index">{{ s.index_label }}</span>{%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  {%- if s.ticker != blank -%}
+    <div class="hno-ticker" aria-hidden="true">
+      <div class="hno-ticker__track">
+        {%- for i in (1..6) -%}<span>{{ s.ticker }}</span><span class="hno-ticker__sep">&#9670;</span>{%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+<style>
+  #section-{{ section.id }}.hno--light {
+    --bg:#ECE9E2; --fg:#18181A; --acc:var(--gold,#9A7B43);
+    --mut:rgba(24,24,26,.55); --bdr:rgba(24,24,26,.16);
+    --btn-bg:#18181A; --btn-fg:#ECE9E2;
+  }
+  #section-{{ section.id }}.hno--dark {
+    --bg:#161618; --fg:#ECE9E2; --acc:var(--gold,#C8A96E);
+    --mut:rgba(236,233,226,.52); --bdr:rgba(236,233,226,.16);
+    --btn-bg:#ECE9E2; --btn-fg:#161618;
+  }
+  #section-{{ section.id }}.hno--warm {
+    --bg:#E7DCCB; --fg:#241D15; --acc:var(--gold,#8E4F2A);
+    --mut:rgba(36,29,21,.55); --bdr:rgba(36,29,21,.2);
+    --btn-bg:#241D15; --btn-fg:#E7DCCB;
+  }
+  #section-{{ section.id }}.hno--theme {
+    --bg:var(--background,#161618); --fg:var(--foreground,#ECE9E2); --acc:var(--gold,#C8A96E);
+    --mut:var(--muted,rgba(236,233,226,.52)); --bdr:var(--border,rgba(236,233,226,.16));
+    --btn-bg:var(--gold,#C8A96E); --btn-fg:var(--black,#0A0A0A);
+  }
+
+  #section-{{ section.id }} {
+    position: relative; background: var(--bg); color: var(--fg);
+    min-height: var(--hno-minh, 96vh);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: clamp(86px,11vh,128px) var(--side-padding,5vw) 0;
+    overflow: hidden;
+  }
+
+  #section-{{ section.id }} .hno-topbar {
+    position: absolute; top: clamp(20px,3vh,34px); left: var(--side-padding,5vw); right: var(--side-padding,5vw);
+    display: flex; justify-content: space-between; gap: 16px;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    letter-spacing: .26em; text-transform: uppercase; color: var(--mut);
+    padding-bottom: 16px; border-bottom: 1px solid var(--bdr);
+  }
+  #section-{{ section.id }} .hno-topbar__c { color: var(--acc); }
+
+  #section-{{ section.id }} .hno-grid {
+    display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(28px,5vw,80px);
+    align-items: center; width: 100%; flex: 1;
+    padding: clamp(40px,7vh,90px) 0;
+  }
+
+  #section-{{ section.id }} .hno-eyebrow {
+    display: inline-block; font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 11px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--acc); margin-bottom: clamp(20px,3vh,30px);
+    animation: hnoUp{{ section.id }} .7s .05s both;
+  }
+  #section-{{ section.id }} .hno-title {
+    font-family: var(--ff-display,'Cormorant Garamond',serif); font-weight: 300;
+    font-size: calc(clamp(48px,7.4vw,120px) * var(--heading-scale,1));
+    line-height: .9; letter-spacing: .005em; text-transform: uppercase; margin: 0;
+  }
+  #section-{{ section.id }} .hno-title__l { display: block; animation: hnoUp{{ section.id }} .9s both; }
+  #section-{{ section.id }} .hno-title__l:nth-child(1){ animation-delay:.12s; }
+  #section-{{ section.id }} .hno-title__l:nth-child(2){ animation-delay:.22s; }
+  #section-{{ section.id }} .hno-title__l:nth-child(3){ animation-delay:.32s; }
+  #section-{{ section.id }} .hno-title__l--em { color: var(--acc); padding-left: clamp(20px,4vw,90px); }
+  #section-{{ section.id }} .hno-title__l--em em { font-style: italic; }
+
+  #section-{{ section.id }} .hno-desc {
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: clamp(14px,1.05vw,16px);
+    line-height: 1.75; color: var(--mut); max-width: 430px;
+    margin: clamp(26px,4vh,40px) 0 0; animation: hnoUp{{ section.id }} .9s .45s both;
+  }
+  #section-{{ section.id }} .hno-ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; animation: hnoUp{{ section.id }} .9s .55s both; }
+  #section-{{ section.id }} .hno-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500;
+    letter-spacing: .16em; text-transform: uppercase; padding: 15px 30px; text-decoration: none;
+    transition: transform .22s, background .22s, color .22s, border-color .22s;
+  }
+  #section-{{ section.id }} .hno-btn--solid { background: var(--btn-bg); color: var(--btn-fg); }
+  #section-{{ section.id }} .hno-btn--solid:hover { transform: translateY(-2px); }
+  #section-{{ section.id }} .hno-btn--line { border: 1px solid var(--bdr); color: var(--fg); }
+  #section-{{ section.id }} .hno-btn--line:hover { background: var(--btn-bg); color: var(--btn-fg); border-color: var(--btn-bg); }
+
+  #section-{{ section.id }} .hno-media { position: relative; animation: hnoFade{{ section.id }} 1.1s .2s both; }
+  #section-{{ section.id }} .hno-media__frame {
+    position: relative; aspect-ratio: 4/5; overflow: hidden;
+    background: var(--bdr); margin-left: auto; width: 100%;
+  }
+  #section-{{ section.id }} .hno-media__img { width: 100%; height: 100%; object-fit: cover; display: block; animation: hnoKen{{ section.id }} 16s ease-out forwards; }
+  #section-{{ section.id }} .hno-tag {
+    position: absolute; left: 16px; bottom: 16px; z-index: 2;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--bg); color: var(--fg); padding: 9px 14px;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    letter-spacing: .2em; text-transform: uppercase;
+  }
+  #section-{{ section.id }} .hno-tag__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--acc); }
+  #section-{{ section.id }} .hno-index {
+    position: absolute; top: 14px; right: 16px; z-index: 2;
+    font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: clamp(34px,4vw,60px);
+    line-height: 1; color: var(--bg); mix-blend-mode: difference; opacity: .9;
+  }
+
+  #section-{{ section.id }} .hno-ticker {
+    position: relative; overflow: hidden; border-top: 1px solid var(--bdr);
+    margin: 0 calc(-1 * var(--side-padding,5vw)); padding: 16px 0;
+  }
+  #section-{{ section.id }} .hno-ticker__track { display: inline-flex; align-items: center; white-space: nowrap; animation: hnoMarq{{ section.id }} 26s linear infinite; }
+  #section-{{ section.id }} .hno-ticker__track span {
+    font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: clamp(20px,2.4vw,34px);
+    font-weight: 300; text-transform: uppercase; letter-spacing: .04em; padding: 0 24px; color: var(--fg);
+  }
+  #section-{{ section.id }} .hno-ticker__sep { color: var(--acc) !important; font-size: 14px !important; }
+
+  @keyframes hnoUp{{ section.id }}   { from { opacity:0; transform: translateY(26px);} to { opacity:1; transform:none; } }
+  @keyframes hnoFade{{ section.id }} { from { opacity:0; transform: scale(1.02);} to { opacity:1; transform:none; } }
+  @keyframes hnoKen{{ section.id }}  { from { transform: scale(1.08);} to { transform: scale(1);} }
+  @keyframes hnoMarq{{ section.id }} { from { transform: translateX(0);} to { transform: translateX(-50%);} }
+
+  @media (max-width: 860px) {
+    #section-{{ section.id }} .hno-grid { grid-template-columns: 1fr; gap: 32px; }
+    #section-{{ section.id }} .hno-media { order: -1; }
+    #section-{{ section.id }} .hno-media__frame { aspect-ratio: 3/4; max-height: 56vh; }
+    #section-{{ section.id }} .hno-title__l--em { padding-left: 0; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Noir",
+  "tag": "section",
+  "class": "section-hero-noir",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (bone)" },
+        { "value": "dark",  "label": "Dark (graphite)" },
+        { "value": "warm",  "label": "Warm (sand)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "dark"
+    },
+    { "type": "range", "id": "min_height", "label": "Minimum height", "min": 70, "max": 100, "step": 5, "unit": "vh", "default": 96 },
+    { "type": "image_picker", "id": "image", "label": "Hero image (right)" },
+    { "type": "header", "content": "Top bar" },
+    { "type": "text", "id": "meta_left",   "label": "Top-left label",   "default": "Maison Noir" },
+    { "type": "text", "id": "meta_center", "label": "Top-center label", "default": "Collection Nº 04" },
+    { "type": "text", "id": "meta_right",  "label": "Top-right label",  "default": "Autumn / Winter 2025" },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Noir Edit" },
+    { "type": "text", "id": "heading_line1", "label": "Headline line 1", "default": "Form" },
+    { "type": "text", "id": "heading_line2", "label": "Headline line 2 (accent, italic)", "default": "Meets" },
+    { "type": "text", "id": "heading_line3", "label": "Headline line 3", "default": "Function" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Sharp tailoring and uncompromising lines. A modern wardrobe built on contrast — architectural, deliberate, and quietly powerful." },
+    { "type": "text", "id": "btn1_label", "label": "Primary button", "default": "Shop the Collection" },
+    { "type": "url",  "id": "btn1_link",  "label": "Primary button link" },
+    { "type": "text", "id": "btn2_label", "label": "Secondary button", "default": "View Lookbook" },
+    { "type": "url",  "id": "btn2_link",  "label": "Secondary button link" },
+    { "type": "header", "content": "Image overlays" },
+    { "type": "text", "id": "tag_label",   "label": "Floating tag", "default": "New Arrivals" },
+    { "type": "text", "id": "index_label", "label": "Index number", "default": "04" },
+    { "type": "header", "content": "Bottom ticker" },
+    { "type": "text", "id": "ticker", "label": "Ticker phrase", "default": "Made to Last" }
+  ],
+  "presets": [ { "name": "Hero Noir" } ]
+}
+{% endschema %}

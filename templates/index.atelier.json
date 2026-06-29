@@ -1,10 +1,19 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "hero-editorial",
       "settings": {
-        "scheme": "light",
-        "min_height": 95,
+        "scheme": "warm",
+        "min_height": 100,
         "eyebrow": "The Atelier Collection",
         "heading_top": "Wear The",
         "heading_accent": "Moment",
@@ -20,14 +29,63 @@
     "arches": {
       "type": "collection-arches",
       "blocks": {
-        "c1": { "type": "card", "settings": { "label": "Ready-to-Wear", "sub": "42 pieces", "url": "/collections/women" } },
-        "c2": { "type": "card", "settings": { "label": "Dresses", "sub": "36 pieces", "url": "/collections/dresses" } },
-        "c3": { "type": "card", "settings": { "label": "Knitwear", "sub": "28 pieces", "url": "/collections/all" } },
-        "c4": { "type": "card", "settings": { "label": "Leather Goods", "sub": "19 pieces", "url": "/collections/accessories" } },
-        "c5": { "type": "card", "settings": { "label": "Eyewear", "sub": "14 pieces", "url": "/collections/accessories" } },
-        "c6": { "type": "card", "settings": { "label": "Footwear", "sub": "23 pieces", "url": "/collections/all" } }
+        "c1": {
+          "type": "card",
+          "settings": {
+            "label": "Ready-to-Wear",
+            "sub": "42 pieces",
+            "url": "/collections/women"
+          }
+        },
+        "c2": {
+          "type": "card",
+          "settings": {
+            "label": "Dresses",
+            "sub": "36 pieces",
+            "url": "/collections/dresses"
+          }
+        },
+        "c3": {
+          "type": "card",
+          "settings": {
+            "label": "Knitwear",
+            "sub": "28 pieces",
+            "url": "/collections/all"
+          }
+        },
+        "c4": {
+          "type": "card",
+          "settings": {
+            "label": "Leather Goods",
+            "sub": "19 pieces",
+            "url": "/collections/accessories"
+          }
+        },
+        "c5": {
+          "type": "card",
+          "settings": {
+            "label": "Eyewear",
+            "sub": "14 pieces",
+            "url": "/collections/accessories"
+          }
+        },
+        "c6": {
+          "type": "card",
+          "settings": {
+            "label": "Footwear",
+            "sub": "23 pieces",
+            "url": "/collections/all"
+          }
+        }
       },
-      "block_order": ["c1", "c2", "c3", "c4", "c5", "c6"],
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6"
+      ],
       "settings": {
         "scheme": "warm",
         "eyebrow": "Shop by Category",
@@ -37,7 +95,7 @@
     "statement": {
       "type": "statement-inline",
       "settings": {
-        "scheme": "light",
+        "scheme": "warm",
         "eyebrow": "The Philosophy",
         "text": "Considered pieces | crafted by hand | for the life | you actually live.",
         "cta_label": "About the Maison",
@@ -47,7 +105,7 @@
     "duo": {
       "type": "duo-spotlight",
       "settings": {
-        "scheme": "light",
+        "scheme": "dark",
         "label_left": "For Her",
         "url_left": "/collections/women",
         "label_right": "For Him",
@@ -69,21 +127,58 @@
         "speed": 30,
         "padding": 16,
         "pause_on_hover": true,
-        "bg_color": "#A4552F",
-        "text_color": "#F4EFE6"
+        "bg_color": "#a4552f",
+        "text_color": "#f4efe6"
       }
     },
     "runway": {
       "type": "runway-strip",
       "blocks": {
-        "l1": { "type": "look", "settings": { "caption": "Wool overcoat, camel" } },
-        "l2": { "type": "look", "settings": { "caption": "Slip dress, bone silk" } },
-        "l3": { "type": "look", "settings": { "caption": "Boxy blazer, pinstripe" } },
-        "l4": { "type": "look", "settings": { "caption": "Oversized shades, tort" } },
-        "l5": { "type": "look", "settings": { "caption": "Leather jacket, espresso" } },
-        "l6": { "type": "look", "settings": { "caption": "Street tailoring, sand" } }
+        "l1": {
+          "type": "look",
+          "settings": {
+            "caption": "Wool overcoat, camel"
+          }
+        },
+        "l2": {
+          "type": "look",
+          "settings": {
+            "caption": "Slip dress, bone silk"
+          }
+        },
+        "l3": {
+          "type": "look",
+          "settings": {
+            "caption": "Boxy blazer, pinstripe"
+          }
+        },
+        "l4": {
+          "type": "look",
+          "settings": {
+            "caption": "Oversized shades, tort"
+          }
+        },
+        "l5": {
+          "type": "look",
+          "settings": {
+            "caption": "Leather jacket, espresso"
+          }
+        },
+        "l6": {
+          "type": "look",
+          "settings": {
+            "caption": "Street tailoring, sand"
+          }
+        }
       },
-      "block_order": ["l1", "l2", "l3", "l4", "l5", "l6"],
+      "block_order": [
+        "l1",
+        "l2",
+        "l3",
+        "l4",
+        "l5",
+        "l6"
+      ],
       "settings": {
         "scheme": "dark",
         "eyebrow": "Straight from the Runway",
@@ -119,19 +214,57 @@
     "social": {
       "type": "social-gallery",
       "blocks": {
-        "t1": { "type": "tile", "settings": {} },
-        "t2": { "type": "tile", "settings": {} },
-        "t3": { "type": "tile", "settings": {} },
-        "t4": { "type": "tile", "settings": {} },
-        "t5": { "type": "tile", "settings": {} },
-        "t6": { "type": "tile", "settings": {} }
+        "t1": {
+          "type": "tile",
+          "settings": {
+            "url": ""
+          }
+        },
+        "t2": {
+          "type": "tile",
+          "settings": {
+            "url": ""
+          }
+        },
+        "t3": {
+          "type": "tile",
+          "settings": {
+            "url": ""
+          }
+        },
+        "t4": {
+          "type": "tile",
+          "settings": {
+            "url": ""
+          }
+        },
+        "t5": {
+          "type": "tile",
+          "settings": {
+            "url": ""
+          }
+        },
+        "t6": {
+          "type": "tile",
+          "settings": {
+            "url": ""
+          }
+        }
       },
-      "block_order": ["t1", "t2", "t3", "t4", "t5", "t6"],
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
       "settings": {
         "scheme": "light",
         "eyebrow": "@maisonnoir",
         "heading": "As Worn by You",
-        "btn_label": "Follow on Instagram"
+        "btn_label": "Follow on Instagram",
+        "btn_url": ""
       }
     },
     "newsletter": {
@@ -150,5 +283,16 @@
       }
     }
   },
-  "order": ["hero", "arches", "statement", "duo", "marquee", "runway", "rail", "quote", "social", "newsletter"]
+  "order": [
+    "hero",
+    "arches",
+    "statement",
+    "duo",
+    "marquee",
+    "runway",
+    "rail",
+    "quote",
+    "social",
+    "newsletter"
+  ]
 }

@@ -1,0 +1,110 @@
+{%- liquid
+  assign s = section.settings
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="mfo-section mfo--{{ s.scheme }}"
+  data-section-id="{{ section.id }}"
+>
+  {%- if s.marquee_word != blank -%}
+    <div class="mfo-band" aria-hidden="true">
+      <div class="mfo-band__track">
+        {%- for i in (1..8) -%}<span>{{ s.marquee_word }}</span><span class="mfo-band__dot">&#9670;</span>{%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="mfo-inner reveal">
+    {%- if s.eyebrow != blank -%}<span class="mfo-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+    {%- if s.statement != blank -%}
+      <p class="mfo-statement">{{ s.statement }}</p>
+    {%- endif -%}
+    {%- if s.signature != blank -%}<span class="mfo-sign">{{ s.signature }}</span>{%- endif -%}
+    {%- if s.btn_label != blank -%}
+      <a href="{{ s.btn_link | default: '#' }}" class="mfo-btn">{{ s.btn_label }}</a>
+    {%- endif -%}
+  </div>
+
+  {%- if s.marquee_word != blank -%}
+    <div class="mfo-band mfo-band--rev" aria-hidden="true">
+      <div class="mfo-band__track mfo-band__track--rev">
+        {%- for i in (1..8) -%}<span>{{ s.marquee_word_2 | default: s.marquee_word }}</span><span class="mfo-band__dot">&#9670;</span>{%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+<style>
+  #section-{{ section.id }}.mfo--light { --bg:#ECE9E2; --fg:#18181A; --acc:var(--gold,#9A7B43); --mut:rgba(24,24,26,.5); --bdr:rgba(24,24,26,.12); }
+  #section-{{ section.id }}.mfo--dark  { --bg:#161618; --fg:#ECE9E2; --acc:var(--gold,#C8A96E); --mut:rgba(236,233,226,.5); --bdr:rgba(236,233,226,.12); }
+  #section-{{ section.id }}.mfo--warm  { --bg:#E7DCCB; --fg:#241D15; --acc:var(--gold,#8E4F2A); --mut:rgba(36,29,21,.5); --bdr:rgba(36,29,21,.16); }
+  #section-{{ section.id }}.mfo--theme { --bg:var(--background,#161618); --fg:var(--foreground,#ECE9E2); --acc:var(--gold,#C8A96E); --mut:var(--muted,rgba(236,233,226,.5)); --bdr:var(--border,rgba(236,233,226,.12)); }
+
+  #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: clamp(64px,9vh,120px) 0; overflow: hidden; }
+
+  #section-{{ section.id }} .mfo-band { overflow: hidden; border-top: 1px solid var(--bdr); border-bottom: 1px solid var(--bdr); padding: 14px 0; }
+  #section-{{ section.id }} .mfo-band__track { display: inline-flex; align-items: center; white-space: nowrap; animation: mfoMarq{{ section.id }} 30s linear infinite; }
+  #section-{{ section.id }} .mfo-band__track--rev { animation-direction: reverse; }
+  #section-{{ section.id }} .mfo-band__track span { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: clamp(22px,2.8vw,40px); font-weight: 300; text-transform: uppercase; letter-spacing: .05em; padding: 0 22px; color: var(--fg); opacity: .55; }
+  #section-{{ section.id }} .mfo-band__dot { color: var(--acc) !important; font-size: 13px !important; opacity: 1 !important; }
+
+  #section-{{ section.id }} .mfo-inner { max-width: 1040px; margin: 0 auto; text-align: center; padding: clamp(48px,8vh,96px) var(--side-padding,5vw); }
+  #section-{{ section.id }} .mfo-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--acc); margin-bottom: clamp(24px,4vh,40px); }
+  #section-{{ section.id }} .mfo-statement { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(28px,4.2vw,58px) * var(--heading-scale,1)); font-weight: 300; line-height: 1.18; letter-spacing: .005em; margin: 0; }
+  #section-{{ section.id }} .mfo-statement em { font-style: italic; color: var(--acc); }
+  #section-{{ section.id }} .mfo-sign { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--mut); margin-top: clamp(26px,4vh,40px); }
+  #section-{{ section.id }} .mfo-btn { display: inline-block; margin-top: 30px; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--bg); background: var(--acc); padding: 15px 34px; text-decoration: none; border-radius: 2px; transition: transform .22s; }
+  #section-{{ section.id }} .mfo-btn:hover { transform: translateY(-2px); }
+
+  #section-{{ section.id }} .reveal.reveal-armed { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s ease; }
+  #section-{{ section.id }} .reveal.is-visible { opacity: 1; transform: none; }
+
+  @keyframes mfoMarq{{ section.id }} { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+</style>
+
+<script>
+(function(){
+  var SEC='{{ section.id }}';
+  function arm(root){
+    var els=root.querySelectorAll('.reveal');
+    els.forEach(function(el){el.classList.add('reveal-armed');});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target);}});},{threshold:.2});
+    els.forEach(function(el){io.observe(el);});
+    setTimeout(function(){els.forEach(function(el){el.classList.add('is-visible');});},800);
+  }
+  function root(){return document.getElementById('section-'+SEC);}
+  document.addEventListener('DOMContentLoaded',function(){var r=root();if(r)arm(r);});
+  document.addEventListener('shopify:section:load',function(e){if(e.detail.sectionId!==SEC)return;var r=root();if(r){arm(r);r.querySelectorAll('.reveal').forEach(function(el){el.classList.add('is-visible');});}});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Manifesto",
+  "tag": "section",
+  "class": "section-manifesto",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (bone)" },
+        { "value": "dark",  "label": "Dark (graphite)" },
+        { "value": "warm",  "label": "Warm (sand)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "dark"
+    },
+    { "type": "header", "content": "Marquee bands" },
+    { "type": "text", "id": "marquee_word",   "label": "Top band phrase",    "default": "Maison Noir" },
+    { "type": "text", "id": "marquee_word_2", "label": "Bottom band phrase",  "default": "Modern Tailoring" },
+    { "type": "header", "content": "Statement" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Our Philosophy" },
+    { "type": "richtext", "id": "statement", "label": "Statement", "default": "<p>We design for the people who notice the <em>details</em> — the weight of a fabric, the fall of a hem, the quiet confidence of clothes built to last.</p>" },
+    { "type": "text", "id": "signature", "label": "Signature line", "default": "— The Maison Noir Atelier" },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Read Our Story" },
+    { "type": "url",  "id": "btn_link",  "label": "Button link" }
+  ],
+  "presets": [ { "name": "Manifesto" } ]
+}
+{% endschema %}

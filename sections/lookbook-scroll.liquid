@@ -1,0 +1,167 @@
+{%- liquid
+  assign s = section.settings
+  assign fallbacks = 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1000&q=85|https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=85|https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1000&q=85|https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=85|https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1000&q=85' | split: '|'
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="lbs-section lbs--{{ s.scheme }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="lbs-head">
+    <div>
+      {%- if s.eyebrow != blank -%}<span class="lbs-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="lbs-heading">{{ s.heading }}</h2>{%- endif -%}
+    </div>
+    <div class="lbs-nav">
+      <span class="lbs-hint">{{ s.hint | default: 'Drag / scroll' }}</span>
+      <button type="button" class="lbs-arrow" data-lbs-prev aria-label="Previous">
+        <svg width="20" height="10" viewBox="0 0 22 10" fill="none"><path d="M21 5H2M6 1L2 5l4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" class="lbs-arrow" data-lbs-next aria-label="Next">
+        <svg width="20" height="10" viewBox="0 0 22 10" fill="none"><path d="M1 5h19M16 1l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="lbs-track" data-lbs-track>
+    {%- for block in section.blocks -%}
+      {%- assign fb = fallbacks[forloop.index0] | default: fallbacks[0] -%}
+      {%- assign img = block.settings.image -%}
+      <article class="lbs-frame{% if block.settings.tall %} lbs-frame--tall{% endif %}" {{ block.shopify_attributes }}>
+        <a href="{{ block.settings.link | default: '/collections/all' }}" class="lbs-frame__media">
+          {%- if img != blank -%}
+            {{ img | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'lbs-frame__img', widths: '500,750,1000', alt: block.settings.title }}
+          {%- else -%}
+            <img class="lbs-frame__img" src="{{ fb }}" alt="{{ block.settings.title | escape }}" loading="lazy" />
+          {%- endif -%}
+          <span class="lbs-frame__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+        </a>
+        <div class="lbs-frame__cap">
+          {%- if block.settings.kicker != blank -%}<span class="lbs-frame__kicker">{{ block.settings.kicker }}</span>{%- endif -%}
+          {%- if block.settings.title != blank -%}<span class="lbs-frame__title">{{ block.settings.title }}</span>{%- endif -%}
+          {%- if block.settings.link_label != blank -%}<a href="{{ block.settings.link | default: '/collections/all' }}" class="lbs-frame__link">{{ block.settings.link_label }} <span aria-hidden="true">&#8594;</span></a>{%- endif -%}
+        </div>
+      </article>
+    {%- else -%}
+      {%- assign demo_titles = 'The Overcoat,Soft Tailoring,Evening Edit,Knit Stories,Leather Goods' | split: ',' -%}
+      {%- assign demo_kick = 'Look 01,Look 02,Look 03,Look 04,Look 05' | split: ',' -%}
+      {%- for i in (0..4) -%}
+        <article class="lbs-frame{% if forloop.index0 == 1 or forloop.index0 == 3 %} lbs-frame--tall{% endif %}">
+          <a href="/collections/all" class="lbs-frame__media">
+            <img class="lbs-frame__img" src="{{ fallbacks[i] }}" alt="{{ demo_titles[i] }}" loading="lazy" />
+            <span class="lbs-frame__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          </a>
+          <div class="lbs-frame__cap">
+            <span class="lbs-frame__kicker">{{ demo_kick[i] }}</span>
+            <span class="lbs-frame__title">{{ demo_titles[i] }}</span>
+            <a href="/collections/all" class="lbs-frame__link">Shop the look <span aria-hidden="true">&#8594;</span></a>
+          </div>
+        </article>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }}.lbs--light { --bg:#ECE9E2; --fg:#18181A; --acc:var(--gold,#9A7B43); --mut:rgba(24,24,26,.55); --bdr:rgba(24,24,26,.16); }
+  #section-{{ section.id }}.lbs--dark  { --bg:#161618; --fg:#ECE9E2; --acc:var(--gold,#C8A96E); --mut:rgba(236,233,226,.52); --bdr:rgba(236,233,226,.16); }
+  #section-{{ section.id }}.lbs--warm  { --bg:#E7DCCB; --fg:#241D15; --acc:var(--gold,#8E4F2A); --mut:rgba(36,29,21,.55); --bdr:rgba(36,29,21,.2); }
+  #section-{{ section.id }}.lbs--theme { --bg:var(--background,#161618); --fg:var(--foreground,#ECE9E2); --acc:var(--gold,#C8A96E); --mut:var(--muted,rgba(236,233,226,.52)); --bdr:var(--border,rgba(236,233,226,.16)); }
+
+  #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: var(--section-spacing,80px) 0; overflow: hidden; }
+  #section-{{ section.id }} .lbs-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: 0 var(--side-padding,5vw); margin-bottom: clamp(30px,4vw,48px); }
+  #section-{{ section.id }} .lbs-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase; color: var(--acc); margin-bottom: 13px; }
+  #section-{{ section.id }} .lbs-heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(32px,4.4vw,62px) * var(--heading-scale,1)); font-weight: 300; line-height: 1.02; text-transform: uppercase; margin: 0; }
+  #section-{{ section.id }} .lbs-nav { display: flex; align-items: center; gap: 12px; }
+  #section-{{ section.id }} .lbs-hint { font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--mut); margin-right: 6px; }
+  #section-{{ section.id }} .lbs-arrow { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--bdr); background: transparent; color: var(--fg); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background .25s, color .25s, border-color .25s; }
+  #section-{{ section.id }} .lbs-arrow:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+
+  #section-{{ section.id }} .lbs-track { display: flex; gap: clamp(16px,2vw,30px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 0 var(--side-padding,5vw) 10px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  #section-{{ section.id }} .lbs-track::-webkit-scrollbar { display: none; }
+
+  #section-{{ section.id }} .lbs-frame { flex: 0 0 auto; width: clamp(280px,32vw,420px); scroll-snap-align: start; }
+  #section-{{ section.id }} .lbs-frame--tall { align-self: flex-start; }
+  #section-{{ section.id }} .lbs-frame__media { position: relative; display: block; aspect-ratio: 3/4; overflow: hidden; background: var(--bdr); }
+  #section-{{ section.id }} .lbs-frame--tall .lbs-frame__media { aspect-ratio: 2/3; }
+  #section-{{ section.id }} .lbs-frame__img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .8s cubic-bezier(.2,0,.2,1); }
+  #section-{{ section.id }} .lbs-frame:hover .lbs-frame__img { transform: scale(1.04); }
+  #section-{{ section.id }} .lbs-frame__num { position: absolute; top: 12px; left: 14px; z-index: 2; font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: clamp(22px,2vw,34px); color: rgba(255,255,255,.9); text-shadow: 0 1px 10px rgba(0,0,0,.4); }
+  #section-{{ section.id }} .lbs-frame__cap { padding: 16px 2px 0; }
+  #section-{{ section.id }} .lbs-frame__kicker { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--acc); margin-bottom: 7px; }
+  #section-{{ section.id }} .lbs-frame__title { display: block; font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: clamp(19px,1.6vw,26px); font-weight: 400; line-height: 1.1; }
+  #section-{{ section.id }} .lbs-frame__link { display: inline-flex; align-items: center; gap: 7px; margin-top: 10px; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--mut); text-decoration: none; transition: color .2s; }
+  #section-{{ section.id }} .lbs-frame__link:hover { color: var(--acc); }
+
+  @media (max-width: 700px) {
+    #section-{{ section.id }} .lbs-nav .lbs-arrow { display: none; }
+    #section-{{ section.id }} .lbs-frame { width: 74vw; }
+  }
+</style>
+
+<script>
+(function(){
+  var SEC='{{ section.id }}';
+  function initNav(root){
+    var track=root.querySelector('[data-lbs-track]'); if(!track)return;
+    var step=Math.round(track.clientWidth*0.7);
+    var prev=root.querySelector('[data-lbs-prev]'), next=root.querySelector('[data-lbs-next]');
+    if(prev)prev.addEventListener('click',function(){track.scrollBy({left:-step,behavior:'smooth'});});
+    if(next)next.addEventListener('click',function(){track.scrollBy({left:step,behavior:'smooth'});});
+  }
+  function root(){return document.getElementById('section-'+SEC);}
+  document.addEventListener('DOMContentLoaded',function(){var r=root();if(r)initNav(r);});
+  document.addEventListener('shopify:section:load',function(e){if(e.detail.sectionId!==SEC)return;var r=root();if(r)initNav(r);});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Lookbook Scroll",
+  "tag": "section",
+  "class": "section-lookbook-scroll",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (bone)" },
+        { "value": "dark",  "label": "Dark (graphite)" },
+        { "value": "warm",  "label": "Warm (sand)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "dark"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Lookbook" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "AW25 In Motion" },
+    { "type": "text", "id": "hint", "label": "Scroll hint", "default": "Drag / scroll" }
+  ],
+  "blocks": [
+    {
+      "type": "frame",
+      "name": "Lookbook frame",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "kicker", "label": "Kicker", "default": "Look 01" },
+        { "type": "text", "id": "title", "label": "Title", "default": "The Overcoat" },
+        { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop the look" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "checkbox", "id": "tall", "label": "Taller frame", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lookbook Scroll",
+      "blocks": [
+        { "type": "frame", "settings": { "kicker": "Look 01", "title": "The Overcoat" } },
+        { "type": "frame", "settings": { "kicker": "Look 02", "title": "Soft Tailoring", "tall": true } },
+        { "type": "frame", "settings": { "kicker": "Look 03", "title": "Evening Edit" } },
+        { "type": "frame", "settings": { "kicker": "Look 04", "title": "Knit Stories", "tall": true } },
+        { "type": "frame", "settings": { "kicker": "Look 05", "title": "Leather Goods" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

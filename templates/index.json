@@ -13,7 +13,7 @@
       "type": "hero-noir",
       "settings": {
         "scheme": "dark",
-        "min_height": 96,
+        "min_height": 95,
         "meta_left": "Maison Noir",
         "meta_center": "Collection Nº 04",
         "meta_right": "Autumn / Winter 2025",
@@ -69,7 +69,7 @@
         "heading": "Defining Pieces",
         "note": "Investment essentials, cut from the season's finest materials.",
         "products_to_show": 8,
-        "columns": 4,
+        "columns": "4",
         "cta_label": "Shop All",
         "cta_url": "/collections/all"
       }

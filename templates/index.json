@@ -13,9 +13,7 @@
       "type": "hero-noir",
       "settings": {
         "scheme": "dark",
-        "min_height": 95,
-        "meta_left": "Maison Noir",
-        "meta_center": "Collection Nº 04",
+        "meta_left": "Collection Nº 04",
         "meta_right": "Autumn / Winter 2025",
         "eyebrow": "The Noir Edit",
         "heading_line1": "Form",
@@ -26,6 +24,8 @@
         "btn1_link": "/collections/all",
         "btn2_label": "View Lookbook",
         "btn2_link": "/collections/all",
+        "scroll_label": "Scroll",
+        "watermark": "Noir",
         "tag_label": "New Arrivals",
         "index_label": "04",
         "ticker": "Made to Last"

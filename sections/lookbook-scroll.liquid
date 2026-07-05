@@ -61,6 +61,8 @@
       {%- endfor -%}
     {%- endfor -%}
   </div>
+
+  <div class="lbs-progress" aria-hidden="true"><span class="lbs-progress__bar" data-lbs-progress></span></div>
 </section>
 
 <style>
@@ -78,8 +80,14 @@
   #section-{{ section.id }} .lbs-arrow { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--bdr); background: transparent; color: var(--fg); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background .25s, color .25s, border-color .25s; }
   #section-{{ section.id }} .lbs-arrow:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 
-  #section-{{ section.id }} .lbs-track { display: flex; gap: clamp(16px,2vw,30px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 0 var(--side-padding,5vw) 10px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  #section-{{ section.id }} .lbs-track { display: flex; gap: clamp(16px,2vw,30px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 0 var(--side-padding,5vw) 10px; -webkit-overflow-scrolling: touch; scrollbar-width: none; cursor: grab; }
+  #section-{{ section.id }} .lbs-track.is-dragging { cursor: grabbing; scroll-snap-type: none; scroll-behavior: auto; }
+  #section-{{ section.id }} .lbs-track.is-dragging .lbs-frame__media { pointer-events: none; }
   #section-{{ section.id }} .lbs-track::-webkit-scrollbar { display: none; }
+
+  /* Scroll progress bar — makes it obvious there is more to the side */
+  #section-{{ section.id }} .lbs-progress { margin: clamp(18px,2.4vw,28px) var(--side-padding,5vw) 0; height: 2px; background: var(--bdr); position: relative; overflow: hidden; }
+  #section-{{ section.id }} .lbs-progress__bar { position: absolute; top: 0; left: 0; bottom: 0; width: 100%; background: var(--acc); transform-origin: left; transform: scaleX(.15); transition: transform .15s linear; }
 
   #section-{{ section.id }} .lbs-frame { flex: 0 0 auto; width: clamp(280px,32vw,420px); scroll-snap-align: start; }
   #section-{{ section.id }} .lbs-frame--tall { align-self: flex-start; }
@@ -95,7 +103,9 @@
   #section-{{ section.id }} .lbs-frame__link:hover { color: var(--acc); }
 
   @media (max-width: 700px) {
-    #section-{{ section.id }} .lbs-nav .lbs-arrow { display: none; }
+    /* arrows stay visible on mobile — smaller, but always there */
+    #section-{{ section.id }} .lbs-arrow { width: 42px; height: 42px; }
+    #section-{{ section.id }} .lbs-hint { display: none; }
     #section-{{ section.id }} .lbs-frame { width: 74vw; }
   }
 </style>
@@ -109,6 +119,38 @@
     var prev=root.querySelector('[data-lbs-prev]'), next=root.querySelector('[data-lbs-next]');
     if(prev)prev.addEventListener('click',function(){track.scrollBy({left:-step,behavior:'smooth'});});
     if(next)next.addEventListener('click',function(){track.scrollBy({left:step,behavior:'smooth'});});
+
+    // progress bar
+    var bar=root.querySelector('[data-lbs-progress]');
+    function paint(){
+      if(!bar)return;
+      var max=track.scrollWidth-track.clientWidth;
+      var ratio=max>0 ? Math.min(1, Math.max(0.12, track.scrollLeft/max)) : 1;
+      bar.style.transform='scaleX('+ratio+')';
+    }
+    paint();
+    track.addEventListener('scroll',paint,{passive:true});
+    window.addEventListener('resize',paint);
+
+    // grab-to-drag on desktop pointers
+    var down=false,startX=0,startL=0,moved=false;
+    track.addEventListener('pointerdown',function(e){
+      if(e.pointerType!=='mouse')return;
+      down=true;moved=false;startX=e.clientX;startL=track.scrollLeft;
+      track.classList.add('is-dragging');
+    });
+    window.addEventListener('pointermove',function(e){
+      if(!down)return;
+      var dx=e.clientX-startX;
+      if(Math.abs(dx)>4)moved=true;
+      track.scrollLeft=startL-dx;
+    });
+    window.addEventListener('pointerup',function(){
+      if(!down)return;
+      down=false;track.classList.remove('is-dragging');
+    });
+    // swallow the click after a real drag so links don't fire
+    track.addEventListener('click',function(e){ if(moved){e.preventDefault();e.stopPropagation();moved=false;} },true);
   }
   function root(){return document.getElementById('section-'+SEC);}
   document.addEventListener('DOMContentLoaded',function(){var r=root();if(r)initNav(r);});

@@ -26,6 +26,16 @@
   ——————————————————————————{%- endcomment -%}
   {%- if header_style == 'v1' -%}
 
+    <button
+      class="header-icon-btn header-burger--mobile"
+      data-open-mobile-menu
+      aria-label="{{ 'accessibility.open_nav' | t }}"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      {%- render 'icon-menu' -%}
+    </button>
+
     {%- render 'header-logo', logo: logo, logo_width: logo_width, logo_text: logo_text -%}
 
     <nav class="site-nav" aria-label="{{ 'accessibility.menu' | t }}">
@@ -75,6 +85,16 @@
     STYLE V2: Split nav | Centered Logo | Split nav
   ——————————————————————————{%- endcomment -%}
   {%- elsif header_style == 'v2' -%}
+
+    <button
+      class="header-icon-btn header-burger--mobile"
+      data-open-mobile-menu
+      aria-label="{{ 'accessibility.open_nav' | t }}"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      {%- render 'icon-menu' -%}
+    </button>
 
     {%- assign links_left  = linklists[menu_handle].links | slice: 0, 2 -%}
     {%- assign links_right = linklists[menu_handle].links | slice: 2, 4 -%}

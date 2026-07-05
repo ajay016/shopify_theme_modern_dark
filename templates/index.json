@@ -10,289 +10,113 @@
 {
   "sections": {
     "hero": {
-      "type": "hero-editorial",
-      "settings": {
-        "scheme": "warm",
-        "min_height": 100,
-        "eyebrow": "The Atelier Collection",
-        "heading_top": "Wear The",
-        "heading_accent": "Moment",
-        "description": "A study in warm minimalism — fluid tailoring and artisanal fabrics for the season in between.",
-        "meta_left": "Nº 03 — Atelier Issue",
-        "meta_right": "Autumn / Winter 2025",
-        "btn1_label": "Shop the Collection",
-        "btn1_link": "/collections/all",
-        "btn2_label": "Discover the Story",
-        "btn2_link": "/pages/about"
-      }
-    },
-    "arches": {
-      "type": "collection-arches",
-      "blocks": {
-        "c1": {
-          "type": "card",
-          "settings": {
-            "label": "Ready-to-Wear",
-            "sub": "42 pieces",
-            "url": "/collections/women"
-          }
-        },
-        "c2": {
-          "type": "card",
-          "settings": {
-            "label": "Dresses",
-            "sub": "36 pieces",
-            "url": "/collections/dresses"
-          }
-        },
-        "c3": {
-          "type": "card",
-          "settings": {
-            "label": "Knitwear",
-            "sub": "28 pieces",
-            "url": "/collections/all"
-          }
-        },
-        "c4": {
-          "type": "card",
-          "settings": {
-            "label": "Leather Goods",
-            "sub": "19 pieces",
-            "url": "/collections/accessories"
-          }
-        },
-        "c5": {
-          "type": "card",
-          "settings": {
-            "label": "Eyewear",
-            "sub": "14 pieces",
-            "url": "/collections/accessories"
-          }
-        },
-        "c6": {
-          "type": "card",
-          "settings": {
-            "label": "Footwear",
-            "sub": "23 pieces",
-            "url": "/collections/all"
-          }
-        }
-      },
-      "block_order": [
-        "c1",
-        "c2",
-        "c3",
-        "c4",
-        "c5",
-        "c6"
-      ],
-      "settings": {
-        "scheme": "warm",
-        "eyebrow": "Shop by Category",
-        "heading": "The Wardrobe Edit"
-      }
-    },
-    "statement": {
-      "type": "statement-inline",
-      "settings": {
-        "scheme": "warm",
-        "eyebrow": "The Philosophy",
-        "text": "Considered pieces | crafted by hand | for the life | you actually live.",
-        "cta_label": "About the Maison",
-        "cta_url": "/pages/about"
-      }
-    },
-    "duo": {
-      "type": "duo-spotlight",
+      "type": "hero-noir",
       "settings": {
         "scheme": "dark",
-        "label_left": "For Her",
-        "url_left": "/collections/women",
-        "label_right": "For Him",
-        "url_right": "/collections/men",
-        "eyebrow": "Two Worlds",
-        "heading": "One Considered Wardrobe",
-        "text": "Womenswear and menswear, cut from the same cloth — literally. Explore both sides of the atelier.",
-        "btn_label": "Shop Everything",
-        "btn_url": "/collections/all"
+        "meta_left": "Collection Nº 04",
+        "meta_right": "Autumn / Winter 2025",
+        "eyebrow": "The Noir Edit",
+        "heading_line1": "Form",
+        "heading_line2": "Meets",
+        "heading_line3": "Function",
+        "description": "Sharp tailoring and uncompromising lines. A modern wardrobe built on contrast — architectural, deliberate, and quietly powerful.",
+        "btn1_label": "Shop the Collection",
+        "btn1_link": "/collections/all",
+        "btn2_label": "View Lookbook",
+        "btn2_link": "/collections/all",
+        "scroll_label": "Scroll",
+        "watermark": "Noir",
+        "tag_label": "New Arrivals",
+        "index_label": "04",
+        "ticker": "Made to Last"
       }
     },
     "marquee": {
       "type": "marquee",
       "settings": {
-        "text": "Handcrafted in Milan, Limited Quantities, Natural Fabrics Only, Carbon-Neutral Delivery, Made to Keep",
-        "style": "bordered",
+        "text": "Modern Tailoring, Made to Last, Architectural Lines, Responsibly Made",
+        "style": "caps",
         "separator": "diamond",
         "direction": "left",
-        "speed": 30,
+        "speed": 28,
         "padding": 16,
         "pause_on_hover": true,
-        "bg_color": "#a4552f",
-        "text_color": "#f4efe6"
+        "bg_color": "#18181A",
+        "text_color": "#ECE9E2"
       }
     },
-    "runway": {
-      "type": "runway-strip",
+    "index": {
+      "type": "category-index",
       "blocks": {
-        "l1": {
-          "type": "look",
-          "settings": {
-            "caption": "Wool overcoat, camel"
-          }
-        },
-        "l2": {
-          "type": "look",
-          "settings": {
-            "caption": "Slip dress, bone silk"
-          }
-        },
-        "l3": {
-          "type": "look",
-          "settings": {
-            "caption": "Boxy blazer, pinstripe"
-          }
-        },
-        "l4": {
-          "type": "look",
-          "settings": {
-            "caption": "Oversized shades, tort"
-          }
-        },
-        "l5": {
-          "type": "look",
-          "settings": {
-            "caption": "Leather jacket, espresso"
-          }
-        },
-        "l6": {
-          "type": "look",
-          "settings": {
-            "caption": "Street tailoring, sand"
-          }
-        }
+        "cat1": { "type": "category", "settings": { "kicker": "The Structure", "title": "Outerwear", "cta": "Explore", "link": "/collections/all" } },
+        "cat2": { "type": "category", "settings": { "kicker": "The Cut", "title": "Tailoring", "cta": "Explore", "link": "/collections/all" } },
+        "cat3": { "type": "category", "settings": { "kicker": "The Comfort", "title": "Knitwear", "cta": "Explore", "link": "/collections/all" } },
+        "cat4": { "type": "category", "settings": { "kicker": "The Detail", "title": "Accessories", "cta": "Explore", "link": "/collections/all" } }
       },
-      "block_order": [
-        "l1",
-        "l2",
-        "l3",
-        "l4",
-        "l5",
-        "l6"
-      ],
+      "block_order": ["cat1", "cat2", "cat3", "cat4"],
+      "settings": {
+        "scheme": "light",
+        "eyebrow": "Browse",
+        "heading": "The Index",
+        "intro": "Four pillars of the collection — engineered for movement, made for the modern wardrobe."
+      }
+    },
+    "products": {
+      "type": "product-noir",
       "settings": {
         "scheme": "dark",
-        "eyebrow": "Straight from the Runway",
-        "heading": "Autumn / Winter Looks",
-        "strip_height": 420,
-        "speed": 45,
-        "pause_on_hover": true,
-        "cta_label": "View the Full Show",
-        "cta_url": "/collections/all"
-      }
-    },
-    "rail": {
-      "type": "product-rail",
-      "settings": {
-        "scheme": "light",
-        "eyebrow": "New This Week",
-        "heading": "The Latest Arrivals",
-        "collection": "dresses",
+        "eyebrow": "The Edit",
+        "heading": "Defining Pieces",
+        "note": "Investment essentials, cut from the season's finest materials.",
         "products_to_show": 8,
-        "cta_label": "Shop All New Arrivals",
+        "columns": "4",
+        "cta_label": "Shop All",
         "cta_url": "/collections/all"
       }
     },
-    "quote": {
-      "type": "quote-editorial",
-      "settings": {
-        "scheme": "warm",
-        "quote": "Style is the only thing you can't buy. It's not in a shopping bag — it's how you wear what you choose to keep.",
-        "author": "Isabelle Moreau",
-        "role": "Creative Director"
-      }
-    },
-    "social": {
-      "type": "social-gallery",
+    "lookbook": {
+      "type": "lookbook-scroll",
       "blocks": {
-        "t1": {
-          "type": "tile",
-          "settings": {
-            "url": ""
-          }
-        },
-        "t2": {
-          "type": "tile",
-          "settings": {
-            "url": ""
-          }
-        },
-        "t3": {
-          "type": "tile",
-          "settings": {
-            "url": ""
-          }
-        },
-        "t4": {
-          "type": "tile",
-          "settings": {
-            "url": ""
-          }
-        },
-        "t5": {
-          "type": "tile",
-          "settings": {
-            "url": ""
-          }
-        },
-        "t6": {
-          "type": "tile",
-          "settings": {
-            "url": ""
-          }
-        }
+        "lk1": { "type": "frame", "settings": { "kicker": "Look 01", "title": "The Overcoat", "link_label": "Shop the look", "link": "/collections/all", "tall": false } },
+        "lk2": { "type": "frame", "settings": { "kicker": "Look 02", "title": "Soft Tailoring", "link_label": "Shop the look", "link": "/collections/all", "tall": true } },
+        "lk3": { "type": "frame", "settings": { "kicker": "Look 03", "title": "Evening Edit", "link_label": "Shop the look", "link": "/collections/all", "tall": false } },
+        "lk4": { "type": "frame", "settings": { "kicker": "Look 04", "title": "Knit Stories", "link_label": "Shop the look", "link": "/collections/all", "tall": true } },
+        "lk5": { "type": "frame", "settings": { "kicker": "Look 05", "title": "Leather Goods", "link_label": "Shop the look", "link": "/collections/all", "tall": false } }
       },
-      "block_order": [
-        "t1",
-        "t2",
-        "t3",
-        "t4",
-        "t5",
-        "t6"
-      ],
+      "block_order": ["lk1", "lk2", "lk3", "lk4", "lk5"],
       "settings": {
         "scheme": "light",
-        "eyebrow": "@maisonnoir",
-        "heading": "As Worn by You",
-        "btn_label": "Follow on Instagram",
-        "btn_url": ""
+        "eyebrow": "Lookbook",
+        "heading": "AW25 In Motion",
+        "hint": "Drag / scroll"
+      }
+    },
+    "manifesto": {
+      "type": "manifesto",
+      "settings": {
+        "scheme": "dark",
+        "marquee_word": "Maison Noir",
+        "marquee_word_2": "Modern Tailoring",
+        "eyebrow": "Our Philosophy",
+        "statement": "<p>We design for the people who notice the <em>details</em> — the weight of a fabric, the fall of a hem, the quiet confidence of clothes built to last.</p>",
+        "signature": "— The Maison Noir Atelier",
+        "btn_label": "Read Our Story",
+        "btn_link": "/collections/all"
       }
     },
     "newsletter": {
       "type": "newsletter-split",
       "settings": {
-        "visual_quote": "Dress like you're already the person you intend to become.",
-        "visual_attr": "— The Atelier Journal",
-        "panel_bg": "ivory",
-        "eyebrow": "From the Atelier",
-        "heading": "Letters, Not Newsletters",
-        "subtext": "A monthly note on craft, fabric, and the pieces worth keeping — plus first access to limited releases.",
-        "perks": "Early access to drops, Members-only pricing, Invitations to fittings",
+        "panel_bg": "charcoal",
+        "eyebrow": "Stay Close",
+        "heading": "Join the Inner Circle",
+        "subtext": "Be the first to know about new collections, exclusive events, and private sales.",
+        "perks": "Early access to new arrivals, Exclusive member discounts, Private event invitations",
         "placeholder": "Your email address",
         "btn_label": "Subscribe",
         "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time."
       }
     }
   },
-  "order": [
-    "hero",
-    "arches",
-    "statement",
-    "duo",
-    "marquee",
-    "runway",
-    "rail",
-    "quote",
-    "social",
-    "newsletter"
-  ]
+  "order": ["hero", "marquee", "index", "products", "lookbook", "manifesto", "newsletter"]
 }

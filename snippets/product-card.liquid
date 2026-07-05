@@ -70,13 +70,15 @@
     assign d_cat   = demo_category | default: 'Atelier'
     assign d_price = demo_price | default: '$0'
     assign d_img   = demo_image
+    # derive cents from the display price so the quick-view popup shows it
+    assign d_cents = d_price | remove: '$' | remove: '€' | remove: '£' | remove: ',' | strip | times: 100
   -%}
   <div
     class="product-card pcard pcard--{{ scheme }} pcard--{{ card_style }} pcard--align-{{ text_align }} pcard--rad-{{ radius }}{% if rail %} pcard--rail{% endif %}"
     data-pcard
     data-quickadd="{{ quickadd_style }}"
   >
-    <script type="application/json" class="product-card__json">{"id":0,"title":{{ d_title | json }},"vendor":{{ shop.name | json }},"url":{{ d_url | json }},"price":0,"compare_at_price":0,"body_html":"Demo product — connect a collection in the theme editor to show your own pieces.","images":[{{ d_img | json }}],"options":["Title"],"variants":[{"id":0,"price":0,"compare_at_price":0,"available":true,"options":["Default Title"]}]}</script>
+    <script type="application/json" class="product-card__json">{"id":0,"title":{{ d_title | json }},"vendor":{{ shop.name | json }},"url":{{ d_url | json }},"price":{{ d_cents }},"compare_at_price":0,"body_html":"Demo product — connect a collection in the theme editor to show your own pieces.","images":[{{ d_img | json }}],"options":["Title"],"variants":[{"id":0,"price":{{ d_cents }},"compare_at_price":0,"available":true,"options":["Default Title"]}]}</script>
 
     <div class="pcard__media pcard__media--{{ image_ratio }} pcard__media--hov-{{ media_hover }}">
       <a href="{{ d_url }}" class="pcard__imglink" aria-label="{{ d_title | escape }}">
@@ -95,12 +97,20 @@
         {%- endif -%}
       </div>
 
-      {%- unless quickadd_style == 'none' -%}
+      {%- comment -%}Demo Add to Bag — opens the quick-view popup from the embedded
+        JSON (same behaviour real multi-variant products get), so the hover
+        flow can be previewed before any collection is connected.{%- endcomment -%}
+      {%- if settings.quickview_enabled -%}
+        <button class="pcard-atc pcard-btn--atc" data-open-quickview data-product-url="{{ d_url }}">
+          {%- render 'icon-bag' -%}
+          <span class="pcard-atc__label">Add to Bag</span>
+        </button>
+      {%- else -%}
         <a href="{{ d_url }}" class="pcard-atc pcard-btn--atc">
           {%- render 'icon-bag' -%}
           <span class="pcard-atc__label">View Product</span>
         </a>
-      {%- endunless -%}
+      {%- endif -%}
     </div>
 
     <div class="pcard__info">

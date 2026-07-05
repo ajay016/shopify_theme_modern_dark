@@ -1,0 +1,252 @@
+{%- liquid
+  assign s = section.settings
+  assign fallbacks = 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=700&q=85|https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=700&q=85|https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?auto=format&fit=crop&w=700&q=85|https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=700&q=85|https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=700&q=85|https://images.unsplash.com/photo-1496217590455-aa63a8350eea?auto=format&fit=crop&w=700&q=85' | split: '|'
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="crv-section crv--{{ s.scheme }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="crv-inner">
+    <div class="crv-head reveal">
+      {%- if s.eyebrow != blank -%}<span class="crv-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="crv-heading">{{ s.heading }}</h2>{%- endif -%}
+    </div>
+
+    <div class="crv-list" data-crv-list>
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- assign fb = fallbacks[forloop.index0] | default: fallbacks[0] -%}
+          {%- liquid
+            assign row_img = fb
+            if block.settings.image != blank
+              assign row_img = block.settings.image | image_url: width: 700
+            endif
+          -%}
+          <a
+            href="{{ block.settings.link | default: '/collections/all' }}"
+            class="crv-row reveal"
+            data-crv-row
+            data-crv-img="{{ row_img }}"
+            {{ block.shopify_attributes }}
+          >
+            <span class="crv-row__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+            <span class="crv-row__title">{{ block.settings.title }}</span>
+            <span class="crv-row__thumb" aria-hidden="true"><img src="{{ row_img }}" alt="" loading="lazy" /></span>
+            <span class="crv-row__meta">{{ block.settings.meta }}</span>
+            <span class="crv-row__arrow" aria-hidden="true">&#8594;</span>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign demo_titles = 'Eveningwear,Tailoring,Silks & Satin,Outerwear,Jewellery' | split: ',' -%}
+        {%- assign demo_meta = '18 pieces,24 pieces,12 pieces,16 pieces,30 pieces' | split: ',' -%}
+        {%- for i in (0..4) -%}
+          <a href="/collections/all" class="crv-row reveal" data-crv-row data-crv-img="{{ fallbacks[i] }}">
+            <span class="crv-row__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+            <span class="crv-row__title">{{ demo_titles[i] }}</span>
+            <span class="crv-row__thumb" aria-hidden="true"><img src="{{ fallbacks[i] }}" alt="" loading="lazy" /></span>
+            <span class="crv-row__meta">{{ demo_meta[i] }}</span>
+            <span class="crv-row__arrow" aria-hidden="true">&#8594;</span>
+          </a>
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- comment -%}Floating preview that trails the cursor (fine pointers only){%- endcomment -%}
+      <span class="crv-float" data-crv-float aria-hidden="true"><img data-crv-float-img src="" alt="" /></span>
+    </div>
+
+    {%- if s.cta_label != blank -%}
+      <div class="crv-foot reveal">
+        <a href="{{ s.cta_url | default: '/collections/all' }}" class="crv-cta">{{ s.cta_label }} <span aria-hidden="true">&#8594;</span></a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }}.crv--light { --bg:#F2EFE8; --fg:#16131A; --acc:var(--gold,#A8874C); --mut:rgba(22,19,26,.5); --bdr:rgba(22,19,26,.16); }
+  #section-{{ section.id }}.crv--dark  { --bg:#100E14; --fg:#EFEBE2; --acc:var(--gold,#C6A15B); --mut:rgba(239,235,226,.5); --bdr:rgba(239,235,226,.16); }
+  #section-{{ section.id }}.crv--warm  { --bg:#E9DFCE; --fg:#241D15; --acc:var(--gold,#8E5A2A); --mut:rgba(36,29,21,.5); --bdr:rgba(36,29,21,.2); }
+  #section-{{ section.id }}.crv--theme { --bg:var(--background,#100E14); --fg:var(--foreground,#EFEBE2); --acc:var(--gold,#C6A15B); --mut:var(--muted,rgba(239,235,226,.5)); --bdr:var(--border,rgba(239,235,226,.16)); }
+
+  #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }
+  #section-{{ section.id }} .crv-inner { max-width: var(--container-width,1440px); margin: 0 auto; }
+
+  #section-{{ section.id }} .crv-head { text-align: center; margin-bottom: clamp(34px,5vw,64px); }
+  #section-{{ section.id }} .crv-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .3em; text-transform: uppercase; color: var(--acc); margin-bottom: 14px; }
+  #section-{{ section.id }} .crv-heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(32px,4.4vw,62px) * var(--heading-scale,1)); font-weight: 300; line-height: 1.02; text-transform: uppercase; margin: 0; }
+
+  /* — The index list — */
+  #section-{{ section.id }} .crv-list { position: relative; border-top: 1px solid var(--bdr); }
+  #section-{{ section.id }} .crv-row {
+    position: relative; display: grid;
+    grid-template-columns: clamp(44px,5vw,80px) 1fr auto clamp(28px,3vw,44px);
+    align-items: center; gap: clamp(12px,2vw,28px);
+    padding: clamp(20px,2.8vw,36px) 4px;
+    border-bottom: 1px solid var(--bdr);
+    text-decoration: none; color: var(--fg);
+  }
+  #section-{{ section.id }} .crv-row__num {
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500;
+    letter-spacing: .2em; color: var(--mut); transition: color .3s;
+  }
+  #section-{{ section.id }} .crv-row__title {
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: calc(clamp(30px,4.6vw,72px) * var(--heading-scale,1));
+    font-weight: 300; line-height: 1; text-transform: uppercase; letter-spacing: .01em;
+    transition: transform .45s cubic-bezier(.2,0,.2,1), color .3s;
+  }
+  #section-{{ section.id }} .crv-row__meta {
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500;
+    letter-spacing: .18em; text-transform: uppercase; color: var(--mut); white-space: nowrap;
+    transition: color .3s;
+  }
+  #section-{{ section.id }} .crv-row__arrow {
+    font-size: 20px; color: var(--mut);
+    transform: translateX(-6px); opacity: .4;
+    transition: transform .35s, opacity .35s, color .3s;
+  }
+  #section-{{ section.id }} .crv-row:hover .crv-row__title { transform: translateX(clamp(10px,1.6vw,26px)); color: var(--acc); }
+  #section-{{ section.id }} .crv-row:hover .crv-row__num,
+  #section-{{ section.id }} .crv-row:hover .crv-row__meta { color: var(--acc); }
+  #section-{{ section.id }} .crv-row:hover .crv-row__arrow { transform: none; opacity: 1; color: var(--acc); }
+
+  /* inline thumb — only shown on touch / small screens */
+  #section-{{ section.id }} .crv-row__thumb { display: none; }
+
+  /* — Floating cursor preview — */
+  #section-{{ section.id }} .crv-float {
+    position: absolute; z-index: 5; top: 0; left: 0;
+    width: clamp(200px, 17vw, 280px); aspect-ratio: 3/4;
+    pointer-events: none; overflow: hidden; border-radius: 3px;
+    opacity: 0; transform: scale(.92);
+    transition: opacity .3s, transform .35s;
+    box-shadow: 0 30px 70px -26px rgba(0,0,0,.55);
+  }
+  #section-{{ section.id }} .crv-float.is-on { opacity: 1; transform: scale(1); }
+  #section-{{ section.id }} .crv-float img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  #section-{{ section.id }} .crv-foot { text-align: center; margin-top: clamp(30px,4vw,48px); }
+  #section-{{ section.id }} .crv-cta {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500;
+    letter-spacing: .18em; text-transform: uppercase; color: var(--fg); text-decoration: none;
+    border-bottom: 1px solid var(--acc); padding-bottom: 5px; transition: color .2s;
+  }
+  #section-{{ section.id }} .crv-cta:hover { color: var(--acc); }
+
+  #section-{{ section.id }} .reveal.reveal-armed { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  #section-{{ section.id }} .reveal.is-visible { opacity: 1; transform: none; }
+  #section-{{ section.id }} .crv-row:nth-child(2){transition-delay:.05s;}
+  #section-{{ section.id }} .crv-row:nth-child(3){transition-delay:.1s;}
+  #section-{{ section.id }} .crv-row:nth-child(4){transition-delay:.15s;}
+  #section-{{ section.id }} .crv-row:nth-child(5){transition-delay:.2s;}
+
+  /* Touch / small screens: no cursor float; inline thumbs instead */
+  @media (hover: none), (max-width: 900px) {
+    #section-{{ section.id }} .crv-float { display: none; }
+    #section-{{ section.id }} .crv-row { grid-template-columns: clamp(34px,6vw,52px) 1fr auto; }
+    #section-{{ section.id }} .crv-row__thumb {
+      display: block; width: clamp(54px,10vw,76px); aspect-ratio: 3/4;
+      overflow: hidden; border-radius: 3px; order: 3;
+    }
+    #section-{{ section.id }} .crv-row__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #section-{{ section.id }} .crv-row__meta,
+    #section-{{ section.id }} .crv-row__arrow { display: none; }
+  }
+</style>
+
+<script>
+(function(){
+  var SEC='{{ section.id }}';
+  function arm(root){
+    var els=root.querySelectorAll('.reveal');
+    els.forEach(function(el){el.classList.add('reveal-armed');});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target);}});},{threshold:.1});
+    els.forEach(function(el){io.observe(el);});
+    setTimeout(function(){els.forEach(function(el){el.classList.add('is-visible');});},800);
+  }
+  function initReveal(root){
+    if(!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    var list=root.querySelector('[data-crv-list]'); if(!list)return;
+    var float=list.querySelector('[data-crv-float]');
+    var img=list.querySelector('[data-crv-float-img]');
+    if(!float||!img)return;
+    var raf=null, x=0, y=0;
+    function paint(){
+      raf=null;
+      float.style.transform='translate('+x+'px,'+y+'px)'+(float.classList.contains('is-on')?' scale(1)':' scale(.92)');
+    }
+    list.addEventListener('mousemove',function(e){
+      var r=list.getBoundingClientRect();
+      /* trail slightly right & below the cursor, clamped inside the list */
+      x=Math.min(e.clientX-r.left+28, r.width-float.offsetWidth-8);
+      y=e.clientY-r.top-float.offsetHeight/2;
+      if(!raf)raf=requestAnimationFrame(paint);
+    });
+    list.querySelectorAll('[data-crv-row]').forEach(function(row){
+      row.addEventListener('mouseenter',function(){
+        var src=row.getAttribute('data-crv-img');
+        if(src&&img.getAttribute('src')!==src)img.setAttribute('src',src);
+        float.classList.add('is-on');
+      });
+    });
+    list.addEventListener('mouseleave',function(){float.classList.remove('is-on');});
+  }
+  function root(){return document.getElementById('section-'+SEC);}
+  function init(){var r=root();if(r){arm(r);initReveal(r);}}
+  document.addEventListener('DOMContentLoaded',init);
+  document.addEventListener('shopify:section:load',function(e){if(e.detail.sectionId!==SEC)return;init();var r=root();if(r)r.querySelectorAll('.reveal').forEach(function(el){el.classList.add('is-visible');});});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Collection Reveal",
+  "tag": "section",
+  "class": "section-collection-reveal",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (pearl)" },
+        { "value": "dark",  "label": "Dark (velvet)" },
+        { "value": "warm",  "label": "Warm (champagne)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "light"
+    },
+    { "type": "paragraph", "content": "A typographic index — hovering a row reveals its image following the cursor. On touch devices each row shows a small inline image instead." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Maison" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Collections" },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "View everything" },
+    { "type": "url",  "id": "cta_url",   "label": "CTA link" }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Collection row",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Hover image" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Eveningwear" },
+        { "type": "text", "id": "meta",  "label": "Meta (right side)", "default": "18 pieces" },
+        { "type": "url",  "id": "link",  "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Reveal",
+      "blocks": [
+        { "type": "row", "settings": { "title": "Eveningwear", "meta": "18 pieces" } },
+        { "type": "row", "settings": { "title": "Tailoring", "meta": "24 pieces" } },
+        { "type": "row", "settings": { "title": "Silks & Satin", "meta": "12 pieces" } },
+        { "type": "row", "settings": { "title": "Outerwear", "meta": "16 pieces" } },
+        { "type": "row", "settings": { "title": "Jewellery", "meta": "30 pieces" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -10,317 +10,108 @@
 {
   "sections": {
     "hero": {
-      "type": "hero-banner",
-      "blocks": {
-        "stat_RbAVjX": {
-          "type": "stat",
-          "settings": {
-            "value": "2009",
-            "label": "Founded"
-          }
-        }
-      },
-      "block_order": [
-        "stat_RbAVjX"
-      ],
+      "type": "hero-lookbook",
       "settings": {
-        "layout": "split",
-        "min_height": 80,
-        "eyebrow": "SS 2025 Collection",
-        "heading": "Timeless",
-        "heading_italic": "Elegance",
-        "heading_line3": "Redefined",
-        "description": "Where heritage craftsmanship meets contemporary vision. Each piece tells a story of quiet luxury and intentional design.",
-        "btn1_label": "Explore Collection",
+        "scheme": "light",
+        "layout": "overlay",
+        "min_height": 94,
+        "overlay": 30,
+        "eyebrow": "Autumn / Winter 2025",
+        "heading": "The New | Season",
+        "description": "Sculptural silhouettes cut from the season's most coveted fabrics — made to be lived in.",
+        "btn1_label": "Shop Collection",
         "btn1_link": "/collections/all",
-        "btn2_label": "Our Story",
-        "btn2_link": "/pages/about",
-        "image": "shopify://shop_images/thumb-1920-1091070.jpg",
-        "image_2": "shopify://shop_images/punta-negra-czarny-jednoczesciowy-kostium-kapielowy_5.jpg",
-        "show_scroll": true,
-        "show_counter": true,
-        "show_stats": false
+        "btn2_label": "View Lookbook",
+        "btn2_link": "/collections/all",
+        "show_scroll": true
       }
     },
-    "categories": {
-      "type": "collection-list",
+    "marquee": {
+      "type": "marquee",
+      "settings": {
+        "text": "New Arrivals, Atelier Crafted, Quiet Luxury, Made to Last, Limited Editions",
+        "style": "bordered",
+        "separator": "diamond",
+        "direction": "left",
+        "speed": 30,
+        "padding": 16,
+        "pause_on_hover": true,
+        "bg_color": "#FAF8F3",
+        "text_color": "#0A0A0A"
+      }
+    },
+    "rows": {
+      "type": "editorial-rows",
       "blocks": {
-        "collection_item_dHUtBn": {
-          "type": "collection_item",
-          "settings": {
-            "collection": "dresses",
-            "label": "",
-            "sublabel": "",
-            "custom_url": ""
-          }
-        },
-        "cat2": {
-          "type": "collection_item",
-          "settings": {
-            "collection": "",
-            "label": "Men's Tailoring",
-            "sublabel": "98 pieces",
-            "custom_url": ""
-          }
-        },
-        "cat3": {
-          "type": "collection_item",
-          "settings": {
-            "collection": "women",
-            "label": "Bags & Accessories",
-            "sublabel": "215 pieces",
-            "custom_url": ""
-          }
-        },
-        "cat4": {
-          "type": "collection_item",
-          "settings": {
-            "collection": "",
-            "label": "Fine Jewellery",
-            "sublabel": "76 pieces",
-            "custom_url": ""
-          }
-        }
+        "r1": { "type": "row", "settings": { "index_label": "01 / 03", "tag": "New In", "eyebrow": "Women's Ready-to-Wear", "heading": "Sculptural Silhouettes", "text": "Eight months in our Milan atelier. Every seam deliberate, every fabric considered.", "btn_label": "Explore Collection", "url": "/collections/women" } },
+        "r2": { "type": "row", "settings": { "index_label": "02 / 03", "tag": "Atelier", "eyebrow": "Men's Tailoring", "heading": "Precision in Motion", "text": "Technical precision meets considered design — engineered for the cities you move through.", "btn_label": "Explore Collection", "url": "/collections/men" } },
+        "r3": { "type": "row", "settings": { "index_label": "03 / 03", "tag": "Limited", "eyebrow": "Outerwear", "heading": "Built for Every Season", "text": "Weatherproofed wool and hand-finished detailing in pieces made to outlast the trends.", "btn_label": "Explore Collection", "url": "/collections/outerwear" } }
       },
-      "block_order": [
-        "collection_item_dHUtBn",
-        "cat2",
-        "cat3",
-        "cat4"
-      ],
+      "block_order": ["r1", "r2", "r3"],
       "settings": {
-        "heading": "Shop by Category",
-        "subheading": "Curated Selections",
-        "view_all_label": "All Collections",
-        "view_all_url": "",
-        "columns": "4"
+        "scheme": "light",
+        "eyebrow": "The Collections",
+        "heading": "Edited for the Season"
       }
     },
-    "featured": {
-      "type": "featured-products",
+    "gallery": {
+      "type": "lookbook-gallery",
+      "blocks": {
+        "t1": { "type": "tile", "settings": { "size": "tall",  "tag": "Featured", "label": "The Tailoring Edit", "meta": "Explore", "url": "/collections/all" } },
+        "t2": { "type": "tile", "settings": { "size": "wide",  "label": "Outerwear", "meta": "64 pieces", "url": "/collections/outerwear" } },
+        "t3": { "type": "tile", "settings": { "size": "sq",    "label": "Knitwear", "meta": "38 pieces", "url": "/collections/all" } },
+        "t4": { "type": "tile", "settings": { "size": "sq",    "label": "Accessories", "meta": "215 pieces", "url": "/collections/accessories" } }
+      },
+      "block_order": ["t1", "t2", "t3", "t4"],
       "settings": {
-        "heading": "Dresses",
-        "subheading": "Handpicked",
+        "scheme": "warm",
+        "eyebrow": "The Lookbook",
+        "heading": "Autumn Editorial",
+        "cta_label": "View full lookbook",
+        "cta_url": "/collections/all"
+      }
+    },
+    "showcase": {
+      "type": "product-showcase",
+      "settings": {
+        "scheme": "light",
+        "eyebrow": "Curated Edit",
+        "heading": "This Season's Icons",
         "collection": "dresses",
-        "products_to_show": 3,
-        "columns": "3",
-        "show_view_all": true
+        "products_to_show": 4,
+        "columns": 4,
+        "cta_label": "View all products",
+        "cta_url": "/collections/all"
       }
     },
-    "editorial-1": {
-      "type": "image-with-text",
-      "blocks": {
-        "btn1": {
-          "type": "button",
-          "settings": {
-            "label": "Read the Story",
-            "url": "/pages/about",
-            "style": "btn-primary"
-          }
-        }
-      },
-      "block_order": [
-        "btn1"
-      ],
+    "campaign": {
+      "type": "campaign-banner",
       "settings": {
-        "image": "shopify://shop_images/edit1.jpg",
-        "caption": "",
-        "eyebrow": "The Journal",
-        "heading": "The Art of\nWearing Nothing Else",
-        "text": "<p>Our Spring collection explores the intersection of structure and ease — garments engineered to move with the body while commanding a room. Crafted over eight months in our Milan atelier.</p>",
-        "layout": "left",
-        "image_width": "50",
-        "full_width": false
-      }
-    },
-    "stats": {
-      "type": "stats-row",
-      "blocks": {
-        "s1": {
-          "type": "stat",
-          "settings": {
-            "value": "2009",
-            "label": "Founded",
-            "description": ""
-          }
-        },
-        "s2": {
-          "type": "stat",
-          "settings": {
-            "value": "47+",
-            "label": "Artisans",
-            "description": ""
-          }
-        },
-        "s3": {
-          "type": "stat",
-          "settings": {
-            "value": "32",
-            "label": "Countries",
-            "description": ""
-          }
-        },
-        "s4": {
-          "type": "stat",
-          "settings": {
-            "value": "14",
-            "label": "Design Awards",
-            "description": ""
-          }
-        }
-      },
-      "block_order": [
-        "s1",
-        "s2",
-        "s3",
-        "s4"
-      ],
-      "settings": {}
-    },
-    "editorial-2": {
-      "type": "image-with-text",
-      "blocks": {
-        "btn2": {
-          "type": "button",
-          "settings": {
-            "label": "Shop Outerwear",
-            "url": "/collections/all",
-            "style": "btn-primary"
-          }
-        }
-      },
-      "block_order": [
-        "btn2"
-      ],
-      "settings": {
-        "image": "shopify://shop_images/comparing-black-t-shirts-on-a-clothing-rack-in-a-sun-lit-shop.jpg",
-        "caption": "",
-        "eyebrow": "The Outerwear Edit",
-        "heading": "Built for the\nCities You Move Through",
-        "text": "<p>Technical precision meets considered design. Our outerwear collection is built for the urban landscape without compromising on elegance.</p>",
-        "layout": "right",
-        "image_width": "50",
-        "full_width": false
-      }
-    },
-    "brands": {
-      "type": "brand-logos",
-      "blocks": {
-        "b1": {
-          "type": "logo",
-          "settings": {
-            "name": "Bottega",
-            "url": ""
-          }
-        },
-        "b2": {
-          "type": "logo",
-          "settings": {
-            "name": "Lemaire",
-            "url": ""
-          }
-        },
-        "b3": {
-          "type": "logo",
-          "settings": {
-            "name": "The Row",
-            "url": ""
-          }
-        },
-        "b4": {
-          "type": "logo",
-          "settings": {
-            "name": "Totême",
-            "url": ""
-          }
-        },
-        "b5": {
-          "type": "logo",
-          "settings": {
-            "name": "Jacquemus",
-            "url": ""
-          }
-        },
-        "b6": {
-          "type": "logo",
-          "settings": {
-            "name": "Loewe",
-            "url": ""
-          }
-        }
-      },
-      "block_order": [
-        "b1",
-        "b2",
-        "b3",
-        "b4",
-        "b5",
-        "b6"
-      ],
-      "settings": {
-        "heading": "Stocked Brands & Partners",
-        "marquee": false
-      }
-    },
-    "blog": {
-      "type": "blog-posts",
-      "settings": {
-        "eyebrow": "From the Journal",
-        "heading": "Latest Stories",
-        "view_all_label": "View All Stories",
-        "blog": "news",
-        "posts_to_show": 3,
-        "layout": "3",
-        "show_date": true,
-        "show_excerpt": true,
-        "show_category": true
-      }
-    },
-    "testimonials": {
-      "type": "testimonials",
-      "blocks": {
-        "t1": {
-          "type": "testimonial",
-          "settings": {
-            "quote": "Fashion should feel like an extension of oneself — effortless, considered, and entirely one's own.",
-            "name": "Isabelle Moreau",
-            "location": "Creative Director"
-          }
-        }
-      },
-      "block_order": [
-        "t1"
-      ],
-      "settings": {
-        "eyebrow": "The Voice",
-        "heading": "A Considered Perspective",
-        "show_stars": false,
-        "columns": "1"
+        "min_height": 70,
+        "overlay": 40,
+        "align": "center",
+        "eyebrow": "Limited Release",
+        "heading": "The Atelier | Capsule",
+        "description": "Twelve pieces. Made to order. Available for a limited window only.",
+        "btn_label": "Shop the Capsule",
+        "btn_link": "/collections/all"
       }
     },
     "newsletter": {
-      "type": "newsletter",
+      "type": "newsletter-split",
       "settings": {
+        "visual_quote": "Fashion should feel like an extension of oneself — effortless, considered, and entirely one's own.",
+        "visual_attr": "— Isabelle Moreau, Creative Director",
+        "panel_bg": "ivory",
         "eyebrow": "Stay Close",
         "heading": "Join the Inner Circle",
         "subtext": "Be the first to know about new collections, exclusive events, and private sales.",
+        "perks": "Early access to new arrivals, Exclusive member discounts, Private event invitations",
         "placeholder": "Your email address",
-        "button_label": "Subscribe",
-        "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time.",
-        "bg_color": "#161616"
+        "btn_label": "Subscribe",
+        "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time."
       }
     }
   },
-  "order": [
-    "hero",
-    "categories",
-    "featured",
-    "editorial-1",
-    "stats",
-    "editorial-2",
-    "brands",
-    "blog",
-    "testimonials",
-    "newsletter"
-  ]
+  "order": ["hero", "marquee", "rows", "gallery", "showcase", "campaign", "newsletter"]
 }

@@ -47,12 +47,49 @@
     "stories": {
       "type": "story-covers",
       "blocks": {
-        "cv1": { "type": "cover", "settings": { "masthead": "Maison Noir", "title": "Eveningwear", "link_label": "Shop", "link": "/collections/all" } },
-        "cv2": { "type": "cover", "settings": { "masthead": "Maison Noir", "title": "Tailoring", "link_label": "Shop", "link": "/collections/all" } },
-        "cv3": { "type": "cover", "settings": { "masthead": "Maison Noir", "title": "Jewellery", "link_label": "Shop", "link": "/collections/all" } },
-        "cv4": { "type": "cover", "settings": { "masthead": "Maison Noir", "title": "Outerwear", "link_label": "Shop", "link": "/collections/all" } }
+        "cv1": {
+          "type": "cover",
+          "settings": {
+            "masthead": "Maison Noir",
+            "title": "Eveningwear",
+            "link_label": "Shop",
+            "link": "/collections/all"
+          }
+        },
+        "cv2": {
+          "type": "cover",
+          "settings": {
+            "masthead": "Maison Noir",
+            "title": "Tailoring",
+            "link_label": "Shop",
+            "link": "/collections/all"
+          }
+        },
+        "cv3": {
+          "type": "cover",
+          "settings": {
+            "masthead": "Maison Noir",
+            "title": "Jewellery",
+            "link_label": "Shop",
+            "link": "/collections/all"
+          }
+        },
+        "cv4": {
+          "type": "cover",
+          "settings": {
+            "masthead": "Maison Noir",
+            "title": "Outerwear",
+            "link_label": "Shop",
+            "link": "/collections/all"
+          }
+        }
       },
-      "block_order": ["cv1", "cv2", "cv3", "cv4"],
+      "block_order": [
+        "cv1",
+        "cv2",
+        "cv3",
+        "cv4"
+      ],
       "settings": {
         "scheme": "light",
         "eyebrow": "In This Issue",
@@ -92,12 +129,49 @@
     "reviews": {
       "type": "reviews-ticker",
       "blocks": {
-        "rv1": { "type": "review", "settings": { "rating": 5, "quote": "The silk gown arrived like something couture — the weight, the fall, the finish.", "author": "Camille R.", "detail": "Paris" } },
-        "rv2": { "type": "review", "settings": { "rating": 5, "quote": "Tailoring that fits better than bespoke I have paid triple for.", "author": "Sofia M.", "detail": "Milan" } },
-        "rv3": { "type": "review", "settings": { "rating": 5, "quote": "Ordered on Monday, worn to a vernissage on Friday. Flawless.", "author": "Elena V.", "detail": "London" } },
-        "rv4": { "type": "review", "settings": { "rating": 5, "quote": "The only maison whose emails I actually open.", "author": "Margaux D.", "detail": "Brussels" } }
+        "rv1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "The silk gown arrived like something couture — the weight, the fall, the finish.",
+            "author": "Camille R.",
+            "detail": "Paris"
+          }
+        },
+        "rv2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Tailoring that fits better than bespoke I have paid triple for.",
+            "author": "Sofia M.",
+            "detail": "Milan"
+          }
+        },
+        "rv3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Ordered on Monday, worn to a vernissage on Friday. Flawless.",
+            "author": "Elena V.",
+            "detail": "London"
+          }
+        },
+        "rv4": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "The only maison whose emails I actually open.",
+            "author": "Margaux D.",
+            "detail": "Brussels"
+          }
+        }
       },
-      "block_order": ["rv1", "rv2", "rv3", "rv4"],
+      "block_order": [
+        "rv1",
+        "rv2",
+        "rv3",
+        "rv4"
+      ],
       "settings": {
         "scheme": "light",
         "eyebrow": "Le Carnet",
@@ -117,7 +191,123 @@
         "foot_left": "Maison Noir",
         "foot_right": "Est. 2009"
       }
+    },
+    "directory": {
+      "type": "collection-reveal",
+      "blocks": {
+        "dr1": {
+          "type": "row",
+          "settings": {
+            "title": "Eveningwear",
+            "meta": "18 pieces",
+            "link": "/collections/all"
+          }
+        },
+        "dr2": {
+          "type": "row",
+          "settings": {
+            "title": "Tailoring",
+            "meta": "24 pieces",
+            "link": "/collections/all"
+          }
+        },
+        "dr3": {
+          "type": "row",
+          "settings": {
+            "title": "Silks & Satin",
+            "meta": "12 pieces",
+            "link": "/collections/all"
+          }
+        },
+        "dr4": {
+          "type": "row",
+          "settings": {
+            "title": "Outerwear",
+            "meta": "16 pieces",
+            "link": "/collections/all"
+          }
+        },
+        "dr5": {
+          "type": "row",
+          "settings": {
+            "title": "Jewellery",
+            "meta": "30 pieces",
+            "link": "/collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "dr1",
+        "dr2",
+        "dr3",
+        "dr4",
+        "dr5"
+      ],
+      "settings": {
+        "scheme": "light",
+        "eyebrow": "The Directory",
+        "heading": "Browse the Maison",
+        "cta_label": "View everything",
+        "cta_url": "/collections/all"
+      }
+    },
+    "letter": {
+      "type": "editor-letter",
+      "settings": {
+        "scheme": "light",
+        "eyebrow": "From the Editor",
+        "heading": "A Note on Light",
+        "body": "<p>Some seasons arrive loudly. This one arrives the way afternoon light crosses a marble floor — slowly, then all at once. We cut silk to hold that hour, set pearls to catch it, and tailored wool to carve its shadow. Wear it gently.</p>",
+        "signer": "Isabelle Moreau",
+        "role": "Creative Director"
+      }
+    },
+    "services": {
+      "type": "services-lumiere",
+      "blocks": {
+        "sv1": {
+          "type": "service",
+          "settings": {
+            "title": "Complimentary Shipping",
+            "text": "Worldwide, insured, and beautifully packed — on every order."
+          }
+        },
+        "sv2": {
+          "type": "service",
+          "settings": {
+            "title": "Made to Order",
+            "text": "Selected pieces cut to your measure in our Milan atelier."
+          }
+        },
+        "sv3": {
+          "type": "service",
+          "settings": {
+            "title": "Private Appointments",
+            "text": "One-on-one styling in the salon or over video, by reservation."
+          }
+        }
+      },
+      "block_order": [
+        "sv1",
+        "sv2",
+        "sv3"
+      ],
+      "settings": {
+        "scheme": "light",
+        "heading": "The House"
+      }
     }
   },
-  "order": ["hero", "marquee", "stories", "vitrine", "campaign", "reviews", "invitation"]
+  "order": [
+    "hero",
+    "marquee",
+    "stories",
+    "vitrine",
+    "campaign",
+    "directory",
+    "reviews",
+    "letter",
+    "services",
+    "invitation"
+  ]
 }

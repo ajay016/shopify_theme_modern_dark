@@ -1,0 +1,152 @@
+{%- liquid
+  assign s = section.settings
+  assign numerals = 'I.,II.,III.,IV.' | split: ','
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="svl-section svl--{{ s.scheme }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="svl-inner reveal">
+    {%- if s.heading != blank -%}
+      <div class="svl-head">
+        <span class="svl-head__dia" aria-hidden="true">&#10022;</span>
+        <h2 class="svl-heading">{{ s.heading }}</h2>
+        <span class="svl-head__dia" aria-hidden="true">&#10022;</span>
+      </div>
+    {%- endif -%}
+
+    <div class="svl-band">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          <div class="svl-item" {{ block.shopify_attributes }}>
+            <span class="svl-item__num">{{ numerals[forloop.index0] | default: 'I.' }}</span>
+            <span class="svl-item__title">{{ block.settings.title }}</span>
+            {%- if block.settings.text != blank -%}<span class="svl-item__text">{{ block.settings.text }}</span>{%- endif -%}
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign demo_titles = 'Complimentary Shipping,Made to Order,Private Appointments' | split: ',' -%}
+        {%- assign demo_texts = 'Worldwide, insured, and beautifully packed — on every order.,Selected pieces cut to your measure in our Milan atelier.,One-on-one styling in the salon or over video, by reservation.' | split: ',' -%}
+        {%- for i in (0..2) -%}
+          <div class="svl-item">
+            <span class="svl-item__num">{{ numerals[i] }}</span>
+            <span class="svl-item__title">{{ demo_titles[i] }}</span>
+            <span class="svl-item__text">{{ demo_texts[i] }}</span>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }}.svl--light { --bg:#F4F1EA; --fg:#17141B; --acc:var(--gold,#A8874C); --mut:rgba(23,20,27,.55); --bdr:rgba(23,20,27,.15); }
+  #section-{{ section.id }}.svl--dark  { --bg:#131118; --fg:#EFEBE2; --acc:var(--gold,#C6A15B); --mut:rgba(239,235,226,.52); --bdr:rgba(239,235,226,.16); }
+  #section-{{ section.id }}.svl--warm  { --bg:#EBE2D2; --fg:#241D15; --acc:var(--gold,#8E5A2A); --mut:rgba(36,29,21,.55); --bdr:rgba(36,29,21,.18); }
+  #section-{{ section.id }}.svl--theme { --bg:var(--background,#F4F1EA); --fg:var(--foreground,#17141B); --acc:var(--gold,#A8874C); --mut:var(--muted,rgba(23,20,27,.55)); --bdr:var(--border,rgba(23,20,27,.15)); }
+
+  #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: clamp(48px,7vh,84px) var(--side-padding,5vw); }
+  #section-{{ section.id }} .svl-inner { max-width: var(--container-width,1440px); margin: 0 auto; }
+
+  #section-{{ section.id }} .svl-head {
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    margin-bottom: clamp(24px,3.4vh,38px);
+  }
+  #section-{{ section.id }} .svl-head__dia { color: var(--acc); font-size: 10px; }
+  #section-{{ section.id }} .svl-heading {
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 11px; font-weight: 500; letter-spacing: .34em; text-transform: uppercase;
+    color: var(--mut); margin: 0;
+  }
+
+  #section-{{ section.id }} .svl-band {
+    display: grid; grid-template-columns: repeat({{ section.blocks.size | at_least: 3 }}, 1fr);
+    border-top: 1px solid var(--bdr); border-bottom: 1px solid var(--bdr);
+  }
+  #section-{{ section.id }} .svl-item {
+    padding: clamp(24px,3vw,40px) clamp(18px,2.4vw,36px);
+    text-align: center;
+  }
+  #section-{{ section.id }} .svl-item + .svl-item { border-left: 1px solid var(--bdr); }
+  #section-{{ section.id }} .svl-item__num {
+    display: block; font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: clamp(20px,1.8vw,28px); color: var(--acc); margin-bottom: 10px;
+  }
+  #section-{{ section.id }} .svl-item__title {
+    display: block; font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: clamp(19px,1.7vw,26px); font-weight: 400; line-height: 1.15; margin-bottom: 8px;
+  }
+  #section-{{ section.id }} .svl-item__text {
+    display: block; font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: clamp(12px,.95vw,14px); line-height: 1.65; color: var(--mut);
+    max-width: 280px; margin: 0 auto;
+  }
+
+  #section-{{ section.id }} .reveal.reveal-armed { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  #section-{{ section.id }} .reveal.is-visible { opacity: 1; transform: none; }
+
+  @media (max-width: 820px) {
+    #section-{{ section.id }} .svl-band { grid-template-columns: 1fr; }
+    #section-{{ section.id }} .svl-item + .svl-item { border-left: none; border-top: 1px solid var(--bdr); }
+  }
+</style>
+
+<script>
+(function(){
+  var SEC='{{ section.id }}';
+  function arm(root){
+    var els=root.querySelectorAll('.reveal');
+    els.forEach(function(el){el.classList.add('reveal-armed');});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target);}});},{threshold:.2});
+    els.forEach(function(el){io.observe(el);});
+    setTimeout(function(){els.forEach(function(el){el.classList.add('is-visible');});},800);
+  }
+  function root(){return document.getElementById('section-'+SEC);}
+  document.addEventListener('DOMContentLoaded',function(){var r=root();if(r)arm(r);});
+  document.addEventListener('shopify:section:load',function(e){if(e.detail.sectionId!==SEC)return;var r=root();if(r){arm(r);r.querySelectorAll('.reveal').forEach(function(el){el.classList.add('is-visible');});}});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "House Services",
+  "tag": "section",
+  "class": "section-services-lumiere",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (pearl)" },
+        { "value": "dark",  "label": "Dark (velvet)" },
+        { "value": "warm",  "label": "Warm (champagne)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "light"
+    },
+    { "type": "text", "id": "heading", "label": "Band heading", "default": "The House" }
+  ],
+  "blocks": [
+    {
+      "type": "service",
+      "name": "Service",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Complimentary Shipping" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Worldwide, insured, and beautifully packed — on every order." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "House Services",
+      "blocks": [
+        { "type": "service", "settings": { "title": "Complimentary Shipping", "text": "Worldwide, insured, and beautifully packed — on every order." } },
+        { "type": "service", "settings": { "title": "Made to Order", "text": "Selected pieces cut to your measure in our Milan atelier." } },
+        { "type": "service", "settings": { "title": "Private Appointments", "text": "One-on-one styling in the salon or over video, by reservation." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,7 +1,8 @@
 {%- liquid
   assign s = section.settings
-  assign fallback = 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=900&q=85'
-  assign img_alt = s.heading_left | default: 'Editorial'
+  assign f1 = 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&q=85'
+  assign f2 = 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=900&q=85'
+  assign f3 = 'https://images.unsplash.com/photo-1496217590455-aa63a8350eea?auto=format&fit=crop&w=800&q=85'
 -%}
 
 <section
@@ -9,184 +10,193 @@
   class="hlm-section hlm--{{ s.scheme }}"
   data-section-id="{{ section.id }}"
 >
-  <span class="hlm-spot" aria-hidden="true"></span>
-
   <div class="hlm-inner">
-    {%- if s.eyebrow != blank -%}
-      <span class="hlm-eyebrow"><span class="hlm-eyebrow__dia">&#10022;</span> {{ s.eyebrow }} <span class="hlm-eyebrow__dia">&#10022;</span></span>
-    {%- endif -%}
 
-    {%- comment -%}The stage: headline split around a centered image column{%- endcomment -%}
-    <div class="hlm-stage">
-      <h1 class="hlm-title" aria-label="{{ s.heading_left }} {{ s.heading_right }}">
-        <span class="hlm-title__half hlm-title__half--l" aria-hidden="true">{{ s.heading_left }}</span>
-
-        <span class="hlm-figure">
-          <span class="hlm-figure__ring" aria-hidden="true"></span>
-          <span class="hlm-figure__media">
-            {%- if s.image != blank -%}
-              {{ s.image | image_url: width: 900 | image_tag:
-                loading: 'eager', fetchpriority: 'high', class: 'hlm-figure__img',
-                sizes: '(max-width:900px) 78vw, 30vw', widths: '450,700,900', alt: img_alt }}
-            {%- else -%}
-              <img class="hlm-figure__img" src="{{ fallback }}" alt="{{ img_alt | escape }}" loading="eager" fetchpriority="high" />
-            {%- endif -%}
-          </span>
-          {%- if s.accent_word != blank -%}
-            <span class="hlm-figure__accent" aria-hidden="true"><em>{{ s.accent_word }}</em></span>
-          {%- endif -%}
-        </span>
-
-        <span class="hlm-title__half hlm-title__half--r" aria-hidden="true">{{ s.heading_right }}</span>
-      </h1>
+    {%- comment -%}Masthead row — like the top of a magazine issue{%- endcomment -%}
+    <div class="hlm-masthead">
+      {%- if s.mast_left != blank -%}<span>{{ s.mast_left }}</span>{%- endif -%}
+      <span class="hlm-masthead__dia" aria-hidden="true">&#10022;</span>
+      {%- if s.mast_center != blank -%}<span class="hlm-masthead__c">{{ s.mast_center }}</span>{%- endif -%}
+      <span class="hlm-masthead__dia" aria-hidden="true">&#10022;</span>
+      {%- if s.mast_right != blank -%}<span>{{ s.mast_right }}</span>{%- endif -%}
     </div>
+
+    {%- comment -%}Giant issue title with an italic gold word{%- endcomment -%}
+    <h1 class="hlm-title">
+      {%- if s.heading_a != blank -%}<span class="hlm-title__w">{{ s.heading_a }}</span>{%- endif -%}
+      {%- if s.heading_em != blank -%}<span class="hlm-title__em"><em>{{ s.heading_em }}</em></span>{%- endif -%}
+      {%- if s.heading_b != blank -%}<span class="hlm-title__w">{{ s.heading_b }}</span>{%- endif -%}
+    </h1>
 
     {%- if s.description != blank -%}<p class="hlm-desc">{{ s.description }}</p>{%- endif -%}
 
     <div class="hlm-ctas">
       {%- if s.btn1_label != blank -%}<a href="{{ s.btn1_link | default: '#' }}" class="hlm-btn hlm-btn--gold">{{ s.btn1_label }}</a>{%- endif -%}
-      {%- if s.btn2_label != blank -%}<a href="{{ s.btn2_link | default: '#' }}" class="hlm-btn hlm-btn--ghost">{{ s.btn2_label }}</a>{%- endif -%}
+      {%- if s.btn2_label != blank -%}<a href="{{ s.btn2_link | default: '#' }}" class="hlm-btn hlm-btn--under">{{ s.btn2_label }} <span aria-hidden="true">&#8599;</span></a>{%- endif -%}
     </div>
-  </div>
 
-  <div class="hlm-foot" aria-hidden="true">
-    {%- if s.corner_left != blank -%}<span>{{ s.corner_left }}</span>{%- endif -%}
-    {%- if s.scroll_label != blank -%}
-      <span class="hlm-cue"><span class="hlm-cue__dot"></span>{{ s.scroll_label }}</span>
-    {%- endif -%}
-    {%- if s.corner_right != blank -%}<span>{{ s.corner_right }}</span>{%- endif -%}
+    {%- comment -%}Campaign triptych — three frames, center raised{%- endcomment -%}
+    <div class="hlm-trip">
+      <figure class="hlm-frame hlm-frame--a">
+        <span class="hlm-frame__media">
+          {%- if s.image_1 != blank -%}
+            {{ s.image_1 | image_url: width: 800 | image_tag: loading: 'eager', class: 'hlm-frame__img', sizes: '(max-width:900px) 72vw, 30vw', widths: '400,600,800', alt: s.caption_1 | default: 'Editorial' }}
+          {%- else -%}
+            <img class="hlm-frame__img" src="{{ f1 }}" alt="{{ s.caption_1 | escape }}" loading="eager" />
+          {%- endif -%}
+        </span>
+        {%- if s.caption_1 != blank -%}<figcaption class="hlm-frame__cap"><span class="hlm-frame__num">I.</span>{{ s.caption_1 }}</figcaption>{%- endif -%}
+      </figure>
+
+      <figure class="hlm-frame hlm-frame--b">
+        <span class="hlm-frame__media">
+          {%- if s.image_2 != blank -%}
+            {{ s.image_2 | image_url: width: 900 | image_tag: loading: 'eager', fetchpriority: 'high', class: 'hlm-frame__img', sizes: '(max-width:900px) 72vw, 34vw', widths: '450,700,900', alt: s.caption_2 | default: 'Editorial' }}
+          {%- else -%}
+            <img class="hlm-frame__img" src="{{ f2 }}" alt="{{ s.caption_2 | escape }}" loading="eager" fetchpriority="high" />
+          {%- endif -%}
+          {%- if s.tag_label != blank -%}
+            <span class="hlm-tag"><span class="hlm-tag__dot"></span>{{ s.tag_label }}</span>
+          {%- endif -%}
+        </span>
+        {%- if s.caption_2 != blank -%}<figcaption class="hlm-frame__cap"><span class="hlm-frame__num">II.</span>{{ s.caption_2 }}</figcaption>{%- endif -%}
+      </figure>
+
+      <figure class="hlm-frame hlm-frame--c">
+        <span class="hlm-frame__media">
+          {%- if s.image_3 != blank -%}
+            {{ s.image_3 | image_url: width: 800 | image_tag: loading: 'eager', class: 'hlm-frame__img', sizes: '(max-width:900px) 72vw, 30vw', widths: '400,600,800', alt: s.caption_3 | default: 'Editorial' }}
+          {%- else -%}
+            <img class="hlm-frame__img" src="{{ f3 }}" alt="{{ s.caption_3 | escape }}" loading="eager" />
+          {%- endif -%}
+        </span>
+        {%- if s.caption_3 != blank -%}<figcaption class="hlm-frame__cap"><span class="hlm-frame__num">III.</span>{{ s.caption_3 }}</figcaption>{%- endif -%}
+      </figure>
+    </div>
+
   </div>
 </section>
 
 <style>
-  #section-{{ section.id }}.hlm--light { --bg:#F2EFE8; --fg:#16131A; --acc:var(--gold,#A8874C); --mut:rgba(22,19,26,.55); --bdr:rgba(22,19,26,.16); --spot:rgba(168,135,76,.14); }
-  #section-{{ section.id }}.hlm--dark  { --bg:#100E14; --fg:#EFEBE2; --acc:var(--gold,#C6A15B); --mut:rgba(239,235,226,.52); --bdr:rgba(239,235,226,.16); --spot:rgba(198,161,91,.16); }
-  #section-{{ section.id }}.hlm--warm  { --bg:#E9DFCE; --fg:#241D15; --acc:var(--gold,#8E5A2A); --mut:rgba(36,29,21,.55); --bdr:rgba(36,29,21,.2); --spot:rgba(142,90,42,.13); }
-  #section-{{ section.id }}.hlm--theme { --bg:var(--background,#100E14); --fg:var(--foreground,#EFEBE2); --acc:var(--gold,#C6A15B); --mut:var(--muted,rgba(239,235,226,.52)); --bdr:var(--border,rgba(239,235,226,.16)); --spot:rgba(198,161,91,.14); }
+  #section-{{ section.id }}.hlm--light { --bg:#F4F1EA; --fg:#17141B; --acc:var(--gold,#A8874C); --mut:rgba(23,20,27,.55); --bdr:rgba(23,20,27,.15); }
+  #section-{{ section.id }}.hlm--dark  { --bg:#131118; --fg:#EFEBE2; --acc:var(--gold,#C6A15B); --mut:rgba(239,235,226,.52); --bdr:rgba(239,235,226,.16); }
+  #section-{{ section.id }}.hlm--warm  { --bg:#EBE2D2; --fg:#241D15; --acc:var(--gold,#8E5A2A); --mut:rgba(36,29,21,.55); --bdr:rgba(36,29,21,.18); }
+  #section-{{ section.id }}.hlm--theme { --bg:var(--background,#F4F1EA); --fg:var(--foreground,#17141B); --acc:var(--gold,#A8874C); --mut:var(--muted,rgba(23,20,27,.55)); --bdr:var(--border,rgba(23,20,27,.15)); }
 
   #section-{{ section.id }} {
-    position: relative; background: var(--bg); color: var(--fg);
-    overflow: hidden; isolation: isolate;
-    display: flex; flex-direction: column;
-    padding: clamp(112px, 14svh, 160px) var(--side-padding,5vw) 0;
+    background: var(--bg); color: var(--fg);
+    padding: clamp(108px, 14svh, 156px) var(--side-padding,5vw) clamp(40px, 6svh, 72px);
   }
+  #section-{{ section.id }} .hlm-inner { max-width: var(--container-width,1440px); margin: 0 auto; }
 
-  /* Runway spotlight */
-  #section-{{ section.id }} .hlm-spot {
-    position: absolute; z-index: 0; inset: -12% -30%;
-    background: radial-gradient(42% 52% at 50% 46%, var(--spot) 0%, transparent 72%);
-    pointer-events: none;
+  /* — Masthead — */
+  #section-{{ section.id }} .hlm-masthead {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    padding-bottom: 16px; margin-bottom: clamp(28px, 4.4svh, 48px);
+    border-bottom: 1px solid var(--bdr);
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    letter-spacing: .3em; text-transform: uppercase; color: var(--mut);
+    animation: hlmUp{{ section.id }} .7s both;
   }
+  #section-{{ section.id }} .hlm-masthead__c { color: var(--fg); }
+  #section-{{ section.id }} .hlm-masthead__dia { color: var(--acc); font-size: 9px; letter-spacing: 0; }
 
-  #section-{{ section.id }} .hlm-inner {
-    position: relative; z-index: 1;
-    display: flex; flex-direction: column; align-items: center; text-align: center;
-    width: 100%; max-width: var(--container-width,1440px); margin: 0 auto;
-  }
-
-  #section-{{ section.id }} .hlm-eyebrow {
-    display: inline-flex; align-items: center; gap: 12px;
-    font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 11px; font-weight: 500; letter-spacing: .34em; text-transform: uppercase;
-    color: var(--acc); margin-bottom: clamp(26px, 4.4svh, 46px);
-    animation: hlmUp{{ section.id }} .8s .05s both;
-  }
-  #section-{{ section.id }} .hlm-eyebrow__dia { font-size: 9px; }
-
-  /* — The stage — */
-  #section-{{ section.id }} .hlm-stage { width: 100%; }
+  /* — Issue title — */
   #section-{{ section.id }} .hlm-title {
-    display: grid; grid-template-columns: 1fr auto 1fr;
-    align-items: center; gap: clamp(18px, 2.6vw, 44px);
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline;
+    column-gap: clamp(14px, 2vw, 34px);
+    text-align: center; margin: 0;
     font-family: var(--ff-display,'Cormorant Garamond',serif); font-weight: 300;
-    font-size: calc(clamp(40px, 6vw, 96px) * var(--heading-scale,1));
-    line-height: 1; letter-spacing: .02em; text-transform: uppercase;
-    margin: 0; width: 100%;
+    font-size: calc(clamp(52px, 9.4vw, 148px) * var(--heading-scale,1));
+    line-height: .96; letter-spacing: .01em; text-transform: uppercase;
   }
-  #section-{{ section.id }} .hlm-title__half--l { text-align: right; animation: hlmL{{ section.id }} 1s .2s both; }
-  #section-{{ section.id }} .hlm-title__half--r { text-align: left;  animation: hlmR{{ section.id }} 1s .2s both; }
-
-  #section-{{ section.id }} .hlm-figure { position: relative; display: inline-block; }
-  #section-{{ section.id }} .hlm-figure__ring {
-    position: absolute; z-index: 0; inset: -9% -22% auto;
-    width: 144%; aspect-ratio: 1; left: 50%; top: 46%;
-    transform: translate(-50%, -50%);
-    border: 1px solid color-mix(in srgb, var(--acc) 55%, transparent);
-    border-radius: 50%;
-    animation: hlmRing{{ section.id }} 1.4s .5s both;
-  }
-  #section-{{ section.id }} .hlm-figure__media {
-    position: relative; z-index: 1; display: block;
-    width: clamp(220px, 24vw, 360px); aspect-ratio: 3/4.2;
-    overflow: hidden; border-radius: 999px 999px 4px 4px; /* couture arch */
-    background: var(--bdr);
-    animation: hlmFade{{ section.id }} 1.2s .12s both;
-  }
-  #section-{{ section.id }} .hlm-figure__img { width: 100%; height: 100%; object-fit: cover; display: block; animation: hlmKen{{ section.id }} 16s ease-out forwards; }
-  #section-{{ section.id }} .hlm-figure__accent {
-    position: absolute; z-index: 2; left: 50%; bottom: -4%;
-    transform: translateX(-50%); white-space: nowrap;
-    font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: calc(clamp(30px, 3.4vw, 56px) * var(--heading-scale,1));
-    font-weight: 300; color: var(--acc); text-transform: none;
-    text-shadow: 0 2px 22px rgba(0,0,0,.25);
-    animation: hlmUp{{ section.id }} 1s .6s both;
-  }
-  #section-{{ section.id }} .hlm-figure__accent em { font-style: italic; }
+  #section-{{ section.id }} .hlm-title__w  { animation: hlmUp{{ section.id }} .9s .1s both; }
+  #section-{{ section.id }} .hlm-title__w:last-child { animation-delay: .3s; }
+  #section-{{ section.id }} .hlm-title__em { color: var(--acc); text-transform: none; animation: hlmUp{{ section.id }} .9s .2s both; }
+  #section-{{ section.id }} .hlm-title__em em { font-style: italic; }
 
   #section-{{ section.id }} .hlm-desc {
     font-family: var(--ff-body,'Outfit',sans-serif);
     font-size: clamp(14px, 1.05vw, 16px); line-height: 1.75;
-    color: var(--mut); max-width: 480px;
-    margin: clamp(30px, 5svh, 52px) 0 0;
-    animation: hlmUp{{ section.id }} .9s .7s both;
+    color: var(--mut); max-width: 540px; text-align: center;
+    margin: clamp(18px, 2.8svh, 28px) auto 0;
+    animation: hlmUp{{ section.id }} .9s .42s both;
   }
-  #section-{{ section.id }} .hlm-ctas { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: clamp(22px, 3.4svh, 34px); animation: hlmUp{{ section.id }} .9s .8s both; }
+  #section-{{ section.id }} .hlm-ctas {
+    display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; align-items: center;
+    margin: clamp(20px, 3svh, 30px) 0 clamp(34px, 5.4svh, 60px);
+    animation: hlmUp{{ section.id }} .9s .52s both;
+  }
   #section-{{ section.id }} .hlm-btn {
-    display: inline-flex; align-items: center;
+    display: inline-flex; align-items: center; gap: 8px;
     font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500;
-    letter-spacing: .18em; text-transform: uppercase; padding: 16px 36px; text-decoration: none;
-    border-radius: 999px; transition: transform .22s, background .22s, color .22s, border-color .22s, box-shadow .22s;
+    letter-spacing: .18em; text-transform: uppercase; text-decoration: none;
+    transition: transform .22s, box-shadow .22s, color .22s;
   }
-  #section-{{ section.id }} .hlm-btn--gold { background: var(--acc); color: #14110a; }
+  #section-{{ section.id }} .hlm-btn--gold { background: var(--acc); color: #14110a; padding: 16px 36px; border-radius: 999px; }
   #section-{{ section.id }} .hlm-btn--gold:hover { transform: translateY(-2px); box-shadow: 0 16px 38px -16px color-mix(in srgb, var(--acc) 70%, transparent); }
-  #section-{{ section.id }} .hlm-btn--ghost { border: 1px solid var(--bdr); color: var(--fg); }
-  #section-{{ section.id }} .hlm-btn--ghost:hover { border-color: var(--acc); color: var(--acc); }
+  #section-{{ section.id }} .hlm-btn--under { color: var(--fg); border-bottom: 1px solid var(--acc); padding-bottom: 6px; }
+  #section-{{ section.id }} .hlm-btn--under:hover { color: var(--acc); }
 
-  /* Invitation footline */
-  #section-{{ section.id }} .hlm-foot {
-    position: relative; z-index: 1;
-    display: flex; align-items: center; justify-content: space-between; gap: 18px;
-    max-width: var(--container-width,1440px); margin: clamp(34px, 6svh, 64px) auto 0; width: 100%;
-    padding: 16px 0 22px; border-top: 1px solid var(--bdr);
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
-    letter-spacing: .26em; text-transform: uppercase; color: var(--mut);
+  /* — Triptych — */
+  #section-{{ section.id }} .hlm-trip {
+    display: grid; grid-template-columns: 1fr 1.18fr 1fr;
+    gap: clamp(14px, 2vw, 30px); align-items: end;
   }
-  #section-{{ section.id }} .hlm-cue { display: inline-flex; align-items: center; gap: 10px; color: var(--acc); }
-  #section-{{ section.id }} .hlm-cue__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--acc); animation: hlmPulse{{ section.id }} 2.2s ease-in-out infinite; }
+  #section-{{ section.id }} .hlm-frame { margin: 0; }
+  #section-{{ section.id }} .hlm-frame__media {
+    position: relative; display: block; overflow: hidden; background: var(--bdr); border-radius: 3px;
+  }
+  #section-{{ section.id }} .hlm-frame--a .hlm-frame__media,
+  #section-{{ section.id }} .hlm-frame--c .hlm-frame__media { aspect-ratio: 4/5; }
+  #section-{{ section.id }} .hlm-frame--b .hlm-frame__media { aspect-ratio: 3/4.35; }
+  #section-{{ section.id }} .hlm-frame--a { animation: hlmUp{{ section.id }} 1s .55s both; }
+  #section-{{ section.id }} .hlm-frame--b { animation: hlmUp{{ section.id }} 1s .65s both; }
+  #section-{{ section.id }} .hlm-frame--c { animation: hlmUp{{ section.id }} 1s .75s both; }
+  #section-{{ section.id }} .hlm-frame__img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform .8s cubic-bezier(.2,0,.2,1);
+  }
+  #section-{{ section.id }} .hlm-frame:hover .hlm-frame__img { transform: scale(1.04); }
+  #section-{{ section.id }} .hlm-frame--b .hlm-frame__img { animation: hlmKen{{ section.id }} 16s ease-out forwards; }
+  #section-{{ section.id }} .hlm-frame__cap {
+    display: flex; align-items: center; gap: 10px;
+    margin-top: 12px;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--mut);
+  }
+  #section-{{ section.id }} .hlm-frame__num { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: 14px; letter-spacing: 0; color: var(--acc); }
+  #section-{{ section.id }} .hlm-tag {
+    position: absolute; z-index: 2; left: 14px; bottom: 14px;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(244,241,234,.82);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    color: #17141B; padding: 9px 15px; border-radius: 999px;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    letter-spacing: .18em; text-transform: uppercase;
+  }
+  #section-{{ section.id }} .hlm-tag__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--acc); }
 
-  @keyframes hlmUp{{ section.id }}   { from { opacity:0; transform: translateY(24px);} to { opacity:1; transform:none; } }
-  @keyframes hlmL{{ section.id }}    { from { opacity:0; transform: translateX(-34px);} to { opacity:1; transform:none; } }
-  @keyframes hlmR{{ section.id }}    { from { opacity:0; transform: translateX(34px);} to { opacity:1; transform:none; } }
-  @keyframes hlmFade{{ section.id }} { from { opacity:0;} to { opacity:1;} }
-  @keyframes hlmKen{{ section.id }}  { from { transform: scale(1.08);} to { transform: scale(1);} }
-  @keyframes hlmRing{{ section.id }} { from { opacity:0; transform: translate(-50%,-50%) scale(.92);} to { opacity:1; transform: translate(-50%,-50%) scale(1);} }
-  @keyframes hlmPulse{{ section.id }}{ 0%,100% { opacity:.4;} 50% { opacity:1;} }
+  @keyframes hlmUp{{ section.id }}  { from { opacity:0; transform: translateY(26px);} to { opacity:1; transform:none; } }
+  @keyframes hlmKen{{ section.id }} { from { transform: scale(1.07);} to { transform: scale(1);} }
 
   @media (max-width: 900px) {
-    #section-{{ section.id }} { padding-top: clamp(104px, 13svh, 132px); }
-    #section-{{ section.id }} .hlm-title {
-      grid-template-columns: 1fr; gap: 10px;
-      font-size: calc(clamp(38px, 10vw, 60px) * var(--heading-scale,1));
+    #section-{{ section.id }} { padding-top: clamp(100px, 13svh, 128px); }
+    #section-{{ section.id }} .hlm-masthead span:first-child,
+    #section-{{ section.id }} .hlm-masthead span:last-child { display: none; }
+    #section-{{ section.id }} .hlm-masthead { justify-content: center; gap: 12px; }
+    /* triptych becomes a swipeable strip — nothing hidden, nothing empty */
+    #section-{{ section.id }} .hlm-trip {
+      display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+      margin: 0 calc(-1 * var(--side-padding,5vw));
+      padding: 0 var(--side-padding,5vw) 6px;
+      scrollbar-width: none;
     }
-    #section-{{ section.id }} .hlm-title__half--l,
-    #section-{{ section.id }} .hlm-title__half--r { text-align: center; }
-    #section-{{ section.id }} .hlm-figure { order: 3; margin-top: 18px; }
-    #section-{{ section.id }} .hlm-figure__media { width: min(66vw, 300px); }
-    #section-{{ section.id }} .hlm-figure__ring { width: 126%; }
-    #section-{{ section.id }} .hlm-foot span:first-child,
-    #section-{{ section.id }} .hlm-foot span:last-child { display: none; }
-    #section-{{ section.id }} .hlm-foot { justify-content: center; }
+    #section-{{ section.id }} .hlm-trip::-webkit-scrollbar { display: none; }
+    #section-{{ section.id }} .hlm-frame { flex: 0 0 72vw; scroll-snap-align: center; }
+    #section-{{ section.id }} .hlm-frame--a .hlm-frame__media,
+    #section-{{ section.id }} .hlm-frame--b .hlm-frame__media,
+    #section-{{ section.id }} .hlm-frame--c .hlm-frame__media { aspect-ratio: 3/4; }
   }
 </style>
 
@@ -204,23 +214,29 @@
         { "value": "warm",  "label": "Warm (champagne)" },
         { "value": "theme", "label": "Follow theme" }
       ],
-      "default": "dark"
+      "default": "light"
     },
-    { "type": "image_picker", "id": "image", "label": "Center image" },
-    { "type": "header", "content": "Headline (split around the image)" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Maison Noir Presents" },
-    { "type": "text", "id": "heading_left",  "label": "Headline left of image",  "default": "La Belle" },
-    { "type": "text", "id": "heading_right", "label": "Headline right of image", "default": "Lumière" },
-    { "type": "text", "id": "accent_word", "label": "Accent word (italic, over image base)", "default": "Nº 05" },
-    { "type": "textarea", "id": "description", "label": "Description", "default": "An evening-wear study in light and shadow — champagne silks, sculpted velvet, and pieces that arrive like an invitation." },
-    { "type": "text", "id": "btn1_label", "label": "Primary button", "default": "Enter the Collection" },
+    { "type": "header", "content": "Masthead row" },
+    { "type": "text", "id": "mast_left",   "label": "Left",   "default": "Issue Nº 05" },
+    { "type": "text", "id": "mast_center", "label": "Center", "default": "Maison Noir" },
+    { "type": "text", "id": "mast_right",  "label": "Right",  "default": "Autumn / Winter 2025" },
+    { "type": "header", "content": "Issue title" },
+    { "type": "text", "id": "heading_a",  "label": "Word 1", "default": "The" },
+    { "type": "text", "id": "heading_em", "label": "Word 2 (italic, accent)", "default": "Light" },
+    { "type": "text", "id": "heading_b",  "label": "Word 3", "default": "Issue" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Champagne silks, pearl tailoring and jewellery that catches the afternoon — the season, photographed like a magazine and shoppable like a boutique." },
+    { "type": "text", "id": "btn1_label", "label": "Primary button", "default": "Shop the Issue" },
     { "type": "url",  "id": "btn1_link",  "label": "Primary button link" },
-    { "type": "text", "id": "btn2_label", "label": "Secondary button", "default": "The Story" },
-    { "type": "url",  "id": "btn2_link",  "label": "Secondary button link" },
-    { "type": "header", "content": "Footline" },
-    { "type": "text", "id": "corner_left",  "label": "Foot left",  "default": "Paris — Milan — Tokyo" },
-    { "type": "text", "id": "scroll_label", "label": "Center cue", "default": "Begin" },
-    { "type": "text", "id": "corner_right", "label": "Foot right", "default": "Autumn / Winter 2025" }
+    { "type": "text", "id": "btn2_label", "label": "Secondary link", "default": "Read the Editor's Note" },
+    { "type": "url",  "id": "btn2_link",  "label": "Secondary link URL" },
+    { "type": "header", "content": "Campaign triptych" },
+    { "type": "image_picker", "id": "image_1", "label": "Left image" },
+    { "type": "text", "id": "caption_1", "label": "Left caption", "default": "The Morning Silk" },
+    { "type": "image_picker", "id": "image_2", "label": "Center image (tallest)" },
+    { "type": "text", "id": "caption_2", "label": "Center caption", "default": "The Champagne Gown" },
+    { "type": "text", "id": "tag_label", "label": "Center image tag", "default": "New Season" },
+    { "type": "image_picker", "id": "image_3", "label": "Right image" },
+    { "type": "text", "id": "caption_3", "label": "Right caption", "default": "The Pearl Tailoring" }
   ],
   "presets": [ { "name": "Hero Lumière" } ]
 }

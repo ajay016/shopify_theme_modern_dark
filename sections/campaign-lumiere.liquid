@@ -1,0 +1,155 @@
+{%- liquid
+  assign s = section.settings
+  assign fallback = 'https://images.unsplash.com/photo-1490725263030-1f0521cec8ec?auto=format&fit=crop&w=1700&q=85'
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="clm-section clm--{{ s.scheme }}"
+  data-section-id="{{ section.id }}"
+  style="--clm-minh: {{ s.min_height }}vh;"
+>
+  <div class="clm-bg" aria-hidden="true">
+    {%- if s.image != blank -%}
+      {{ s.image | image_url: width: 1800 | image_tag: loading: 'lazy', class: 'clm-bg__img', sizes: '100vw', widths: '900,1300,1800', alt: '' }}
+    {%- else -%}
+      <img class="clm-bg__img" src="{{ fallback }}" alt="" loading="lazy" />
+    {%- endif -%}
+    <span class="clm-bg__scrim"></span>
+  </div>
+
+  <div class="clm-inner reveal">
+    {%- if s.eyebrow != blank -%}<span class="clm-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+    <h2 class="clm-title">
+      {%- if s.heading_line1 != blank -%}<span>{{ s.heading_line1 }}</span>{%- endif -%}
+      {%- if s.heading_line2 != blank -%}<span class="clm-title__em"><em>{{ s.heading_line2 }}</em></span>{%- endif -%}
+    </h2>
+    {%- if s.description != blank -%}<p class="clm-desc">{{ s.description }}</p>{%- endif -%}
+    <div class="clm-ctas">
+      {%- if s.btn_label != blank -%}<a href="{{ s.btn_link | default: '/collections/all' }}" class="clm-btn">{{ s.btn_label }}</a>{%- endif -%}
+      {%- if s.link_label != blank -%}<a href="{{ s.link_url | default: '/collections/all' }}" class="clm-link">{{ s.link_label }} <span aria-hidden="true">&#8599;</span></a>{%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }}.clm--light { --panel:#F4F1EA; --fg:#17141B; --acc:var(--gold,#A8874C); --mut:rgba(23,20,27,.6); }
+  #section-{{ section.id }}.clm--dark  { --panel:#131118; --fg:#EFEBE2; --acc:var(--gold,#C6A15B); --mut:rgba(239,235,226,.6); }
+  #section-{{ section.id }}.clm--warm  { --panel:#EBE2D2; --fg:#241D15; --acc:var(--gold,#8E5A2A); --mut:rgba(36,29,21,.6); }
+  #section-{{ section.id }}.clm--theme { --panel:var(--background,#F4F1EA); --fg:var(--foreground,#17141B); --acc:var(--gold,#A8874C); --mut:var(--muted,rgba(23,20,27,.6)); }
+
+  #section-{{ section.id }} {
+    position: relative; overflow: hidden; isolation: isolate;
+    min-height: var(--clm-minh, 68vh);
+    display: flex; align-items: center;
+    padding: clamp(64px,9vh,110px) var(--side-padding,5vw);
+  }
+  #section-{{ section.id }} .clm-bg { position: absolute; inset: 0; z-index: 0; }
+  #section-{{ section.id }} .clm-bg__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #section-{{ section.id }} .clm-bg__scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(95deg,
+      color-mix(in srgb, var(--panel) 96%, transparent) 0%,
+      color-mix(in srgb, var(--panel) 82%, transparent) 34%,
+      color-mix(in srgb, var(--panel) 20%, transparent) 62%,
+      transparent 100%);
+  }
+
+  #section-{{ section.id }} .clm-inner { position: relative; z-index: 2; max-width: 560px; }
+  #section-{{ section.id }} .clm-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500;
+    letter-spacing: .28em; text-transform: uppercase; color: var(--acc); margin-bottom: 18px;
+  }
+  #section-{{ section.id }} .clm-eyebrow::before { content:''; width: 26px; height: 1px; background: var(--acc); }
+  #section-{{ section.id }} .clm-title {
+    font-family: var(--ff-display,'Cormorant Garamond',serif); font-weight: 300;
+    font-size: calc(clamp(38px,5.4vw,84px) * var(--heading-scale,1));
+    line-height: 1; text-transform: uppercase; letter-spacing: .01em;
+    color: var(--fg); margin: 0;
+  }
+  #section-{{ section.id }} .clm-title span { display: block; }
+  #section-{{ section.id }} .clm-title__em { color: var(--acc); text-transform: none; padding-left: clamp(16px,2.4vw,48px); }
+  #section-{{ section.id }} .clm-title__em em { font-style: italic; }
+  #section-{{ section.id }} .clm-desc {
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: clamp(14px,1.05vw,16px); line-height: 1.75; color: var(--mut);
+    margin: clamp(18px,2.6vh,26px) 0 0; max-width: 440px;
+  }
+  #section-{{ section.id }} .clm-ctas { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; margin-top: clamp(24px,3.6vh,34px); }
+  #section-{{ section.id }} .clm-btn {
+    display: inline-block; font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+    text-decoration: none; color: #14110a; background: var(--acc);
+    padding: 16px 36px; border-radius: 999px;
+    transition: transform .22s, box-shadow .22s;
+  }
+  #section-{{ section.id }} .clm-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 38px -16px color-mix(in srgb, var(--acc) 70%, transparent); }
+  #section-{{ section.id }} .clm-link {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--fg); text-decoration: none;
+    border-bottom: 1px solid var(--acc); padding-bottom: 5px; transition: color .2s;
+  }
+  #section-{{ section.id }} .clm-link:hover { color: var(--acc); }
+
+  #section-{{ section.id }} .reveal.reveal-armed { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s ease; }
+  #section-{{ section.id }} .reveal.is-visible { opacity: 1; transform: none; }
+
+  @media (max-width: 760px) {
+    #section-{{ section.id }} .clm-bg__scrim {
+      background: linear-gradient(to top,
+        color-mix(in srgb, var(--panel) 96%, transparent) 0%,
+        color-mix(in srgb, var(--panel) 74%, transparent) 55%,
+        color-mix(in srgb, var(--panel) 28%, transparent) 100%);
+    }
+    #section-{{ section.id }} { align-items: flex-end; min-height: min(88svh, 640px); }
+  }
+</style>
+
+<script>
+(function(){
+  var SEC='{{ section.id }}';
+  function arm(root){
+    var els=root.querySelectorAll('.reveal');
+    els.forEach(function(el){el.classList.add('reveal-armed');});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target);}});},{threshold:.2});
+    els.forEach(function(el){io.observe(el);});
+    setTimeout(function(){els.forEach(function(el){el.classList.add('is-visible');});},800);
+  }
+  function root(){return document.getElementById('section-'+SEC);}
+  document.addEventListener('DOMContentLoaded',function(){var r=root();if(r)arm(r);});
+  document.addEventListener('shopify:section:load',function(e){if(e.detail.sectionId!==SEC)return;var r=root();if(r){arm(r);r.querySelectorAll('.reveal').forEach(function(el){el.classList.add('is-visible');});}});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Campaign Lumière",
+  "tag": "section",
+  "class": "section-campaign-lumiere",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Panel scheme",
+      "options": [
+        { "value": "light", "label": "Light (pearl)" },
+        { "value": "dark",  "label": "Dark (velvet)" },
+        { "value": "warm",  "label": "Warm (champagne)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "light"
+    },
+    { "type": "image_picker", "id": "image", "label": "Background image" },
+    { "type": "range", "id": "min_height", "label": "Minimum height", "min": 50, "max": 90, "step": 5, "unit": "vh", "default": 70 },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Golden Hour" },
+    { "type": "text", "id": "heading_line1", "label": "Headline line 1", "default": "Dressed in" },
+    { "type": "text", "id": "heading_line2", "label": "Headline line 2 (italic accent)", "default": "Last Light" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "The capsule for evenings that begin at golden hour — champagne satin, liquid pearl, and tailoring that glows." },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Shop the Capsule" },
+    { "type": "url",  "id": "btn_link",  "label": "Button link" },
+    { "type": "text", "id": "link_label", "label": "Secondary link label", "default": "See the Campaign" },
+    { "type": "url",  "id": "link_url",   "label": "Secondary link URL" }
+  ],
+  "presets": [ { "name": "Campaign Lumière" } ]
+}
+{% endschema %}

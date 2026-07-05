@@ -1,0 +1,192 @@
+{%- liquid
+  assign s = section.settings
+  assign fallbacks = 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=700&q=85|https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=700&q=85|https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=700&q=85|https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=700&q=85|https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=700&q=85|https://images.unsplash.com/photo-1496217590455-aa63a8350eea?auto=format&fit=crop&w=700&q=85' | split: '|'
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="stc-section stc--{{ s.scheme }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="stc-inner">
+    <div class="stc-head reveal">
+      <div>
+        {%- if s.eyebrow != blank -%}<span class="stc-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+        {%- if s.heading != blank -%}<h2 class="stc-heading">{{ s.heading }}</h2>{%- endif -%}
+      </div>
+      {%- if s.intro != blank -%}<p class="stc-intro">{{ s.intro }}</p>{%- endif -%}
+    </div>
+
+    <div class="stc-rack">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- assign fb = fallbacks[forloop.index0] | default: fallbacks[0] -%}
+          <a href="{{ block.settings.link | default: '/collections/all' }}" class="stc-cover reveal" {{ block.shopify_attributes }}>
+            <span class="stc-cover__mast">{{ block.settings.masthead | default: 'Maison Noir' }}</span>
+            <span class="stc-cover__media">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 700 | image_tag: loading: 'lazy', class: 'stc-cover__img', sizes: '(max-width:700px) 46vw, 24vw', widths: '350,500,700', alt: block.settings.title }}
+              {%- else -%}
+                <img class="stc-cover__img" src="{{ fb }}" alt="{{ block.settings.title | escape }}" loading="lazy" />
+              {%- endif -%}
+              <span class="stc-cover__issue">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+            </span>
+            <span class="stc-cover__foot">
+              <span class="stc-cover__title">{{ block.settings.title }}</span>
+              <span class="stc-cover__link">{{ block.settings.link_label | default: 'Shop' }} <span aria-hidden="true">&#8594;</span></span>
+            </span>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign demo_titles = 'Eveningwear,Tailoring,Jewellery,Outerwear' | split: ',' -%}
+        {%- for i in (0..3) -%}
+          <a href="/collections/all" class="stc-cover reveal">
+            <span class="stc-cover__mast">Maison Noir</span>
+            <span class="stc-cover__media">
+              <img class="stc-cover__img" src="{{ fallbacks[i] }}" alt="{{ demo_titles[i] }}" loading="lazy" />
+              <span class="stc-cover__issue">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+            </span>
+            <span class="stc-cover__foot">
+              <span class="stc-cover__title">{{ demo_titles[i] }}</span>
+              <span class="stc-cover__link">Shop <span aria-hidden="true">&#8594;</span></span>
+            </span>
+          </a>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }}.stc--light { --bg:#F4F1EA; --card:#FBF9F4; --fg:#17141B; --acc:var(--gold,#A8874C); --mut:rgba(23,20,27,.55); --bdr:rgba(23,20,27,.15); }
+  #section-{{ section.id }}.stc--dark  { --bg:#131118; --card:#1A1720; --fg:#EFEBE2; --acc:var(--gold,#C6A15B); --mut:rgba(239,235,226,.52); --bdr:rgba(239,235,226,.16); }
+  #section-{{ section.id }}.stc--warm  { --bg:#EBE2D2; --card:#F3ECDF; --fg:#241D15; --acc:var(--gold,#8E5A2A); --mut:rgba(36,29,21,.55); --bdr:rgba(36,29,21,.18); }
+  #section-{{ section.id }}.stc--theme { --bg:var(--background,#F4F1EA); --card:color-mix(in srgb, var(--background,#F4F1EA) 82%, #fff 18%); --fg:var(--foreground,#17141B); --acc:var(--gold,#A8874C); --mut:var(--muted,rgba(23,20,27,.55)); --bdr:var(--border,rgba(23,20,27,.15)); }
+
+  #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }
+  #section-{{ section.id }} .stc-inner { max-width: var(--container-width,1440px); margin: 0 auto; }
+
+  #section-{{ section.id }} .stc-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; margin-bottom: clamp(30px,3.8vw,52px); flex-wrap: wrap; }
+  #section-{{ section.id }} .stc-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--acc); margin-bottom: 13px; }
+  #section-{{ section.id }} .stc-heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(32px,4.4vw,62px) * var(--heading-scale,1)); font-weight: 300; line-height: 1.02; text-transform: uppercase; margin: 0; }
+  #section-{{ section.id }} .stc-intro { font-family: var(--ff-body,'Outfit',sans-serif); font-size: clamp(13px,1vw,15px); line-height: 1.7; color: var(--mut); max-width: 340px; }
+
+  #section-{{ section.id }} .stc-rack { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(14px,1.8vw,28px); }
+
+  /* — A cover: framed card with masthead strip, image, footline — */
+  #section-{{ section.id }} .stc-cover {
+    display: flex; flex-direction: column; text-decoration: none; color: var(--fg);
+    background: var(--card); border: 1px solid var(--bdr);
+    padding: clamp(10px,1vw,16px);
+    transition: transform .4s cubic-bezier(.2,0,.2,1), box-shadow .4s, border-color .3s;
+  }
+  #section-{{ section.id }} .stc-cover:hover {
+    transform: translateY(clamp(-10px,-.7vw,-6px));
+    box-shadow: 0 34px 60px -30px rgba(20,17,26,.35);
+    border-color: color-mix(in srgb, var(--acc) 55%, transparent);
+  }
+  #section-{{ section.id }} .stc-cover__mast {
+    text-align: center; padding: 4px 0 10px;
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: clamp(13px,1.1vw,17px); letter-spacing: .3em; text-transform: uppercase;
+    color: var(--fg);
+  }
+  #section-{{ section.id }} .stc-cover__media { position: relative; display: block; aspect-ratio: 3/4; overflow: hidden; }
+  #section-{{ section.id }} .stc-cover__img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .7s cubic-bezier(.2,0,.2,1); }
+  #section-{{ section.id }} .stc-cover:hover .stc-cover__img { transform: scale(1.05); }
+  #section-{{ section.id }} .stc-cover__issue {
+    position: absolute; top: 10px; right: 12px; z-index: 2;
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: clamp(20px,1.8vw,30px); line-height: 1; color: rgba(255,255,255,.94);
+    text-shadow: 0 1px 10px rgba(0,0,0,.35);
+  }
+  #section-{{ section.id }} .stc-cover__foot {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 12px 2px 4px;
+  }
+  #section-{{ section.id }} .stc-cover__title {
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: clamp(17px,1.5vw,23px); font-weight: 400; line-height: 1.1;
+  }
+  #section-{{ section.id }} .stc-cover__link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--mut); white-space: nowrap;
+    transition: color .25s;
+  }
+  #section-{{ section.id }} .stc-cover:hover .stc-cover__link { color: var(--acc); }
+
+  #section-{{ section.id }} .reveal.reveal-armed { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+  #section-{{ section.id }} .reveal.is-visible { opacity: 1; transform: none; }
+  #section-{{ section.id }} .stc-rack .stc-cover:nth-child(2){transition-delay:.06s;}
+  #section-{{ section.id }} .stc-rack .stc-cover:nth-child(3){transition-delay:.12s;}
+  #section-{{ section.id }} .stc-rack .stc-cover:nth-child(4){transition-delay:.18s;}
+
+  @media (max-width: 900px) {
+    #section-{{ section.id }} .stc-rack { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+
+<script>
+(function(){
+  var SEC='{{ section.id }}';
+  function arm(root){
+    var els=root.querySelectorAll('.reveal');
+    els.forEach(function(el){el.classList.add('reveal-armed');});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target);}});},{threshold:.1});
+    els.forEach(function(el){io.observe(el);});
+    setTimeout(function(){els.forEach(function(el){el.classList.add('is-visible');});},800);
+  }
+  function root(){return document.getElementById('section-'+SEC);}
+  document.addEventListener('DOMContentLoaded',function(){var r=root();if(r)arm(r);});
+  document.addEventListener('shopify:section:load',function(e){if(e.detail.sectionId!==SEC)return;var r=root();if(r){arm(r);r.querySelectorAll('.reveal').forEach(function(el){el.classList.add('is-visible');});}});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Story Covers",
+  "tag": "section",
+  "class": "section-story-covers",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (pearl)" },
+        { "value": "dark",  "label": "Dark (velvet)" },
+        { "value": "warm",  "label": "Warm (champagne)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "light"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "In This Issue" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Stories" },
+    { "type": "textarea", "id": "intro", "label": "Intro", "default": "Every category, shot like a cover story — pick an issue and step inside." }
+  ],
+  "blocks": [
+    {
+      "type": "cover",
+      "name": "Cover",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Cover image" },
+        { "type": "text", "id": "masthead", "label": "Masthead text", "default": "Maison Noir" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Eveningwear" },
+        { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop" },
+        { "type": "url",  "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Story Covers",
+      "blocks": [
+        { "type": "cover", "settings": { "title": "Eveningwear" } },
+        { "type": "cover", "settings": { "title": "Tailoring" } },
+        { "type": "cover", "settings": { "title": "Jewellery" } },
+        { "type": "cover", "settings": { "title": "Outerwear" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -3,70 +3,102 @@
     "hero": {
       "type": "hero-lumiere",
       "settings": {
-        "scheme": "dark",
-        "eyebrow": "Maison Noir Presents",
-        "heading_left": "La Belle",
-        "heading_right": "Lumière",
-        "accent_word": "Nº 05",
-        "description": "An evening-wear study in light and shadow — champagne silks, sculpted velvet, and pieces that arrive like an invitation.",
-        "btn1_label": "Enter the Collection",
+        "scheme": "light",
+        "mast_left": "Issue Nº 05",
+        "mast_center": "Maison Noir",
+        "mast_right": "Autumn / Winter 2025",
+        "heading_a": "The",
+        "heading_em": "Light",
+        "heading_b": "Issue",
+        "description": "Champagne silks, pearl tailoring and jewellery that catches the afternoon — the season, photographed like a magazine and shoppable like a boutique.",
+        "btn1_label": "Shop the Issue",
         "btn1_link": "/collections/all",
-        "btn2_label": "The Story",
+        "btn2_label": "Read the Editor's Note",
         "btn2_link": "/collections/all",
-        "corner_left": "Paris — Milan — Tokyo",
-        "scroll_label": "Begin",
-        "corner_right": "Autumn / Winter 2025"
+        "caption_1": "The Morning Silk",
+        "caption_2": "The Champagne Gown",
+        "tag_label": "New Season",
+        "caption_3": "The Pearl Tailoring"
       }
     },
     "marquee": {
       "type": "marquee",
       "settings": {
-        "text": "L'Invitation, Evening Silks, Sculpted Velvet, Champagne Gold, By Appointment",
+        "text": "The Light Issue, Champagne Silks, Pearl Tailoring, Jewellery of Note, By Appointment",
         "style": "caps",
         "separator": "diamond",
         "direction": "left",
         "speed": 30,
         "padding": 16,
         "pause_on_hover": true,
-        "bg_color": "#100E14",
-        "text_color": "#EFEBE2"
+        "bg_color": "#B99657",
+        "text_color": "#14110A"
       }
     },
-    "collections": {
-      "type": "collection-reveal",
+    "stories": {
+      "type": "story-covers",
       "blocks": {
-        "row1": { "type": "row", "settings": { "title": "Eveningwear", "meta": "18 pieces", "link": "/collections/all" } },
-        "row2": { "type": "row", "settings": { "title": "Tailoring", "meta": "24 pieces", "link": "/collections/all" } },
-        "row3": { "type": "row", "settings": { "title": "Silks & Satin", "meta": "12 pieces", "link": "/collections/all" } },
-        "row4": { "type": "row", "settings": { "title": "Outerwear", "meta": "16 pieces", "link": "/collections/all" } },
-        "row5": { "type": "row", "settings": { "title": "Jewellery", "meta": "30 pieces", "link": "/collections/all" } }
+        "cv1": { "type": "cover", "settings": { "masthead": "Maison Noir", "title": "Eveningwear", "link_label": "Shop", "link": "/collections/all" } },
+        "cv2": { "type": "cover", "settings": { "masthead": "Maison Noir", "title": "Tailoring", "link_label": "Shop", "link": "/collections/all" } },
+        "cv3": { "type": "cover", "settings": { "masthead": "Maison Noir", "title": "Jewellery", "link_label": "Shop", "link": "/collections/all" } },
+        "cv4": { "type": "cover", "settings": { "masthead": "Maison Noir", "title": "Outerwear", "link_label": "Shop", "link": "/collections/all" } }
       },
-      "block_order": ["row1", "row2", "row3", "row4", "row5"],
+      "block_order": ["cv1", "cv2", "cv3", "cv4"],
       "settings": {
         "scheme": "light",
-        "eyebrow": "The Maison",
-        "heading": "Collections",
-        "cta_label": "View everything",
-        "cta_url": "/collections/all"
+        "eyebrow": "In This Issue",
+        "heading": "The Stories",
+        "intro": "Every category, shot like a cover story — pick an issue and step inside."
       }
     },
     "vitrine": {
       "type": "product-vitrine",
       "settings": {
-        "scheme": "dark",
+        "scheme": "light",
         "eyebrow": "The Vitrine",
         "heading": "Pieces of Light",
         "text": "A cabinet of the season's most luminous pieces — silks that hold candlelight, tailoring that carves shadow.",
         "products_to_show": 6,
         "cta_label": "Shop the Vitrine",
         "cta_url": "/collections/all",
-        "note": "Complimentary shipping worldwide"
+        "note": "Complimentary shipping worldwide",
+        "panel_caption": "From the atelier"
+      }
+    },
+    "campaign": {
+      "type": "campaign-lumiere",
+      "settings": {
+        "scheme": "light",
+        "min_height": 70,
+        "eyebrow": "The Golden Hour",
+        "heading_line1": "Dressed in",
+        "heading_line2": "Last Light",
+        "description": "The capsule for evenings that begin at golden hour — champagne satin, liquid pearl, and tailoring that glows.",
+        "btn_label": "Shop the Capsule",
+        "btn_link": "/collections/all",
+        "link_label": "See the Campaign",
+        "link_url": "/collections/all"
+      }
+    },
+    "reviews": {
+      "type": "reviews-ticker",
+      "blocks": {
+        "rv1": { "type": "review", "settings": { "rating": 5, "quote": "The silk gown arrived like something couture — the weight, the fall, the finish.", "author": "Camille R.", "detail": "Paris" } },
+        "rv2": { "type": "review", "settings": { "rating": 5, "quote": "Tailoring that fits better than bespoke I have paid triple for.", "author": "Sofia M.", "detail": "Milan" } },
+        "rv3": { "type": "review", "settings": { "rating": 5, "quote": "Ordered on Monday, worn to a vernissage on Friday. Flawless.", "author": "Elena V.", "detail": "London" } },
+        "rv4": { "type": "review", "settings": { "rating": 5, "quote": "The only maison whose emails I actually open.", "author": "Margaux D.", "detail": "Brussels" } }
+      },
+      "block_order": ["rv1", "rv2", "rv3", "rv4"],
+      "settings": {
+        "scheme": "light",
+        "eyebrow": "Le Carnet",
+        "heading": "Words from the Clientele"
       }
     },
     "invitation": {
       "type": "newsletter-invitation",
       "settings": {
-        "scheme": "dark",
+        "scheme": "light",
         "eyebrow": "You Are Invited",
         "heading": "The Private Salon",
         "subtext": "First viewings, midnight releases, and pieces reserved for the inner circle — delivered like an invitation, never a newsletter.",
@@ -78,5 +110,5 @@
       }
     }
   },
-  "order": ["hero", "marquee", "collections", "vitrine", "invitation"]
+  "order": ["hero", "marquee", "stories", "vitrine", "campaign", "reviews", "invitation"]
 }

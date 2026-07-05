@@ -251,50 +251,27 @@
         "cta_url": "/collections/all"
       }
     },
-    "letter": {
-      "type": "editor-letter",
+    "arrivals": {
+      "type": "arrivals-lumiere",
       "settings": {
         "scheme": "light",
-        "eyebrow": "From the Editor",
-        "heading": "A Note on Light",
-        "body": "<p>Some seasons arrive loudly. This one arrives the way afternoon light crosses a marble floor — slowly, then all at once. We cut silk to hold that hour, set pearls to catch it, and tailored wool to carve its shadow. Wear it gently.</p>",
-        "signer": "Isabelle Moreau",
-        "role": "Creative Director"
+        "eyebrow": "Just In",
+        "heading": "New This Week",
+        "products_to_show": 8,
+        "cta_label": "View all new arrivals",
+        "cta_url": "/collections/all"
       }
     },
-    "services": {
-      "type": "services-lumiere",
-      "blocks": {
-        "sv1": {
-          "type": "service",
-          "settings": {
-            "title": "Complimentary Shipping",
-            "text": "Worldwide, insured, and beautifully packed — on every order."
-          }
-        },
-        "sv2": {
-          "type": "service",
-          "settings": {
-            "title": "Made to Order",
-            "text": "Selected pieces cut to your measure in our Milan atelier."
-          }
-        },
-        "sv3": {
-          "type": "service",
-          "settings": {
-            "title": "Private Appointments",
-            "text": "One-on-one styling in the salon or over video, by reservation."
-          }
-        }
-      },
-      "block_order": [
-        "sv1",
-        "sv2",
-        "sv3"
-      ],
+    "look": {
+      "type": "shop-the-look",
       "settings": {
         "scheme": "light",
-        "heading": "The House"
+        "tag_label": "Look 05 — Eveningwear",
+        "eyebrow": "Shop the Look",
+        "heading": "Worn Together",
+        "text": "The gown and the pearls from the cover story — exactly as photographed, ready to wear.",
+        "cta_label": "Shop the full look",
+        "cta_url": "/collections/all"
       }
     }
   },
@@ -302,12 +279,12 @@
     "hero",
     "marquee",
     "stories",
+    "arrivals",
     "vitrine",
     "campaign",
     "directory",
+    "look",
     "reviews",
-    "letter",
-    "services",
     "invitation"
   ]
 }

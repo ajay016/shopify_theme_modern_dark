@@ -1,0 +1,164 @@
+{%- liquid
+  assign s = section.settings
+  assign col = collections[s.collection]
+  assign look_fallback = 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1100&q=85'
+
+  assign demo_names = 'Champagne Silk Gown,Drop Pearl Earrings' | split: ','
+  assign demo_prices = '$1,480|$340' | split: '|'
+  assign demo_cats = 'Eveningwear,Jewellery' | split: ','
+  assign l1 = 'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=700&q=80'
+  assign l2 = 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=700&q=80'
+  assign demo_imgs_str = l1 | append: '||' | append: l2
+  assign demo_imgs = demo_imgs_str | split: '||'
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="stl-section stl--{{ s.scheme }}"
+  data-section-id="{{ section.id }}"
+  data-qv-scheme="{{ s.scheme }}"
+>
+  <div class="stl-inner">
+    {%- comment -%}Editorial look image{%- endcomment -%}
+    <div class="stl-look reveal">
+      {%- if s.image != blank -%}
+        {{ s.image | image_url: width: 1100 | image_tag: loading: 'lazy', class: 'stl-look__img', sizes: '(max-width:900px) 92vw, 46vw', widths: '550,800,1100', alt: s.heading | default: 'The look' }}
+      {%- else -%}
+        <img class="stl-look__img" src="{{ look_fallback }}" alt="{{ s.heading | escape }}" loading="lazy" />
+      {%- endif -%}
+      {%- if s.tag_label != blank -%}
+        <span class="stl-tag"><span class="stl-tag__dot"></span>{{ s.tag_label }}</span>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%}The shoppable pieces{%- endcomment -%}
+    <div class="stl-shop">
+      <div class="stl-head reveal">
+        {%- if s.eyebrow != blank -%}<span class="stl-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+        {%- if s.heading != blank -%}<h2 class="stl-heading">{{ s.heading }}</h2>{%- endif -%}
+        {%- if s.text != blank -%}<p class="stl-text">{{ s.text }}</p>{%- endif -%}
+      </div>
+
+      <div class="stl-cards">
+        {%- if col != blank and col.products.size > 0 -%}
+          {%- for product in col.products limit: 2 -%}
+            <div class="stl-card reveal">{%- render 'product-card', product: product, scheme: s.scheme, number: forloop.index -%}</div>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for i in (0..1) -%}
+            <div class="stl-card reveal">{%- render 'product-card',
+              scheme: s.scheme, number: forloop.index,
+              demo_index: i,
+              demo_title: demo_names[i],
+              demo_price: demo_prices[i],
+              demo_category: demo_cats[i],
+              demo_image: demo_imgs[i],
+              demo_url: '/collections/all' -%}</div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+      {%- if s.cta_label != blank -%}
+        <a href="{{ col.url | default: s.cta_url | default: '/collections/all' }}" class="stl-cta reveal">{{ s.cta_label }} <span aria-hidden="true">&#8594;</span></a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }}.stl--light { --bg:#F4F1EA; --fg:#17141B; --acc:var(--gold,#A8874C); --mut:rgba(23,20,27,.55); --bdr:rgba(23,20,27,.15); }
+  #section-{{ section.id }}.stl--dark  { --bg:#131118; --fg:#EFEBE2; --acc:var(--gold,#C6A15B); --mut:rgba(239,235,226,.52); --bdr:rgba(239,235,226,.16); }
+  #section-{{ section.id }}.stl--warm  { --bg:#EBE2D2; --fg:#241D15; --acc:var(--gold,#8E5A2A); --mut:rgba(36,29,21,.55); --bdr:rgba(36,29,21,.18); }
+  #section-{{ section.id }}.stl--theme { --bg:var(--background,#F4F1EA); --fg:var(--foreground,#17141B); --acc:var(--gold,#A8874C); --mut:var(--muted,rgba(23,20,27,.55)); --bdr:var(--border,rgba(23,20,27,.15)); }
+
+  #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }
+  #section-{{ section.id }} .stl-inner {
+    display: grid; grid-template-columns: 1.05fr .95fr;
+    gap: clamp(28px,4.5vw,72px); align-items: center;
+    max-width: var(--container-width,1440px); margin: 0 auto;
+  }
+
+  #section-{{ section.id }} .stl-look { position: relative; aspect-ratio: 4/5; overflow: hidden; border-radius: 3px; background: var(--bdr); }
+  #section-{{ section.id }} .stl-look__img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .8s cubic-bezier(.2,0,.2,1); }
+  #section-{{ section.id }} .stl-look:hover .stl-look__img { transform: scale(1.03); }
+  #section-{{ section.id }} .stl-tag {
+    position: absolute; left: 16px; bottom: 16px; z-index: 2;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(244,241,234,.85); color: #17141B;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    padding: 9px 15px; border-radius: 999px;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    letter-spacing: .18em; text-transform: uppercase;
+  }
+  #section-{{ section.id }} .stl-tag__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--acc); }
+
+  #section-{{ section.id }} .stl-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--acc); margin-bottom: 14px; }
+  #section-{{ section.id }} .stl-heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(30px,3.8vw,54px) * var(--heading-scale,1)); font-weight: 300; line-height: 1.04; text-transform: uppercase; margin: 0 0 14px; }
+  #section-{{ section.id }} .stl-text { font-family: var(--ff-body,'Outfit',sans-serif); font-size: clamp(13px,1vw,15px); line-height: 1.7; color: var(--mut); max-width: 400px; margin: 0 0 clamp(22px,3vh,32px); }
+
+  #section-{{ section.id }} .stl-cards { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px,2vw,28px); }
+
+  #section-{{ section.id }} .stl-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: clamp(24px,3.4vh,34px);
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--fg); text-decoration: none;
+    border-bottom: 1px solid var(--acc); padding-bottom: 5px; transition: color .2s;
+  }
+  #section-{{ section.id }} .stl-cta:hover { color: var(--acc); }
+
+  #section-{{ section.id }} .reveal.reveal-armed { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+  #section-{{ section.id }} .reveal.is-visible { opacity: 1; transform: none; }
+  #section-{{ section.id }} .stl-cards .stl-card:nth-child(2){transition-delay:.08s;}
+
+  @media (max-width: 900px) {
+    #section-{{ section.id }} .stl-inner { grid-template-columns: 1fr; gap: 28px; }
+    #section-{{ section.id }} .stl-look { aspect-ratio: 4/5; max-height: 62svh; }
+  }
+</style>
+
+<script>
+(function(){
+  var SEC='{{ section.id }}';
+  function arm(root){
+    var els=root.querySelectorAll('.reveal');
+    els.forEach(function(el){el.classList.add('reveal-armed');});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target);}});},{threshold:.1});
+    els.forEach(function(el){io.observe(el);});
+    setTimeout(function(){els.forEach(function(el){el.classList.add('is-visible');});},800);
+  }
+  function root(){return document.getElementById('section-'+SEC);}
+  document.addEventListener('DOMContentLoaded',function(){var r=root();if(r)arm(r);});
+  document.addEventListener('shopify:section:load',function(e){if(e.detail.sectionId!==SEC)return;var r=root();if(r){arm(r);r.querySelectorAll('.reveal').forEach(function(el){el.classList.add('is-visible');});}});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Shop the Look",
+  "tag": "section",
+  "class": "section-shop-the-look",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light (pearl)" },
+        { "value": "dark",  "label": "Dark (velvet)" },
+        { "value": "warm",  "label": "Warm (champagne)" },
+        { "value": "theme", "label": "Follow theme" }
+      ],
+      "default": "light"
+    },
+    { "type": "paragraph", "content": "The first two products of the chosen collection appear as shoppable cards beside the look. Cards follow Theme settings → Product Cards; demo items show until a collection is connected." },
+    { "type": "image_picker", "id": "image", "label": "Look image" },
+    { "type": "text", "id": "tag_label", "label": "Image tag", "default": "Look 05 — Eveningwear" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Shop the Look" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Worn Together" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "The gown and the pearls from the cover story — exactly as photographed, ready to wear." },
+    { "type": "collection", "id": "collection", "label": "Collection (first two products shown)" },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Shop the full look" },
+    { "type": "url",  "id": "cta_url",   "label": "CTA link" }
+  ],
+  "presets": [ { "name": "Shop the Look" } ]
+}
+{% endschema %}

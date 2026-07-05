@@ -497,10 +497,12 @@ body.has-announcement .site-header { top: 44px; }
 }
 
 /* Mobile-only burger for header V1/V2 — the desktop nav (.site-nav) hides
-   below 900px, so these styles need a way to open the mobile menu too. */
-.header-burger--mobile { display: none; }
+   below 900px, so these styles need a way to open the mobile menu too.
+   Doubled selector: .header-icon-btn's display:flex is declared later in
+   this file and would otherwise win the cascade and show it on desktop. */
+.header-icon-btn.header-burger--mobile { display: none; }
 @media (max-width: 900px) {
-  .header-burger--mobile { display: inline-flex; }
+  .header-icon-btn.header-burger--mobile { display: inline-flex; }
 }
 
 /* V3 — Hamburger sidebar (minimal top bar) */

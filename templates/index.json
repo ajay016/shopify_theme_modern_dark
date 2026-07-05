@@ -13,7 +13,7 @@
       "type": "hero-noir",
       "settings": {
         "scheme": "dark",
-        "meta_left": "Collection Nº 04",
+        "meta_left": "Maison Noir — The Collection",
         "meta_right": "Autumn / Winter 2025",
         "eyebrow": "The Noir Edit",
         "heading_line1": "Form",
@@ -48,12 +48,49 @@
     "index": {
       "type": "category-index",
       "blocks": {
-        "cat1": { "type": "category", "settings": { "kicker": "The Structure", "title": "Outerwear", "cta": "Explore", "link": "/collections/all" } },
-        "cat2": { "type": "category", "settings": { "kicker": "The Cut", "title": "Tailoring", "cta": "Explore", "link": "/collections/all" } },
-        "cat3": { "type": "category", "settings": { "kicker": "The Comfort", "title": "Knitwear", "cta": "Explore", "link": "/collections/all" } },
-        "cat4": { "type": "category", "settings": { "kicker": "The Detail", "title": "Accessories", "cta": "Explore", "link": "/collections/all" } }
+        "cat1": {
+          "type": "category",
+          "settings": {
+            "kicker": "The Structure",
+            "title": "Outerwear",
+            "cta": "Explore",
+            "link": "/collections/all"
+          }
+        },
+        "cat2": {
+          "type": "category",
+          "settings": {
+            "kicker": "The Cut",
+            "title": "Tailoring",
+            "cta": "Explore",
+            "link": "/collections/all"
+          }
+        },
+        "cat3": {
+          "type": "category",
+          "settings": {
+            "kicker": "The Comfort",
+            "title": "Knitwear",
+            "cta": "Explore",
+            "link": "/collections/all"
+          }
+        },
+        "cat4": {
+          "type": "category",
+          "settings": {
+            "kicker": "The Detail",
+            "title": "Accessories",
+            "cta": "Explore",
+            "link": "/collections/all"
+          }
+        }
       },
-      "block_order": ["cat1", "cat2", "cat3", "cat4"],
+      "block_order": [
+        "cat1",
+        "cat2",
+        "cat3",
+        "cat4"
+      ],
       "settings": {
         "scheme": "light",
         "eyebrow": "Browse",
@@ -77,13 +114,64 @@
     "lookbook": {
       "type": "lookbook-scroll",
       "blocks": {
-        "lk1": { "type": "frame", "settings": { "kicker": "Look 01", "title": "The Overcoat", "link_label": "Shop the look", "link": "/collections/all", "tall": false } },
-        "lk2": { "type": "frame", "settings": { "kicker": "Look 02", "title": "Soft Tailoring", "link_label": "Shop the look", "link": "/collections/all", "tall": true } },
-        "lk3": { "type": "frame", "settings": { "kicker": "Look 03", "title": "Evening Edit", "link_label": "Shop the look", "link": "/collections/all", "tall": false } },
-        "lk4": { "type": "frame", "settings": { "kicker": "Look 04", "title": "Knit Stories", "link_label": "Shop the look", "link": "/collections/all", "tall": true } },
-        "lk5": { "type": "frame", "settings": { "kicker": "Look 05", "title": "Leather Goods", "link_label": "Shop the look", "link": "/collections/all", "tall": false } }
+        "lk1": {
+          "type": "frame",
+          "settings": {
+            "kicker": "Look 01",
+            "title": "The Overcoat",
+            "link_label": "Shop the look",
+            "link": "/collections/all",
+            "tall": false
+          }
+        },
+        "lk2": {
+          "type": "frame",
+          "settings": {
+            "kicker": "Look 02",
+            "title": "Soft Tailoring",
+            "link_label": "Shop the look",
+            "link": "/collections/all",
+            "tall": true
+          }
+        },
+        "lk3": {
+          "type": "frame",
+          "settings": {
+            "kicker": "Look 03",
+            "title": "Evening Edit",
+            "link_label": "Shop the look",
+            "link": "/collections/all",
+            "tall": false
+          }
+        },
+        "lk4": {
+          "type": "frame",
+          "settings": {
+            "kicker": "Look 04",
+            "title": "Knit Stories",
+            "link_label": "Shop the look",
+            "link": "/collections/all",
+            "tall": true
+          }
+        },
+        "lk5": {
+          "type": "frame",
+          "settings": {
+            "kicker": "Look 05",
+            "title": "Leather Goods",
+            "link_label": "Shop the look",
+            "link": "/collections/all",
+            "tall": false
+          }
+        }
       },
-      "block_order": ["lk1", "lk2", "lk3", "lk4", "lk5"],
+      "block_order": [
+        "lk1",
+        "lk2",
+        "lk3",
+        "lk4",
+        "lk5"
+      ],
       "settings": {
         "scheme": "light",
         "eyebrow": "Lookbook",
@@ -116,7 +204,57 @@
         "btn_label": "Subscribe",
         "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time."
       }
+    },
+    "campaign": {
+      "type": "campaign-noir",
+      "blocks": {
+        "st1": {
+          "type": "stat",
+          "settings": {
+            "value": "12",
+            "label": "Pieces"
+          }
+        },
+        "st2": {
+          "type": "stat",
+          "settings": {
+            "value": "01",
+            "label": "Atelier"
+          }
+        },
+        "st3": {
+          "type": "stat",
+          "settings": {
+            "value": "AW25",
+            "label": "Season"
+          }
+        }
+      },
+      "block_order": [
+        "st1",
+        "st2",
+        "st3"
+      ],
+      "settings": {
+        "scheme": "dark",
+        "min_height": 75,
+        "eyebrow": "The Capsule",
+        "heading_line1": "Twelve Pieces",
+        "heading_line2": "One Statement",
+        "description": "A limited atelier capsule — made to order, numbered by hand, and gone by the end of the season.",
+        "btn_label": "Shop the Capsule",
+        "btn_link": "/collections/all"
+      }
     }
   },
-  "order": ["hero", "marquee", "index", "products", "lookbook", "manifesto", "newsletter"]
+  "order": [
+    "hero",
+    "marquee",
+    "index",
+    "products",
+    "campaign",
+    "lookbook",
+    "manifesto",
+    "newsletter"
+  ]
 }

@@ -10,113 +10,317 @@
 {
   "sections": {
     "hero": {
-      "type": "hero-noir",
+      "type": "hero-banner",
+      "blocks": {
+        "stat_RbAVjX": {
+          "type": "stat",
+          "settings": {
+            "value": "2009",
+            "label": "Founded"
+          }
+        }
+      },
+      "block_order": [
+        "stat_RbAVjX"
+      ],
       "settings": {
-        "scheme": "dark",
-        "meta_left": "Collection Nº 04",
-        "meta_right": "Autumn / Winter 2025",
-        "eyebrow": "The Noir Edit",
-        "heading_line1": "Form",
-        "heading_line2": "Meets",
-        "heading_line3": "Function",
-        "description": "Sharp tailoring and uncompromising lines. A modern wardrobe built on contrast — architectural, deliberate, and quietly powerful.",
-        "btn1_label": "Shop the Collection",
+        "layout": "split",
+        "min_height": 80,
+        "eyebrow": "SS 2025 Collection",
+        "heading": "Timeless",
+        "heading_italic": "Elegance",
+        "heading_line3": "Redefined",
+        "description": "Where heritage craftsmanship meets contemporary vision. Each piece tells a story of quiet luxury and intentional design.",
+        "btn1_label": "Explore Collection",
         "btn1_link": "/collections/all",
-        "btn2_label": "View Lookbook",
-        "btn2_link": "/collections/all",
-        "scroll_label": "Scroll",
-        "watermark": "Noir",
-        "tag_label": "New Arrivals",
-        "index_label": "04",
-        "ticker": "Made to Last"
+        "btn2_label": "Our Story",
+        "btn2_link": "/pages/about",
+        "image": "shopify://shop_images/thumb-1920-1091070.jpg",
+        "image_2": "shopify://shop_images/punta-negra-czarny-jednoczesciowy-kostium-kapielowy_5.jpg",
+        "show_scroll": true,
+        "show_counter": true,
+        "show_stats": false
       }
     },
-    "marquee": {
-      "type": "marquee",
-      "settings": {
-        "text": "Modern Tailoring, Made to Last, Architectural Lines, Responsibly Made",
-        "style": "caps",
-        "separator": "diamond",
-        "direction": "left",
-        "speed": 28,
-        "padding": 16,
-        "pause_on_hover": true,
-        "bg_color": "#18181A",
-        "text_color": "#ECE9E2"
-      }
-    },
-    "index": {
-      "type": "category-index",
+    "categories": {
+      "type": "collection-list",
       "blocks": {
-        "cat1": { "type": "category", "settings": { "kicker": "The Structure", "title": "Outerwear", "cta": "Explore", "link": "/collections/all" } },
-        "cat2": { "type": "category", "settings": { "kicker": "The Cut", "title": "Tailoring", "cta": "Explore", "link": "/collections/all" } },
-        "cat3": { "type": "category", "settings": { "kicker": "The Comfort", "title": "Knitwear", "cta": "Explore", "link": "/collections/all" } },
-        "cat4": { "type": "category", "settings": { "kicker": "The Detail", "title": "Accessories", "cta": "Explore", "link": "/collections/all" } }
+        "collection_item_dHUtBn": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "dresses",
+            "label": "",
+            "sublabel": "",
+            "custom_url": ""
+          }
+        },
+        "cat2": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "",
+            "label": "Men's Tailoring",
+            "sublabel": "98 pieces",
+            "custom_url": ""
+          }
+        },
+        "cat3": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "women",
+            "label": "Bags & Accessories",
+            "sublabel": "215 pieces",
+            "custom_url": ""
+          }
+        },
+        "cat4": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "",
+            "label": "Fine Jewellery",
+            "sublabel": "76 pieces",
+            "custom_url": ""
+          }
+        }
       },
-      "block_order": ["cat1", "cat2", "cat3", "cat4"],
+      "block_order": [
+        "collection_item_dHUtBn",
+        "cat2",
+        "cat3",
+        "cat4"
+      ],
       "settings": {
-        "scheme": "light",
-        "eyebrow": "Browse",
-        "heading": "The Index",
-        "intro": "Four pillars of the collection — engineered for movement, made for the modern wardrobe."
+        "heading": "Shop by Category",
+        "subheading": "Curated Selections",
+        "view_all_label": "All Collections",
+        "view_all_url": "",
+        "columns": "4"
       }
     },
-    "products": {
-      "type": "product-noir",
+    "featured": {
+      "type": "featured-products",
       "settings": {
-        "scheme": "dark",
-        "eyebrow": "The Edit",
-        "heading": "Defining Pieces",
-        "note": "Investment essentials, cut from the season's finest materials.",
-        "products_to_show": 8,
-        "columns": "4",
-        "cta_label": "Shop All",
-        "cta_url": "/collections/all"
+        "heading": "Dresses",
+        "subheading": "Handpicked",
+        "collection": "dresses",
+        "products_to_show": 3,
+        "columns": "3",
+        "show_view_all": true
       }
     },
-    "lookbook": {
-      "type": "lookbook-scroll",
+    "editorial-1": {
+      "type": "image-with-text",
       "blocks": {
-        "lk1": { "type": "frame", "settings": { "kicker": "Look 01", "title": "The Overcoat", "link_label": "Shop the look", "link": "/collections/all", "tall": false } },
-        "lk2": { "type": "frame", "settings": { "kicker": "Look 02", "title": "Soft Tailoring", "link_label": "Shop the look", "link": "/collections/all", "tall": true } },
-        "lk3": { "type": "frame", "settings": { "kicker": "Look 03", "title": "Evening Edit", "link_label": "Shop the look", "link": "/collections/all", "tall": false } },
-        "lk4": { "type": "frame", "settings": { "kicker": "Look 04", "title": "Knit Stories", "link_label": "Shop the look", "link": "/collections/all", "tall": true } },
-        "lk5": { "type": "frame", "settings": { "kicker": "Look 05", "title": "Leather Goods", "link_label": "Shop the look", "link": "/collections/all", "tall": false } }
+        "btn1": {
+          "type": "button",
+          "settings": {
+            "label": "Read the Story",
+            "url": "/pages/about",
+            "style": "btn-primary"
+          }
+        }
       },
-      "block_order": ["lk1", "lk2", "lk3", "lk4", "lk5"],
+      "block_order": [
+        "btn1"
+      ],
       "settings": {
-        "scheme": "light",
-        "eyebrow": "Lookbook",
-        "heading": "AW25 In Motion",
-        "hint": "Drag / scroll"
+        "image": "shopify://shop_images/edit1.jpg",
+        "caption": "",
+        "eyebrow": "The Journal",
+        "heading": "The Art of\nWearing Nothing Else",
+        "text": "<p>Our Spring collection explores the intersection of structure and ease — garments engineered to move with the body while commanding a room. Crafted over eight months in our Milan atelier.</p>",
+        "layout": "left",
+        "image_width": "50",
+        "full_width": false
       }
     },
-    "manifesto": {
-      "type": "manifesto",
+    "stats": {
+      "type": "stats-row",
+      "blocks": {
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "value": "2009",
+            "label": "Founded",
+            "description": ""
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "value": "47+",
+            "label": "Artisans",
+            "description": ""
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "value": "32",
+            "label": "Countries",
+            "description": ""
+          }
+        },
+        "s4": {
+          "type": "stat",
+          "settings": {
+            "value": "14",
+            "label": "Design Awards",
+            "description": ""
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "settings": {}
+    },
+    "editorial-2": {
+      "type": "image-with-text",
+      "blocks": {
+        "btn2": {
+          "type": "button",
+          "settings": {
+            "label": "Shop Outerwear",
+            "url": "/collections/all",
+            "style": "btn-primary"
+          }
+        }
+      },
+      "block_order": [
+        "btn2"
+      ],
       "settings": {
-        "scheme": "dark",
-        "marquee_word": "Maison Noir",
-        "marquee_word_2": "Modern Tailoring",
-        "eyebrow": "Our Philosophy",
-        "statement": "<p>We design for the people who notice the <em>details</em> — the weight of a fabric, the fall of a hem, the quiet confidence of clothes built to last.</p>",
-        "signature": "— The Maison Noir Atelier",
-        "btn_label": "Read Our Story",
-        "btn_link": "/collections/all"
+        "image": "shopify://shop_images/comparing-black-t-shirts-on-a-clothing-rack-in-a-sun-lit-shop.jpg",
+        "caption": "",
+        "eyebrow": "The Outerwear Edit",
+        "heading": "Built for the\nCities You Move Through",
+        "text": "<p>Technical precision meets considered design. Our outerwear collection is built for the urban landscape without compromising on elegance.</p>",
+        "layout": "right",
+        "image_width": "50",
+        "full_width": false
+      }
+    },
+    "brands": {
+      "type": "brand-logos",
+      "blocks": {
+        "b1": {
+          "type": "logo",
+          "settings": {
+            "name": "Bottega",
+            "url": ""
+          }
+        },
+        "b2": {
+          "type": "logo",
+          "settings": {
+            "name": "Lemaire",
+            "url": ""
+          }
+        },
+        "b3": {
+          "type": "logo",
+          "settings": {
+            "name": "The Row",
+            "url": ""
+          }
+        },
+        "b4": {
+          "type": "logo",
+          "settings": {
+            "name": "Totême",
+            "url": ""
+          }
+        },
+        "b5": {
+          "type": "logo",
+          "settings": {
+            "name": "Jacquemus",
+            "url": ""
+          }
+        },
+        "b6": {
+          "type": "logo",
+          "settings": {
+            "name": "Loewe",
+            "url": ""
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6"
+      ],
+      "settings": {
+        "heading": "Stocked Brands & Partners",
+        "marquee": false
+      }
+    },
+    "blog": {
+      "type": "blog-posts",
+      "settings": {
+        "eyebrow": "From the Journal",
+        "heading": "Latest Stories",
+        "view_all_label": "View All Stories",
+        "blog": "news",
+        "posts_to_show": 3,
+        "layout": "3",
+        "show_date": true,
+        "show_excerpt": true,
+        "show_category": true
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "t1": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Fashion should feel like an extension of oneself — effortless, considered, and entirely one's own.",
+            "name": "Isabelle Moreau",
+            "location": "Creative Director"
+          }
+        }
+      },
+      "block_order": [
+        "t1"
+      ],
+      "settings": {
+        "eyebrow": "The Voice",
+        "heading": "A Considered Perspective",
+        "show_stars": false,
+        "columns": "1"
       }
     },
     "newsletter": {
-      "type": "newsletter-split",
+      "type": "newsletter",
       "settings": {
-        "panel_bg": "charcoal",
         "eyebrow": "Stay Close",
         "heading": "Join the Inner Circle",
         "subtext": "Be the first to know about new collections, exclusive events, and private sales.",
-        "perks": "Early access to new arrivals, Exclusive member discounts, Private event invitations",
         "placeholder": "Your email address",
-        "btn_label": "Subscribe",
-        "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time."
+        "button_label": "Subscribe",
+        "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time.",
+        "bg_color": "#161616"
       }
     }
   },
-  "order": ["hero", "marquee", "index", "products", "lookbook", "manifesto", "newsletter"]
+  "order": [
+    "hero",
+    "categories",
+    "featured",
+    "editorial-1",
+    "stats",
+    "editorial-2",
+    "brands",
+    "blog",
+    "testimonials",
+    "newsletter"
+  ]
 }

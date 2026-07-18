@@ -12,7 +12,7 @@
     "hero": {
       "type": "hero-lumiere",
       "settings": {
-        "scheme": "light",
+        "scheme": "theme",
         "mast_left": "Issue Nº 05",
         "mast_center": "Maison Noir",
         "mast_right": "Autumn / Winter 2025",
@@ -91,7 +91,7 @@
         "cv4"
       ],
       "settings": {
-        "scheme": "light",
+        "scheme": "theme",
         "eyebrow": "In This Issue",
         "heading": "The Stories",
         "intro": "Every category, shot like a cover story — pick an issue and step inside."
@@ -100,7 +100,7 @@
     "arrivals": {
       "type": "arrivals-lumiere",
       "settings": {
-        "scheme": "light",
+        "scheme": "theme",
         "eyebrow": "Just In",
         "heading": "New This Week",
         "collection": "",
@@ -112,7 +112,7 @@
     "vitrine": {
       "type": "product-vitrine",
       "settings": {
-        "scheme": "light",
+        "scheme": "theme",
         "eyebrow": "The Vitrine",
         "heading": "Pieces of Light",
         "text": "A cabinet of the season's most luminous pieces — silks that hold candlelight, tailoring that carves shadow.",
@@ -127,7 +127,7 @@
     "campaign": {
       "type": "campaign-lumiere",
       "settings": {
-        "scheme": "light",
+        "scheme": "theme",
         "min_height": 70,
         "eyebrow": "The Golden Hour",
         "heading_line1": "Dressed in",
@@ -193,7 +193,7 @@
         "dr5"
       ],
       "settings": {
-        "scheme": "light",
+        "scheme": "theme",
         "eyebrow": "The Directory",
         "heading": "Browse the Maison",
         "cta_label": "View everything",
@@ -203,7 +203,7 @@
     "look": {
       "type": "shop-the-look",
       "settings": {
-        "scheme": "light",
+        "scheme": "theme",
         "tag_label": "Look 05 — Eveningwear",
         "eyebrow": "Shop the Look",
         "heading": "Worn Together",
@@ -260,7 +260,7 @@
         "rv4"
       ],
       "settings": {
-        "scheme": "light",
+        "scheme": "theme",
         "eyebrow": "Le Carnet",
         "heading": "Words from the Clientele"
       }
@@ -268,7 +268,7 @@
     "invitation": {
       "type": "newsletter-invitation",
       "settings": {
-        "scheme": "light",
+        "scheme": "theme",
         "eyebrow": "You Are Invited",
         "heading": "The Private Salon",
         "subtext": "First viewings, midnight releases, and pieces reserved for the inner circle — delivered like an invitation, never a newsletter.",

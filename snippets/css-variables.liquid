@@ -15,290 +15,328 @@
   light/dark divide (except s4, which is intentionally
   inverted), so choosing "Light / Ivory" keeps the whole site
   light and choosing "Dark Luxury" keeps it dark.
+
+  DELIBERATELY FILTER-FREE. Every value below is a literal.
+  An earlier version derived the alphas with color_modify /
+  color_brightness; if any of those failed the whole :root
+  block was lost and the literal fallbacks scattered through
+  theme.css (which are dark) repainted the entire site, making
+  the scheme setting look like it did nothing. Keep it literal.
   ============================================================
 {%- endcomment -%}
 <style>
+{%- liquid
+  assign scheme = settings.color_scheme | default: 'dark'
+-%}
+
+{%- case scheme -%}
+
+{%- when 'light' -%}
   :root {
-    {%- liquid
-      case settings.color_scheme
-        when 'light'
-          assign sc_black    = '#FFFFFF'
-          assign sc_charcoal = '#F7F4EE'
-          assign sc_cream    = '#1A1A1A'
-          assign sc_gold     = '#9B7B3F'
-          assign sc_gold_l   = '#C8A96E'
-          assign sc_muted    = '#6B6660'
-          assign sc_ivory    = '#0A0A0A'
-          assign sc_sale     = '#8B1A1A'
-          assign sc_sale_bg  = '#FFD5D5'
+    --s1-bg: #FFFFFF; --s1-fg: #1A1A1A; --s1-mut: rgba(26,26,26,0.66); --s1-bdr: rgba(26,26,26,0.16);
+    --s2-bg: #F7F4EE; --s2-fg: #1A1A1A; --s2-mut: rgba(26,26,26,0.66); --s2-bdr: rgba(26,26,26,0.16);
+    --s3-bg: #EDE8DD; --s3-fg: #1A1A1A; --s3-mut: rgba(26,26,26,0.66); --s3-bdr: rgba(26,26,26,0.16);
+    --s4-bg: #1A1A1A; --s4-fg: #F7F4EE; --s4-mut: rgba(247,244,238,0.66); --s4-bdr: rgba(247,244,238,0.16);
 
-          assign s1_bg = '#FFFFFF'
-          assign s2_bg = '#F7F4EE'
-          assign s3_bg = '#EDE8DD'
-          assign s4_bg = '#1A1A1A'
-          assign tone_fg = '#1A1A1A'
-          assign s4_fg   = '#F7F4EE'
+    --black: #FFFFFF;
+    --charcoal: #F7F4EE;
+    --cream: #1A1A1A;
+    --muted: rgba(26,26,26,0.66);
+    --ivory: #0A0A0A;
+    --gold: #9B7B3F;
+    --gold-light: #C8A96E;
+    --on-gold: #0A0A0A;
+    --sale-text: #8B1A1A;
+    --sale-bg: #FFD5D5;
 
-        when 'warm'
-          assign sc_black    = '#1C1410'
-          assign sc_charcoal = '#241A14'
-          assign sc_cream    = '#EDE0CC'
-          assign sc_gold     = '#D2A166'
-          assign sc_gold_l   = '#E4BF8C'
-          assign sc_muted    = '#A6907A'
-          assign sc_ivory    = '#F5EDD8'
-          assign sc_sale     = '#FFBABA'
-          assign sc_sale_bg  = '#7A2020'
+    --border: rgba(155,123,63,0.30);
+    --border-strong: rgba(155,123,63,0.55);
+    --gold-dim: rgba(155,123,63,0.14);
+    --gold-glow: rgba(155,123,63,0.09);
+    --cream-faint: rgba(26,26,26,0.06);
+    --black-overlay: rgba(255,255,255,0.78);
 
-          assign s1_bg = '#1C1410'
-          assign s2_bg = '#241A14'
-          assign s3_bg = '#2E2219'
-          assign s4_bg = '#EDE0CC'
-          assign tone_fg = '#EDE0CC'
-          assign s4_fg   = '#1C1410'
+    --hdr-bg: #FFFFFF;
+    --hdr-fg: #1A1A1A;
+    --hdr-mut: rgba(26,26,26,0.66);
+    --hdr-bdr: rgba(26,26,26,0.16);
+    --hdr-bg-scroll: rgba(255,255,255,0.96);
+    --hdr-bg-trans: rgba(255,255,255,0.40);
+    --hdr-hover: rgba(26,26,26,0.07);
 
-        when 'custom'
-          assign sc_black    = settings.color_black
-          assign sc_charcoal = settings.color_charcoal
-          assign sc_cream    = settings.color_cream
-          assign sc_gold     = settings.color_gold
-          assign sc_gold_l   = settings.color_gold_light
-          assign sc_muted    = settings.color_muted
-          assign sc_ivory    = settings.color_ivory
-          assign sc_sale     = settings.color_sale
-          assign sc_sale_bg  = settings.color_sale_bg
+    --modal-bg: #FFFFFF;
+    --modal-fg: #1A1A1A;
+    --modal-mut: rgba(26,26,26,0.66);
+    --modal-bdr: rgba(26,26,26,0.18);
+    --modal-surface: #F7F4EE;
 
-          assign base_bright = settings.color_black | color_brightness
-          assign s1_bg = settings.color_black
-          assign s2_bg = settings.color_charcoal
-          if base_bright < 128
-            assign s3_bg = settings.color_charcoal | color_lighten: 5
-          else
-            assign s3_bg = settings.color_charcoal | color_darken: 5
-          endif
-          assign s4_bg = settings.color_cream
-          assign tone_fg = settings.color_cream
-          assign s4_fg   = settings.color_black
+    --drawer-bg: #FFFFFF;
+    --drawer-fg: #1A1A1A;
+    --drawer-mut: rgba(26,26,26,0.66);
+    --drawer-bdr: rgba(26,26,26,0.16);
 
-        else
-          assign sc_black    = '#0A0A0A'
-          assign sc_charcoal = '#161616'
-          assign sc_cream    = '#F5F0E8'
-          assign sc_gold     = '#C8A96E'
-          assign sc_gold_l   = '#E8D4A8'
-          assign sc_muted    = '#8E8880'
-          assign sc_ivory    = '#FAF8F3'
-          assign sc_sale     = '#FFBABA'
-          assign sc_sale_bg  = '#7A2020'
+    --field-bg: rgba(26,26,26,0.04);
+    --field-bdr: rgba(26,26,26,0.22);
+    --field-fg: #1A1A1A;
+    --field-ph: rgba(26,26,26,0.45);
 
-          assign s1_bg = '#0A0A0A'
-          assign s2_bg = '#131313'
-          assign s3_bg = '#1A1714'
-          assign s4_bg = '#F5F0E8'
-          assign tone_fg = '#F5F0E8'
-          assign s4_fg   = '#0A0A0A'
-      endcase
+    --btn-primary-bg: #9B7B3F;
+    --btn-primary-fg: #0A0A0A;
+    --btn-ghost-fg: #1A1A1A;
+    --btn-ghost-bdr: rgba(26,26,26,0.28);
+  }
 
-      comment
-        Is the active scheme dark-based? Drives every derived
-        alpha below so muted text and borders always fall on the
-        readable side of their own background.
-      endcomment
-      assign base_brightness = s1_bg | color_brightness
-      assign is_dark = true
-      if base_brightness >= 128
-        assign is_dark = false
-      endif
+{%- when 'warm' -%}
+  :root {
+    --s1-bg: #1C1410; --s1-fg: #EDE0CC; --s1-mut: rgba(237,224,204,0.62); --s1-bdr: rgba(237,224,204,0.16);
+    --s2-bg: #241A14; --s2-fg: #EDE0CC; --s2-mut: rgba(237,224,204,0.62); --s2-bdr: rgba(237,224,204,0.16);
+    --s3-bg: #2E2219; --s3-fg: #EDE0CC; --s3-mut: rgba(237,224,204,0.62); --s3-bdr: rgba(237,224,204,0.16);
+    --s4-bg: #EDE0CC; --s4-fg: #1C1410; --s4-mut: rgba(28,20,16,0.62); --s4-bdr: rgba(28,20,16,0.16);
 
-      comment
-        Foreground alphas for muted text. These are solved values,
-        not guesses: on light schemes muted text has to sit at 0.66
-        to clear WCAG AA (4.5:1) against the *deepest* rung — 0.60
-        measured 4.29:1 there and failed. Dark schemes clear AA
-        comfortably at 0.62 (6.69:1 worst case).
-      endcomment
-      assign mut_a = 0.62
-      if is_dark == false
-        assign mut_a = 0.66
-      endif
+    --black: #1C1410;
+    --charcoal: #241A14;
+    --cream: #EDE0CC;
+    --muted: rgba(237,224,204,0.62);
+    --ivory: #F5EDD8;
+    --gold: #D2A166;
+    --gold-light: #E4BF8C;
+    --on-gold: #14110A;
+    --sale-text: #FFBABA;
+    --sale-bg: #7A2020;
 
-      assign tone_mut = tone_fg | color_modify: 'alpha', mut_a
-      assign tone_bdr = tone_fg | color_modify: 'alpha', 0.16
-      assign s4_mut   = s4_fg   | color_modify: 'alpha', mut_a
-      assign s4_bdr   = s4_fg   | color_modify: 'alpha', 0.16
+    --border: rgba(210,161,102,0.24);
+    --border-strong: rgba(210,161,102,0.42);
+    --gold-dim: rgba(210,161,102,0.14);
+    --gold-glow: rgba(210,161,102,0.09);
+    --cream-faint: rgba(237,224,204,0.06);
+    --black-overlay: rgba(28,20,16,0.75);
 
-      comment Text color that reads on top of the gold accent. endcomment
-      assign gold_bright = sc_gold | color_brightness
-      assign on_gold = '#0A0A0A'
-      if gold_bright < 130
-        assign on_gold = '#FFFFFF'
-      endif
+    --hdr-bg: #1C1410;
+    --hdr-fg: #EDE0CC;
+    --hdr-mut: rgba(237,224,204,0.62);
+    --hdr-bdr: rgba(237,224,204,0.16);
+    --hdr-bg-scroll: rgba(28,20,16,0.96);
+    --hdr-bg-trans: rgba(28,20,16,0.40);
+    --hdr-hover: rgba(237,224,204,0.07);
 
-      comment Base font scale — 14px is the design's reference size. endcomment
-      assign fs_scale = settings.type_body_size | times: 1.0 | divided_by: 14.0
-    -%}
+    --modal-bg: #1C1410;
+    --modal-fg: #EDE0CC;
+    --modal-mut: rgba(237,224,204,0.62);
+    --modal-bdr: rgba(237,224,204,0.18);
+    --modal-surface: #241A14;
 
-    /* ── Brand palette (legacy aliases, still consumed widely) ── */
-    --black:       {{ s1_bg }};
-    --charcoal:    {{ s2_bg }};
-    --cream:       {{ tone_fg }};
-    --gold:        {{ sc_gold }};
-    --gold-light:  {{ sc_gold_l }};
-    --muted:       {{ tone_mut }};
-    --ivory:       {{ sc_ivory }};
-    --sale-text:   {{ sc_sale }};
-    --sale-bg:     {{ sc_sale_bg }};
-    --on-gold:     {{ on_gold }};
+    --drawer-bg: #1C1410;
+    --drawer-fg: #EDE0CC;
+    --drawer-mut: rgba(237,224,204,0.62);
+    --drawer-bdr: rgba(237,224,204,0.16);
 
-    /* ── Tonal ladder ─────────────────────────────────────────── */
-    --s1-bg:  {{ s1_bg }};
-    --s1-fg:  {{ tone_fg }};
-    --s1-mut: {{ tone_mut }};
-    --s1-bdr: {{ tone_bdr }};
+    --field-bg: rgba(237,224,204,0.05);
+    --field-bdr: rgba(237,224,204,0.22);
+    --field-fg: #EDE0CC;
+    --field-ph: rgba(237,224,204,0.45);
 
-    --s2-bg:  {{ s2_bg }};
-    --s2-fg:  {{ tone_fg }};
-    --s2-mut: {{ tone_mut }};
-    --s2-bdr: {{ tone_bdr }};
+    --btn-primary-bg: #D2A166;
+    --btn-primary-fg: #14110A;
+    --btn-ghost-fg: #EDE0CC;
+    --btn-ghost-bdr: rgba(237,224,204,0.28);
+  }
 
-    --s3-bg:  {{ s3_bg }};
-    --s3-fg:  {{ tone_fg }};
-    --s3-mut: {{ tone_mut }};
-    --s3-bdr: {{ tone_bdr }};
+{%- when 'custom' -%}
+  :root {
+    --s1-bg: {{ settings.color_black }};
+    --s1-fg: {{ settings.color_cream }};
+    --s1-mut: color-mix(in srgb, {{ settings.color_cream }} 66%, transparent);
+    --s1-bdr: color-mix(in srgb, {{ settings.color_cream }} 18%, transparent);
+    --s2-bg: {{ settings.color_charcoal }};
+    --s2-fg: {{ settings.color_cream }};
+    --s2-mut: color-mix(in srgb, {{ settings.color_cream }} 66%, transparent);
+    --s2-bdr: color-mix(in srgb, {{ settings.color_cream }} 18%, transparent);
+    --s3-bg: color-mix(in srgb, {{ settings.color_charcoal }} 88%, {{ settings.color_cream }});
+    --s3-fg: {{ settings.color_cream }};
+    --s3-mut: color-mix(in srgb, {{ settings.color_cream }} 66%, transparent);
+    --s3-bdr: color-mix(in srgb, {{ settings.color_cream }} 18%, transparent);
+    --s4-bg: {{ settings.color_cream }};
+    --s4-fg: {{ settings.color_black }};
+    --s4-mut: color-mix(in srgb, {{ settings.color_black }} 66%, transparent);
+    --s4-bdr: color-mix(in srgb, {{ settings.color_black }} 18%, transparent);
 
-    --s4-bg:  {{ s4_bg }};
-    --s4-fg:  {{ s4_fg }};
-    --s4-mut: {{ s4_mut }};
-    --s4-bdr: {{ s4_bdr }};
+    --black: {{ settings.color_black }};
+    --charcoal: {{ settings.color_charcoal }};
+    --cream: {{ settings.color_cream }};
+    --muted: {{ settings.color_muted }};
+    --ivory: {{ settings.color_ivory }};
+    --gold: {{ settings.color_gold }};
+    --gold-light: {{ settings.color_gold_light }};
+    --on-gold: #0A0A0A;
+    --sale-text: {{ settings.color_sale }};
+    --sale-bg: {{ settings.color_sale_bg }};
 
+    --border: color-mix(in srgb, {{ settings.color_gold }} 22%, transparent);
+    --border-strong: color-mix(in srgb, {{ settings.color_gold }} 40%, transparent);
+    --gold-dim: color-mix(in srgb, {{ settings.color_gold }} 14%, transparent);
+    --gold-glow: color-mix(in srgb, {{ settings.color_gold }} 9%, transparent);
+    --cream-faint: color-mix(in srgb, {{ settings.color_cream }} 6%, transparent);
+    --black-overlay: color-mix(in srgb, {{ settings.color_black }} 75%, transparent);
+
+    --hdr-bg: {{ settings.color_black }};
+    --hdr-fg: {{ settings.color_cream }};
+    --hdr-mut: color-mix(in srgb, {{ settings.color_cream }} 66%, transparent);
+    --hdr-bdr: color-mix(in srgb, {{ settings.color_cream }} 18%, transparent);
+    --hdr-bg-scroll: color-mix(in srgb, {{ settings.color_black }} 96%, transparent);
+    --hdr-bg-trans: color-mix(in srgb, {{ settings.color_black }} 40%, transparent);
+    --hdr-hover: color-mix(in srgb, {{ settings.color_cream }} 7%, transparent);
+
+    --modal-bg: {{ settings.color_black }};
+    --modal-fg: {{ settings.color_cream }};
+    --modal-mut: color-mix(in srgb, {{ settings.color_cream }} 66%, transparent);
+    --modal-bdr: color-mix(in srgb, {{ settings.color_cream }} 18%, transparent);
+    --modal-surface: {{ settings.color_charcoal }};
+
+    --drawer-bg: {{ settings.color_black }};
+    --drawer-fg: {{ settings.color_cream }};
+    --drawer-mut: color-mix(in srgb, {{ settings.color_cream }} 66%, transparent);
+    --drawer-bdr: color-mix(in srgb, {{ settings.color_cream }} 18%, transparent);
+
+    --field-bg: color-mix(in srgb, {{ settings.color_cream }} 5%, transparent);
+    --field-bdr: color-mix(in srgb, {{ settings.color_cream }} 22%, transparent);
+    --field-fg: {{ settings.color_cream }};
+    --field-ph: color-mix(in srgb, {{ settings.color_cream }} 45%, transparent);
+
+    --btn-primary-bg: {{ settings.color_gold }};
+    --btn-primary-fg: #0A0A0A;
+    --btn-ghost-fg: {{ settings.color_cream }};
+    --btn-ghost-bdr: color-mix(in srgb, {{ settings.color_cream }} 28%, transparent);
+  }
+
+{%- else -%}
+  :root {
+    --s1-bg: #0A0A0A; --s1-fg: #F5F0E8; --s1-mut: rgba(245,240,232,0.62); --s1-bdr: rgba(245,240,232,0.16);
+    --s2-bg: #131313; --s2-fg: #F5F0E8; --s2-mut: rgba(245,240,232,0.62); --s2-bdr: rgba(245,240,232,0.16);
+    --s3-bg: #1A1714; --s3-fg: #F5F0E8; --s3-mut: rgba(245,240,232,0.62); --s3-bdr: rgba(245,240,232,0.16);
+    --s4-bg: #F5F0E8; --s4-fg: #0A0A0A; --s4-mut: rgba(10,10,10,0.62); --s4-bdr: rgba(10,10,10,0.16);
+
+    --black: #0A0A0A;
+    --charcoal: #131313;
+    --cream: #F5F0E8;
+    --muted: rgba(245,240,232,0.62);
+    --ivory: #FAF8F3;
+    --gold: #C8A96E;
+    --gold-light: #E8D4A8;
+    --on-gold: #0A0A0A;
+    --sale-text: #FFBABA;
+    --sale-bg: #7A2020;
+
+    --border: rgba(200,169,110,0.18);
+    --border-strong: rgba(200,169,110,0.35);
+    --gold-dim: rgba(200,169,110,0.12);
+    --gold-glow: rgba(200,169,110,0.08);
+    --cream-faint: rgba(245,240,232,0.06);
+    --black-overlay: rgba(10,10,10,0.75);
+
+    --hdr-bg: #0A0A0A;
+    --hdr-fg: #F5F0E8;
+    --hdr-mut: rgba(245,240,232,0.62);
+    --hdr-bdr: rgba(245,240,232,0.16);
+    --hdr-bg-scroll: rgba(10,10,10,0.96);
+    --hdr-bg-trans: rgba(10,10,10,0.40);
+    --hdr-hover: rgba(245,240,232,0.07);
+
+    --modal-bg: #0A0A0A;
+    --modal-fg: #F5F0E8;
+    --modal-mut: rgba(245,240,232,0.62);
+    --modal-bdr: rgba(245,240,232,0.18);
+    --modal-surface: #131313;
+
+    --drawer-bg: #0A0A0A;
+    --drawer-fg: #F5F0E8;
+    --drawer-mut: rgba(245,240,232,0.62);
+    --drawer-bdr: rgba(245,240,232,0.16);
+
+    --field-bg: rgba(245,240,232,0.04);
+    --field-bdr: rgba(245,240,232,0.20);
+    --field-fg: #F5F0E8;
+    --field-ph: rgba(245,240,232,0.45);
+
+    --btn-primary-bg: #C8A96E;
+    --btn-primary-fg: #0A0A0A;
+    --btn-ghost-fg: #F5F0E8;
+    --btn-ghost-bdr: rgba(245,240,232,0.28);
+  }
+{%- endcase -%}
+
+  :root {
     /* Semantic aliases used by "Follow theme" section variants */
-    --background:  var(--s1-bg);
-    --foreground:  var(--s1-fg);
+    --background: var(--s1-bg);
+    --foreground: var(--s1-fg);
 
-    /* ── Header ───────────────────────────────────────────────────
-       Flat colors only — no gradients. The transparent state is a
-       translucent wash of the SAME surface color, so header text
-       keeps the scheme's foreground and never inverts on scroll. */
-    --hdr-bg:        {{ s1_bg }};
-    --hdr-fg:        {{ tone_fg }};
-    --hdr-mut:       {{ tone_mut }};
-    --hdr-bdr:       {{ tone_bdr }};
-    --hdr-bg-scroll: {{ s1_bg | color_modify: 'alpha', 0.96 }};
-    --hdr-bg-trans:  {{ s1_bg | color_modify: 'alpha', 0.32 }};
-    --hdr-hover:     {{ tone_fg | color_modify: 'alpha', 0.07 }};
+    --card-bg: var(--s2-bg);
+    --card-fg: var(--s2-fg);
+    --card-mut: var(--s2-mut);
+    --card-bdr: var(--s2-bdr);
 
-    /* ── Surfaces for components ─────────────────────────────── */
-    --card-bg:   var(--s2-bg);
-    --card-fg:   var(--s2-fg);
-    --card-mut:  var(--s2-mut);
-    --card-bdr:  var(--s2-bdr);
-
-    --modal-bg:      {{ s1_bg }};
-    --modal-fg:      {{ tone_fg }};
-    --modal-mut:     {{ tone_mut }};
-    --modal-bdr:     {{ tone_bdr }};
-    --modal-surface: {{ s2_bg }};
-    /* A scrim dims the page behind a modal, so it is always dark — deriving
+    /* A scrim dims the page behind a modal, so it is always dark. Deriving
        it from the surface produced a white scrim under a white modal. */
-    --modal-scrim:   rgba(10, 10, 11, 0.74);
+    --modal-scrim: rgba(10, 10, 11, 0.74);
 
-    --drawer-bg:  {{ s1_bg }};
-    --drawer-fg:  {{ tone_fg }};
-    --drawer-mut: {{ tone_mut }};
-    --drawer-bdr: {{ tone_bdr }};
-
-    /* Inputs */
-    --field-bg:     {{ tone_fg | color_modify: 'alpha', 0.04 }};
-    --field-bdr:    {{ tone_fg | color_modify: 'alpha', 0.20 }};
-    --field-fg:     {{ tone_fg }};
-    --field-ph:     {{ tone_fg | color_modify: 'alpha', 0.45 }};
-
-    /* Buttons */
-    --btn-primary-bg: {{ sc_gold }};
-    --btn-primary-fg: {{ on_gold }};
-    --btn-ghost-fg:   {{ tone_fg }};
-    --btn-ghost-bdr:  {{ tone_fg | color_modify: 'alpha', 0.28 }};
-
-    /* ── Derived semi-transparent values (legacy names kept) ──── */
-    --border:        {{ sc_gold | color_modify: 'alpha', 0.18 }};
-    --border-strong: {{ sc_gold | color_modify: 'alpha', 0.35 }};
-    --gold-dim:      {{ sc_gold | color_modify: 'alpha', 0.12 }};
-    --gold-glow:     {{ sc_gold | color_modify: 'alpha', 0.08 }};
-    --cream-faint:   {{ tone_fg | color_modify: 'alpha', 0.06 }};
-    --black-overlay: {{ s1_bg | color_modify: 'alpha', 0.75 }};
-
-    /* Scrim over imagery — always dark so overlaid white text reads,
-       regardless of scheme (images are photographic, not themed).
-       --img-placeholder is the stand-in shown where a merchant has not
-       uploaded an image yet; it stays dark for the same reason: the
-       captions drawn on top of it are always --on-image (white). */
-    --img-placeholder:  #1A1714;
-
-    /* ── On-photo controls ────────────────────────────────────────
-       Buttons, badges and pills that sit ON a product image. These
-       are deliberately scheme-independent: the image behind them is
-       photographic, not themed, so following the page surface makes
-       them vanish (a white button on a white garment shot). Both
-       pairs are opaque and mutually high-contrast. */
-    --onphoto-light:     rgba(252, 251, 249, 0.96);
-    --onphoto-light-fg:  #16130F;
-    --onphoto-dark:      rgba(20, 17, 13, 0.94);
-    --onphoto-dark-fg:   #F4EFE6;
-    --img-scrim:        rgba(10, 10, 11, 0.55);
+    /* Imagery is photographic, not themed. Anything drawn on top of a photo
+       keeps its own always-legible colors in every scheme. */
+    --img-placeholder: #1A1714;
+    --img-scrim: rgba(10, 10, 11, 0.55);
     --img-scrim-strong: rgba(10, 10, 11, 0.78);
-    --on-image:         #FFFFFF;
-    --on-image-mut:     rgba(255, 255, 255, 0.78);
+    --on-image: #FFFFFF;
+    --on-image-mut: rgba(255, 255, 255, 0.78);
+    --onphoto-light: rgba(252, 251, 249, 0.96);
+    --onphoto-light-fg: #16130F;
+    --onphoto-dark: rgba(20, 17, 13, 0.94);
+    --onphoto-dark-fg: #F4EFE6;
 
-    /* ── Typography ───────────────────────────────────────────── */
+    /* Typography */
     {%- liquid
-      case settings.font_pairing
-        when 'playfair_inter'
-          assign ff_display = '"Playfair Display", Georgia, serif'
-          assign ff_body    = 'Inter, system-ui, sans-serif'
-        when 'libre_raleway'
-          assign ff_display = '"Libre Baskerville", Georgia, serif'
-          assign ff_body    = 'Raleway, system-ui, sans-serif'
-        when 'dm_serif_dm_sans'
-          assign ff_display = '"DM Serif Display", Georgia, serif'
-          assign ff_body    = '"DM Sans", system-ui, sans-serif'
-        else
-          assign ff_display = '"Cormorant Garamond", Georgia, serif'
-          assign ff_body    = 'Outfit, system-ui, sans-serif'
-      endcase
+      assign pairing = settings.font_pairing | default: 'cormorant_outfit'
+      assign body_size = settings.type_body_size | default: 14
+      assign hscale = settings.type_heading_size_scale | default: 'medium'
     -%}
-    --ff-display: {{ ff_display }};
-    --ff-body:    {{ ff_body }};
-    --fs-base:    {{ settings.type_body_size }}px;
-    --fs-scale:   {{ fs_scale }};
-    {%- liquid
-      case settings.type_heading_size_scale
-        when 'small'
-          assign heading_scale = '0.80'
-        when 'large'
-          assign heading_scale = '1.24'
-        else
-          assign heading_scale = '1'
-      endcase
-    -%}
-    --heading-scale: {{ heading_scale }};
+    {%- if pairing == 'playfair_inter' -%}
+      --ff-display: "Playfair Display", Georgia, serif;
+      --ff-body: Inter, system-ui, sans-serif;
+    {%- elsif pairing == 'libre_raleway' -%}
+      --ff-display: "Libre Baskerville", Georgia, serif;
+      --ff-body: Raleway, system-ui, sans-serif;
+    {%- elsif pairing == 'dm_serif_dm_sans' -%}
+      --ff-display: "DM Serif Display", Georgia, serif;
+      --ff-body: "DM Sans", system-ui, sans-serif;
+    {%- else -%}
+      --ff-display: "Cormorant Garamond", Georgia, serif;
+      --ff-body: Outfit, system-ui, sans-serif;
+    {%- endif -%}
+
+    --fs-base: {{ body_size }}px;
+    --fs-scale: {{ body_size | times: 1.0 | divided_by: 14.0 }};
+    {%- if hscale == 'small' -%}
+      --heading-scale: 0.80;
+    {%- elsif hscale == 'large' -%}
+      --heading-scale: 1.24;
+    {%- else -%}
+      --heading-scale: 1;
+    {%- endif -%}
 
     /* Layout */
-    --container-width:   {{ settings.layout_container_width }};
-    --section-spacing:   {{ settings.layout_section_spacing }}px;
-    --side-padding:      {{ settings.layout_side_padding }}px;
+    --container-width: {{ settings.layout_container_width | default: '1440px' }};
+    --section-spacing: {{ settings.layout_section_spacing | default: 80 }}px;
+    --side-padding: {{ settings.layout_side_padding | default: 40 }}px;
 
     /* Transitions */
-    --ease-out:  cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --ease-in:   cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --ease-in: cubic-bezier(0.55, 0.055, 0.675, 0.19);
     --transition: 0.3s var(--ease-out);
 
     /* Z-index layers — nav must be lower than drawers/modals */
-    --z-base:    1;
-    --z-raised:  10;
-    --z-nav:     100;
+    --z-base: 1;
+    --z-raised: 10;
+    --z-nav: 100;
     --z-overlay: 150;
-    --z-drawer:  400;
-    --z-modal:   500;
-    --z-cursor:  9999;
+    --z-drawer: 400;
+    --z-modal: 500;
+    --z-cursor: 9999;
   }
 </style>

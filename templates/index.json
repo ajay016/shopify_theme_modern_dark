@@ -40,8 +40,8 @@
         "speed": 30,
         "padding": 16,
         "pause_on_hover": true,
-        "bg_color": "#B99657",
-        "text_color": "#14110A"
+        "bg_color": "#b99657",
+        "text_color": "#14110a"
       }
     },
     "stories": {
@@ -97,6 +97,18 @@
         "intro": "Every category, shot like a cover story — pick an issue and step inside."
       }
     },
+    "arrivals": {
+      "type": "arrivals-lumiere",
+      "settings": {
+        "scheme": "theme",
+        "eyebrow": "Just In",
+        "heading": "New This Week",
+        "collection": "dresses",
+        "products_to_show": 8,
+        "cta_label": "View all new arrivals",
+        "cta_url": "/collections/all"
+      }
+    },
     "vitrine": {
       "type": "product-vitrine",
       "settings": {
@@ -104,6 +116,7 @@
         "eyebrow": "The Vitrine",
         "heading": "Pieces of Light",
         "text": "A cabinet of the season's most luminous pieces — silks that hold candlelight, tailoring that carves shadow.",
+        "collection": "dresses",
         "products_to_show": 6,
         "cta_label": "Shop the Vitrine",
         "cta_url": "/collections/all",
@@ -124,6 +137,78 @@
         "btn_link": "/collections/all",
         "link_label": "See the Campaign",
         "link_url": "/collections/all"
+      }
+    },
+    "directory": {
+      "type": "collection-reveal",
+      "blocks": {
+        "dr1": {
+          "type": "row",
+          "settings": {
+            "title": "Eveningwear",
+            "meta": "18 pieces",
+            "link": "/collections/all"
+          }
+        },
+        "dr2": {
+          "type": "row",
+          "settings": {
+            "title": "Tailoring",
+            "meta": "24 pieces",
+            "link": "/collections/all"
+          }
+        },
+        "dr3": {
+          "type": "row",
+          "settings": {
+            "title": "Silks & Satin",
+            "meta": "12 pieces",
+            "link": "/collections/all"
+          }
+        },
+        "dr4": {
+          "type": "row",
+          "settings": {
+            "title": "Outerwear",
+            "meta": "16 pieces",
+            "link": "/collections/all"
+          }
+        },
+        "dr5": {
+          "type": "row",
+          "settings": {
+            "title": "Jewellery",
+            "meta": "30 pieces",
+            "link": "/collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "dr1",
+        "dr2",
+        "dr3",
+        "dr4",
+        "dr5"
+      ],
+      "settings": {
+        "scheme": "light",
+        "eyebrow": "The Directory",
+        "heading": "Browse the Maison",
+        "cta_label": "View everything",
+        "cta_url": "/collections/all"
+      }
+    },
+    "look": {
+      "type": "shop-the-look",
+      "settings": {
+        "scheme": "theme",
+        "tag_label": "Look 05 — Eveningwear",
+        "eyebrow": "Shop the Look",
+        "heading": "Worn Together",
+        "text": "The gown and the pearls from the cover story — exactly as photographed, ready to wear.",
+        "collection": "",
+        "cta_label": "Shop the full look",
+        "cta_url": "/collections/all"
       }
     },
     "reviews": {
@@ -190,88 +275,6 @@
         "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time.",
         "foot_left": "Maison Noir",
         "foot_right": "Est. 2009"
-      }
-    },
-    "directory": {
-      "type": "collection-reveal",
-      "blocks": {
-        "dr1": {
-          "type": "row",
-          "settings": {
-            "title": "Eveningwear",
-            "meta": "18 pieces",
-            "link": "/collections/all"
-          }
-        },
-        "dr2": {
-          "type": "row",
-          "settings": {
-            "title": "Tailoring",
-            "meta": "24 pieces",
-            "link": "/collections/all"
-          }
-        },
-        "dr3": {
-          "type": "row",
-          "settings": {
-            "title": "Silks & Satin",
-            "meta": "12 pieces",
-            "link": "/collections/all"
-          }
-        },
-        "dr4": {
-          "type": "row",
-          "settings": {
-            "title": "Outerwear",
-            "meta": "16 pieces",
-            "link": "/collections/all"
-          }
-        },
-        "dr5": {
-          "type": "row",
-          "settings": {
-            "title": "Jewellery",
-            "meta": "30 pieces",
-            "link": "/collections/all"
-          }
-        }
-      },
-      "block_order": [
-        "dr1",
-        "dr2",
-        "dr3",
-        "dr4",
-        "dr5"
-      ],
-      "settings": {
-        "scheme": "light",
-        "eyebrow": "The Directory",
-        "heading": "Browse the Maison",
-        "cta_label": "View everything",
-        "cta_url": "/collections/all"
-      }
-    },
-    "arrivals": {
-      "type": "arrivals-lumiere",
-      "settings": {
-        "scheme": "theme",
-        "eyebrow": "Just In",
-        "heading": "New This Week",
-        "products_to_show": 8,
-        "cta_label": "View all new arrivals",
-        "cta_url": "/collections/all"
-      }
-    },
-    "look": {
-      "type": "shop-the-look",
-      "settings": {
-        "scheme": "theme",
-        "tag_label": "Look 05 — Eveningwear",
-        "eyebrow": "Shop the Look",
-        "heading": "Worn Together",
-        "text": "The gown and the pearls from the cover story — exactly as photographed, ready to wear.",
-        "cta_label": "Shop the full look",
-        "cta_url": "/collections/all"
       }
     }
   },

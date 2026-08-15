@@ -58,16 +58,34 @@ Schema labels are relabelled to match ("Primary surface", "Alternate", "Deep", "
 
 ## Phases
 
-- [ ] **Phase 1 — Token foundation.** Rewrite `css-variables.liquid`: full tonal ladder for all four schemes, plus header, overlay, modal, card and state tokens. Custom scheme derives its ladder from the pickers.
-- [ ] **Phase 2 — Header & navigation.** Scheme-aware, flat (non-gradient) backgrounds; correct contrast in transparent-over-hero, scrolled and solid states; nav links, icons, badges, mega menu, mobile drawer.
-- [ ] **Phase 3 — Sections.** Convert all 27 scheme-aware sections to reference global tokens; relabel schema options.
-- [ ] **Phase 4 — Components.** Quick-view modal, cart drawer, product cards, footer, toasts, buttons, forms — all token-driven.
-- [ ] **Phase 5 — Typography.** Make Base Font Size actually scale body copy.
-- [ ] **Phase 6 — Cart.** Implement Notification and Page cart types.
-- [ ] **Phase 7 — Audit.** Sweep for surviving hardcoded colors; contrast-check every scheme; validate; push.
+- [x] **Phase 1 — Token foundation.** Rewrite `css-variables.liquid`: full tonal ladder for all four schemes, plus header, overlay, modal, card and state tokens. Custom scheme derives its ladder from the pickers.
+- [x] **Phase 2 — Header & navigation.** Scheme-aware, flat (non-gradient) backgrounds; correct contrast in transparent-over-hero, scrolled and solid states; nav links, icons, badges, mega menu, mobile drawer.
+- [x] **Phase 3 — Sections.** Convert all 27 scheme-aware sections to reference global tokens; relabel schema options.
+- [x] **Phase 4 — Components.** Quick-view modal, cart drawer, product cards, footer, toasts, buttons, forms — all token-driven.
+- [x] **Phase 5 — Typography.** Make Base Font Size actually scale body copy.
+- [x] **Phase 6 — Cart.** Implement Notification and Page cart types.
+- [x] **Phase 7 — Audit.** Sweep for surviving hardcoded colors; contrast-check every scheme; validate; push.
 
 ---
 
 ## Progress log
 
-_Updated as each phase completes._
+**Phase 1 — done.** `css-variables.liquid` rewritten. Emits `--s1..s4` (bg/fg/mut/bdr) per scheme plus header, modal, drawer, card, field, button, image-scrim and `--on-gold` tokens, and `--fs-scale`. Muted alphas and on-gold text are *derived from measured brightness*, not assumed. Legacy `--black`/`--charcoal`/`--cream` aliases were re-pointed at the ladder, so several hundred existing rules became scheme-correct with no edit.
+
+**Phase 2 — done.** Header no longer hardcodes `rgba(10,10,10,…)`. Transparent state is a flat translucent wash of the header surface (gradient removed, as requested) with blur; scrolled state uses the same hue, so scrolling can no longer flip the bar to a color its text cannot sit on. Logo, nav links, icons and count badges follow header tokens.
+
+**Phase 3 — done.** 27 sections × 107 variant blocks × 542 declarations converted to ladder tokens. Stored template values still work but now mean tonal roles. Schema label renamed "Surface tone" with role-based options. Also tokenised on-gold text, on-image text and glass pills inside section bodies (29 declarations).
+
+**Phase 4 — done.** Quick-view modal shell/gallery were fixed dark (`#111`, `#0d0d0d`) — now `--modal-bg`/`--modal-surface`. **Deleted 89 lines** of `[data-qv-scheme="light"|"warm"]` overrides, which only existed to patch the modal per-section and could never cover every case. Product-card palettes (`.pcard--light/dark/warm/theme`) were hardcoded too and now follow the ladder.
+
+**Phase 5 — done.** `--fs-base` previously only set `html{font-size}` while every size in the theme was literal `px`/`clamp()`, so the slider did nothing. `html` is left at the browser default (respecting user accessibility settings); `body` takes the setting directly, and **457 font-size declarations** (92 in `theme.css`, 365 in sections) are wrapped in `calc(… * var(--fs-scale))`. Heading declarations already governed by `--heading-scale` were deliberately skipped to avoid double-scaling.
+
+**Phase 6 — done.** Notification mode was never implemented — `addToCart()` always opened the drawer, and the drawer isn't rendered outside drawer mode, so it was a silent no-op. `addToCart()` now branches on `cart_type`: drawer (unchanged), **notification** (new token-driven popover under the cart icon showing the added item, running total, View bag / Continue shopping), and **page** (adds, then redirects to `/cart`). `cart_type` is exposed via `window.theme_settings`. Quick view auto-closes in notification mode so the popover isn't hidden behind it.
+
+**Phase 7 — done.** Contrast audited programmatically across all four schemes (body, muted and accent text on every rung). The audit **caught two real failures**: muted text on Light `s2`/`s3` measured 4.44:1 and 4.29:1 — below AA — because the light muted alpha was 0.60. Solved for the minimum passing value and set it to **0.66** (worst case now 5.14:1). All four schemes now pass WCAG AA. Remaining literal colors in `theme.css` are only photographic scrims, shadows and the error red, all intentional.
+
+### Verification
+- 64 section schemas, 33 templates, both configs parse.
+- 498 `calc()` expressions balanced after Liquid rendering.
+- Range settings valid; `theme.js` passes `node --check`.
+- Live homepage: 10 sections, all types resolve.

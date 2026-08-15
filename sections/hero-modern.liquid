@@ -165,7 +165,7 @@
   /* Side labels */
   #section-{{ section.id }} .hmod__side {
     position: absolute; top: 50%;
-    font-size: 10px; letter-spacing: 0.45em; text-transform: uppercase;
+    font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.45em; text-transform: uppercase;
     color: var(--cream); opacity: 0.45; white-space: nowrap; z-index: 2;
   }
   #section-{{ section.id }} .hmod__side--left {
@@ -196,7 +196,7 @@
   #section-{{ section.id }} .hmod__eyebrow {
     display: inline-flex; align-items: center; gap: 14px;
     font-family: var(--ff-body);
-    font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase;
+    font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.4em; text-transform: uppercase;
     color: var(--gold); margin-bottom: 28px;
   }
   #section-{{ section.id }} .hmod__eyebrow::before {
@@ -214,7 +214,7 @@
   }
   #section-{{ section.id }} .hmod__line {
     display: block;
-    font-size: clamp(52px, 9vw, 132px);
+    font-size: calc(clamp(52px, 9vw, 132px) * var(--fs-scale, 1));
     color: var(--cream);
   }
   #section-{{ section.id }} .hmod__line em { font-style: italic; color: var(--gold-light); }
@@ -226,7 +226,7 @@
 
   /* Description */
   #section-{{ section.id }} .hmod__desc {
-    font-size: 14px; line-height: 1.85; letter-spacing: 0.02em;
+    font-size: calc(14px * var(--fs-scale, 1)); line-height: 1.85; letter-spacing: 0.02em;
     color: var(--cream); opacity: 0.7; max-width: 440px; margin-bottom: 40px;
   }
 
@@ -234,7 +234,7 @@
   #section-{{ section.id }} .hmod__ctas { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
   #section-{{ section.id }} .hmod__text-link {
     display: inline-flex; align-items: center; gap: 12px;
-    font-size: 11px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase;
+    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase;
     color: var(--cream); transition: gap var(--transition), color var(--transition);
   }
   #section-{{ section.id }} .hmod__text-link:hover { gap: 18px; color: var(--gold); }
@@ -247,10 +247,10 @@
   }
   #section-{{ section.id }} .hmod__stat { display: flex; flex-direction: column; gap: 6px; }
   #section-{{ section.id }} .hmod__stat-value {
-    font-family: var(--ff-display); font-size: clamp(28px, 3vw, 40px); font-weight: 400; color: var(--gold);
+    font-family: var(--ff-display); font-size: calc(clamp(28px, 3vw, 40px) * var(--fs-scale, 1)); font-weight: 400; color: var(--gold);
   }
   #section-{{ section.id }} .hmod__stat-label {
-    font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--cream); opacity: 0.55;
+    font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.28em; text-transform: uppercase; color: var(--cream); opacity: 0.55;
   }
 
   /* Rotating badge */
@@ -264,7 +264,7 @@
     animation: hmodSpin 18s linear infinite;
   }
   #section-{{ section.id }} .hmod__badge-ring text {
-    font-family: var(--ff-body); font-size: 7px; letter-spacing: 0.32em;
+    font-family: var(--ff-body); font-size: calc(7px * var(--fs-scale, 1)); letter-spacing: 0.32em;
     text-transform: uppercase; fill: var(--gold);
   }
   @keyframes hmodSpin { to { transform: rotate(360deg); } }
@@ -291,10 +291,10 @@
     animation: hmodMarquee 28s linear infinite;
   }
   #section-{{ section.id }} .hmod__ticker-item {
-    font-family: var(--ff-display); font-size: 16px; font-style: italic;
+    font-family: var(--ff-display); font-size: calc(16px * var(--fs-scale, 1)); font-style: italic;
     letter-spacing: 0.04em; color: var(--cream); opacity: 0.85; white-space: nowrap;
   }
-  #section-{{ section.id }} .hmod__ticker-dot { color: var(--gold); margin: 0 28px; font-size: 11px; }
+  #section-{{ section.id }} .hmod__ticker-dot { color: var(--gold); margin: 0 28px; font-size: calc(11px * var(--fs-scale, 1)); }
   @keyframes hmodMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   /* Scroll cue */
@@ -303,7 +303,7 @@
     display: flex; align-items: center; gap: 16px;
   }
   #section-{{ section.id }} .hmod__scroll span {
-    font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted);
+    font-size: calc(9px * var(--fs-scale, 1)); letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted);
   }
   #section-{{ section.id }} .hmod__scroll-line {
     width: 56px; height: 1px; background: linear-gradient(to right, var(--gold), transparent);

@@ -89,7 +89,7 @@
   .arc-eyebrow {
     display: block;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 11px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
     color: var(--aacc); margin-bottom: 14px;
   }
   .arc-heading {
@@ -123,7 +123,7 @@
   .arc-card__num {
     position: absolute; top: 14px; left: 50%; transform: translateX(-50%); z-index: 2;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 10px; font-weight: 500; letter-spacing: .22em;
+    font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .22em;
     color: var(--on-image-mut);
   }
   .arc-card__media {
@@ -139,13 +139,13 @@
   .arc-card__label {
     display: block; margin-top: 18px;
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(20px, 1.7vw, 26px); font-weight: 400; font-style: italic;
+    font-size: calc(clamp(20px, 1.7vw, 26px) * var(--fs-scale, 1)); font-weight: 400; font-style: italic;
     color: var(--afg);
   }
   .arc-card__sub {
     display: block; margin-top: 6px;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 10px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase;
+    font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .2em; text-transform: uppercase;
     color: var(--amut);
   }
 

@@ -67,7 +67,7 @@
   .stm-eyebrow {
     display: inline-block;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 11px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
     color: var(--sacc); margin-bottom: 30px;
   }
   .stm-text {
@@ -92,7 +92,7 @@
     display: inline-flex; align-items: center; gap: 10px;
     margin-top: clamp(30px, 4vw, 48px);
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
     color: var(--sfg); text-decoration: none;
     border-bottom: 1px solid var(--sacc); padding-bottom: 8px;
     transition: color .25s, gap .25s;

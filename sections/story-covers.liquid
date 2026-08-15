@@ -67,9 +67,9 @@
   #section-{{ section.id }} .stc-inner { max-width: var(--container-width,1440px); margin: 0 auto; }
 
   #section-{{ section.id }} .stc-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; margin-bottom: clamp(30px,3.8vw,52px); flex-wrap: wrap; }
-  #section-{{ section.id }} .stc-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--acc); margin-bottom: 13px; }
+  #section-{{ section.id }} .stc-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--acc); margin-bottom: 13px; }
   #section-{{ section.id }} .stc-heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(32px,4.4vw,62px) * var(--heading-scale,1)); font-weight: 300; line-height: 1.02; text-transform: uppercase; margin: 0; }
-  #section-{{ section.id }} .stc-intro { font-family: var(--ff-body,'Outfit',sans-serif); font-size: clamp(13px,1vw,15px); line-height: 1.7; color: var(--mut); max-width: 340px; }
+  #section-{{ section.id }} .stc-intro { font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(clamp(13px,1vw,15px) * var(--fs-scale, 1)); line-height: 1.7; color: var(--mut); max-width: 340px; }
 
   #section-{{ section.id }} .stc-rack { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(14px,1.8vw,28px); }
 
@@ -88,7 +88,7 @@
   #section-{{ section.id }} .stc-cover__mast {
     text-align: center; padding: 4px 0 10px;
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(13px,1.1vw,17px); letter-spacing: .3em; text-transform: uppercase;
+    font-size: calc(clamp(13px,1.1vw,17px) * var(--fs-scale, 1)); letter-spacing: .3em; text-transform: uppercase;
     color: var(--fg);
   }
   #section-{{ section.id }} .stc-cover__media { position: relative; display: block; aspect-ratio: 3/4; overflow: hidden; }
@@ -97,7 +97,7 @@
   #section-{{ section.id }} .stc-cover__issue {
     position: absolute; top: 10px; right: 12px; z-index: 2;
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(20px,1.8vw,30px); line-height: 1; color: var(--on-image);
+    font-size: calc(clamp(20px,1.8vw,30px) * var(--fs-scale, 1)); line-height: 1; color: var(--on-image);
     text-shadow: 0 1px 10px rgba(0,0,0,.35);
   }
   #section-{{ section.id }} .stc-cover__foot {
@@ -106,11 +106,11 @@
   }
   #section-{{ section.id }} .stc-cover__title {
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(17px,1.5vw,23px); font-weight: 400; line-height: 1.1;
+    font-size: calc(clamp(17px,1.5vw,23px) * var(--fs-scale, 1)); font-weight: 400; line-height: 1.1;
   }
   #section-{{ section.id }} .stc-cover__link {
     display: inline-flex; align-items: center; gap: 6px;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .16em; text-transform: uppercase; color: var(--mut); white-space: nowrap;
     transition: color .25s;
   }

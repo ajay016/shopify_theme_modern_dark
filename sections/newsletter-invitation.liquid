@@ -76,10 +76,10 @@
     border: 1px solid color-mix(in srgb, var(--acc) 32%, transparent);
   }
 
-  #section-{{ section.id }} .nli-orn { display: block; font-size: 15px; color: var(--acc); margin-bottom: 18px; }
+  #section-{{ section.id }} .nli-orn { display: block; font-size: calc(15px * var(--fs-scale, 1)); color: var(--acc); margin-bottom: 18px; }
   #section-{{ section.id }} .nli-eyebrow {
     display: block; font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 10px; font-weight: 500; letter-spacing: .34em; text-transform: uppercase;
+    font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .34em; text-transform: uppercase;
     color: var(--acc); margin-bottom: 16px;
   }
   #section-{{ section.id }} .nli-heading {
@@ -89,7 +89,7 @@
   }
   #section-{{ section.id }} .nli-sub {
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: clamp(13px, 1vw, 15px); line-height: 1.7; color: var(--mut);
+    font-size: calc(clamp(13px, 1vw, 15px) * var(--fs-scale, 1)); line-height: 1.7; color: var(--mut);
     max-width: 420px; margin: 0 auto clamp(24px, 3.4vh, 34px);
   }
 
@@ -103,22 +103,22 @@
   #section-{{ section.id }} .nli-row input {
     flex: 1; min-width: 0; border: none; background: transparent; outline: none;
     padding: 16px 22px; color: var(--fg);
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 13px; letter-spacing: .04em;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(13px * var(--fs-scale, 1)); letter-spacing: .04em;
   }
   #section-{{ section.id }} .nli-row input::placeholder { color: var(--mut); }
   #section-{{ section.id }} .nli-row button {
     border: none; cursor: pointer; background: var(--acc); color: var(--on-gold);
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 600;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 600;
     letter-spacing: .18em; text-transform: uppercase; padding: 0 30px;
     transition: filter .2s;
   }
   #section-{{ section.id }} .nli-row button:hover { filter: brightness(1.08); }
 
-  #section-{{ section.id }} .nli-success { font-family: var(--ff-body,'Outfit',sans-serif); font-size: 13px; letter-spacing: .06em; color: var(--acc); }
-  #section-{{ section.id }} .nli-error   { font-family: var(--ff-body,'Outfit',sans-serif); font-size: 12px; color: #C97B7B; margin-top: 10px; }
+  #section-{{ section.id }} .nli-success { font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(13px * var(--fs-scale, 1)); letter-spacing: .06em; color: var(--acc); }
+  #section-{{ section.id }} .nli-error   { font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(12px * var(--fs-scale, 1)); color: #C97B7B; margin-top: 10px; }
 
   #section-{{ section.id }} .nli-disc {
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; line-height: 1.6;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); line-height: 1.6;
     color: var(--mut); opacity: .8; margin-top: 16px;
   }
 
@@ -126,10 +126,10 @@
     display: flex; align-items: center; justify-content: center; gap: 14px;
     margin-top: clamp(24px, 3.4vh, 34px); padding-top: 18px;
     border-top: 1px solid var(--bdr);
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 9px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(9px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .3em; text-transform: uppercase; color: var(--mut);
   }
-  #section-{{ section.id }} .nli-foot__dia { color: var(--acc); font-size: 9px; }
+  #section-{{ section.id }} .nli-foot__dia { color: var(--acc); font-size: calc(9px * var(--fs-scale, 1)); }
 
   #section-{{ section.id }} .reveal.reveal-armed { opacity: 0; transform: translateY(26px); transition: opacity .8s ease, transform .8s ease; }
   #section-{{ section.id }} .reveal.is-visible { opacity: 1; transform: none; }

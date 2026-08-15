@@ -65,9 +65,9 @@
   .team-member:hover .team-member__social { opacity: 1; transform: translateY(0); }
   .team-member__social a { color: var(--cream); transition: color 0.2s; }
   .team-member__social a:hover { color: var(--gold); }
-  .team-member__name { font-family: var(--ff-display); font-size: 18px; font-weight: 300; margin-bottom: 4px; }
-  .team-member__role { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-  .team-member__bio { font-size: 12px; line-height: 1.7; opacity: 0.6; }
+  .team-member__name { font-family: var(--ff-display); font-size: calc(18px * var(--fs-scale, 1)); font-weight: 300; margin-bottom: 4px; }
+  .team-member__role { font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  .team-member__bio { font-size: calc(12px * var(--fs-scale, 1)); line-height: 1.7; opacity: 0.6; }
   @media (max-width: 1200px) { .team-grid__members--5 { grid-template-columns: repeat(4, 1fr); } }
   @media (max-width: 900px) { .team-grid__members--3, .team-grid__members--4, .team-grid__members--5 { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 640px) { .team-grid__members--3, .team-grid__members--4, .team-grid__members--5 { grid-template-columns: 1fr; } }

@@ -104,11 +104,11 @@
     z-index: 2;
   }
   #section-{{ section.id }} .nls__visual-quote p {
-    font-family: var(--ff-display); font-size: clamp(18px, 2.2vw, 28px); font-style: italic;
+    font-family: var(--ff-display); font-size: calc(clamp(18px, 2.2vw, 28px) * var(--fs-scale, 1)); font-style: italic;
     color: var(--cream); font-weight: 300; line-height: 1.35; margin-bottom: 14px;
   }
   #section-{{ section.id }} .nls__visual-quote cite {
-    font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+    font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.3em; text-transform: uppercase;
     color: var(--gold); font-style: normal;
   }
 
@@ -123,7 +123,7 @@
 
   /* Eyebrow */
   #section-{{ section.id }} .nls__eyebrow {
-    font-size: 10px; letter-spacing: 0.38em; text-transform: uppercase;
+    font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.38em; text-transform: uppercase;
     color: var(--gold); display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
   }
   #section-{{ section.id }} .nls__eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
@@ -134,14 +134,14 @@
 
   /* Heading */
   #section-{{ section.id }} .nls__heading {
-    font-family: var(--ff-display); font-size: clamp(28px, 3.2vw, 46px); font-weight: 300;
+    font-family: var(--ff-display); font-size: calc(clamp(28px, 3.2vw, 46px) * var(--fs-scale, 1)); font-weight: 300;
     line-height: 1.1; color: var(--cream); margin-bottom: 16px;
   }
   #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__heading,
   #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__heading { color: var(--black); }
 
   /* Subtext */
-  #section-{{ section.id }} .nls__sub { font-size: 13px; line-height: 1.75; color: var(--cream); opacity: 0.65; margin-bottom: 24px; }
+  #section-{{ section.id }} .nls__sub { font-size: calc(13px * var(--fs-scale, 1)); line-height: 1.75; color: var(--cream); opacity: 0.65; margin-bottom: 24px; }
   #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__sub,
   #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__sub { color: var(--black); }
 
@@ -149,7 +149,7 @@
   #section-{{ section.id }} .nls__perks { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 10px; }
   #section-{{ section.id }} .nls__perk {
     display: flex; align-items: center; gap: 10px;
-    font-size: 12px; letter-spacing: 0.04em; color: var(--cream); opacity: 0.8;
+    font-size: calc(12px * var(--fs-scale, 1)); letter-spacing: 0.04em; color: var(--cream); opacity: 0.8;
   }
   #section-{{ section.id }} .nls__perk svg { color: var(--gold); flex-shrink: 0; }
   #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__perk,
@@ -162,7 +162,7 @@
   #section-{{ section.id }} .nls__input-row input[type="email"] {
     width: 100%; background: transparent;
     border: 0; border-bottom: 1px solid var(--border-strong);
-    color: var(--cream); font-family: var(--ff-body); font-size: 14px;
+    color: var(--cream); font-family: var(--ff-body); font-size: calc(14px * var(--fs-scale, 1));
     padding: 14px 0; outline: none; transition: border-color 0.3s;
     letter-spacing: 0.03em;
   }
@@ -176,7 +176,7 @@
     display: inline-flex; align-items: center; gap: 10px; justify-content: center;
     width: 100%; padding: 16px 24px;
     background: var(--gold); color: var(--black);
-    font-family: var(--ff-body); font-size: 11px; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase;
+    font-family: var(--ff-body); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase;
     border: none; cursor: pointer; transition: background var(--transition), transform 0.2s;
   }
   #section-{{ section.id }} .nls__input-row button:hover { background: var(--gold-light); transform: translateY(-1px); }
@@ -184,9 +184,9 @@
   #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__input-row button:hover { background: #111; }
 
   /* Feedback */
-  #section-{{ section.id }} .nls__success { color: var(--gold); font-size: 13px; letter-spacing: 0.06em; }
-  #section-{{ section.id }} .nls__error   { color: var(--sale-text); font-size: 12px; margin-top: 8px; }
-  #section-{{ section.id }} .nls__disclaimer { font-size: 11px; line-height: 1.6; color: var(--cream); opacity: 0.45; margin-top: 14px; }
+  #section-{{ section.id }} .nls__success { color: var(--gold); font-size: calc(13px * var(--fs-scale, 1)); letter-spacing: 0.06em; }
+  #section-{{ section.id }} .nls__error   { color: var(--sale-text); font-size: calc(12px * var(--fs-scale, 1)); margin-top: 8px; }
+  #section-{{ section.id }} .nls__disclaimer { font-size: calc(11px * var(--fs-scale, 1)); line-height: 1.6; color: var(--cream); opacity: 0.45; margin-top: 14px; }
   #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__disclaimer,
   #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__disclaimer { color: var(--black); }
 

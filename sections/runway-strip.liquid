@@ -85,7 +85,7 @@
   .rwy-eyebrow {
     display: inline-block;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 11px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
     color: var(--racc); margin-bottom: 14px;
   }
   .rwy-heading {
@@ -115,11 +115,11 @@
     padding: 28px 16px 14px;
     background: linear-gradient(180deg, rgba(20,16,12,0), rgba(20,16,12,.66));
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 11px; font-weight: 400; letter-spacing: .08em;
+    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 400; letter-spacing: .08em;
     color: var(--on-image);
   }
   .rwy-look__num {
-    display: block; font-size: 9px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
+    display: block; font-size: calc(9px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
     color: rgba(255,255,255,.65); margin-bottom: 4px;
   }
 
@@ -127,7 +127,7 @@
   .rwy-cta {
     display: inline-flex; align-items: center; gap: 10px;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
     color: var(--rfg); text-decoration: none;
     border-bottom: 1px solid var(--racc); padding-bottom: 8px;
     transition: color .25s, gap .25s;

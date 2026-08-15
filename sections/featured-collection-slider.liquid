@@ -128,12 +128,12 @@
   #section-{{ section.id }} .fcs__ph-tag {
     position: absolute; top: 16px; left: 16px;
     background: var(--gold); color: var(--black);
-    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 500;
+    font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 500;
     padding: 5px 11px;
   }
-  #section-{{ section.id }} .fcs__ph-brand { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
-  #section-{{ section.id }} .fcs__ph-name { font-family: var(--ff-display); font-size: 19px; font-weight: 400; color: var(--cream); margin-bottom: 6px; }
-  #section-{{ section.id }} .fcs__ph-price { font-size: 14px; color: var(--cream); opacity: 0.85; }
+  #section-{{ section.id }} .fcs__ph-brand { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  #section-{{ section.id }} .fcs__ph-name { font-family: var(--ff-display); font-size: calc(19px * var(--fs-scale, 1)); font-weight: 400; color: var(--cream); margin-bottom: 6px; }
+  #section-{{ section.id }} .fcs__ph-price { font-size: calc(14px * var(--fs-scale, 1)); color: var(--cream); opacity: 0.85; }
 
   @media (max-width: 1100px) {
     #section-{{ section.id }} .fcs__slide { flex-basis: calc((100% - 24px) / 2); }

@@ -49,20 +49,20 @@
     border: 1px solid var(--border); padding: 64px;
   }
   .newsletter__text { flex: 1; }
-  .newsletter__heading { font-family: var(--ff-display); font-size: clamp(28px, 3vw, 44px); font-weight: 300; margin: 12px 0; }
-  .newsletter__sub { font-size: 13px; opacity: 0.6; line-height: 1.7; margin-top: 12px; }
+  .newsletter__heading { font-family: var(--ff-display); font-size: calc(clamp(28px, 3vw, 44px) * var(--fs-scale, 1)); font-weight: 300; margin: 12px 0; }
+  .newsletter__sub { font-size: calc(13px * var(--fs-scale, 1)); opacity: 0.6; line-height: 1.7; margin-top: 12px; }
   .newsletter__form-wrap { flex: 1; max-width: 480px; }
   .newsletter__row { display: flex; gap: 0; }
   .newsletter__row input[type="email"] {
     flex: 1; background: transparent; border: 1px solid var(--border); border-right: none;
-    color: var(--cream); font-family: var(--ff-body); font-size: 13px;
+    color: var(--cream); font-family: var(--ff-body); font-size: calc(13px * var(--fs-scale, 1));
     padding: 16px 20px; outline: none; transition: border-color 0.3s;
   }
   .newsletter__row input[type="email"]::placeholder { color: var(--muted); }
   .newsletter__row input[type="email"]:focus { border-color: var(--gold); }
-  .newsletter__disclaimer { font-size: 11px; letter-spacing: 0.05em; color: var(--cream); opacity: 0.55; margin-top: 16px; line-height: 1.6; }
-  .newsletter__success { color: var(--gold); font-size: 13px; letter-spacing: 0.05em; }
-  .newsletter__error { color: var(--sale-text); font-size: 12px; margin-top: 8px; }
+  .newsletter__disclaimer { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.05em; color: var(--cream); opacity: 0.55; margin-top: 16px; line-height: 1.6; }
+  .newsletter__success { color: var(--gold); font-size: calc(13px * var(--fs-scale, 1)); letter-spacing: 0.05em; }
+  .newsletter__error { color: var(--sale-text); font-size: calc(12px * var(--fs-scale, 1)); margin-top: 8px; }
   @media (max-width: 900px) {
     .newsletter__inner { flex-direction: column; align-items: flex-start; padding: 40px; }
     .newsletter__form-wrap { width: 100%; max-width: 100%; }

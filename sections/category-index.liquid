@@ -79,9 +79,9 @@
   #section-{{ section.id }} .cix-inner { max-width: var(--container-width,1440px); margin: 0 auto; }
 
   #section-{{ section.id }} .cix-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; margin-bottom: clamp(30px,3.6vw,48px); flex-wrap: wrap; }
-  #section-{{ section.id }} .cix-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase; color: var(--acc); margin-bottom: 14px; }
+  #section-{{ section.id }} .cix-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .26em; text-transform: uppercase; color: var(--acc); margin-bottom: 14px; }
   #section-{{ section.id }} .cix-heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(32px,4.4vw,62px) * var(--heading-scale,1)); font-weight: 300; line-height: 1.02; text-transform: uppercase; margin: 0; }
-  #section-{{ section.id }} .cix-intro { font-family: var(--ff-body,'Outfit',sans-serif); font-size: clamp(13px,1vw,15px); line-height: 1.7; color: var(--mut); max-width: 340px; }
+  #section-{{ section.id }} .cix-intro { font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(clamp(13px,1vw,15px) * var(--fs-scale, 1)); line-height: 1.7; color: var(--mut); max-width: 340px; }
 
   /* — Expanding panels — */
   #section-{{ section.id }} .cix-panels {
@@ -113,7 +113,7 @@
   #section-{{ section.id }} .cix-panel__num {
     position: absolute; z-index: 2; top: 16px; left: 18px;
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(22px,2.2vw,36px); line-height: 1; color: var(--on-image);
+    font-size: calc(clamp(22px,2.2vw,36px) * var(--fs-scale, 1)); line-height: 1; color: var(--on-image);
   }
 
   /* Collapsed state: vertical label along the panel */
@@ -122,7 +122,7 @@
     transform: translateX(-50%);
     writing-mode: vertical-rl;
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(18px,1.7vw,26px); font-weight: 400; letter-spacing: .06em;
+    font-size: calc(clamp(18px,1.7vw,26px) * var(--fs-scale, 1)); font-weight: 400; letter-spacing: .06em;
     text-transform: uppercase; color: var(--on-image); white-space: nowrap;
     opacity: 1; transition: opacity .3s;
   }
@@ -135,9 +135,9 @@
     transition: opacity .45s .18s, transform .5s .18s;
   }
   #section-{{ section.id }} .cix-panel.is-open .cix-panel__body { opacity: 1; transform: none; }
-  #section-{{ section.id }} .cix-panel__kicker { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--acc); margin-bottom: 8px; }
-  #section-{{ section.id }} .cix-panel__title { display: block; font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: clamp(26px,2.8vw,48px); font-weight: 400; line-height: 1.04; color: var(--on-image); }
-  #section-{{ section.id }} .cix-panel__cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--on-image-mut); border-bottom: 1px solid var(--acc); padding-bottom: 4px; }
+  #section-{{ section.id }} .cix-panel__kicker { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--acc); margin-bottom: 8px; }
+  #section-{{ section.id }} .cix-panel__title { display: block; font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(26px,2.8vw,48px) * var(--fs-scale, 1)); font-weight: 400; line-height: 1.04; color: var(--on-image); }
+  #section-{{ section.id }} .cix-panel__cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--on-image-mut); border-bottom: 1px solid var(--acc); padding-bottom: 4px; }
 
   #section-{{ section.id }} .reveal.reveal-armed { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
   #section-{{ section.id }} .reveal.is-visible { opacity: 1; transform: none; }
@@ -149,9 +149,9 @@
     #section-{{ section.id }} .cix-panel.is-open { flex: none; height: clamp(300px, 48svh, 420px); }
     #section-{{ section.id }} .cix-panel__side {
       writing-mode: horizontal-tb; left: 18px; right: auto; bottom: 50%;
-      transform: translateY(50%); font-size: 20px;
+      transform: translateY(50%); font-size: calc(20px * var(--fs-scale, 1));
     }
-    #section-{{ section.id }} .cix-panel__num { top: 50%; left: auto; right: 18px; transform: translateY(-50%); font-size: 20px; }
+    #section-{{ section.id }} .cix-panel__num { top: 50%; left: auto; right: 18px; transform: translateY(-50%); font-size: calc(20px * var(--fs-scale, 1)); }
     #section-{{ section.id }} .cix-panel.is-open .cix-panel__num { top: 16px; transform: none; }
   }
 </style>

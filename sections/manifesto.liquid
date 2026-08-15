@@ -46,15 +46,15 @@
   #section-{{ section.id }} .mfo-band { overflow: hidden; border-top: 1px solid var(--bdr); border-bottom: 1px solid var(--bdr); padding: 14px 0; }
   #section-{{ section.id }} .mfo-band__track { display: inline-flex; align-items: center; white-space: nowrap; animation: mfoMarq{{ section.id }} 30s linear infinite; }
   #section-{{ section.id }} .mfo-band__track--rev { animation-direction: reverse; }
-  #section-{{ section.id }} .mfo-band__track span { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: clamp(22px,2.8vw,40px); font-weight: 300; text-transform: uppercase; letter-spacing: .05em; padding: 0 22px; color: var(--fg); opacity: .55; }
-  #section-{{ section.id }} .mfo-band__dot { color: var(--acc) !important; font-size: 13px !important; opacity: 1 !important; }
+  #section-{{ section.id }} .mfo-band__track span { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(22px,2.8vw,40px) * var(--fs-scale, 1)); font-weight: 300; text-transform: uppercase; letter-spacing: .05em; padding: 0 22px; color: var(--fg); opacity: .55; }
+  #section-{{ section.id }} .mfo-band__dot { color: var(--acc) !important; font-size: calc(13px !important * var(--fs-scale, 1)); opacity: 1 !important; }
 
   #section-{{ section.id }} .mfo-inner { max-width: 1040px; margin: 0 auto; text-align: center; padding: clamp(48px,8vh,96px) var(--side-padding,5vw); }
-  #section-{{ section.id }} .mfo-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--acc); margin-bottom: clamp(24px,4vh,40px); }
+  #section-{{ section.id }} .mfo-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--acc); margin-bottom: clamp(24px,4vh,40px); }
   #section-{{ section.id }} .mfo-statement { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(28px,4.2vw,58px) * var(--heading-scale,1)); font-weight: 300; line-height: 1.18; letter-spacing: .005em; margin: 0; }
   #section-{{ section.id }} .mfo-statement em { font-style: italic; color: var(--acc); }
-  #section-{{ section.id }} .mfo-sign { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--mut); margin-top: clamp(26px,4vh,40px); }
-  #section-{{ section.id }} .mfo-btn { display: inline-block; margin-top: 30px; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--bg); background: var(--acc); padding: 15px 34px; text-decoration: none; border-radius: 2px; transition: transform .22s; }
+  #section-{{ section.id }} .mfo-sign { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(12px * var(--fs-scale, 1)); letter-spacing: .2em; text-transform: uppercase; color: var(--mut); margin-top: clamp(26px,4vh,40px); }
+  #section-{{ section.id }} .mfo-btn { display: inline-block; margin-top: 30px; font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--bg); background: var(--acc); padding: 15px 34px; text-decoration: none; border-radius: 2px; transition: transform .22s; }
   #section-{{ section.id }} .mfo-btn:hover { transform: translateY(-2px); }
 
   #section-{{ section.id }} .reveal.reveal-armed { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s ease; }

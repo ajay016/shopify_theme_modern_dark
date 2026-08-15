@@ -50,19 +50,19 @@
 <style>
   .account-page { padding: var(--section-spacing) 0; }
   .account-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 48px; }
-  .account-header__title { font-family: var(--ff-display); font-size: clamp(24px, 3vw, 40px); font-weight: 300; }
-  .account-header__logout { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--muted); transition: all 0.2s; }
+  .account-header__title { font-family: var(--ff-display); font-size: calc(clamp(24px, 3vw, 40px) * var(--fs-scale, 1)); font-weight: 300; }
+  .account-header__logout { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--muted); transition: all 0.2s; }
   .account-header__logout:hover { color: var(--gold); border-bottom-color: var(--gold); }
   .account-grid { display: grid; grid-template-columns: 200px 1fr; gap: 48px; }
   .account-nav { display: flex; flex-direction: column; gap: 4px; }
-  .account-nav__item { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding: 10px 0; border-bottom: 1px solid transparent; transition: all 0.2s; }
+  .account-nav__item { font-size: calc(12px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding: 10px 0; border-bottom: 1px solid transparent; transition: all 0.2s; }
   .account-nav__item.is-active, .account-nav__item:hover { color: var(--gold); border-bottom-color: var(--gold); }
-  .account-section-title { font-family: var(--ff-display); font-size: 22px; font-weight: 300; margin-bottom: 24px; }
-  .account-orders { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .account-orders th { text-align: left; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .account-section-title { font-family: var(--ff-display); font-size: calc(22px * var(--fs-scale, 1)); font-weight: 300; margin-bottom: 24px; }
+  .account-orders { width: 100%; border-collapse: collapse; font-size: calc(13px * var(--fs-scale, 1)); }
+  .account-orders th { text-align: left; font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); padding: 12px 0; border-bottom: 1px solid var(--border); }
   .account-orders td { padding: 16px 0; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--cream); opacity: 0.8; }
   .account-order-link { color: var(--gold); }
-  .order-badge { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 8px; background: var(--charcoal); border: 1px solid var(--border); }
+  .order-badge { font-size: calc(9px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 8px; background: var(--charcoal); border: 1px solid var(--border); }
   .account-empty { opacity: 0.6; margin-bottom: 24px; }
   @media (max-width: 768px) {
     .account-grid { grid-template-columns: 1fr; }

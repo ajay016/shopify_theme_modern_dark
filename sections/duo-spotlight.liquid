@@ -85,7 +85,7 @@
     position: absolute; left: clamp(24px, 4vw, 56px); bottom: clamp(24px, 4vw, 48px);
     display: inline-flex; align-items: center; gap: 12px;
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(26px, 2.6vw, 40px); font-weight: 300; font-style: italic;
+    font-size: calc(clamp(26px, 2.6vw, 40px) * var(--fs-scale, 1)); font-weight: 300; font-style: italic;
     color: var(--on-image); z-index: 2;
     transition: gap .3s ease;
   }
@@ -104,7 +104,7 @@
   .duo-card__eyebrow {
     display: block;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 10px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+    font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
     color: var(--dacc); margin-bottom: 16px;
   }
   .duo-card__heading {
@@ -114,13 +114,13 @@
   }
   .duo-card__text {
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 13px; line-height: 1.7; color: var(--dmut);
+    font-size: calc(13px * var(--fs-scale, 1)); line-height: 1.7; color: var(--dmut);
     margin: 16px 0 0;
   }
   .duo-card__btn {
     display: inline-block; margin-top: 24px;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 10px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+    font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
     color: var(--dfg); text-decoration: none;
     border-bottom: 1px solid var(--dacc); padding-bottom: 7px;
     transition: color .25s;

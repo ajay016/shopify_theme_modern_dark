@@ -87,7 +87,7 @@
   #section-{{ section.id }} .hno-watermark {
     position: absolute; z-index: 0; left: -1vw; bottom: clamp(40px, 8svh, 110px);
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(110px, 20vw, 320px); font-weight: 300; line-height: 1;
+    font-size: calc(clamp(110px, 20vw, 320px) * var(--fs-scale, 1)); font-weight: 300; line-height: 1;
     text-transform: uppercase; letter-spacing: .02em;
     color: transparent; -webkit-text-stroke: 1px var(--wm);
     pointer-events: none; user-select: none; white-space: nowrap;
@@ -108,13 +108,13 @@
   }
   #section-{{ section.id }} .hno-rail__text {
     writing-mode: vertical-rl; transform: rotate(180deg);
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .3em; text-transform: uppercase; color: var(--mut);
   }
   #section-{{ section.id }} .hno-rail__line { flex: 0 0 clamp(40px, 8svh, 90px); width: 1px; background: var(--acc); }
   #section-{{ section.id }} .hno-rail__num {
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(22px, 2vw, 32px); color: var(--acc); line-height: 1;
+    font-size: calc(clamp(22px, 2vw, 32px) * var(--fs-scale, 1)); color: var(--acc); line-height: 1;
   }
 
   /* — Copy — */
@@ -123,7 +123,7 @@
     padding: clamp(20px, 4svh, 48px) 0 clamp(28px, 5svh, 56px) clamp(10px, 1.6vw, 28px);
   }
   #section-{{ section.id }} .hno-season {
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .3em; text-transform: uppercase; color: var(--mut);
     margin-bottom: clamp(14px, 2svh, 22px);
     animation: hnoUp{{ section.id }} .7s both;
@@ -131,7 +131,7 @@
   #section-{{ section.id }} .hno-eyebrow {
     display: inline-flex; align-items: center; gap: 10px;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 11px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase;
+    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .28em; text-transform: uppercase;
     color: var(--acc); margin-bottom: clamp(14px, 2.4svh, 24px);
     animation: hnoUp{{ section.id }} .7s .08s both;
   }
@@ -155,14 +155,14 @@
   #section-{{ section.id }} .hno-title__l--push { padding-left: clamp(36px, 5vw, 120px); }
 
   #section-{{ section.id }} .hno-desc {
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: clamp(14px, 1.05vw, 16px);
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(clamp(14px, 1.05vw, 16px) * var(--fs-scale, 1));
     line-height: 1.75; color: var(--mut); max-width: 400px;
     margin: clamp(20px, 3.2svh, 34px) 0 0; animation: hnoUp{{ section.id }} .85s .5s both;
   }
   #section-{{ section.id }} .hno-ctas { display: flex; align-items: center; flex-wrap: wrap; gap: 22px; margin-top: clamp(22px, 3.4svh, 34px); animation: hnoUp{{ section.id }} .85s .6s both; }
   #section-{{ section.id }} .hno-btn {
     display: inline-flex; align-items: center; gap: 8px;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .16em; text-transform: uppercase; text-decoration: none;
     transition: transform .22s, background .22s, color .22s, border-color .22s, box-shadow .22s;
   }
@@ -174,7 +174,7 @@
   #section-{{ section.id }} .hno-scroll {
     display: inline-flex; align-items: center; gap: 12px;
     margin-top: clamp(28px, 5svh, 52px);
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .26em; text-transform: uppercase; color: var(--mut);
     animation: hnoUp{{ section.id }} .85s .7s both;
   }
@@ -206,7 +206,7 @@
     background: rgba(16,16,17,.55);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(236,233,226,.22); color: #ECE9E2; padding: 10px 16px;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .2em; text-transform: uppercase;
   }
   #section-{{ section.id }} .hno-tag__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--acc); }
@@ -220,10 +220,10 @@
   }
   #section-{{ section.id }} .hno-ticker__track { display: inline-flex; align-items: center; white-space: nowrap; animation: hnoMarq{{ section.id }} 28s linear infinite; }
   #section-{{ section.id }} .hno-ticker__track span {
-    font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: clamp(17px, 1.8vw, 26px);
+    font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(17px, 1.8vw, 26px) * var(--fs-scale, 1));
     font-weight: 300; text-transform: uppercase; letter-spacing: .05em; padding: 0 22px; color: var(--fg); opacity: .8;
   }
-  #section-{{ section.id }} .hno-ticker__sep { color: var(--acc) !important; font-size: 12px !important; opacity: 1 !important; }
+  #section-{{ section.id }} .hno-ticker__sep { color: var(--acc) !important; font-size: calc(12px !important * var(--fs-scale, 1)); opacity: 1 !important; }
 
   @keyframes hnoUp{{ section.id }}    { from { opacity:0; transform: translateY(26px);} to { opacity:1; transform:none; } }
   @keyframes hnoFade{{ section.id }}  { from { opacity:0;} to { opacity:1;} }

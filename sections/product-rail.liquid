@@ -83,7 +83,7 @@
   .prl-eyebrow {
     display: block;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 11px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
     color: var(--pacc); margin-bottom: 14px;
   }
   .prl-heading {
@@ -113,7 +113,7 @@
   .prl-cta {
     display: inline-block;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase;
+    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .16em; text-transform: uppercase;
     color: var(--pbg); background: var(--pfg);
     padding: 16px 38px; border-radius: 2px; text-decoration: none;
     transition: transform .25s, background .25s, color .25s;

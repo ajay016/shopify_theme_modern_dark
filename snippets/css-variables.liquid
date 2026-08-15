@@ -111,12 +111,15 @@
       endif
 
       comment
-        Foreground alphas. Muted text sits at 0.62 on dark and
-        0.60 on light — both clear WCAG AA against their rung.
+        Foreground alphas for muted text. These are solved values,
+        not guesses: on light schemes muted text has to sit at 0.66
+        to clear WCAG AA (4.5:1) against the *deepest* rung — 0.60
+        measured 4.29:1 there and failed. Dark schemes clear AA
+        comfortably at 0.62 (6.69:1 worst case).
       endcomment
       assign mut_a = 0.62
       if is_dark == false
-        assign mut_a = 0.60
+        assign mut_a = 0.66
       endif
 
       assign tone_mut = tone_fg | color_modify: 'alpha', mut_a

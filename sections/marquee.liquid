@@ -60,14 +60,14 @@
 
   #section-{{ section.id }} .marquee__item {
     font-family: {% if s.style == 'serif' %}var(--ff-display){% else %}var(--ff-body){% endif %};
-    {% if s.style == 'serif' %}font-style: italic; font-size: clamp(20px, 2.4vw, 34px); letter-spacing: 0.02em;{% else %}font-size: clamp(12px, 1.4vw, 16px); letter-spacing: 0.32em; text-transform: uppercase; font-weight: 500;{% endif %}
+    {% if s.style == 'serif' %}font-style: italic; font-size: calc(clamp(20px, 2.4vw, 34px) * var(--fs-scale, 1)); letter-spacing: 0.02em;{% else %}font-size: calc(clamp(12px, 1.4vw, 16px) * var(--fs-scale, 1)); letter-spacing: 0.32em; text-transform: uppercase; font-weight: 500;{% endif %}
     color: var(--mq-fg);
   }
   #section-{{ section.id }} .marquee__sep {
     color: var(--mq-fg);
     margin: 0 clamp(20px, 3vw, 44px);
     opacity: 0.55;
-    font-size: {% if s.style == 'serif' %}16px{% else %}11px{% endif %};
+    font-size: calc({% if s.style == 'serif' %}16px{% else %}11px{% endif %} * var(--fs-scale, 1));
   }
 
   @keyframes mqScroll-{{ section.id }} {

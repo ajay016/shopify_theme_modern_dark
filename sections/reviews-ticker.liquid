@@ -55,7 +55,7 @@
   #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: var(--section-spacing,80px) 0; overflow: hidden; }
 
   #section-{{ section.id }} .rvt-head { text-align: center; padding: 0 var(--side-padding,5vw); margin-bottom: clamp(28px,3.6vw,46px); }
-  #section-{{ section.id }} .rvt-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .3em; text-transform: uppercase; color: var(--acc); margin-bottom: 13px; }
+  #section-{{ section.id }} .rvt-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .3em; text-transform: uppercase; color: var(--acc); margin-bottom: 13px; }
   #section-{{ section.id }} .rvt-heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(28px,3.6vw,52px) * var(--heading-scale,1)); font-weight: 300; line-height: 1.05; text-transform: uppercase; margin: 0; }
 
   /* — Auto-scrolling band; pauses on hover — */
@@ -75,14 +75,14 @@
     transition: border-color .3s;
   }
   #section-{{ section.id }} .rvt-card:hover { border-color: color-mix(in srgb, var(--acc) 55%, transparent); }
-  #section-{{ section.id }} .rvt-card__stars { display: block; color: var(--acc); font-size: 12px; letter-spacing: .3em; margin-bottom: 14px; }
+  #section-{{ section.id }} .rvt-card__stars { display: block; color: var(--acc); font-size: calc(12px * var(--fs-scale, 1)); letter-spacing: .3em; margin-bottom: 14px; }
   #section-{{ section.id }} .rvt-card__quote {
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(17px,1.4vw,21px); font-weight: 400; font-style: italic;
+    font-size: calc(clamp(17px,1.4vw,21px) * var(--fs-scale, 1)); font-weight: 400; font-style: italic;
     line-height: 1.45; margin: 0 0 16px;
   }
   #section-{{ section.id }} .rvt-card__who {
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .2em; text-transform: uppercase; color: var(--mut);
   }
 

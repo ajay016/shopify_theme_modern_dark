@@ -94,12 +94,12 @@
     display: flex; align-items: center; justify-content: space-between; gap: 14px;
     padding-bottom: 16px; margin-bottom: clamp(28px, 4.4svh, 48px);
     border-bottom: 1px solid var(--bdr);
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .3em; text-transform: uppercase; color: var(--mut);
     animation: hlmUp{{ section.id }} .7s both;
   }
   #section-{{ section.id }} .hlm-masthead__c { color: var(--fg); }
-  #section-{{ section.id }} .hlm-masthead__dia { color: var(--acc); font-size: 9px; letter-spacing: 0; }
+  #section-{{ section.id }} .hlm-masthead__dia { color: var(--acc); font-size: calc(9px * var(--fs-scale, 1)); letter-spacing: 0; }
 
   /* — Issue title — */
   #section-{{ section.id }} .hlm-title {
@@ -117,7 +117,7 @@
 
   #section-{{ section.id }} .hlm-desc {
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: clamp(14px, 1.05vw, 16px); line-height: 1.75;
+    font-size: calc(clamp(14px, 1.05vw, 16px) * var(--fs-scale, 1)); line-height: 1.75;
     color: var(--mut); max-width: 540px; text-align: center;
     margin: clamp(18px, 2.8svh, 28px) auto 0;
     animation: hlmUp{{ section.id }} .9s .42s both;
@@ -129,7 +129,7 @@
   }
   #section-{{ section.id }} .hlm-btn {
     display: inline-flex; align-items: center; gap: 8px;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .18em; text-transform: uppercase; text-decoration: none;
     transition: transform .22s, box-shadow .22s, color .22s;
   }
@@ -162,17 +162,17 @@
   #section-{{ section.id }} .hlm-frame__cap {
     display: flex; align-items: center; gap: 10px;
     margin-top: 12px;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .22em; text-transform: uppercase; color: var(--mut);
   }
-  #section-{{ section.id }} .hlm-frame__num { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: 14px; letter-spacing: 0; color: var(--acc); }
+  #section-{{ section.id }} .hlm-frame__num { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(14px * var(--fs-scale, 1)); letter-spacing: 0; color: var(--acc); }
   #section-{{ section.id }} .hlm-tag {
     position: absolute; z-index: 2; left: 14px; bottom: 14px;
     display: inline-flex; align-items: center; gap: 8px;
     background: var(--s1-bg);
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     color: var(--s1-fg); padding: 9px 15px; border-radius: 999px;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .18em; text-transform: uppercase;
   }
   #section-{{ section.id }} .hlm-tag__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--acc); }

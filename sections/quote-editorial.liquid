@@ -44,7 +44,7 @@
   .qte-mark {
     display: block;
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(72px, 8vw, 120px); line-height: .6;
+    font-size: calc(clamp(72px, 8vw, 120px) * var(--fs-scale, 1)); line-height: .6;
     color: var(--qacc); margin-bottom: 18px;
   }
   .qte-quote {
@@ -65,13 +65,13 @@
   .qte-author {
     display: block;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 13px; font-weight: 500; letter-spacing: .06em;
+    font-size: calc(13px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .06em;
     color: var(--qfg);
   }
   .qte-role {
     display: block; margin-top: 3px;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 10px; font-weight: 400; letter-spacing: .18em; text-transform: uppercase;
+    font-size: calc(10px * var(--fs-scale, 1)); font-weight: 400; letter-spacing: .18em; text-transform: uppercase;
     color: var(--qmut);
   }
 </style>

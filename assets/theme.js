@@ -243,12 +243,20 @@
       btn.disabled = true;
     }
 
-    // 2. Open drawer with spinner immediately
-    const body = document.getElementById('cart-drawer-items');
-    if (body) body.innerHTML = '<div class="cart-loading"><span class="cart-spinner"></span></div>';
-    document.getElementById('cart-drawer')?.classList.add('is-open');
-    document.getElementById('cart-overlay')?.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
+    // 2. Feedback depends on the Cart Type setting:
+    //    drawer       -> slide-in drawer with a spinner (default)
+    //    notification -> compact popover anchored under the header cart icon
+    //    page         -> add, then navigate to the full cart page
+    const cartType = window.theme_settings?.cart_type || 'drawer';
+    const useDrawer = cartType === 'drawer';
+
+    const body = useDrawer ? document.getElementById('cart-drawer-items') : null;
+    if (useDrawer) {
+      if (body) body.innerHTML = '<div class="cart-loading"><span class="cart-spinner"></span></div>';
+      document.getElementById('cart-drawer')?.classList.add('is-open');
+      document.getElementById('cart-overlay')?.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
 
     try {
       // 3. Add item
@@ -287,10 +295,19 @@
       // 5. Fetch full cart in background to reconcile all items and totals
       const cart = await fetch('/cart.js').then(r => r.json());
       updateCartUI(cart);
-      showToast(window.theme_strings?.added_to_cart || 'Added to bag');
+
+      if (cartType === 'notification') {
+        showCartNotification(addedItem, cart);
+      } else if (cartType === 'page') {
+        window.location.href = window.routes?.cart_url || '/cart';
+        return;
+      } else {
+        showToast(window.theme_strings?.added_to_cart || 'Added to bag');
+      }
     } catch (err) {
       console.error('Add to cart failed:', err);
       if (body) body.innerHTML = `<div class="cart-error">${err.message || 'Something went wrong. Please try again.'}</div>`;
+      else showToast(err.message || 'Something went wrong. Please try again.');
     } finally {
       if (btn && btn._origHTML !== undefined) {
         btn.innerHTML = btn._origHTML;
@@ -729,6 +746,10 @@
           try {
             await addToCart(variantId, 1);
             atcBtn.textContent = '✓ Added';
+            // Outside drawer mode the confirmation renders on the page, so the
+            // modal has to step aside or it would cover it.
+            const ct = window.theme_settings?.cart_type || 'drawer';
+            if (ct === 'notification') setTimeout(closeQV, 350);
             setTimeout(() => { atcBtn.textContent = prev; atcBtn.disabled = false; }, 2000);
           } catch {
             atcBtn.textContent = 'Error — try again';
@@ -904,6 +925,70 @@
      Toast Notification
      ============================================================ */
   let toastTimer;
+  /* ------------------------------------------------------------
+     Cart notification (Cart Type = "Notification Only")
+     A compact popover anchored under the header cart icon showing
+     the item just added, the running total and the two next steps.
+     ------------------------------------------------------------ */
+  let cartNotifTimer;
+  function showCartNotification(item, cart) {
+    let el = document.getElementById('cart-notification');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'cart-notification';
+      el.className = 'cart-notification';
+      el.setAttribute('role', 'status');
+      el.setAttribute('aria-live', 'polite');
+      document.body.appendChild(el);
+      // Close button is delegated so it survives re-renders.
+      el.addEventListener('click', (e) => {
+        if (e.target.closest('[data-close-cart-notification]')) hideCartNotification();
+      });
+    }
+
+    const img = item?.featured_image?.url || item?.image || '';
+    const variant = item?.variant_title && item.variant_title !== 'Default Title'
+      ? `<p class="cart-notification__variant">${item.variant_title}</p>` : '';
+    const count = cart?.item_count ?? 0;
+    const cartUrl = window.routes?.cart_url || '/cart';
+
+    el.innerHTML = `
+      <div class="cart-notification__head">
+        <span class="cart-notification__tick" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="cart-notification__title">${window.theme_strings?.added_to_cart || 'Added to bag'}</span>
+        <button class="cart-notification__close" type="button" data-close-cart-notification aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="cart-notification__item">
+        ${img ? `<span class="cart-notification__media"><img src="${img}" alt="" loading="eager"></span>` : ''}
+        <div class="cart-notification__info">
+          <p class="cart-notification__name">${item?.product_title || ''}</p>
+          ${variant}
+          <p class="cart-notification__price">${formatMoney(item?.final_price ?? 0)}</p>
+        </div>
+      </div>
+      <div class="cart-notification__actions">
+        <a class="cart-notification__btn cart-notification__btn--primary" href="${cartUrl}">
+          View bag${count ? ` (${count})` : ''}
+        </a>
+        <button class="cart-notification__btn cart-notification__btn--ghost" type="button" data-close-cart-notification>
+          Continue shopping
+        </button>
+      </div>`;
+
+    requestAnimationFrame(() => el.classList.add('is-visible'));
+    clearTimeout(cartNotifTimer);
+    cartNotifTimer = setTimeout(hideCartNotification, 6000);
+  }
+
+  function hideCartNotification() {
+    clearTimeout(cartNotifTimer);
+    document.getElementById('cart-notification')?.classList.remove('is-visible');
+  }
+
   function showToast(message) {
     let toast = document.getElementById('mn-toast');
     if (!toast) {
@@ -927,6 +1012,8 @@
   // Expose globally for use in sections
   window.MaisonNoir = {
     addToCart,
+    showCartNotification,
+    hideCartNotification,
     toggleWishlist,
     showToast,
     formatMoney,

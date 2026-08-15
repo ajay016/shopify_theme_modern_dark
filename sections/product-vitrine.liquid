@@ -90,7 +90,7 @@
   #section-{{ section.id }} .pvt-panel__stick { position: sticky; top: clamp(110px, 15vh, 150px); }
   #section-{{ section.id }} .pvt-eyebrow {
     display: block; font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 11px; font-weight: 500; letter-spacing: .3em; text-transform: uppercase;
+    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .3em; text-transform: uppercase;
     color: var(--acc); margin-bottom: 16px;
   }
   #section-{{ section.id }} .pvt-heading {
@@ -100,12 +100,12 @@
   }
   #section-{{ section.id }} .pvt-text {
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: clamp(13px, 1vw, 15px); line-height: 1.75; color: var(--mut);
+    font-size: calc(clamp(13px, 1vw, 15px) * var(--fs-scale, 1)); line-height: 1.75; color: var(--mut);
     max-width: 340px; margin: 0 0 26px;
   }
   #section-{{ section.id }} .pvt-cta {
     display: inline-block;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .18em; text-transform: uppercase; text-decoration: none;
     color: var(--on-gold); background: var(--acc); padding: 15px 34px; border-radius: 999px;
     transition: transform .22s, box-shadow .22s;
@@ -114,7 +114,7 @@
   #section-{{ section.id }} .pvt-note {
     display: flex; align-items: center; gap: 12px;
     margin-top: clamp(28px, 4vh, 44px);
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .24em; text-transform: uppercase; color: var(--mut);
   }
   #section-{{ section.id }} .pvt-note__rule { width: 36px; height: 1px; background: var(--acc); flex: 0 0 auto; }
@@ -128,7 +128,7 @@
     background: var(--s1-bg); color: var(--s1-fg);
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     padding: 8px 14px; border-radius: 999px;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .18em; text-transform: uppercase;
   }
 

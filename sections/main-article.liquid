@@ -133,32 +133,32 @@
   .article-hero__img { width: 100%; max-height: 560px; object-fit: cover; display: block; }
   .article-header { margin-bottom: 48px; }
   .article-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-  .article-title { font-family: var(--ff-display); font-size: clamp(28px, 4vw, 56px); font-weight: 300; line-height: 1.1; margin: 16px 0 20px; }
-  .article-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  .article-title { font-family: var(--ff-display); font-size: calc(clamp(28px, 4vw, 56px) * var(--fs-scale, 1)); font-weight: 300; line-height: 1.1; margin: 16px 0 20px; }
+  .article-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
   .article-meta__sep { color: var(--border-strong); }
-  .article-content { font-size: 15px; line-height: 1.9; max-width: 720px; }
-  .article-content h2 { font-family: var(--ff-display); font-size: 26px; font-weight: 300; margin: 40px 0 16px; }
-  .article-content h3 { font-family: var(--ff-display); font-size: 20px; font-weight: 300; margin: 32px 0 12px; }
+  .article-content { font-size: calc(15px * var(--fs-scale, 1)); line-height: 1.9; max-width: 720px; }
+  .article-content h2 { font-family: var(--ff-display); font-size: calc(26px * var(--fs-scale, 1)); font-weight: 300; margin: 40px 0 16px; }
+  .article-content h3 { font-family: var(--ff-display); font-size: calc(20px * var(--fs-scale, 1)); font-weight: 300; margin: 32px 0 12px; }
   .article-content p { margin-bottom: 20px; opacity: 0.8; }
   .article-content img { max-width: 100%; height: auto; }
-  .article-share { display: flex; align-items: center; gap: 12px; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .article-share { display: flex; align-items: center; gap: 12px; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border); font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
   .article-share a { color: var(--muted); transition: color 0.2s; }
   .article-share a:hover { color: var(--gold); }
   .article-comments { margin-top: 64px; padding-top: 48px; border-top: 1px solid var(--border); }
-  .article-comments__title, .comment-form__title { font-family: var(--ff-display); font-size: 24px; font-weight: 300; margin-bottom: 32px; }
+  .article-comments__title, .comment-form__title { font-family: var(--ff-display); font-size: calc(24px * var(--fs-scale, 1)); font-weight: 300; margin-bottom: 32px; }
   .comment { padding: 24px 0; border-bottom: 1px solid var(--border); }
-  .comment__meta { display: flex; gap: 12px; margin-bottom: 10px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .comment__meta { display: flex; gap: 12px; margin-bottom: 10px; font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
   .comment__author { color: var(--cream); }
-  .comment__body { font-size: 14px; line-height: 1.7; opacity: 0.7; }
+  .comment__body { font-size: calc(14px * var(--fs-scale, 1)); line-height: 1.7; opacity: 0.7; }
   .comment-form { margin-top: 48px; }
   .comment-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .comment-form__success { color: var(--gold); margin-bottom: 24px; }
   .comment-form__error { color: var(--sale-text); margin-bottom: 24px; }
   .form-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-  .form-field label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .form-field label { font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
   .form-field input, .form-field textarea, .form-field select {
     background: transparent; border: 1px solid var(--border); color: var(--cream);
-    font-family: var(--ff-body); font-size: 14px; padding: 12px 16px; outline: none; transition: border-color 0.3s; resize: vertical;
+    font-family: var(--ff-body); font-size: calc(14px * var(--fs-scale, 1)); padding: 12px 16px; outline: none; transition: border-color 0.3s; resize: vertical;
   }
   .form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: var(--gold); }
   @media (max-width: 900px) {

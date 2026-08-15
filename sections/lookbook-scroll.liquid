@@ -73,10 +73,10 @@
 
   #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: var(--section-spacing,80px) 0; overflow: hidden; }
   #section-{{ section.id }} .lbs-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: 0 var(--side-padding,5vw); margin-bottom: clamp(30px,4vw,48px); }
-  #section-{{ section.id }} .lbs-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase; color: var(--acc); margin-bottom: 13px; }
+  #section-{{ section.id }} .lbs-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .26em; text-transform: uppercase; color: var(--acc); margin-bottom: 13px; }
   #section-{{ section.id }} .lbs-heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(32px,4.4vw,62px) * var(--heading-scale,1)); font-weight: 300; line-height: 1.02; text-transform: uppercase; margin: 0; }
   #section-{{ section.id }} .lbs-nav { display: flex; align-items: center; gap: 12px; }
-  #section-{{ section.id }} .lbs-hint { font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--mut); margin-right: 6px; }
+  #section-{{ section.id }} .lbs-hint { font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: .2em; text-transform: uppercase; color: var(--mut); margin-right: 6px; }
   #section-{{ section.id }} .lbs-arrow { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--bdr); background: transparent; color: var(--fg); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background .25s, color .25s, border-color .25s; }
   #section-{{ section.id }} .lbs-arrow:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 
@@ -95,11 +95,11 @@
   #section-{{ section.id }} .lbs-frame--tall .lbs-frame__media { aspect-ratio: 2/3; }
   #section-{{ section.id }} .lbs-frame__img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .8s cubic-bezier(.2,0,.2,1); }
   #section-{{ section.id }} .lbs-frame:hover .lbs-frame__img { transform: scale(1.04); }
-  #section-{{ section.id }} .lbs-frame__num { position: absolute; top: 12px; left: 14px; z-index: 2; font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: clamp(22px,2vw,34px); color: rgba(255,255,255,.9); text-shadow: 0 1px 10px rgba(0,0,0,.4); }
+  #section-{{ section.id }} .lbs-frame__num { position: absolute; top: 12px; left: 14px; z-index: 2; font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(22px,2vw,34px) * var(--fs-scale, 1)); color: rgba(255,255,255,.9); text-shadow: 0 1px 10px rgba(0,0,0,.4); }
   #section-{{ section.id }} .lbs-frame__cap { padding: 16px 2px 0; }
-  #section-{{ section.id }} .lbs-frame__kicker { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--acc); margin-bottom: 7px; }
-  #section-{{ section.id }} .lbs-frame__title { display: block; font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: clamp(19px,1.6vw,26px); font-weight: 400; line-height: 1.1; }
-  #section-{{ section.id }} .lbs-frame__link { display: inline-flex; align-items: center; gap: 7px; margin-top: 10px; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--mut); text-decoration: none; transition: color .2s; }
+  #section-{{ section.id }} .lbs-frame__kicker { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--acc); margin-bottom: 7px; }
+  #section-{{ section.id }} .lbs-frame__title { display: block; font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(19px,1.6vw,26px) * var(--fs-scale, 1)); font-weight: 400; line-height: 1.1; }
+  #section-{{ section.id }} .lbs-frame__link { display: inline-flex; align-items: center; gap: 7px; margin-top: 10px; font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--mut); text-decoration: none; transition: color .2s; }
   #section-{{ section.id }} .lbs-frame__link:hover { color: var(--acc); }
 
   @media (max-width: 700px) {

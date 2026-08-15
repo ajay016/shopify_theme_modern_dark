@@ -58,7 +58,7 @@
   #section-{{ section.id }} .clm-inner { position: relative; z-index: 2; max-width: 560px; }
   #section-{{ section.id }} .clm-eyebrow {
     display: inline-flex; align-items: center; gap: 10px;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .28em; text-transform: uppercase; color: var(--acc); margin-bottom: 18px;
   }
   #section-{{ section.id }} .clm-eyebrow::before { content:''; width: 26px; height: 1px; background: var(--acc); }
@@ -73,13 +73,13 @@
   #section-{{ section.id }} .clm-title__em em { font-style: italic; }
   #section-{{ section.id }} .clm-desc {
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: clamp(14px,1.05vw,16px); line-height: 1.75; color: var(--mut);
+    font-size: calc(clamp(14px,1.05vw,16px) * var(--fs-scale, 1)); line-height: 1.75; color: var(--mut);
     margin: clamp(18px,2.6vh,26px) 0 0; max-width: 440px;
   }
   #section-{{ section.id }} .clm-ctas { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; margin-top: clamp(24px,3.6vh,34px); }
   #section-{{ section.id }} .clm-btn {
     display: inline-block; font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
     text-decoration: none; color: var(--on-gold); background: var(--acc);
     padding: 16px 36px; border-radius: 999px;
     transition: transform .22s, box-shadow .22s;
@@ -87,7 +87,7 @@
   #section-{{ section.id }} .clm-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 38px -16px color-mix(in srgb, var(--acc) 70%, transparent); }
   #section-{{ section.id }} .clm-link {
     display: inline-flex; align-items: center; gap: 7px;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .16em; text-transform: uppercase; color: var(--fg); text-decoration: none;
     border-bottom: 1px solid var(--acc); padding-bottom: 5px; transition: color .2s;
   }

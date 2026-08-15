@@ -27,16 +27,16 @@
 <style>
   .error-page { padding: var(--section-spacing) 0; text-align: center; min-height: 60vh; display: flex; align-items: center; }
   .error-page__inner { max-width: 560px; margin: 0 auto; }
-  .error-page__code { font-family: var(--ff-display); font-size: clamp(80px, 12vw, 160px); font-weight: 300; color: var(--gold); opacity: 0.25; line-height: 1; margin-bottom: 8px; }
-  .error-page__title { font-family: var(--ff-display); font-size: clamp(24px, 3vw, 40px); font-weight: 300; margin-bottom: 16px; }
-  .error-page__text { font-size: 14px; opacity: 0.6; line-height: 1.7; margin-bottom: 40px; }
+  .error-page__code { font-family: var(--ff-display); font-size: calc(clamp(80px, 12vw, 160px) * var(--fs-scale, 1)); font-weight: 300; color: var(--gold); opacity: 0.25; line-height: 1; margin-bottom: 8px; }
+  .error-page__title { font-family: var(--ff-display); font-size: calc(clamp(24px, 3vw, 40px) * var(--fs-scale, 1)); font-weight: 300; margin-bottom: 16px; }
+  .error-page__text { font-size: calc(14px * var(--fs-scale, 1)); opacity: 0.6; line-height: 1.7; margin-bottom: 40px; }
   .error-page__actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
   .error-page__search { margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--border); }
-  .error-page__search-label { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--cream); opacity: 0.6; margin-bottom: 20px; }
+  .error-page__search-label { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.25em; text-transform: uppercase; color: var(--cream); opacity: 0.6; margin-bottom: 20px; }
   .error-search-form__row { display: flex; max-width: 400px; margin: 0 auto; }
-  .error-search-form__row input { flex: 1; background: transparent; border: 1px solid var(--border); border-right: none; color: var(--cream); font-family: var(--ff-body); font-size: 14px; padding: 14px 18px; outline: none; }
+  .error-search-form__row input { flex: 1; background: transparent; border: 1px solid var(--border); border-right: none; color: var(--cream); font-family: var(--ff-body); font-size: calc(14px * var(--fs-scale, 1)); padding: 14px 18px; outline: none; }
   .error-search-form__row input:focus { border-color: var(--gold); }
-  .error-search-form__row .btn-primary { font-size: 11px; letter-spacing: 0.2em; white-space: nowrap; }
+  .error-search-form__row .btn-primary { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.2em; white-space: nowrap; }
 </style>
 
 {% schema %}

@@ -321,11 +321,11 @@
   .collection-title--style-4 .collection-title__centered { text-align: center; padding-top: 56px; }
   .collection-title--style-5 .collection-title__split { padding-top: 32px; }
   .collection-title--style-5 .container { display: flex; align-items: baseline; justify-content: space-between; }
-  .collection-title__text { font-family: var(--ff-display); font-size: clamp(28px, 4vw, 56px); font-weight: 300; letter-spacing: 0.02em; }
+  .collection-title__text { font-family: var(--ff-display); font-size: calc(clamp(28px, 4vw, 56px) * var(--fs-scale, 1)); font-weight: 300; letter-spacing: 0.02em; }
   .collection-title--style-2 .collection-title__text { color: var(--cream); }
-  .collection-title__text--large { font-size: clamp(40px, 6vw, 80px); }
-  .collection-title__count { font-size: 12px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; }
-  .collection-title__desc { margin-top: 16px; font-size: 13px; opacity: 0.6; max-width: 560px; line-height: 1.7; }
+  .collection-title__text--large { font-size: calc(clamp(40px, 6vw, 80px) * var(--fs-scale, 1)); }
+  .collection-title__count { font-size: calc(12px * var(--fs-scale, 1)); letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; }
+  .collection-title__desc { margin-top: 16px; font-size: calc(13px * var(--fs-scale, 1)); opacity: 0.6; max-width: 560px; line-height: 1.7; }
 
   .collection-toolbar {
     display: flex; align-items: center; justify-content: space-between;
@@ -337,12 +337,12 @@
   .toolbar-btn {
     display: flex; align-items: center; gap: 8px;
     background: transparent; border: 1px solid var(--border);
-    color: var(--cream); font-family: var(--ff-body); font-size: 11px;
+    color: var(--cream); font-family: var(--ff-body); font-size: calc(11px * var(--fs-scale, 1));
     letter-spacing: 0.2em; text-transform: uppercase; padding: 10px 20px; cursor: pointer;
     transition: border-color 0.3s;
   }
   .toolbar-btn:hover { border-color: var(--gold); }
-  .filter-count { background: var(--gold); color: var(--black); width: 18px; height: 18px; border-radius: 50%; font-size: 9px; display: flex; align-items: center; justify-content: center; }
+  .filter-count { background: var(--gold); color: var(--black); width: 18px; height: 18px; border-radius: 50%; font-size: calc(9px * var(--fs-scale, 1)); display: flex; align-items: center; justify-content: center; }
 
   .collection-layout { display: flex; gap: 48px; align-items: flex-start; }
   .collection-layout--has-sidebar.collection-layout--sidebar-left { flex-direction: row; }
@@ -351,27 +351,27 @@
   .collection-main { flex: 1; min-width: 0; }
 
   .sidebar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-  .sidebar-header__title { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; }
-  .sidebar-clear { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--cream); opacity: 0.55; border-bottom: 1px solid var(--muted); }
+  .sidebar-header__title { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.25em; text-transform: uppercase; }
+  .sidebar-clear { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--cream); opacity: 0.55; border-bottom: 1px solid var(--muted); }
 
   .filter-group { border-bottom: 1px solid var(--border); }
   .filter-group__toggle {
     width: 100%; display: flex; align-items: center; justify-content: space-between;
     background: transparent; border: none; color: var(--cream);
-    font-family: var(--ff-body); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    font-family: var(--ff-body); font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase;
     padding: 16px 0; cursor: pointer;
   }
   .filter-group__toggle svg { transition: transform 0.3s; }
   .filter-group__toggle[aria-expanded="false"] svg { transform: rotate(-90deg); }
   .filter-group__body { padding-bottom: 16px; }
   .filter-list { list-style: none; }
-  .filter-check { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; font-size: 13px; color: var(--cream); }
+  .filter-check { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; font-size: calc(13px * var(--fs-scale, 1)); color: var(--cream); }
   .filter-check input[type="checkbox"] { appearance: none; width: 14px; height: 14px; border: 1px solid var(--border); border-radius: 1px; flex-shrink: 0; transition: all 0.2s; }
   .filter-check input[type="checkbox"]:checked { background: var(--gold); border-color: var(--gold); }
-  .filter-count-pill { margin-left: auto; font-size: 11px; color: var(--cream); opacity: 0.6; }
+  .filter-count-pill { margin-left: auto; font-size: calc(11px * var(--fs-scale, 1)); color: var(--cream); opacity: 0.6; }
 
   .active-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-  .filter-chip { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--border); color: var(--cream); transition: all 0.2s; }
+  .filter-chip { font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--border); color: var(--cream); transition: all 0.2s; }
   .filter-chip--active { border-color: var(--gold); color: var(--gold); }
   .filter-chip--active:hover { background: var(--gold); color: var(--black); }
   .filter-chip--clear { color: var(--cream); opacity: 0.5; }
@@ -383,7 +383,7 @@
   .dropdown-filter { position: relative; }
   .dropdown-filter summary {
     list-style: none; cursor: pointer; padding: 10px 20px; border: 1px solid var(--border);
-    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--cream);
+    font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--cream);
     transition: border-color 0.3s; display: flex; align-items: center; gap: 8px;
   }
   .dropdown-filter summary:hover { border-color: var(--gold); }
@@ -401,7 +401,7 @@
   }
   .filter-drawer.is-open { right: 0; }
   .filter-drawer__header { display: flex; align-items: center; justify-content: space-between; padding: 24px 28px; border-bottom: 1px solid var(--border); }
-  .filter-drawer__header h2 { font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase; }
+  .filter-drawer__header h2 { font-size: calc(12px * var(--fs-scale, 1)); letter-spacing: 0.25em; text-transform: uppercase; }
   .filter-drawer__close { background: transparent; border: none; color: var(--cream); cursor: pointer; padding: 4px; }
   .filter-drawer__body { flex: 1; overflow-y: auto; padding: 0 28px; }
   .filter-drawer__footer { padding: 24px 28px; border-top: 1px solid var(--border); display: flex; gap: 12px; }
@@ -409,7 +409,7 @@
   .filter-drawer.is-open ~ .filter-drawer__overlay { display: block; }
 
   .pagination { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 48px; }
-  .pagination__item { padding: 10px 16px; border: 1px solid var(--border); font-size: 12px; letter-spacing: 0.1em; color: var(--cream); transition: all 0.2s; }
+  .pagination__item { padding: 10px 16px; border: 1px solid var(--border); font-size: calc(12px * var(--fs-scale, 1)); letter-spacing: 0.1em; color: var(--cream); transition: all 0.2s; }
   .pagination__item--current { border-color: var(--gold); color: var(--gold); }
   .pagination__item:hover:not(.pagination__item--current):not(.pagination__item--gap) { border-color: var(--gold); }
   .pagination__item--gap { border-color: transparent; }
@@ -418,7 +418,7 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   .price-range-inputs { display: flex; align-items: center; gap: 8px; }
-  .price-range-inputs input { width: 80px; background: transparent; border: 1px solid var(--border); color: var(--cream); font-family: var(--ff-body); font-size: 12px; padding: 8px 10px; outline: none; }
+  .price-range-inputs input { width: 80px; background: transparent; border: 1px solid var(--border); color: var(--cream); font-family: var(--ff-body); font-size: calc(12px * var(--fs-scale, 1)); padding: 8px 10px; outline: none; }
   .price-range-inputs input:focus { border-color: var(--gold); }
   .price-range-inputs span { color: var(--muted); }
 

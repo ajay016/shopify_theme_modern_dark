@@ -138,6 +138,7 @@
       wishlist_removed:        {{ 'wishlist.removed' | t | json }}
     };
     window.theme_settings = {
+      cart_type:        {{ settings.cart_type | json }},
       custom_cursor:    {{ settings.custom_cursor | json }},
       wishlist_enabled: {{ settings.wishlist_enabled | json }},
       quickview_enabled:{{ settings.quickview_enabled | json }},

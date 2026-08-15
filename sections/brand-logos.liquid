@@ -43,7 +43,7 @@
 
 <style>
   .brand-logos { padding: var(--section-spacing) 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .brand-logos__heading { text-align: center; font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; }
+  .brand-logos__heading { text-align: center; font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.35em; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; }
   .brand-logos__track-wrap { overflow: hidden; }
   .brand-logos__track { display: flex; align-items: center; justify-content: center; gap: 56px; flex-wrap: wrap; }
   .brand-logos__track--marquee { flex-wrap: nowrap; justify-content: flex-start; animation: marquee 24s linear infinite; }
@@ -55,7 +55,7 @@
   .brand-logos__item { display: flex; align-items: center; flex-shrink: 0; }
   .brand-logos__img { height: 32px; width: auto; object-fit: contain; opacity: 0.45; filter: brightness(0) invert(1); transition: opacity 0.3s; }
   .brand-logos__item:hover .brand-logos__img { opacity: 0.9; }
-  .brand-logos__item--text { font-family: var(--ff-display); font-size: 18px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); transition: color 0.3s; white-space: nowrap; }
+  .brand-logos__item--text { font-family: var(--ff-display); font-size: calc(18px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); transition: color 0.3s; white-space: nowrap; }
   .brand-logos__item--text:hover { color: var(--cream); }
 </style>
 

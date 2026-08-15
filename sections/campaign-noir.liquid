@@ -48,9 +48,9 @@
 <style>
   /* scheme only drives the accent + button; the canvas is the image itself */
   #section-{{ section.id }}.cno--light,
-  #section-{{ section.id }}.cno--dark,
-  #section-{{ section.id }}.cno--warm { --acc:var(--gold,#C8A96E); }
-  #section-{{ section.id }}.cno--theme { --acc:var(--gold,#C8A96E); }
+  #section-{  }}.cno--dark,
+  #section-{{ section.id }}.cno--warm { --acc:var(--gold); }
+  #section-{{ section.id }}.cno--theme { --acc:var(--gold); }
 
   #section-{{ section.id }} {
     position: relative; overflow: hidden; isolation: isolate;
@@ -149,12 +149,12 @@
   "max_blocks": 4,
   "settings": [
     {
-      "type": "select", "id": "scheme", "label": "Accent scheme",
+      "type": "select", "id": "scheme", "label": "Surface tone",
       "options": [
-        { "value": "light", "label": "Light (bone)" },
-        { "value": "dark",  "label": "Dark (graphite)" },
-        { "value": "warm",  "label": "Warm (sand)" },
-        { "value": "theme", "label": "Follow theme" }
+        { "value": "light", "label": "Alternate surface (soft)" },
+        { "value": "dark",  "label": "Primary surface" },
+        { "value": "warm",  "label": "Deep surface" },
+        { "value": "theme", "label": "Primary surface (follow theme)" }
       ],
       "default": "dark"
     },

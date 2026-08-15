@@ -58,10 +58,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.arl--light { --bg:#F4F1EA; --fg:#17141B; --acc:var(--gold,#A8874C); --mut:rgba(23,20,27,.55); --bdr:rgba(23,20,27,.15); }
-  #section-{{ section.id }}.arl--dark  { --bg:#131118; --fg:#EFEBE2; --acc:var(--gold,#C6A15B); --mut:rgba(239,235,226,.52); --bdr:rgba(239,235,226,.16); }
-  #section-{{ section.id }}.arl--warm  { --bg:#EBE2D2; --fg:#241D15; --acc:var(--gold,#8E5A2A); --mut:rgba(36,29,21,.55); --bdr:rgba(36,29,21,.18); }
-  #section-{{ section.id }}.arl--theme { --bg:var(--background,#F4F1EA); --fg:var(--foreground,#17141B); --acc:var(--gold,#A8874C); --mut:var(--muted,rgba(23,20,27,.55)); --bdr:var(--border,rgba(23,20,27,.15)); }
+  #section-{{ section.id }}.arl--light { --bg:var(--s2-bg); --fg:var(--s2-fg); --acc:var(--gold); --mut:var(--s2-mut); --bdr:var(--s2-bdr); }
+  #section-{{ section.id }}.arl--dark  { --bg:var(--s1-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
+  #section-{{ section.id }}.arl--warm  { --bg:var(--s3-bg); --fg:var(--s3-fg); --acc:var(--gold); --mut:var(--s3-mut); --bdr:var(--s3-bdr); }
+  #section-{{ section.id }}.arl--theme { --bg:var(--s1-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
 
   #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }
   #section-{{ section.id }} .arl-inner { max-width: var(--container-width,1440px); margin: 0 auto; }
@@ -116,12 +116,12 @@
   "class": "section-arrivals-lumiere",
   "settings": [
     {
-      "type": "select", "id": "scheme", "label": "Color scheme",
+      "type": "select", "id": "scheme", "label": "Surface tone",
       "options": [
-        { "value": "light", "label": "Light (pearl)" },
-        { "value": "dark",  "label": "Dark (velvet)" },
-        { "value": "warm",  "label": "Warm (champagne)" },
-        { "value": "theme", "label": "Follow theme" }
+        { "value": "light", "label": "Alternate surface (soft)" },
+        { "value": "dark",  "label": "Primary surface" },
+        { "value": "warm",  "label": "Deep surface" },
+        { "value": "theme", "label": "Primary surface (follow theme)" }
       ],
       "default": "light"
     },

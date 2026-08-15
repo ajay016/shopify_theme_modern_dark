@@ -71,26 +71,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.hno--light {
-    --bg:#ECE9E2; --fg:#18181A; --acc:var(--gold,#9A7B43);
-    --mut:rgba(24,24,26,.55); --bdr:rgba(24,24,26,.16);
-    --btn-bg:#18181A; --btn-fg:#ECE9E2; --wm:rgba(24,24,26,.05);
-  }
-  #section-{{ section.id }}.hno--dark {
-    --bg:#161618; --fg:#ECE9E2; --acc:var(--gold,#C8A96E);
-    --mut:rgba(236,233,226,.52); --bdr:rgba(236,233,226,.16);
-    --btn-bg:#ECE9E2; --btn-fg:#161618; --wm:rgba(236,233,226,.05);
-  }
-  #section-{{ section.id }}.hno--warm {
-    --bg:#E7DCCB; --fg:#241D15; --acc:var(--gold,#8E4F2A);
-    --mut:rgba(36,29,21,.55); --bdr:rgba(36,29,21,.2);
-    --btn-bg:#241D15; --btn-fg:#E7DCCB; --wm:rgba(36,29,21,.05);
-  }
-  #section-{{ section.id }}.hno--theme {
-    --bg:var(--background,#161618); --fg:var(--foreground,#ECE9E2); --acc:var(--gold,#C8A96E);
-    --mut:var(--muted,rgba(236,233,226,.52)); --bdr:var(--border,rgba(236,233,226,.16));
-    --btn-bg:var(--gold,#C8A96E); --btn-fg:var(--black,#0A0A0A); --wm:rgba(236,233,226,.05);
-  }
+  #section-{{ section.id }}.hno--light { --bg:var(--s2-bg); --fg:var(--s2-fg); --acc:var(--gold); --mut:var(--s2-mut); --bdr:var(--s2-bdr); --btn-bg:var(--btn-primary-bg); --btn-fg:var(--btn-primary-fg); --wm:var(--s2-bdr); }
+  #section-{{ section.id }}.hno--dark { --bg:var(--s1-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); --btn-bg:var(--btn-primary-bg); --btn-fg:var(--btn-primary-fg); --wm:var(--s1-bdr); }
+  #section-{{ section.id }}.hno--warm { --bg:var(--s3-bg); --fg:var(--s3-fg); --acc:var(--gold); --mut:var(--s3-mut); --bdr:var(--s3-bdr); --btn-bg:var(--btn-primary-bg); --btn-fg:var(--btn-primary-fg); --wm:var(--s3-bdr); }
+  #section-{{ section.id }}.hno--theme { --bg:var(--s1-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); --btn-bg:var(--btn-primary-bg); --btn-fg:var(--btn-primary-fg); --wm:var(--s1-bdr); }
 
   #section-{{ section.id }} {
     position: relative; background: var(--bg); color: var(--fg);
@@ -271,12 +255,12 @@
   "class": "section-hero-noir",
   "settings": [
     {
-      "type": "select", "id": "scheme", "label": "Color scheme",
+      "type": "select", "id": "scheme", "label": "Surface tone",
       "options": [
-        { "value": "light", "label": "Light (bone)" },
-        { "value": "dark",  "label": "Dark (graphite)" },
-        { "value": "warm",  "label": "Warm (sand)" },
-        { "value": "theme", "label": "Follow theme" }
+        { "value": "light", "label": "Alternate surface (soft)" },
+        { "value": "dark",  "label": "Primary surface" },
+        { "value": "warm",  "label": "Deep surface" },
+        { "value": "theme", "label": "Primary surface (follow theme)" }
       ],
       "default": "dark"
     },

@@ -52,10 +52,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.nli--light { --bg:#F2EFE8; --card:#FBF9F4; --fg:#16131A; --acc:var(--gold,#A8874C); --mut:rgba(22,19,26,.55); --bdr:rgba(22,19,26,.16); }
-  #section-{{ section.id }}.nli--dark  { --bg:#100E14; --card:#17141C; --fg:#EFEBE2; --acc:var(--gold,#C6A15B); --mut:rgba(239,235,226,.52); --bdr:rgba(239,235,226,.16); }
-  #section-{{ section.id }}.nli--warm  { --bg:#E9DFCE; --card:#F2EADB; --fg:#241D15; --acc:var(--gold,#8E5A2A); --mut:rgba(36,29,21,.55); --bdr:rgba(36,29,21,.2); }
-  #section-{{ section.id }}.nli--theme { --bg:var(--background,#100E14); --card:color-mix(in srgb, var(--background,#100E14) 88%, #fff 12%); --fg:var(--foreground,#EFEBE2); --acc:var(--gold,#C6A15B); --mut:var(--muted,rgba(239,235,226,.52)); --bdr:var(--border,rgba(239,235,226,.16)); }
+  #section-{{ section.id }}.nli--light { --bg:var(--s2-bg); --card:var(--s3-bg); --fg:var(--s2-fg); --acc:var(--gold); --mut:var(--s2-mut); --bdr:var(--s2-bdr); }
+  #section-{{ section.id }}.nli--dark  { --bg:var(--s1-bg); --card:var(--s2-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
+  #section-{{ section.id }}.nli--warm  { --bg:var(--s3-bg); --card:var(--s2-bg); --fg:var(--s3-fg); --acc:var(--gold); --mut:var(--s3-mut); --bdr:var(--s3-bdr); }
+  #section-{{ section.id }}.nli--theme { --bg:var(--s1-bg); --card:var(--s2-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
 
   #section-{{ section.id }} {
     background: var(--bg); color: var(--fg);
@@ -107,7 +107,7 @@
   }
   #section-{{ section.id }} .nli-row input::placeholder { color: var(--mut); }
   #section-{{ section.id }} .nli-row button {
-    border: none; cursor: pointer; background: var(--acc); color: #14110a;
+    border: none; cursor: pointer; background: var(--acc); color: var(--on-gold);
     font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 600;
     letter-spacing: .18em; text-transform: uppercase; padding: 0 30px;
     transition: filter .2s;
@@ -164,12 +164,12 @@
   "class": "section-newsletter-invitation",
   "settings": [
     {
-      "type": "select", "id": "scheme", "label": "Color scheme",
+      "type": "select", "id": "scheme", "label": "Surface tone",
       "options": [
-        { "value": "light", "label": "Light (pearl)" },
-        { "value": "dark",  "label": "Dark (velvet)" },
-        { "value": "warm",  "label": "Warm (champagne)" },
-        { "value": "theme", "label": "Follow theme" }
+        { "value": "light", "label": "Alternate surface (soft)" },
+        { "value": "dark",  "label": "Primary surface" },
+        { "value": "warm",  "label": "Deep surface" },
+        { "value": "theme", "label": "Primary surface (follow theme)" }
       ],
       "default": "dark"
     },

@@ -272,7 +272,7 @@ em.gold { font-style: italic; color: var(--gold-light); }
 .btn-ghost {
   background: transparent;
   color: var(--cream);
-  border: 1px solid rgba(245, 240, 232, 0.5);
+  border: 1px solid var(--btn-ghost-bdr);
 }
 .btn-ghost:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
 
@@ -457,7 +457,8 @@ select.styled option { background: #1c1c1c; color: var(--cream); }
   position: absolute;
   top: 0; left: 0; right: 0;
   z-index: var(--z-nav);
-  background: var(--black);
+  background: var(--hdr-bg);
+  color: var(--hdr-fg);
   transition: background var(--transition), border-color var(--transition), backdrop-filter var(--transition);
 }
 
@@ -468,16 +469,26 @@ select.styled option { background: #1c1c1c; color: var(--cream); }
 
 body.has-announcement .site-header { top: 44px; }
 
-/* Transparent over homepage hero (class added only on index when enabled) */
+/* Transparent over homepage hero (class added only on index when enabled).
+   A FLAT translucent wash of the same surface color — never a gradient — so
+   the header keeps the scheme's foreground and text stays legible over the
+   hero. Blur lifts it off busy imagery. */
 .site-header.is-transparent {
-  background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+  background: var(--hdr-bg-trans);
+  backdrop-filter: blur(14px) saturate(1.05);
+  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+  border-bottom: 1px solid transparent;
 }
 
-/* Solid backdrop once the page is scrolled */
-.site-header.scrolled {
-  background: rgba(10, 10, 10, 0.97);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
+/* Solid backdrop once the page is scrolled — same hue as the header's own
+   surface, so scrolling never flips the header to a color the text can't
+   sit on. */
+.site-header.scrolled,
+.site-header.is-transparent.scrolled {
+  background: var(--hdr-bg-scroll);
+  backdrop-filter: blur(14px) saturate(1.05);
+  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+  border-bottom: 1px solid var(--hdr-bdr);
 }
 
 /* V1 — Classic (logo left, nav center) */
@@ -519,7 +530,7 @@ body.has-announcement .site-header { top: 44px; }
   font-size: 20px;
   font-weight: 500;
   letter-spacing: 0.35em;
-  color: var(--cream);
+  color: var(--hdr-fg);
   transition: color var(--transition);
 }
 .site-header__logo span { color: var(--gold); }
@@ -538,7 +549,7 @@ body.has-announcement .site-header { top: 44px; }
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--cream);
+  color: var(--hdr-fg);
   opacity: 0.85;
   transition: opacity var(--transition), color var(--transition);
   position: relative;
@@ -575,9 +586,9 @@ body.has-announcement .site-header { top: 44px; }
 .header-icon-btn svg {
   width: 20px; height: 20px;
   fill: none;
-  stroke: var(--cream);
+  stroke: var(--hdr-fg);
   stroke-width: 1.5;
-  opacity: 0.65;
+  opacity: 0.7;
   transition: opacity var(--transition);
 }
 .header-icon-btn:hover svg { opacity: 1; }
@@ -587,7 +598,7 @@ body.has-announcement .site-header { top: 44px; }
   position: absolute;
   top: -4px; right: -6px;
   background: var(--gold);
-  color: var(--black);
+  color: var(--on-gold);
   width: 15px; height: 15px;
   border-radius: 50%;
   font-size: 8.5px;
@@ -612,7 +623,7 @@ body.has-announcement .site-header { top: 44px; }
   position: absolute;
   top: 100%;
   left: 0; right: 0;
-  background: rgba(10, 10, 10, 0.98);
+  background: var(--hdr-bg-scroll);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(16px);
@@ -787,7 +798,7 @@ body.has-announcement .site-header { top: 44px; }
 .mobile-menu-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10,10,10,0.6);
+  background: var(--img-scrim);
   z-index: calc(var(--z-drawer) - 1);
   opacity: 0;
   visibility: hidden;
@@ -870,7 +881,7 @@ body.has-announcement .site-header { top: 44px; }
 .cart-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10,10,10,0.6);
+  background: var(--img-scrim);
   z-index: calc(var(--z-drawer) - 1);
   opacity: 0;
   visibility: hidden;
@@ -1065,8 +1076,8 @@ body.has-announcement .site-header { top: 44px; }
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
   color: var(--cream);
-  background: rgba(245,240,232,0.07);
-  border: 1px solid rgba(245,240,232,0.22);
+  background: var(--field-bg);
+  border: 1px solid var(--field-bdr);
   border-radius: 6px;
   transition: color var(--transition), border-color var(--transition), background var(--transition);
   cursor: pointer;
@@ -1271,7 +1282,7 @@ body.has-announcement .site-header { top: 44px; }
 .pcard--overlay .pcard__info {
   position:absolute; left:0; right:0; bottom:0; z-index:3;
   padding:22px 16px 16px;
-  background: linear-gradient(to top, rgba(10,10,10,.92) 0%, transparent 100%);
+  background: linear-gradient(to top, var(--img-scrim-strong) 0%, transparent 100%);
 }
 .pcard--overlay .pcard__name { color:#F4EFE6; }
 .pcard--overlay .pcard__price { color: rgba(244,239,230,.75); }
@@ -1292,7 +1303,7 @@ body.has-announcement .site-header { top: 44px; }
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10,10,10,0.8);
+  background: var(--modal-scrim);
   z-index: var(--z-modal);
   display: flex;
   align-items: center;
@@ -1328,7 +1339,7 @@ body.has-announcement .site-header { top: 44px; }
   justify-self: end;
   margin: 14px 14px 0 0;
   width: 38px; height: 38px;
-  background: rgba(255,255,255,0.06);
+  background: var(--field-bg);
   border: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
   color: var(--cream);
@@ -1342,7 +1353,7 @@ body.has-announcement .site-header { top: 44px; }
   grid-row: 2;
   display: flex;
   flex-direction: column;
-  background: #0a0a0a;
+  background: var(--modal-surface);
   overflow: hidden;
 }
 .qv-gallery__main {
@@ -1475,7 +1486,6 @@ body.has-announcement .site-header { top: 44px; }
   margin-bottom: 22px;
 }
 .qv-shipping svg { color: var(--gold); flex-shrink: 0; }
-.modal-overlay[data-qv-scheme="light"] .qv-shipping { color: rgba(10, 10, 10, 0.7); }
 
 /* Image placeholder */
 .qv-img-placeholder {
@@ -1846,7 +1856,7 @@ body.has-announcement .site-header { top: 44px; }
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 60%);
+  background: linear-gradient(to top, var(--img-scrim-strong) 0%, transparent 60%);
 }
 .collection-title-s5 h1 { position: relative; font-family: var(--ff-display); font-size: clamp(40px, 6vw, 80px); font-weight: 300; }
 
@@ -2031,7 +2041,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .search-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10,10,10,0.97);
+  background: var(--hdr-bg-scroll);
   z-index: var(--z-modal);
   display: flex;
   flex-direction: column;
@@ -2176,92 +2186,3 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   .cart-drawer { width: 100vw; }
   .mobile-menu { width: 100vw; }
 }
-
-/* ============================================================
-   Quick View — scheme variants (modal adopts the homepage
-   section's palette via data-qv-scheme on the overlay)
-   ============================================================ */
-
-/* ── Light (Home #2 "Blanc" — ivory / gold) ── */
-.modal-overlay[data-qv-scheme="light"] { background: rgba(250, 248, 243, 0.55); }
-.modal-overlay[data-qv-scheme="light"] .quick-view-modal {
-  background: #FAF8F3;
-  border-color: rgba(10, 10, 10, 0.12);
-}
-.modal-overlay[data-qv-scheme="light"] .qv-close {
-  background: rgba(10, 10, 10, 0.05);
-  border-color: rgba(10, 10, 10, 0.15);
-  color: #0A0A0A;
-}
-.modal-overlay[data-qv-scheme="light"] .qv-close:hover { background: #9B7B3F; border-color: #9B7B3F; color: #FAF8F3; }
-.modal-overlay[data-qv-scheme="light"] .qv-vendor { color: #9B7B3F; }
-.modal-overlay[data-qv-scheme="light"] .qv-title { color: #0A0A0A; }
-.modal-overlay[data-qv-scheme="light"] .qv-price__current { color: #0A0A0A; }
-.modal-overlay[data-qv-scheme="light"] .qv-price__compare { color: rgba(10, 10, 10, 0.45); }
-.modal-overlay[data-qv-scheme="light"] .qv-option__label { color: rgba(10, 10, 10, 0.55); }
-.modal-overlay[data-qv-scheme="light"] .qv-opt-selected { color: #0A0A0A; }
-.modal-overlay[data-qv-scheme="light"] .qv-opt-btn {
-  background: transparent;
-  border-color: rgba(10, 10, 10, 0.22);
-  color: #0A0A0A;
-}
-.modal-overlay[data-qv-scheme="light"] .qv-opt-btn:hover { border-color: #9B7B3F; }
-.modal-overlay[data-qv-scheme="light"] .qv-opt-btn.is-active { background: #0A0A0A; border-color: #0A0A0A; color: #FAF8F3; }
-.modal-overlay[data-qv-scheme="light"] .qv-swatch-btn:hover { outline-color: rgba(155, 123, 63, 0.5); }
-.modal-overlay[data-qv-scheme="light"] .qv-swatch-btn.is-active { outline-color: #9B7B3F; border-color: #9B7B3F; }
-.modal-overlay[data-qv-scheme="light"] .qv-thumb.is-active,
-.modal-overlay[data-qv-scheme="light"] .qv-thumb:hover { border-color: #9B7B3F; }
-.modal-overlay[data-qv-scheme="light"] .qv-description { color: rgba(10, 10, 10, 0.6); }
-.modal-overlay[data-qv-scheme="light"] .qv-atc {
-  background: #0A0A0A;
-  border-color: #0A0A0A;
-  color: #FAF8F3;
-}
-.modal-overlay[data-qv-scheme="light"] .qv-atc:hover:not(:disabled) { background: #9B7B3F; border-color: #9B7B3F; color: #FAF8F3; }
-.modal-overlay[data-qv-scheme="light"] .qv-view-full { color: rgba(10, 10, 10, 0.55); }
-.modal-overlay[data-qv-scheme="light"] .qv-view-full:hover { color: #9B7B3F; }
-.modal-overlay[data-qv-scheme="light"] .qv-gallery,
-.modal-overlay[data-qv-scheme="light"] .qv-img-placeholder { background: #EFE9DD; }
-.modal-overlay[data-qv-scheme="light"] .qv-loading__dot { background: #9B7B3F; }
-
-/* ── Warm (Home #3 "Atelier" — sand / terracotta) ── */
-.modal-overlay[data-qv-scheme="warm"] { background: rgba(231, 220, 203, 0.55); }
-.modal-overlay[data-qv-scheme="warm"] .quick-view-modal {
-  background: #F4EFE6;
-  border-color: rgba(28, 24, 20, 0.14);
-}
-.modal-overlay[data-qv-scheme="warm"] .qv-close {
-  background: rgba(28, 24, 20, 0.05);
-  border-color: rgba(28, 24, 20, 0.16);
-  color: #1C1814;
-}
-.modal-overlay[data-qv-scheme="warm"] .qv-close:hover { background: #A4552F; border-color: #A4552F; color: #F4EFE6; }
-.modal-overlay[data-qv-scheme="warm"] .qv-vendor { color: #A4552F; }
-.modal-overlay[data-qv-scheme="warm"] .qv-title { color: #1C1814; }
-.modal-overlay[data-qv-scheme="warm"] .qv-price__current { color: #1C1814; }
-.modal-overlay[data-qv-scheme="warm"] .qv-price__compare { color: rgba(28, 24, 20, 0.45); }
-.modal-overlay[data-qv-scheme="warm"] .qv-option__label { color: rgba(28, 24, 20, 0.55); }
-.modal-overlay[data-qv-scheme="warm"] .qv-opt-selected { color: #1C1814; }
-.modal-overlay[data-qv-scheme="warm"] .qv-opt-btn {
-  background: transparent;
-  border-color: rgba(28, 24, 20, 0.22);
-  color: #1C1814;
-}
-.modal-overlay[data-qv-scheme="warm"] .qv-opt-btn:hover { border-color: #A4552F; }
-.modal-overlay[data-qv-scheme="warm"] .qv-opt-btn.is-active { background: #1C1814; border-color: #1C1814; color: #F4EFE6; }
-.modal-overlay[data-qv-scheme="warm"] .qv-swatch-btn:hover { outline-color: rgba(164, 85, 47, 0.5); }
-.modal-overlay[data-qv-scheme="warm"] .qv-swatch-btn.is-active { outline-color: #A4552F; border-color: #A4552F; }
-.modal-overlay[data-qv-scheme="warm"] .qv-thumb.is-active,
-.modal-overlay[data-qv-scheme="warm"] .qv-thumb:hover { border-color: #A4552F; }
-.modal-overlay[data-qv-scheme="warm"] .qv-description { color: rgba(28, 24, 20, 0.6); }
-.modal-overlay[data-qv-scheme="warm"] .qv-atc {
-  background: #1C1814;
-  border-color: #1C1814;
-  color: #F4EFE6;
-}
-.modal-overlay[data-qv-scheme="warm"] .qv-atc:hover:not(:disabled) { background: #A4552F; border-color: #A4552F; color: #F4EFE6; }
-.modal-overlay[data-qv-scheme="warm"] .qv-view-full { color: rgba(28, 24, 20, 0.55); }
-.modal-overlay[data-qv-scheme="warm"] .qv-view-full:hover { color: #A4552F; }
-.modal-overlay[data-qv-scheme="warm"] .qv-gallery,
-.modal-overlay[data-qv-scheme="warm"] .qv-img-placeholder { background: #E7DCCB; }
-.modal-overlay[data-qv-scheme="warm"] .qv-loading__dot { background: #A4552F; }

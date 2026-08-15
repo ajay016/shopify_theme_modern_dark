@@ -1,28 +1,62 @@
+{%- comment -%}
+  ============================================================
+  GLOBAL DESIGN TOKENS — single source of truth for color.
+
+  Every scheme emits a four-rung TONAL LADDER. Each rung ships
+  its background together with a matched foreground, so a
+  section can never produce an unreadable pairing:
+
+    s1  base      — page background
+    s2  soft      — subtle raised / alternate band
+    s3  deep      — richest tone of the scheme
+    s4  contrast  — deliberate inverted band
+
+  Within a scheme every rung stays on the same side of the
+  light/dark divide (except s4, which is intentionally
+  inverted), so choosing "Light / Ivory" keeps the whole site
+  light and choosing "Dark Luxury" keeps it dark.
+  ============================================================
+{%- endcomment -%}
 <style>
   :root {
-    /* ── Color Scheme Presets ───────────────────────────────────── */
     {%- liquid
       case settings.color_scheme
         when 'light'
           assign sc_black    = '#FFFFFF'
-          assign sc_charcoal = '#F5F2EC'
+          assign sc_charcoal = '#F7F4EE'
           assign sc_cream    = '#1A1A1A'
           assign sc_gold     = '#9B7B3F'
           assign sc_gold_l   = '#C8A96E'
-          assign sc_muted    = '#8A8480'
+          assign sc_muted    = '#6B6660'
           assign sc_ivory    = '#0A0A0A'
           assign sc_sale     = '#8B1A1A'
           assign sc_sale_bg  = '#FFD5D5'
+
+          assign s1_bg = '#FFFFFF'
+          assign s2_bg = '#F7F4EE'
+          assign s3_bg = '#EDE8DD'
+          assign s4_bg = '#1A1A1A'
+          assign tone_fg = '#1A1A1A'
+          assign s4_fg   = '#F7F4EE'
+
         when 'warm'
           assign sc_black    = '#1C1410'
-          assign sc_charcoal = '#2A2018'
+          assign sc_charcoal = '#241A14'
           assign sc_cream    = '#EDE0CC'
-          assign sc_gold     = '#C8965A'
+          assign sc_gold     = '#D2A166'
           assign sc_gold_l   = '#E4BF8C'
-          assign sc_muted    = '#8A7A68'
+          assign sc_muted    = '#A6907A'
           assign sc_ivory    = '#F5EDD8'
           assign sc_sale     = '#FFBABA'
           assign sc_sale_bg  = '#7A2020'
+
+          assign s1_bg = '#1C1410'
+          assign s2_bg = '#241A14'
+          assign s3_bg = '#2E2219'
+          assign s4_bg = '#EDE0CC'
+          assign tone_fg = '#EDE0CC'
+          assign s4_fg   = '#1C1410'
+
         when 'custom'
           assign sc_black    = settings.color_black
           assign sc_charcoal = settings.color_charcoal
@@ -33,43 +67,169 @@
           assign sc_ivory    = settings.color_ivory
           assign sc_sale     = settings.color_sale
           assign sc_sale_bg  = settings.color_sale_bg
+
+          assign base_bright = settings.color_black | color_brightness
+          assign s1_bg = settings.color_black
+          assign s2_bg = settings.color_charcoal
+          if base_bright < 128
+            assign s3_bg = settings.color_charcoal | color_lighten: 5
+          else
+            assign s3_bg = settings.color_charcoal | color_darken: 5
+          endif
+          assign s4_bg = settings.color_cream
+          assign tone_fg = settings.color_cream
+          assign s4_fg   = settings.color_black
+
         else
           assign sc_black    = '#0A0A0A'
           assign sc_charcoal = '#161616'
           assign sc_cream    = '#F5F0E8'
           assign sc_gold     = '#C8A96E'
           assign sc_gold_l   = '#E8D4A8'
-          assign sc_muted    = '#6E6A66'
+          assign sc_muted    = '#8E8880'
           assign sc_ivory    = '#FAF8F3'
           assign sc_sale     = '#FFBABA'
           assign sc_sale_bg  = '#7A2020'
+
+          assign s1_bg = '#0A0A0A'
+          assign s2_bg = '#131313'
+          assign s3_bg = '#1A1714'
+          assign s4_bg = '#F5F0E8'
+          assign tone_fg = '#F5F0E8'
+          assign s4_fg   = '#0A0A0A'
       endcase
+
+      comment
+        Is the active scheme dark-based? Drives every derived
+        alpha below so muted text and borders always fall on the
+        readable side of their own background.
+      endcomment
+      assign base_brightness = s1_bg | color_brightness
+      assign is_dark = true
+      if base_brightness >= 128
+        assign is_dark = false
+      endif
+
+      comment
+        Foreground alphas. Muted text sits at 0.62 on dark and
+        0.60 on light — both clear WCAG AA against their rung.
+      endcomment
+      assign mut_a = 0.62
+      if is_dark == false
+        assign mut_a = 0.60
+      endif
+
+      assign tone_mut = tone_fg | color_modify: 'alpha', mut_a
+      assign tone_bdr = tone_fg | color_modify: 'alpha', 0.16
+      assign s4_mut   = s4_fg   | color_modify: 'alpha', mut_a
+      assign s4_bdr   = s4_fg   | color_modify: 'alpha', 0.16
+
+      comment Text color that reads on top of the gold accent. endcomment
+      assign gold_bright = sc_gold | color_brightness
+      assign on_gold = '#0A0A0A'
+      if gold_bright < 130
+        assign on_gold = '#FFFFFF'
+      endif
+
+      comment Base font scale — 14px is the design's reference size. endcomment
+      assign fs_scale = settings.type_body_size | times: 1.0 | divided_by: 14.0
     -%}
 
-    /* Brand Palette */
-    --black:       {{ sc_black }};
-    --charcoal:    {{ sc_charcoal }};
-    --cream:       {{ sc_cream }};
+    /* ── Brand palette (legacy aliases, still consumed widely) ── */
+    --black:       {{ s1_bg }};
+    --charcoal:    {{ s2_bg }};
+    --cream:       {{ tone_fg }};
     --gold:        {{ sc_gold }};
     --gold-light:  {{ sc_gold_l }};
-    --muted:       {{ sc_muted }};
+    --muted:       {{ tone_mut }};
     --ivory:       {{ sc_ivory }};
     --sale-text:   {{ sc_sale }};
     --sale-bg:     {{ sc_sale_bg }};
+    --on-gold:     {{ on_gold }};
+
+    /* ── Tonal ladder ─────────────────────────────────────────── */
+    --s1-bg:  {{ s1_bg }};
+    --s1-fg:  {{ tone_fg }};
+    --s1-mut: {{ tone_mut }};
+    --s1-bdr: {{ tone_bdr }};
+
+    --s2-bg:  {{ s2_bg }};
+    --s2-fg:  {{ tone_fg }};
+    --s2-mut: {{ tone_mut }};
+    --s2-bdr: {{ tone_bdr }};
+
+    --s3-bg:  {{ s3_bg }};
+    --s3-fg:  {{ tone_fg }};
+    --s3-mut: {{ tone_mut }};
+    --s3-bdr: {{ tone_bdr }};
+
+    --s4-bg:  {{ s4_bg }};
+    --s4-fg:  {{ s4_fg }};
+    --s4-mut: {{ s4_mut }};
+    --s4-bdr: {{ s4_bdr }};
 
     /* Semantic aliases used by "Follow theme" section variants */
-    --background:  var(--black);
-    --foreground:  var(--cream);
+    --background:  var(--s1-bg);
+    --foreground:  var(--s1-fg);
 
-    /* Derived semi-transparent values */
+    /* ── Header ───────────────────────────────────────────────────
+       Flat colors only — no gradients. The transparent state is a
+       translucent wash of the SAME surface color, so header text
+       keeps the scheme's foreground and never inverts on scroll. */
+    --hdr-bg:        {{ s1_bg }};
+    --hdr-fg:        {{ tone_fg }};
+    --hdr-mut:       {{ tone_mut }};
+    --hdr-bdr:       {{ tone_bdr }};
+    --hdr-bg-scroll: {{ s1_bg | color_modify: 'alpha', 0.96 }};
+    --hdr-bg-trans:  {{ s1_bg | color_modify: 'alpha', 0.32 }};
+    --hdr-hover:     {{ tone_fg | color_modify: 'alpha', 0.07 }};
+
+    /* ── Surfaces for components ─────────────────────────────── */
+    --card-bg:   var(--s2-bg);
+    --card-fg:   var(--s2-fg);
+    --card-mut:  var(--s2-mut);
+    --card-bdr:  var(--s2-bdr);
+
+    --modal-bg:      {{ s1_bg }};
+    --modal-fg:      {{ tone_fg }};
+    --modal-mut:     {{ tone_mut }};
+    --modal-bdr:     {{ tone_bdr }};
+    --modal-surface: {{ s2_bg }};
+    --modal-scrim:   {{ s1_bg | color_modify: 'alpha', 0.82 }};
+
+    --drawer-bg:  {{ s1_bg }};
+    --drawer-fg:  {{ tone_fg }};
+    --drawer-mut: {{ tone_mut }};
+    --drawer-bdr: {{ tone_bdr }};
+
+    /* Inputs */
+    --field-bg:     {{ tone_fg | color_modify: 'alpha', 0.04 }};
+    --field-bdr:    {{ tone_fg | color_modify: 'alpha', 0.20 }};
+    --field-fg:     {{ tone_fg }};
+    --field-ph:     {{ tone_fg | color_modify: 'alpha', 0.45 }};
+
+    /* Buttons */
+    --btn-primary-bg: {{ sc_gold }};
+    --btn-primary-fg: {{ on_gold }};
+    --btn-ghost-fg:   {{ tone_fg }};
+    --btn-ghost-bdr:  {{ tone_fg | color_modify: 'alpha', 0.28 }};
+
+    /* ── Derived semi-transparent values (legacy names kept) ──── */
     --border:        {{ sc_gold | color_modify: 'alpha', 0.18 }};
     --border-strong: {{ sc_gold | color_modify: 'alpha', 0.35 }};
     --gold-dim:      {{ sc_gold | color_modify: 'alpha', 0.12 }};
     --gold-glow:     {{ sc_gold | color_modify: 'alpha', 0.08 }};
-    --cream-faint:   {{ sc_cream | color_modify: 'alpha', 0.06 }};
-    --black-overlay: {{ sc_black | color_modify: 'alpha', 0.75 }};
+    --cream-faint:   {{ tone_fg | color_modify: 'alpha', 0.06 }};
+    --black-overlay: {{ s1_bg | color_modify: 'alpha', 0.75 }};
 
-    /* Typography — fonts loaded via Google Fonts in theme.liquid */
+    /* Scrim over imagery — always dark so overlaid white text reads,
+       regardless of scheme (images are photographic, not themed). */
+    --img-scrim:        rgba(10, 10, 11, 0.55);
+    --img-scrim-strong: rgba(10, 10, 11, 0.78);
+    --on-image:         #FFFFFF;
+    --on-image-mut:     rgba(255, 255, 255, 0.78);
+
+    /* ── Typography ───────────────────────────────────────────── */
     {%- liquid
       case settings.font_pairing
         when 'playfair_inter'
@@ -89,6 +249,7 @@
     --ff-display: {{ ff_display }};
     --ff-body:    {{ ff_body }};
     --fs-base:    {{ settings.type_body_size }}px;
+    --fs-scale:   {{ fs_scale }};
     {%- liquid
       case settings.type_heading_size_scale
         when 'small'

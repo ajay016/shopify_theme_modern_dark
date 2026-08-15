@@ -53,10 +53,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.psc--light { --sbg:#FAF8F3; --sfg:#0A0A0A; --sacc:var(--gold,#9B7B3F); --smut:rgba(10,10,10,.5); --sbdr:rgba(10,10,10,.12); }
-  #section-{{ section.id }}.psc--dark  { --sbg:#0A0A0A; --sfg:#F5F0E8; --sacc:var(--gold,#C8A96E); --smut:rgba(245,240,232,.55); --sbdr:rgba(245,240,232,.1); }
-  #section-{{ section.id }}.psc--warm  { --sbg:#F0EBE0; --sfg:#2C1F14; --sacc:var(--gold,#8B5E3C); --smut:rgba(44,31,20,.5); --sbdr:rgba(44,31,20,.13); }
-  #section-{{ section.id }}.psc--theme { --sbg:var(--background,#0A0A0A); --sfg:var(--foreground,#F5F0E8); --sacc:var(--gold,#C8A96E); --smut:var(--muted,rgba(245,240,232,.55)); --sbdr:var(--border,rgba(245,240,232,.1)); }
+  #section-{{ section.id }}.psc--light { --sbg:var(--s2-bg); --sfg:var(--s2-fg); --sacc:var(--gold); --smut:var(--s2-mut); --sbdr:var(--s2-bdr); }
+  #section-{{ section.id }}.psc--dark  { --sbg:var(--s1-bg); --sfg:var(--s1-fg); --sacc:var(--gold); --smut:var(--s1-mut); --sbdr:var(--s1-bdr); }
+  #section-{{ section.id }}.psc--warm  { --sbg:var(--s3-bg); --sfg:var(--s3-fg); --sacc:var(--gold); --smut:var(--s3-mut); --sbdr:var(--s3-bdr); }
+  #section-{{ section.id }}.psc--theme { --sbg:var(--s1-bg); --sfg:var(--s1-fg); --sacc:var(--gold); --smut:var(--s1-mut); --sbdr:var(--s1-bdr); }
 
   #section-{{ section.id }} { background: var(--sbg); color: var(--sfg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }
   .psc-inner { max-width: var(--container-width,1440px); margin: 0 auto; }
@@ -104,12 +104,12 @@
   "class": "section-product-showcase",
   "settings": [
     {
-      "type": "select", "id": "scheme", "label": "Color scheme",
+      "type": "select", "id": "scheme", "label": "Surface tone",
       "options": [
-        { "value": "light", "label": "Light (ivory)" },
-        { "value": "dark",  "label": "Dark (black)" },
-        { "value": "warm",  "label": "Warm (sand)" },
-        { "value": "theme", "label": "Follow theme" }
+        { "value": "light", "label": "Alternate surface (soft)" },
+        { "value": "dark",  "label": "Primary surface" },
+        { "value": "warm",  "label": "Deep surface" },
+        { "value": "theme", "label": "Primary surface (follow theme)" }
       ],
       "default": "light"
     },

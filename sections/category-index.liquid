@@ -70,10 +70,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.cix--light { --bg:#ECE9E2; --fg:#18181A; --acc:var(--gold,#9A7B43); --mut:rgba(24,24,26,.55); --bdr:rgba(24,24,26,.14); }
-  #section-{{ section.id }}.cix--dark  { --bg:#161618; --fg:#ECE9E2; --acc:var(--gold,#C8A96E); --mut:rgba(236,233,226,.52); --bdr:rgba(236,233,226,.14); }
-  #section-{{ section.id }}.cix--warm  { --bg:#E7DCCB; --fg:#241D15; --acc:var(--gold,#8E4F2A); --mut:rgba(36,29,21,.55); --bdr:rgba(36,29,21,.18); }
-  #section-{{ section.id }}.cix--theme { --bg:var(--background,#161618); --fg:var(--foreground,#ECE9E2); --acc:var(--gold,#C8A96E); --mut:var(--muted,rgba(236,233,226,.52)); --bdr:var(--border,rgba(236,233,226,.14)); }
+  #section-{{ section.id }}.cix--light { --bg:var(--s2-bg); --fg:var(--s2-fg); --acc:var(--gold); --mut:var(--s2-mut); --bdr:var(--s2-bdr); }
+  #section-{{ section.id }}.cix--dark  { --bg:var(--s1-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
+  #section-{{ section.id }}.cix--warm  { --bg:var(--s3-bg); --fg:var(--s3-fg); --acc:var(--gold); --mut:var(--s3-mut); --bdr:var(--s3-bdr); }
+  #section-{{ section.id }}.cix--theme { --bg:var(--s1-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
 
   #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }
   #section-{{ section.id }} .cix-inner { max-width: var(--container-width,1440px); margin: 0 auto; }
@@ -113,7 +113,7 @@
   #section-{{ section.id }} .cix-panel__num {
     position: absolute; z-index: 2; top: 16px; left: 18px;
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: clamp(22px,2.2vw,36px); line-height: 1; color: rgba(255,255,255,.92);
+    font-size: clamp(22px,2.2vw,36px); line-height: 1; color: var(--on-image);
   }
 
   /* Collapsed state: vertical label along the panel */
@@ -123,7 +123,7 @@
     writing-mode: vertical-rl;
     font-family: var(--ff-display,'Cormorant Garamond',serif);
     font-size: clamp(18px,1.7vw,26px); font-weight: 400; letter-spacing: .06em;
-    text-transform: uppercase; color: #fff; white-space: nowrap;
+    text-transform: uppercase; color: var(--on-image); white-space: nowrap;
     opacity: 1; transition: opacity .3s;
   }
   #section-{{ section.id }} .cix-panel.is-open .cix-panel__side { opacity: 0; }
@@ -136,8 +136,8 @@
   }
   #section-{{ section.id }} .cix-panel.is-open .cix-panel__body { opacity: 1; transform: none; }
   #section-{{ section.id }} .cix-panel__kicker { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 10px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--acc); margin-bottom: 8px; }
-  #section-{{ section.id }} .cix-panel__title { display: block; font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: clamp(26px,2.8vw,48px); font-weight: 400; line-height: 1.04; color: #fff; }
-  #section-{{ section.id }} .cix-panel__cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.85); border-bottom: 1px solid var(--acc); padding-bottom: 4px; }
+  #section-{{ section.id }} .cix-panel__title { display: block; font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: clamp(26px,2.8vw,48px); font-weight: 400; line-height: 1.04; color: var(--on-image); }
+  #section-{{ section.id }} .cix-panel__cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-family: var(--ff-body,'Outfit',sans-serif); font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--on-image-mut); border-bottom: 1px solid var(--acc); padding-bottom: 4px; }
 
   #section-{{ section.id }} .reveal.reveal-armed { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
   #section-{{ section.id }} .reveal.is-visible { opacity: 1; transform: none; }
@@ -196,12 +196,12 @@
   "max_blocks": 6,
   "settings": [
     {
-      "type": "select", "id": "scheme", "label": "Color scheme",
+      "type": "select", "id": "scheme", "label": "Surface tone",
       "options": [
-        { "value": "light", "label": "Light (bone)" },
-        { "value": "dark",  "label": "Dark (graphite)" },
-        { "value": "warm",  "label": "Warm (sand)" },
-        { "value": "theme", "label": "Follow theme" }
+        { "value": "light", "label": "Alternate surface (soft)" },
+        { "value": "dark",  "label": "Primary surface" },
+        { "value": "warm",  "label": "Deep surface" },
+        { "value": "theme", "label": "Primary surface (follow theme)" }
       ],
       "default": "light"
     },

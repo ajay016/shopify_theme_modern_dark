@@ -66,13 +66,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.prl--light { --pbg:#F4EFE6; --pfg:#1C1814; --pacc:var(--gold,#A4552F); --pbdr:rgba(28,24,20,.16); }
-  #section-{{ section.id }}.prl--dark  { --pbg:#14100C; --pfg:#F2EDE4; --pacc:var(--gold,#D9986B); --pbdr:rgba(242,237,228,.2); }
-  #section-{{ section.id }}.prl--warm  { --pbg:#E7DCCB; --pfg:#2A2118; --pacc:var(--gold,#8E4F2A); --pbdr:rgba(42,33,24,.2); }
-  #section-{{ section.id }}.prl--theme {
-    --pbg:var(--background,#14100C); --pfg:var(--foreground,#F2EDE4);
-    --pacc:var(--gold,#C8A96E); --pbdr:var(--border-strong,rgba(242,237,228,.2));
-  }
+  #section-{{ section.id }}.prl--light { --pbg:var(--s2-bg); --pfg:var(--s2-fg); --pacc:var(--gold); --pbdr:var(--s2-bdr); }
+  #section-{{ section.id }}.prl--dark  { --pbg:var(--s1-bg); --pfg:var(--s1-fg); --pacc:var(--gold); --pbdr:var(--s1-bdr); }
+  #section-{{ section.id }}.prl--warm  { --pbg:var(--s3-bg); --pfg:var(--s3-fg); --pacc:var(--gold); --pbdr:var(--s3-bdr); }
+  #section-{{ section.id }}.prl--theme { --pbg:var(--s1-bg); --pfg:var(--s1-fg); --pacc:var(--gold); --pbdr:var(--s1-bdr); }
 
   #section-{{ section.id }} {
     background: var(--pbg);
@@ -121,7 +118,7 @@
     padding: 16px 38px; border-radius: 2px; text-decoration: none;
     transition: transform .25s, background .25s, color .25s;
   }
-  .prl-cta:hover { transform: translateY(-2px); background: var(--pacc); color: #fff; }
+  .prl-cta:hover { transform: translateY(-2px); background: var(--pacc); color: var(--on-image); }
 
   @media (max-width: 700px) {
     .prl-nav { display: none; }
@@ -153,12 +150,12 @@
   "class": "section-product-rail",
   "settings": [
     {
-      "type": "select", "id": "scheme", "label": "Color scheme",
+      "type": "select", "id": "scheme", "label": "Surface tone",
       "options": [
-        { "value": "light", "label": "Light (sand)" },
-        { "value": "dark",  "label": "Dark (espresso)" },
-        { "value": "warm",  "label": "Warm (deep sand)" },
-        { "value": "theme", "label": "Follow theme" }
+        { "value": "light", "label": "Alternate surface (soft)" },
+        { "value": "dark",  "label": "Primary surface" },
+        { "value": "warm",  "label": "Deep surface" },
+        { "value": "theme", "label": "Primary surface (follow theme)" }
       ],
       "default": "light"
     },

@@ -64,14 +64,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.sgl--light { --gbg:#F4EFE6; --gfg:#1C1814; --gacc:var(--gold,#A4552F); --gmut:rgba(28,24,20,.55); --gbdr:rgba(28,24,20,.16); }
-  #section-{{ section.id }}.sgl--dark  { --gbg:#14100C; --gfg:#F2EDE4; --gacc:var(--gold,#D9986B); --gmut:rgba(242,237,228,.6); --gbdr:rgba(242,237,228,.2); }
-  #section-{{ section.id }}.sgl--warm  { --gbg:#E7DCCB; --gfg:#2A2118; --gacc:var(--gold,#8E4F2A); --gmut:rgba(42,33,24,.55); --gbdr:rgba(42,33,24,.2); }
-  #section-{{ section.id }}.sgl--theme {
-    --gbg:var(--background,#14100C); --gfg:var(--foreground,#F2EDE4);
-    --gacc:var(--gold,#C8A96E); --gmut:var(--muted,rgba(242,237,228,.6));
-    --gbdr:var(--border-strong,rgba(242,237,228,.2));
-  }
+  #section-{{ section.id }}.sgl--light { --gbg:var(--s2-bg); --gfg:var(--s2-fg); --gacc:var(--gold); --gmut:var(--s2-mut); --gbdr:var(--s2-bdr); }
+  #section-{{ section.id }}.sgl--dark  { --gbg:var(--s1-bg); --gfg:var(--s1-fg); --gacc:var(--gold); --gmut:var(--s1-mut); --gbdr:var(--s1-bdr); }
+  #section-{{ section.id }}.sgl--warm  { --gbg:var(--s3-bg); --gfg:var(--s3-fg); --gacc:var(--gold); --gmut:var(--s3-mut); --gbdr:var(--s3-bdr); }
+  #section-{{ section.id }}.sgl--theme { --gbg:var(--s1-bg); --gfg:var(--s1-fg); --gacc:var(--gold); --gmut:var(--s1-mut); --gbdr:var(--s1-bdr); }
 
   #section-{{ section.id }} {
     background: var(--gbg);
@@ -136,12 +132,12 @@
   "class": "section-social-gallery",
   "settings": [
     {
-      "type": "select", "id": "scheme", "label": "Color scheme",
+      "type": "select", "id": "scheme", "label": "Surface tone",
       "options": [
-        { "value": "light", "label": "Light (sand)" },
-        { "value": "dark",  "label": "Dark (espresso)" },
-        { "value": "warm",  "label": "Warm (deep sand)" },
-        { "value": "theme", "label": "Follow theme" }
+        { "value": "light", "label": "Alternate surface (soft)" },
+        { "value": "dark",  "label": "Primary surface" },
+        { "value": "warm",  "label": "Deep surface" },
+        { "value": "theme", "label": "Primary surface (follow theme)" }
       ],
       "default": "light"
     },

@@ -33,10 +33,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.clm--light { --panel:#F4F1EA; --fg:#17141B; --acc:var(--gold,#A8874C); --mut:rgba(23,20,27,.6); }
-  #section-{{ section.id }}.clm--dark  { --panel:#131118; --fg:#EFEBE2; --acc:var(--gold,#C6A15B); --mut:rgba(239,235,226,.6); }
-  #section-{{ section.id }}.clm--warm  { --panel:#EBE2D2; --fg:#241D15; --acc:var(--gold,#8E5A2A); --mut:rgba(36,29,21,.6); }
-  #section-{{ section.id }}.clm--theme { --panel:var(--background,#F4F1EA); --fg:var(--foreground,#17141B); --acc:var(--gold,#A8874C); --mut:var(--muted,rgba(23,20,27,.6)); }
+  #section-{{ section.id }}.clm--light { --panel:var(--s3-bg); --fg:var(--s2-fg); --acc:var(--gold); --mut:var(--s2-mut); }
+  #section-{{ section.id }}.clm--dark  { --panel:var(--s2-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); }
+  #section-{{ section.id }}.clm--warm  { --panel:var(--s2-bg); --fg:var(--s3-fg); --acc:var(--gold); --mut:var(--s3-mut); }
+  #section-{{ section.id }}.clm--theme { --panel:var(--s2-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); }
 
   #section-{{ section.id }} {
     position: relative; overflow: hidden; isolation: isolate;
@@ -80,7 +80,7 @@
   #section-{{ section.id }} .clm-btn {
     display: inline-block; font-family: var(--ff-body,'Outfit',sans-serif);
     font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
-    text-decoration: none; color: #14110a; background: var(--acc);
+    text-decoration: none; color: var(--on-gold); background: var(--acc);
     padding: 16px 36px; border-radius: 999px;
     transition: transform .22s, box-shadow .22s;
   }
@@ -130,12 +130,12 @@
   "class": "section-campaign-lumiere",
   "settings": [
     {
-      "type": "select", "id": "scheme", "label": "Panel scheme",
+      "type": "select", "id": "scheme", "label": "Surface tone",
       "options": [
-        { "value": "light", "label": "Light (pearl)" },
-        { "value": "dark",  "label": "Dark (velvet)" },
-        { "value": "warm",  "label": "Warm (champagne)" },
-        { "value": "theme", "label": "Follow theme" }
+        { "value": "light", "label": "Alternate surface (soft)" },
+        { "value": "dark",  "label": "Primary surface" },
+        { "value": "warm",  "label": "Deep surface" },
+        { "value": "theme", "label": "Primary surface (follow theme)" }
       ],
       "default": "light"
     },

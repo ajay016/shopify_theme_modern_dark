@@ -72,10 +72,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.arc--light { --abg:var(--s2-bg); --afg:var(--s2-fg); --aacc:var(--gold); --amut:var(--s2-mut); --abdr:var(--s2-bdr); }
-  #section-{{ section.id }}.arc--dark  { --abg:var(--s1-bg); --afg:var(--s1-fg); --aacc:var(--gold); --amut:var(--s1-mut); --abdr:var(--s1-bdr); }
-  #section-{{ section.id }}.arc--warm  { --abg:var(--s3-bg); --afg:var(--s3-fg); --aacc:var(--gold); --amut:var(--s3-mut); --abdr:var(--s3-bdr); }
-  #section-{{ section.id }}.arc--theme { --abg:var(--s1-bg); --afg:var(--s1-fg); --aacc:var(--gold); --amut:var(--s1-mut); --abdr:var(--s1-bdr); }
+  #section-{{ section.id }}.arc--light { --abg:var(--s2-bg, #131313); --afg:var(--s2-fg, #F5F0E8); --aacc:var(--gold, #C8A96E); --amut:var(--s2-mut, rgba(245,240,232,.62)); --abdr:var(--s2-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.arc--dark  { --abg:var(--s1-bg, #0A0A0A); --afg:var(--s1-fg, #F5F0E8); --aacc:var(--gold, #C8A96E); --amut:var(--s1-mut, rgba(245,240,232,.62)); --abdr:var(--s1-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.arc--warm  { --abg:var(--s3-bg, #1A1714); --afg:var(--s3-fg, #F5F0E8); --aacc:var(--gold, #C8A96E); --amut:var(--s3-mut, rgba(245,240,232,.62)); --abdr:var(--s3-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.arc--theme { --abg:var(--s1-bg, #0A0A0A); --afg:var(--s1-fg, #F5F0E8); --aacc:var(--gold, #C8A96E); --amut:var(--s1-mut, rgba(245,240,232,.62)); --abdr:var(--s1-bdr, rgba(245,240,232,.16)); }
 
   #section-{{ section.id }} {
     background: var(--abg);
@@ -124,12 +124,12 @@
     position: absolute; top: 14px; left: 50%; transform: translateX(-50%); z-index: 2;
     font-family: var(--ff-body,'Outfit',sans-serif);
     font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .22em;
-    color: var(--on-image-mut);
+    color: var(--on-image-mut, rgba(255,255,255,.78));
   }
   .arc-card__media {
     aspect-ratio: 3 / 4;
     border-radius: 999px 999px 4px 4px; /* arch */
-    overflow: hidden; background: var(--img-placeholder);
+    overflow: hidden; background: var(--img-placeholder, #1A1714);
   }
   .arc-card__img {
     width: 100%; height: 100%; object-fit: cover; display: block;

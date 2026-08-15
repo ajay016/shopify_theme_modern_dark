@@ -112,23 +112,23 @@
 </div>
 
 <style>
-  .order-date { font-size: calc(12px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; }
+  .order-date { font-size: calc(12px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); margin-bottom: 40px; }
   .order-grid { display: grid; grid-template-columns: 1fr 280px; gap: 48px; align-items: flex-start; }
   .order-table { width: 100%; border-collapse: collapse; font-size: calc(13px * var(--fs-scale, 1)); }
-  .order-table th { text-align: left; font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); padding: 12px 8px; border-bottom: 1px solid var(--border); }
-  .order-table td { padding: 16px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--cream); }
+  .order-table th { text-align: left; font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); padding: 12px 8px; border-bottom: 1px solid var(--border, rgba(200,169,110,.18)); }
+  .order-table td { padding: 16px 8px; border-bottom: 1px solid var(--border, rgba(200,169,110,.18)); vertical-align: middle; color: var(--cream, #F5F0E8); }
   .order-table__img-cell { width: 80px; }
   .order-table__img { width: 64px; height: 80px; object-fit: cover; }
-  .order-table__product-title { color: var(--cream); transition: color 0.2s; }
-  .order-table__product-title:hover { color: var(--gold); }
-  .order-table__variant, .order-table__sku, .order-table__fulfillment { font-size: calc(11px * var(--fs-scale, 1)); color: var(--muted); margin-top: 4px; }
-  .order-totals td, .order-discount td, .order-shipping td, .order-tax td, .order-total-final td { border-bottom: 1px solid var(--border); padding: 12px 8px; }
-  .order-total-final td { color: var(--cream); font-size: calc(15px * var(--fs-scale, 1)); }
-  .order-info-card { border: 1px solid var(--border); padding: 24px; margin-bottom: 24px; }
-  .order-info-card h3 { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+  .order-table__product-title { color: var(--cream, #F5F0E8); transition: color 0.2s; }
+  .order-table__product-title:hover { color: var(--gold, #C8A96E); }
+  .order-table__variant, .order-table__sku, .order-table__fulfillment { font-size: calc(11px * var(--fs-scale, 1)); color: var(--muted, rgba(245,240,232,.62)); margin-top: 4px; }
+  .order-totals td, .order-discount td, .order-shipping td, .order-tax td, .order-total-final td { border-bottom: 1px solid var(--border, rgba(200,169,110,.18)); padding: 12px 8px; }
+  .order-total-final td { color: var(--cream, #F5F0E8); font-size: calc(15px * var(--fs-scale, 1)); }
+  .order-info-card { border: 1px solid var(--border, rgba(200,169,110,.18)); padding: 24px; margin-bottom: 24px; }
+  .order-info-card h3 { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); margin-bottom: 16px; }
   .order-info-card address { font-style: normal; font-size: calc(14px * var(--fs-scale, 1)); line-height: 1.8; opacity: 0.8; margin-bottom: 16px; }
-  .order-status { font-size: calc(12px * var(--fs-scale, 1)); color: var(--muted); }
-  .order-status span { color: var(--gold); }
+  .order-status { font-size: calc(12px * var(--fs-scale, 1)); color: var(--muted, rgba(245,240,232,.62)); }
+  .order-status span { color: var(--gold, #C8A96E); }
   @media (max-width: 900px) { .order-grid { grid-template-columns: 1fr; } .order-table { display: block; overflow-x: auto; } }
 </style>
 

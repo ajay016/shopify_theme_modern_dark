@@ -52,10 +52,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.nli--light { --bg:var(--s2-bg); --card:var(--s3-bg); --fg:var(--s2-fg); --acc:var(--gold); --mut:var(--s2-mut); --bdr:var(--s2-bdr); }
-  #section-{{ section.id }}.nli--dark  { --bg:var(--s1-bg); --card:var(--s2-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
-  #section-{{ section.id }}.nli--warm  { --bg:var(--s3-bg); --card:var(--s2-bg); --fg:var(--s3-fg); --acc:var(--gold); --mut:var(--s3-mut); --bdr:var(--s3-bdr); }
-  #section-{{ section.id }}.nli--theme { --bg:var(--s1-bg); --card:var(--s2-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
+  #section-{{ section.id }}.nli--light { --bg:var(--s2-bg, #131313); --card:var(--s3-bg, #1A1714); --fg:var(--s2-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s2-mut, rgba(245,240,232,.62)); --bdr:var(--s2-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.nli--dark  { --bg:var(--s1-bg, #0A0A0A); --card:var(--s2-bg, #131313); --fg:var(--s1-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s1-mut, rgba(245,240,232,.62)); --bdr:var(--s1-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.nli--warm  { --bg:var(--s3-bg, #1A1714); --card:var(--s2-bg, #131313); --fg:var(--s3-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s3-mut, rgba(245,240,232,.62)); --bdr:var(--s3-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.nli--theme { --bg:var(--s1-bg, #0A0A0A); --card:var(--s2-bg, #131313); --fg:var(--s1-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s1-mut, rgba(245,240,232,.62)); --bdr:var(--s1-bdr, rgba(245,240,232,.16)); }
 
   #section-{{ section.id }} {
     background: var(--bg); color: var(--fg);
@@ -107,7 +107,7 @@
   }
   #section-{{ section.id }} .nli-row input::placeholder { color: var(--mut); }
   #section-{{ section.id }} .nli-row button {
-    border: none; cursor: pointer; background: var(--acc); color: var(--on-gold);
+    border: none; cursor: pointer; background: var(--acc); color: var(--on-gold, #0A0A0A);
     font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 600;
     letter-spacing: .18em; text-transform: uppercase; padding: 0 30px;
     transition: filter .2s;

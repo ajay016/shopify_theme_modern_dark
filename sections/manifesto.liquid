@@ -36,10 +36,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.mfo--light { --bg:var(--s2-bg); --fg:var(--s2-fg); --acc:var(--gold); --mut:var(--s2-mut); --bdr:var(--s2-bdr); }
-  #section-{{ section.id }}.mfo--dark  { --bg:var(--s1-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
-  #section-{{ section.id }}.mfo--warm  { --bg:var(--s3-bg); --fg:var(--s3-fg); --acc:var(--gold); --mut:var(--s3-mut); --bdr:var(--s3-bdr); }
-  #section-{{ section.id }}.mfo--theme { --bg:var(--s1-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
+  #section-{{ section.id }}.mfo--light { --bg:var(--s2-bg, #131313); --fg:var(--s2-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s2-mut, rgba(245,240,232,.62)); --bdr:var(--s2-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.mfo--dark  { --bg:var(--s1-bg, #0A0A0A); --fg:var(--s1-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s1-mut, rgba(245,240,232,.62)); --bdr:var(--s1-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.mfo--warm  { --bg:var(--s3-bg, #1A1714); --fg:var(--s3-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s3-mut, rgba(245,240,232,.62)); --bdr:var(--s3-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.mfo--theme { --bg:var(--s1-bg, #0A0A0A); --fg:var(--s1-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s1-mut, rgba(245,240,232,.62)); --bdr:var(--s1-bdr, rgba(245,240,232,.16)); }
 
   #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: clamp(64px,9vh,120px) 0; overflow: hidden; }
 

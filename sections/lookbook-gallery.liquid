@@ -59,10 +59,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.lkb--light { --lbg:var(--s2-bg); --lfg:var(--s2-fg); --lacc:var(--gold); --lmut:var(--s2-mut); --lbdr:var(--s2-bdr); }
-  #section-{{ section.id }}.lkb--dark  { --lbg:var(--s1-bg); --lfg:var(--s1-fg); --lacc:var(--gold); --lmut:var(--s1-mut); --lbdr:var(--s1-bdr); }
-  #section-{{ section.id }}.lkb--warm  { --lbg:var(--s3-bg); --lfg:var(--s3-fg); --lacc:var(--gold); --lmut:var(--s3-mut); --lbdr:var(--s3-bdr); }
-  #section-{{ section.id }}.lkb--theme { --lbg:var(--s1-bg); --lfg:var(--s1-fg); --lacc:var(--gold); --lmut:var(--s1-mut); --lbdr:var(--s1-bdr); }
+  #section-{{ section.id }}.lkb--light { --lbg:var(--s2-bg, #131313); --lfg:var(--s2-fg, #F5F0E8); --lacc:var(--gold, #C8A96E); --lmut:var(--s2-mut, rgba(245,240,232,.62)); --lbdr:var(--s2-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.lkb--dark  { --lbg:var(--s1-bg, #0A0A0A); --lfg:var(--s1-fg, #F5F0E8); --lacc:var(--gold, #C8A96E); --lmut:var(--s1-mut, rgba(245,240,232,.62)); --lbdr:var(--s1-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.lkb--warm  { --lbg:var(--s3-bg, #1A1714); --lfg:var(--s3-fg, #F5F0E8); --lacc:var(--gold, #C8A96E); --lmut:var(--s3-mut, rgba(245,240,232,.62)); --lbdr:var(--s3-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.lkb--theme { --lbg:var(--s1-bg, #0A0A0A); --lfg:var(--s1-fg, #F5F0E8); --lacc:var(--gold, #C8A96E); --lmut:var(--s1-mut, rgba(245,240,232,.62)); --lbdr:var(--s1-bdr, rgba(245,240,232,.16)); }
 
   #section-{{ section.id }} { background: var(--lbg); color: var(--lfg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }
   .lkb-inner { max-width: var(--container-width,1440px); margin: 0 auto; }
@@ -80,7 +80,7 @@
     grid-auto-rows: clamp(120px, 14vw, 200px);
     gap: clamp(12px, 1.4vw, 22px);
   }
-  .lkb-tile { position: relative; overflow: hidden; border-radius: 3px; text-decoration: none; display: block; background: var(--img-placeholder); }
+  .lkb-tile { position: relative; overflow: hidden; border-radius: 3px; text-decoration: none; display: block; background: var(--img-placeholder, #1A1714); }
   .lkb-tile--tall  { grid-column: span 4; grid-row: span 3; }
   .lkb-tile--wide  { grid-column: span 8; grid-row: span 2; }
   .lkb-tile--sq    { grid-column: span 4; grid-row: span 2; }
@@ -98,11 +98,11 @@
     opacity: .9; transition: opacity .3s;
   }
   .lkb-tile:hover .lkb-tile__overlay { opacity: 1; }
-  .lkb-tile__tag { align-self:flex-start; font-family:var(--ff-body,'Outfit',sans-serif); font-size:calc(9px * var(--fs-scale, 1)); font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#0A0A0A; background: var(--on-image); padding:6px 11px; border-radius:2px; }
+  .lkb-tile__tag { align-self:flex-start; font-family:var(--ff-body,'Outfit',sans-serif); font-size:calc(9px * var(--fs-scale, 1)); font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#0A0A0A; background: var(--on-image, #FFFFFF); padding:6px 11px; border-radius:2px; }
   .lkb-tile__foot { display:flex; flex-direction:column; gap:3px; transform: translateY(6px); opacity:.92; transition: transform .35s, opacity .35s; }
   .lkb-tile:hover .lkb-tile__foot { transform: none; opacity:1; }
-  .lkb-tile__label { font-family:var(--ff-display,'Cormorant Garamond',serif); font-size:calc(clamp(18px,2vw,26px) * var(--fs-scale, 1)); font-weight:400; color: var(--on-image); }
-  .lkb-tile__meta { font-family:var(--ff-body,'Outfit',sans-serif); font-size:calc(10px * var(--fs-scale, 1)); letter-spacing:.14em; text-transform:uppercase; color: var(--on-image-mut); }
+  .lkb-tile__label { font-family:var(--ff-display,'Cormorant Garamond',serif); font-size:calc(clamp(18px,2vw,26px) * var(--fs-scale, 1)); font-weight:400; color: var(--on-image, #FFFFFF); }
+  .lkb-tile__meta { font-family:var(--ff-body,'Outfit',sans-serif); font-size:calc(10px * var(--fs-scale, 1)); letter-spacing:.14em; text-transform:uppercase; color: var(--on-image-mut, rgba(255,255,255,.78)); }
 
   .lkb-section .reveal.reveal-armed { opacity:0; transform:translateY(26px); transition: opacity .65s ease, transform .65s ease; }
   .lkb-section .reveal.is-visible { opacity:1; transform:none; }

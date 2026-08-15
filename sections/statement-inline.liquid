@@ -54,10 +54,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.stm--light { --sbg:var(--s2-bg); --sfg:var(--s2-fg); --sacc:var(--gold); --smut:var(--s2-mut); }
-  #section-{{ section.id }}.stm--dark  { --sbg:var(--s1-bg); --sfg:var(--s1-fg); --sacc:var(--gold); --smut:var(--s1-mut); }
-  #section-{{ section.id }}.stm--warm  { --sbg:var(--s3-bg); --sfg:var(--s3-fg); --sacc:var(--gold); --smut:var(--s3-mut); }
-  #section-{{ section.id }}.stm--theme { --sbg:var(--s1-bg); --sfg:var(--s1-fg); --sacc:var(--gold); --smut:var(--s1-mut); }
+  #section-{{ section.id }}.stm--light { --sbg:var(--s2-bg, #131313); --sfg:var(--s2-fg, #F5F0E8); --sacc:var(--gold, #C8A96E); --smut:var(--s2-mut, rgba(245,240,232,.62)); }
+  #section-{{ section.id }}.stm--dark  { --sbg:var(--s1-bg, #0A0A0A); --sfg:var(--s1-fg, #F5F0E8); --sacc:var(--gold, #C8A96E); --smut:var(--s1-mut, rgba(245,240,232,.62)); }
+  #section-{{ section.id }}.stm--warm  { --sbg:var(--s3-bg, #1A1714); --sfg:var(--s3-fg, #F5F0E8); --sacc:var(--gold, #C8A96E); --smut:var(--s3-mut, rgba(245,240,232,.62)); }
+  #section-{{ section.id }}.stm--theme { --sbg:var(--s1-bg, #0A0A0A); --sfg:var(--s1-fg, #F5F0E8); --sacc:var(--gold, #C8A96E); --smut:var(--s1-mut, rgba(245,240,232,.62)); }
 
   #section-{{ section.id }} {
     background: var(--sbg);
@@ -80,7 +80,7 @@
     display: inline-block; vertical-align: middle;
     width: clamp(72px, 8.5vw, 132px); height: clamp(44px, 5.2vw, 80px);
     border-radius: 999px; overflow: hidden; margin: 0 .35em;
-    background: var(--img-placeholder);
+    background: var(--img-placeholder, #1A1714);
     transform: rotate(-3deg);
     transition: transform .35s ease;
   }

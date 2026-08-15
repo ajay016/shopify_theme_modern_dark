@@ -66,10 +66,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.stl--light { --bg:var(--s2-bg); --fg:var(--s2-fg); --acc:var(--gold); --mut:var(--s2-mut); --bdr:var(--s2-bdr); }
-  #section-{{ section.id }}.stl--dark  { --bg:var(--s1-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
-  #section-{{ section.id }}.stl--warm  { --bg:var(--s3-bg); --fg:var(--s3-fg); --acc:var(--gold); --mut:var(--s3-mut); --bdr:var(--s3-bdr); }
-  #section-{{ section.id }}.stl--theme { --bg:var(--s1-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
+  #section-{{ section.id }}.stl--light { --bg:var(--s2-bg, #131313); --fg:var(--s2-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s2-mut, rgba(245,240,232,.62)); --bdr:var(--s2-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.stl--dark  { --bg:var(--s1-bg, #0A0A0A); --fg:var(--s1-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s1-mut, rgba(245,240,232,.62)); --bdr:var(--s1-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.stl--warm  { --bg:var(--s3-bg, #1A1714); --fg:var(--s3-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s3-mut, rgba(245,240,232,.62)); --bdr:var(--s3-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.stl--theme { --bg:var(--s1-bg, #0A0A0A); --fg:var(--s1-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s1-mut, rgba(245,240,232,.62)); --bdr:var(--s1-bdr, rgba(245,240,232,.16)); }
 
   #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }
   #section-{{ section.id }} .stl-inner {
@@ -84,7 +84,7 @@
   #section-{{ section.id }} .stl-tag {
     position: absolute; left: 16px; bottom: 16px; z-index: 2;
     display: inline-flex; align-items: center; gap: 8px;
-    background: var(--s1-bg); color: var(--s1-fg);
+    background: var(--onphoto-light, rgba(252,251,249,.96)); color: var(--onphoto-light-fg, #16130F);
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     padding: 9px 15px; border-radius: 999px;
     font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;

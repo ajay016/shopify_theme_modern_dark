@@ -198,7 +198,9 @@
     --modal-mut:     {{ tone_mut }};
     --modal-bdr:     {{ tone_bdr }};
     --modal-surface: {{ s2_bg }};
-    --modal-scrim:   {{ s1_bg | color_modify: 'alpha', 0.82 }};
+    /* A scrim dims the page behind a modal, so it is always dark — deriving
+       it from the surface produced a white scrim under a white modal. */
+    --modal-scrim:   rgba(10, 10, 11, 0.74);
 
     --drawer-bg:  {{ s1_bg }};
     --drawer-fg:  {{ tone_fg }};
@@ -231,6 +233,17 @@
        uploaded an image yet; it stays dark for the same reason: the
        captions drawn on top of it are always --on-image (white). */
     --img-placeholder:  #1A1714;
+
+    /* ── On-photo controls ────────────────────────────────────────
+       Buttons, badges and pills that sit ON a product image. These
+       are deliberately scheme-independent: the image behind them is
+       photographic, not themed, so following the page surface makes
+       them vanish (a white button on a white garment shot). Both
+       pairs are opaque and mutually high-contrast. */
+    --onphoto-light:     rgba(252, 251, 249, 0.96);
+    --onphoto-light-fg:  #16130F;
+    --onphoto-dark:      rgba(20, 17, 13, 0.94);
+    --onphoto-dark-fg:   #F4EFE6;
     --img-scrim:        rgba(10, 10, 11, 0.55);
     --img-scrim-strong: rgba(10, 10, 11, 0.78);
     --on-image:         #FFFFFF;

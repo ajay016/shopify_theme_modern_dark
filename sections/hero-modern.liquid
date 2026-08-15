@@ -133,7 +133,7 @@
     overflow: hidden;
     display: flex;
     align-items: center;
-    background: var(--black);
+    background: var(--black, #0A0A0A);
     isolation: isolate;
   }
 
@@ -148,14 +148,14 @@
   #section-{{ section.id }} .hmod__bg-fallback {
     width: 100%; height: 100%;
     background:
-      radial-gradient(120% 80% at 80% 10%, var(--gold-glow), transparent 55%),
-      linear-gradient(135deg, var(--black) 0%, var(--charcoal) 55%, var(--black) 100%);
+      radial-gradient(120% 80% at 80% 10%, var(--gold-glow, rgba(200,169,110,.08)), transparent 55%),
+      linear-gradient(135deg, var(--black, #0A0A0A) 0%, var(--charcoal, #161616) 55%, var(--black, #0A0A0A) 100%);
   }
   #section-{{ section.id }} .hmod__bg-overlay {
     position: absolute; inset: 0;
     background:
       linear-gradient(90deg, rgba(0,0,0,{{ s.overlay_opacity | divided_by: 100.0 }}) 0%, rgba(0,0,0,{{ s.overlay_opacity | divided_by: 200.0 }}) 45%, rgba(0,0,0,0.1) 100%),
-      linear-gradient(to top, var(--black) 2%, transparent 32%);
+      linear-gradient(to top, var(--black, #0A0A0A) 2%, transparent 32%);
   }
   #section-{{ section.id }} .hmod__bg-grain {
     position: absolute; inset: 0; opacity: 0.05; mix-blend-mode: overlay;
@@ -166,7 +166,7 @@
   #section-{{ section.id }} .hmod__side {
     position: absolute; top: 50%;
     font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.45em; text-transform: uppercase;
-    color: var(--cream); opacity: 0.45; white-space: nowrap; z-index: 2;
+    color: var(--cream, #F5F0E8); opacity: 0.45; white-space: nowrap; z-index: 2;
   }
   #section-{{ section.id }} .hmod__side--left {
     left: 26px; transform: translateY(-50%) rotate(180deg); writing-mode: vertical-rl;
@@ -197,10 +197,10 @@
     display: inline-flex; align-items: center; gap: 14px;
     font-family: var(--ff-body);
     font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.4em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 28px;
+    color: var(--gold, #C8A96E); margin-bottom: 28px;
   }
   #section-{{ section.id }} .hmod__eyebrow::before {
-    content: ''; width: 44px; height: 1px; background: var(--gold);
+    content: ''; width: 44px; height: 1px; background: var(--gold, #C8A96E);
   }
 
   /* Kinetic title */
@@ -215,19 +215,19 @@
   #section-{{ section.id }} .hmod__line {
     display: block;
     font-size: calc(clamp(52px, 9vw, 132px) * var(--fs-scale, 1));
-    color: var(--cream);
+    color: var(--cream, #F5F0E8);
   }
-  #section-{{ section.id }} .hmod__line em { font-style: italic; color: var(--gold-light); }
+  #section-{{ section.id }} .hmod__line em { font-style: italic; color: var(--gold-light, #E8D4A8); }
   #section-{{ section.id }} .hmod__line--outline {
     color: transparent;
-    -webkit-text-stroke: 1px var(--gold-light);
-    text-stroke: 1px var(--gold-light);
+    -webkit-text-stroke: 1px var(--gold-light, #E8D4A8);
+    text-stroke: 1px var(--gold-light, #E8D4A8);
   }
 
   /* Description */
   #section-{{ section.id }} .hmod__desc {
     font-size: calc(14px * var(--fs-scale, 1)); line-height: 1.85; letter-spacing: 0.02em;
-    color: var(--cream); opacity: 0.7; max-width: 440px; margin-bottom: 40px;
+    color: var(--cream, #F5F0E8); opacity: 0.7; max-width: 440px; margin-bottom: 40px;
   }
 
   /* CTAs */
@@ -235,22 +235,22 @@
   #section-{{ section.id }} .hmod__text-link {
     display: inline-flex; align-items: center; gap: 12px;
     font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase;
-    color: var(--cream); transition: gap var(--transition), color var(--transition);
+    color: var(--cream, #F5F0E8); transition: gap var(--transition), color var(--transition);
   }
-  #section-{{ section.id }} .hmod__text-link:hover { gap: 18px; color: var(--gold); }
+  #section-{{ section.id }} .hmod__text-link:hover { gap: 18px; color: var(--gold, #C8A96E); }
 
   /* Stats */
   #section-{{ section.id }} .hmod__stats {
     display: flex; gap: clamp(32px, 4vw, 64px);
     margin-top: 56px; padding-top: 36px;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--border, rgba(200,169,110,.18));
   }
   #section-{{ section.id }} .hmod__stat { display: flex; flex-direction: column; gap: 6px; }
   #section-{{ section.id }} .hmod__stat-value {
-    font-family: var(--ff-display); font-size: calc(clamp(28px, 3vw, 40px) * var(--fs-scale, 1)); font-weight: 400; color: var(--gold);
+    font-family: var(--ff-display); font-size: calc(clamp(28px, 3vw, 40px) * var(--fs-scale, 1)); font-weight: 400; color: var(--gold, #C8A96E);
   }
   #section-{{ section.id }} .hmod__stat-label {
-    font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.28em; text-transform: uppercase; color: var(--cream); opacity: 0.55;
+    font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.28em; text-transform: uppercase; color: var(--cream, #F5F0E8); opacity: 0.55;
   }
 
   /* Rotating badge */
@@ -265,24 +265,24 @@
   }
   #section-{{ section.id }} .hmod__badge-ring text {
     font-family: var(--ff-body); font-size: calc(7px * var(--fs-scale, 1)); letter-spacing: 0.32em;
-    text-transform: uppercase; fill: var(--gold);
+    text-transform: uppercase; fill: var(--gold, #C8A96E);
   }
   @keyframes hmodSpin { to { transform: rotate(360deg); } }
   #section-{{ section.id }} .hmod__badge-arrow {
     width: 54px; height: 54px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    border: 1px solid var(--border-strong); color: var(--gold);
+    border: 1px solid var(--border-strong, rgba(200,169,110,.35)); color: var(--gold, #C8A96E);
     transition: background var(--transition), color var(--transition), transform var(--transition);
   }
   #section-{{ section.id }} .hmod__badge:hover .hmod__badge-arrow {
-    background: var(--gold); color: var(--black); transform: scale(1.08);
+    background: var(--gold, #C8A96E); color: var(--black, #0A0A0A); transform: scale(1.08);
   }
 
   /* Ticker */
   #section-{{ section.id }} .hmod__ticker {
     position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
-    border-top: 1px solid var(--border);
-    background: var(--black-overlay);
+    border-top: 1px solid var(--border, rgba(200,169,110,.18));
+    background: var(--black-overlay, rgba(10,10,10,.75));
     backdrop-filter: blur(6px);
     overflow: hidden; padding: 16px 0;
   }
@@ -292,9 +292,9 @@
   }
   #section-{{ section.id }} .hmod__ticker-item {
     font-family: var(--ff-display); font-size: calc(16px * var(--fs-scale, 1)); font-style: italic;
-    letter-spacing: 0.04em; color: var(--cream); opacity: 0.85; white-space: nowrap;
+    letter-spacing: 0.04em; color: var(--cream, #F5F0E8); opacity: 0.85; white-space: nowrap;
   }
-  #section-{{ section.id }} .hmod__ticker-dot { color: var(--gold); margin: 0 28px; font-size: calc(11px * var(--fs-scale, 1)); }
+  #section-{{ section.id }} .hmod__ticker-dot { color: var(--gold, #C8A96E); margin: 0 28px; font-size: calc(11px * var(--fs-scale, 1)); }
   @keyframes hmodMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   /* Scroll cue */
@@ -303,15 +303,15 @@
     display: flex; align-items: center; gap: 16px;
   }
   #section-{{ section.id }} .hmod__scroll span {
-    font-size: calc(9px * var(--fs-scale, 1)); letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted);
+    font-size: calc(9px * var(--fs-scale, 1)); letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62));
   }
   #section-{{ section.id }} .hmod__scroll-line {
-    width: 56px; height: 1px; background: linear-gradient(to right, var(--gold), transparent);
+    width: 56px; height: 1px; background: linear-gradient(to right, var(--gold, #C8A96E), transparent);
     position: relative; overflow: hidden;
   }
   #section-{{ section.id }} .hmod__scroll-line::after {
     content: ''; position: absolute; top: 0; left: 0; width: 18px; height: 1px;
-    background: var(--gold-light); animation: hmodScroll 2s var(--ease-out) infinite;
+    background: var(--gold-light, #E8D4A8); animation: hmodScroll 2s var(--ease-out) infinite;
   }
   @keyframes hmodScroll { 0% { transform: translateX(-18px); } 100% { transform: translateX(56px); } }
 
@@ -328,7 +328,7 @@
     #section-{{ section.id }} .hmod__badge { display: none; }
     #section-{{ section.id }} .hmod__side { display: none; }
     #section-{{ section.id }} .hmod__scroll { display: none; }
-    #section-{{ section.id }} .hmod__line--outline { -webkit-text-stroke: 0.6px var(--gold-light); }
+    #section-{{ section.id }} .hmod__line--outline { -webkit-text-stroke: 0.6px var(--gold-light, #E8D4A8); }
   }
   @media (prefers-reduced-motion: reduce) {
     #section-{{ section.id }} .hmod-anim,

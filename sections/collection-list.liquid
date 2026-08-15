@@ -2,7 +2,7 @@
   assign columns = section.settings.columns
 -%}
 
-<section class="section collection-list" id="section-{{ section.id }}" style="background:var(--charcoal);">
+<section class="section collection-list" id="section-{{ section.id }}" style="background:var(--charcoal, #161616);">
   <div class="container">
     {%- if section.settings.heading != blank -%}
       <div class="section-head clist-head">
@@ -130,7 +130,7 @@
     font-size: calc(10px * var(--fs-scale, 1));
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--gold, #C8A96E);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -159,10 +159,10 @@
   .collection-list__item:hover .collection-list__media { transform: scale(1.06); }
 
   /* 4 gradient backgrounds matching reference */
-  .clist-bg-1 { background: linear-gradient(160deg, var(--img-placeholder), #2e2618, #1a1510); }
-  .clist-bg-2 { background: linear-gradient(160deg, var(--img-placeholder), #1c2030, #10141c); }
-  .clist-bg-3 { background: linear-gradient(160deg, var(--img-placeholder), #26182e, #141018); }
-  .clist-bg-4 { background: linear-gradient(160deg, var(--img-placeholder), #162020, #0c1414); }
+  .clist-bg-1 { background: linear-gradient(160deg, var(--img-placeholder, #1A1714), #2e2618, #1a1510); }
+  .clist-bg-2 { background: linear-gradient(160deg, var(--img-placeholder, #1A1714), #1c2030, #10141c); }
+  .clist-bg-3 { background: linear-gradient(160deg, var(--img-placeholder, #1A1714), #26182e, #141018); }
+  .clist-bg-4 { background: linear-gradient(160deg, var(--img-placeholder, #1A1714), #162020, #0c1414); }
 
   .collection-list__img {
     position: absolute; inset: 0;
@@ -197,7 +197,7 @@
     font-family: var(--ff-display);
     font-size: calc(11px * var(--fs-scale, 1));
     letter-spacing: 0.3em;
-    color: var(--gold);
+    color: var(--gold, #C8A96E);
     margin-bottom: 8px;
     opacity: 0;
     transform: translateY(10px);
@@ -211,7 +211,7 @@
     font-weight: 400;
     letter-spacing: 0.05em;
     line-height: 1.2;
-    color: var(--cream);
+    color: var(--cream, #F5F0E8);
     margin-bottom: 4px;
   }
 
@@ -220,7 +220,7 @@
     font-weight: 400;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--cream);
+    color: var(--cream, #F5F0E8);
     opacity: 0.6;
     margin-bottom: 16px;
     word-break: break-word;
@@ -232,7 +232,7 @@
     font-weight: 500;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--gold, #C8A96E);
     opacity: 0;
     transform: translateY(8px);
     transition: opacity 0.4s ease 0.05s, transform 0.4s ease 0.05s;

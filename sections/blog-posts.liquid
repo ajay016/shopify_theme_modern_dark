@@ -166,7 +166,7 @@
     gap: 48px;
     align-items: flex-start;
     padding-bottom: 40px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border, rgba(200,169,110,.18));
   }
   .blog-posts__grid--list .blog-card__media-link { flex: 0 0 360px; }
 
@@ -193,14 +193,14 @@
   }
   .blog-card:hover .blog-card__placeholder { transform: scale(1.04); }
 
-  .bp-bg-1 { background: linear-gradient(135deg, var(--img-placeholder), #24201a, var(--img-placeholder)); }
-  .bp-bg-2 { background: linear-gradient(135deg, var(--img-placeholder), #1c2030, var(--img-placeholder)); }
-  .bp-bg-3 { background: linear-gradient(135deg, var(--img-placeholder), #221830, var(--img-placeholder)); }
+  .bp-bg-1 { background: linear-gradient(135deg, var(--img-placeholder, #1A1714), #24201a, var(--img-placeholder, #1A1714)); }
+  .bp-bg-2 { background: linear-gradient(135deg, var(--img-placeholder, #1A1714), #1c2030, var(--img-placeholder, #1A1714)); }
+  .bp-bg-3 { background: linear-gradient(135deg, var(--img-placeholder, #1A1714), #221830, var(--img-placeholder, #1A1714)); }
 
   .blog-card__tag {
     position: absolute; top: 20px; left: 20px;
     font-size: calc(8px * var(--fs-scale, 1)); letter-spacing: 0.3em; text-transform: uppercase;
-    color: var(--black); background: var(--gold);
+    color: var(--black, #0A0A0A); background: var(--gold, #C8A96E);
     padding: 5px 12px; font-weight: 500;
   }
 
@@ -208,7 +208,7 @@
 
   .blog-card__date {
     font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--gold); display: block; margin-bottom: 12px;
+    color: var(--gold, #C8A96E); display: block; margin-bottom: 12px;
   }
 
   .blog-card__title {
@@ -219,16 +219,16 @@
     margin-bottom: 14px;
   }
   .blog-card__title a { transition: color 0.3s; }
-  .blog-card__title a:hover { color: var(--gold); }
+  .blog-card__title a:hover { color: var(--gold, #C8A96E); }
 
   .blog-card__excerpt {
-    font-size: calc(13px * var(--fs-scale, 1)); line-height: 1.8; color: var(--cream); opacity: 0.75;
+    font-size: calc(13px * var(--fs-scale, 1)); line-height: 1.8; color: var(--cream, #F5F0E8); opacity: 0.75;
     margin-bottom: 20px; flex: 1;
   }
 
   .blog-card__cta {
     font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--gold); display: flex; align-items: center; gap: 10px;
+    color: var(--gold, #C8A96E); display: flex; align-items: center; gap: 10px;
     transition: gap 0.3s;
   }
   .blog-card__cta:hover { gap: 16px; }

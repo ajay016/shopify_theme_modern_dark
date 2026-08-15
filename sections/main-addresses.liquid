@@ -61,22 +61,22 @@
 
 <style>
   .address-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
-  .address-card { border: 1px solid var(--border); padding: 28px; position: relative; }
-  .address-card__badge { position: absolute; top: -1px; right: 20px; font-size: calc(9px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; background: var(--gold); color: var(--black); padding: 3px 10px; }
+  .address-card { border: 1px solid var(--border, rgba(200,169,110,.18)); padding: 28px; position: relative; }
+  .address-card__badge { position: absolute; top: -1px; right: 20px; font-size: calc(9px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; background: var(--gold, #C8A96E); color: var(--black, #0A0A0A); padding: 3px 10px; }
   .address-card address { font-style: normal; font-size: calc(14px * var(--fs-scale, 1)); line-height: 1.8; opacity: 0.8; margin-bottom: 16px; }
   .address-card__actions { display: flex; gap: 16px; }
-  .act-link { background: transparent; border: none; font-family: var(--ff-body); font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); cursor: pointer; padding: 0; border-bottom: 1px solid var(--muted); transition: all 0.2s; }
-  .act-link:hover { color: var(--gold); border-bottom-color: var(--gold); }
-  .act-link--danger:hover { color: var(--sale-text); border-bottom-color: var(--sale-text); }
-  .address-form-wrap { grid-column: 1 / -1; margin-top: 16px; padding: 32px; border: 1px solid var(--border); }
+  .act-link { background: transparent; border: none; font-family: var(--ff-body); font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); cursor: pointer; padding: 0; border-bottom: 1px solid var(--muted, rgba(245,240,232,.62)); transition: all 0.2s; }
+  .act-link:hover { color: var(--gold, #C8A96E); border-bottom-color: var(--gold, #C8A96E); }
+  .act-link--danger:hover { color: var(--sale-text, #E8A0A0); border-bottom-color: var(--sale-text, #E8A0A0); }
+  .address-form-wrap { grid-column: 1 / -1; margin-top: 16px; padding: 32px; border: 1px solid var(--border, rgba(200,169,110,.18)); }
   .address-form__title { font-family: var(--ff-display); font-size: calc(22px * var(--fs-scale, 1)); font-weight: 300; margin-bottom: 28px; }
   .address-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .address-form .form-field { grid-column: span 1; }
   .address-form .form-field:last-of-type { grid-column: span 2; }
   .address-form__actions { grid-column: span 2; display: flex; gap: 12px; margin-top: 8px; }
   .address-form .form-field--checkbox { grid-column: span 2; display: flex; align-items: center; gap: 10px; font-size: calc(13px * var(--fs-scale, 1)); }
-  .account-header__back { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
-  .account-header__back:hover { color: var(--gold); }
+  .account-header__back { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); }
+  .account-header__back:hover { color: var(--gold, #C8A96E); }
   @media (max-width: 640px) { .address-form { grid-template-columns: 1fr; } .address-form .form-field { grid-column: span 1; } .address-form__actions { grid-column: span 1; } }
 </style>
 

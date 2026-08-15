@@ -11,8 +11,8 @@
   class="marquee {{ dir_class }} marquee--{{ s.style }}"
   id="section-{{ section.id }}"
   style="
-    --mq-bg: {% if s.bg_color == blank %}var(--gold){% else %}{{ s.bg_color }}{% endif %};
-    --mq-fg: {% if s.text_color == blank %}var(--black){% else %}{{ s.text_color }}{% endif %};
+    --mq-bg: {% if s.bg_color == blank %}var(--gold, #C8A96E){% else %}{{ s.bg_color }}{% endif %};
+    --mq-fg: {% if s.text_color == blank %}var(--black, #0A0A0A){% else %}{{ s.text_color }}{% endif %};
     --mq-duration: {{ s.speed }}s;
     padding-block: {{ s.padding }}px;
   "
@@ -45,11 +45,11 @@
   }
   #section-{{ section.id }}.marquee--bordered {
     background: transparent;
-    border-block: 1px solid var(--border);
+    border-block: 1px solid var(--border, rgba(200,169,110,.18));
   }
   #section-{{ section.id }}.marquee--bordered .marquee__item,
-  #section-{{ section.id }}.marquee--bordered .marquee__sep { color: var(--cream); }
-  #section-{{ section.id }}.marquee--bordered .marquee__sep { color: var(--gold); }
+  #section-{{ section.id }}.marquee--bordered .marquee__sep { color: var(--cream, #F5F0E8); }
+  #section-{{ section.id }}.marquee--bordered .marquee__sep { color: var(--gold, #C8A96E); }
 
   #section-{{ section.id }} .marquee__track {
     display: inline-flex; align-items: center; width: max-content;

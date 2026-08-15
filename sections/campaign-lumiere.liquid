@@ -33,10 +33,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.clm--light { --panel:var(--s3-bg); --fg:var(--s2-fg); --acc:var(--gold); --mut:var(--s2-mut); }
-  #section-{{ section.id }}.clm--dark  { --panel:var(--s2-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); }
-  #section-{{ section.id }}.clm--warm  { --panel:var(--s2-bg); --fg:var(--s3-fg); --acc:var(--gold); --mut:var(--s3-mut); }
-  #section-{{ section.id }}.clm--theme { --panel:var(--s2-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); }
+  #section-{{ section.id }}.clm--light { --panel:var(--s3-bg, #1A1714); --fg:var(--s2-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s2-mut, rgba(245,240,232,.62)); }
+  #section-{{ section.id }}.clm--dark  { --panel:var(--s2-bg, #131313); --fg:var(--s1-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s1-mut, rgba(245,240,232,.62)); }
+  #section-{{ section.id }}.clm--warm  { --panel:var(--s2-bg, #131313); --fg:var(--s3-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s3-mut, rgba(245,240,232,.62)); }
+  #section-{{ section.id }}.clm--theme { --panel:var(--s2-bg, #131313); --fg:var(--s1-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s1-mut, rgba(245,240,232,.62)); }
 
   #section-{{ section.id }} {
     position: relative; overflow: hidden; isolation: isolate;
@@ -80,7 +80,7 @@
   #section-{{ section.id }} .clm-btn {
     display: inline-block; font-family: var(--ff-body,'Outfit',sans-serif);
     font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
-    text-decoration: none; color: var(--on-gold); background: var(--acc);
+    text-decoration: none; color: var(--on-gold, #0A0A0A); background: var(--acc);
     padding: 16px 36px; border-radius: 999px;
     transition: transform .22s, box-shadow .22s;
   }

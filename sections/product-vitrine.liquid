@@ -73,10 +73,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.pvt--light { --bg:var(--s2-bg); --fg:var(--s2-fg); --acc:var(--gold); --mut:var(--s2-mut); --bdr:var(--s2-bdr); }
-  #section-{{ section.id }}.pvt--dark  { --bg:var(--s1-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
-  #section-{{ section.id }}.pvt--warm  { --bg:var(--s3-bg); --fg:var(--s3-fg); --acc:var(--gold); --mut:var(--s3-mut); --bdr:var(--s3-bdr); }
-  #section-{{ section.id }}.pvt--theme { --bg:var(--s1-bg); --fg:var(--s1-fg); --acc:var(--gold); --mut:var(--s1-mut); --bdr:var(--s1-bdr); }
+  #section-{{ section.id }}.pvt--light { --bg:var(--s2-bg, #131313); --fg:var(--s2-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s2-mut, rgba(245,240,232,.62)); --bdr:var(--s2-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.pvt--dark  { --bg:var(--s1-bg, #0A0A0A); --fg:var(--s1-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s1-mut, rgba(245,240,232,.62)); --bdr:var(--s1-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.pvt--warm  { --bg:var(--s3-bg, #1A1714); --fg:var(--s3-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s3-mut, rgba(245,240,232,.62)); --bdr:var(--s3-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.pvt--theme { --bg:var(--s1-bg, #0A0A0A); --fg:var(--s1-fg, #F5F0E8); --acc:var(--gold, #C8A96E); --mut:var(--s1-mut, rgba(245,240,232,.62)); --bdr:var(--s1-bdr, rgba(245,240,232,.16)); }
 
   #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }
   #section-{{ section.id }} .pvt-inner {
@@ -107,7 +107,7 @@
     display: inline-block;
     font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500;
     letter-spacing: .18em; text-transform: uppercase; text-decoration: none;
-    color: var(--on-gold); background: var(--acc); padding: 15px 34px; border-radius: 999px;
+    color: var(--on-gold, #0A0A0A); background: var(--acc); padding: 15px 34px; border-radius: 999px;
     transition: transform .22s, box-shadow .22s;
   }
   #section-{{ section.id }} .pvt-cta:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -16px color-mix(in srgb, var(--acc) 70%, transparent); }
@@ -125,7 +125,7 @@
   #section-{{ section.id }} .pvt-panel__img { width: 100%; height: 100%; object-fit: cover; display: block; }
   #section-{{ section.id }} .pvt-panel__cap {
     position: absolute; left: 12px; bottom: 12px; z-index: 2;
-    background: var(--s1-bg); color: var(--s1-fg);
+    background: var(--onphoto-light, rgba(252,251,249,.96)); color: var(--onphoto-light-fg, #16130F);
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     padding: 8px 14px; border-radius: 999px;
     font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;

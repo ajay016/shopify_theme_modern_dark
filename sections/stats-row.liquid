@@ -15,11 +15,11 @@
 </section>
 
 <style>
-  .stats-row { padding: var(--section-spacing) 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .stats-row { padding: var(--section-spacing) 0; border-top: 1px solid var(--border, rgba(200,169,110,.18)); border-bottom: 1px solid var(--border, rgba(200,169,110,.18)); }
   .stats-row__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 40px; text-align: center; }
-  .stat-item__value { display: block; font-family: var(--ff-display); font-size: calc(clamp(36px, 5vw, 64px) * var(--fs-scale, 1)); font-weight: 300; color: var(--gold); line-height: 1; margin-bottom: 8px; }
-  .stat-item__label { display: block; font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.35em; text-transform: uppercase; color: var(--muted); }
-  .stat-item__desc { font-size: calc(12px * var(--fs-scale, 1)); color: var(--muted); margin-top: 8px; line-height: 1.5; }
+  .stat-item__value { display: block; font-family: var(--ff-display); font-size: calc(clamp(36px, 5vw, 64px) * var(--fs-scale, 1)); font-weight: 300; color: var(--gold, #C8A96E); line-height: 1; margin-bottom: 8px; }
+  .stat-item__label { display: block; font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.35em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); }
+  .stat-item__desc { font-size: calc(12px * var(--fs-scale, 1)); color: var(--muted, rgba(245,240,232,.62)); margin-top: 8px; line-height: 1.5; }
 </style>
 
 {% schema %}

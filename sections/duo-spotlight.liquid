@@ -58,17 +58,17 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.duo--light { --dbg:var(--s2-bg); --dcard:var(--s3-bg); --dfg:var(--s2-fg); --dacc:var(--gold); --dmut:var(--s2-mut); }
-  #section-{{ section.id }}.duo--dark  { --dbg:var(--s1-bg); --dcard:var(--s2-bg); --dfg:var(--s1-fg); --dacc:var(--gold); --dmut:var(--s1-mut); }
-  #section-{{ section.id }}.duo--warm  { --dbg:var(--s3-bg); --dcard:var(--s2-bg); --dfg:var(--s3-fg); --dacc:var(--gold); --dmut:var(--s3-mut); }
-  #section-{{ section.id }}.duo--theme { --dbg:var(--s1-bg); --dcard:var(--s2-bg); --dfg:var(--s1-fg); --dacc:var(--gold); --dmut:var(--s1-mut); }
+  #section-{{ section.id }}.duo--light { --dbg:var(--s2-bg, #131313); --dcard:var(--s3-bg, #1A1714); --dfg:var(--s2-fg, #F5F0E8); --dacc:var(--gold, #C8A96E); --dmut:var(--s2-mut, rgba(245,240,232,.62)); }
+  #section-{{ section.id }}.duo--dark  { --dbg:var(--s1-bg, #0A0A0A); --dcard:var(--s2-bg, #131313); --dfg:var(--s1-fg, #F5F0E8); --dacc:var(--gold, #C8A96E); --dmut:var(--s1-mut, rgba(245,240,232,.62)); }
+  #section-{{ section.id }}.duo--warm  { --dbg:var(--s3-bg, #1A1714); --dcard:var(--s2-bg, #131313); --dfg:var(--s3-fg, #F5F0E8); --dacc:var(--gold, #C8A96E); --dmut:var(--s3-mut, rgba(245,240,232,.62)); }
+  #section-{{ section.id }}.duo--theme { --dbg:var(--s1-bg, #0A0A0A); --dcard:var(--s2-bg, #131313); --dfg:var(--s1-fg, #F5F0E8); --dacc:var(--gold, #C8A96E); --dmut:var(--s1-mut, rgba(245,240,232,.62)); }
 
   #section-{{ section.id }} { position: relative; background: var(--dbg); padding: var(--section-spacing, 80px) 0; }
   .duo-grid { display: grid; grid-template-columns: 1fr 1fr; }
   .duo-panel {
     position: relative; display: block; overflow: hidden;
     height: clamp(480px, 82vh, 840px);
-    background: var(--img-placeholder);
+    background: var(--img-placeholder, #1A1714);
   }
   .duo-panel__media { position: absolute; inset: 0; }
   .duo-panel__img {
@@ -86,7 +86,7 @@
     display: inline-flex; align-items: center; gap: 12px;
     font-family: var(--ff-display,'Cormorant Garamond',serif);
     font-size: calc(clamp(26px, 2.6vw, 40px) * var(--fs-scale, 1)); font-weight: 300; font-style: italic;
-    color: var(--on-image); z-index: 2;
+    color: var(--on-image, #FFFFFF); z-index: 2;
     transition: gap .3s ease;
   }
   .duo-panel:hover .duo-panel__label { gap: 20px; }

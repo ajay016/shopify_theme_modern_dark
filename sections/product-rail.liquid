@@ -66,10 +66,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.prl--light { --pbg:var(--s2-bg); --pfg:var(--s2-fg); --pacc:var(--gold); --pbdr:var(--s2-bdr); }
-  #section-{{ section.id }}.prl--dark  { --pbg:var(--s1-bg); --pfg:var(--s1-fg); --pacc:var(--gold); --pbdr:var(--s1-bdr); }
-  #section-{{ section.id }}.prl--warm  { --pbg:var(--s3-bg); --pfg:var(--s3-fg); --pacc:var(--gold); --pbdr:var(--s3-bdr); }
-  #section-{{ section.id }}.prl--theme { --pbg:var(--s1-bg); --pfg:var(--s1-fg); --pacc:var(--gold); --pbdr:var(--s1-bdr); }
+  #section-{{ section.id }}.prl--light { --pbg:var(--s2-bg, #131313); --pfg:var(--s2-fg, #F5F0E8); --pacc:var(--gold, #C8A96E); --pbdr:var(--s2-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.prl--dark  { --pbg:var(--s1-bg, #0A0A0A); --pfg:var(--s1-fg, #F5F0E8); --pacc:var(--gold, #C8A96E); --pbdr:var(--s1-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.prl--warm  { --pbg:var(--s3-bg, #1A1714); --pfg:var(--s3-fg, #F5F0E8); --pacc:var(--gold, #C8A96E); --pbdr:var(--s3-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.prl--theme { --pbg:var(--s1-bg, #0A0A0A); --pfg:var(--s1-fg, #F5F0E8); --pacc:var(--gold, #C8A96E); --pbdr:var(--s1-bdr, rgba(245,240,232,.16)); }
 
   #section-{{ section.id }} {
     background: var(--pbg);
@@ -118,7 +118,7 @@
     padding: 16px 38px; border-radius: 2px; text-decoration: none;
     transition: transform .25s, background .25s, color .25s;
   }
-  .prl-cta:hover { transform: translateY(-2px); background: var(--pacc); color: var(--on-image); }
+  .prl-cta:hover { transform: translateY(-2px); background: var(--pacc); color: var(--on-image, #FFFFFF); }
 
   @media (max-width: 700px) {
     .prl-nav { display: none; }

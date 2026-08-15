@@ -187,7 +187,7 @@
                 {%- if childlink.links.size > 0 -%}
                   <ul style="padding-left:16px;list-style:none;">
                     {%- for grandchild in childlink.links -%}
-                      <li><a href="{{ grandchild.url }}" style="font-size:11px;opacity:0.5;display:block;padding:6px 0;color:var(--cream);">{{ grandchild.title }}</a></li>
+                      <li><a href="{{ grandchild.url }}" style="font-size:11px;opacity:0.5;display:block;padding:6px 0;color:var(--cream, #F5F0E8);">{{ grandchild.title }}</a></li>
                     {%- endfor -%}
                   </ul>
                 {%- endif -%}

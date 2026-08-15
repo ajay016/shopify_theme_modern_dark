@@ -71,10 +71,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.rwy--light { --rbg:var(--s2-bg); --rfg:var(--s2-fg); --racc:var(--gold); --rmut:var(--s2-mut); }
-  #section-{{ section.id }}.rwy--dark  { --rbg:var(--s1-bg); --rfg:var(--s1-fg); --racc:var(--gold); --rmut:var(--s1-mut); }
-  #section-{{ section.id }}.rwy--warm  { --rbg:var(--s3-bg); --rfg:var(--s3-fg); --racc:var(--gold); --rmut:var(--s3-mut); }
-  #section-{{ section.id }}.rwy--theme { --rbg:var(--s1-bg); --rfg:var(--s1-fg); --racc:var(--gold); --rmut:var(--s1-mut); }
+  #section-{{ section.id }}.rwy--light { --rbg:var(--s2-bg, #131313); --rfg:var(--s2-fg, #F5F0E8); --racc:var(--gold, #C8A96E); --rmut:var(--s2-mut, rgba(245,240,232,.62)); }
+  #section-{{ section.id }}.rwy--dark  { --rbg:var(--s1-bg, #0A0A0A); --rfg:var(--s1-fg, #F5F0E8); --racc:var(--gold, #C8A96E); --rmut:var(--s1-mut, rgba(245,240,232,.62)); }
+  #section-{{ section.id }}.rwy--warm  { --rbg:var(--s3-bg, #1A1714); --rfg:var(--s3-fg, #F5F0E8); --racc:var(--gold, #C8A96E); --rmut:var(--s3-mut, rgba(245,240,232,.62)); }
+  #section-{{ section.id }}.rwy--theme { --rbg:var(--s1-bg, #0A0A0A); --rfg:var(--s1-fg, #F5F0E8); --racc:var(--gold, #C8A96E); --rmut:var(--s1-mut, rgba(245,240,232,.62)); }
 
   #section-{{ section.id }} {
     background: var(--rbg);
@@ -106,7 +106,7 @@
     margin: 0; position: relative; flex: 0 0 auto;
     height: var(--rwy-h, 420px); aspect-ratio: 3 / 4;
     overflow: hidden; border-radius: 3px;
-    background: var(--img-placeholder);
+    background: var(--img-placeholder, #1A1714);
   }
   .rwy-look__img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .7s ease; }
   .rwy-look:hover .rwy-look__img { transform: scale(1.05); }
@@ -116,11 +116,11 @@
     background: linear-gradient(180deg, rgba(20,16,12,0), rgba(20,16,12,.66));
     font-family: var(--ff-body,'Outfit',sans-serif);
     font-size: calc(11px * var(--fs-scale, 1)); font-weight: 400; letter-spacing: .08em;
-    color: var(--on-image);
+    color: var(--on-image, #FFFFFF);
   }
   .rwy-look__num {
     display: block; font-size: calc(9px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
-    color: var(--on-image-mut); margin-bottom: 4px;
+    color: var(--on-image-mut, rgba(255,255,255,.78)); margin-bottom: 4px;
   }
 
   .rwy-foot { text-align: center; margin-top: clamp(36px, 5vw, 56px); }

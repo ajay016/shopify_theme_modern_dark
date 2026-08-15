@@ -31,15 +31,15 @@
 
 <style>
   .auth-page { padding: var(--section-spacing) 0; display: flex; align-items: center; min-height: 60vh; }
-  .auth-card { max-width: 480px; margin: 0 auto; width: 100%; border: 1px solid var(--border); padding: 56px; }
+  .auth-card { max-width: 480px; margin: 0 auto; width: 100%; border: 1px solid var(--border, rgba(200,169,110,.18)); padding: 56px; }
   .auth-card__title { font-family: var(--ff-display); font-size: calc(28px * var(--fs-scale, 1)); font-weight: 300; margin-bottom: 40px; text-align: center; }
   .auth-form { display: flex; flex-direction: column; gap: 20px; }
   .auth-form__actions { display: flex; flex-direction: column; gap: 16px; align-items: center; margin-top: 8px; }
   .auth-form__submit { width: 100%; font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.25em; padding: 16px; }
-  .auth-form__link { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--muted); transition: all 0.2s; }
-  .auth-form__link:hover { color: var(--gold); border-bottom-color: var(--gold); }
-  .auth-error { background: rgba(122, 32, 32, 0.3); border: 1px solid var(--sale-bg); padding: 12px 16px; font-size: calc(13px * var(--fs-scale, 1)); color: var(--sale-text); }
-  .auth-card__alt { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border); text-align: center; display: flex; flex-direction: column; gap: 16px; align-items: center; }
+  .auth-form__link { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); border-bottom: 1px solid var(--muted, rgba(245,240,232,.62)); transition: all 0.2s; }
+  .auth-form__link:hover { color: var(--gold, #C8A96E); border-bottom-color: var(--gold, #C8A96E); }
+  .auth-error { background: rgba(122, 32, 32, 0.3); border: 1px solid var(--sale-bg, #7A2020); padding: 12px 16px; font-size: calc(13px * var(--fs-scale, 1)); color: var(--sale-text, #E8A0A0); }
+  .auth-card__alt { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border, rgba(200,169,110,.18)); text-align: center; display: flex; flex-direction: column; gap: 16px; align-items: center; }
   .auth-card__alt p { font-size: calc(13px * var(--fs-scale, 1)); opacity: 0.6; }
   @media (max-width: 640px) { .auth-card { padding: 32px 24px; } }
 </style>

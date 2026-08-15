@@ -64,10 +64,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.sgl--light { --gbg:var(--s2-bg); --gfg:var(--s2-fg); --gacc:var(--gold); --gmut:var(--s2-mut); --gbdr:var(--s2-bdr); }
-  #section-{{ section.id }}.sgl--dark  { --gbg:var(--s1-bg); --gfg:var(--s1-fg); --gacc:var(--gold); --gmut:var(--s1-mut); --gbdr:var(--s1-bdr); }
-  #section-{{ section.id }}.sgl--warm  { --gbg:var(--s3-bg); --gfg:var(--s3-fg); --gacc:var(--gold); --gmut:var(--s3-mut); --gbdr:var(--s3-bdr); }
-  #section-{{ section.id }}.sgl--theme { --gbg:var(--s1-bg); --gfg:var(--s1-fg); --gacc:var(--gold); --gmut:var(--s1-mut); --gbdr:var(--s1-bdr); }
+  #section-{{ section.id }}.sgl--light { --gbg:var(--s2-bg, #131313); --gfg:var(--s2-fg, #F5F0E8); --gacc:var(--gold, #C8A96E); --gmut:var(--s2-mut, rgba(245,240,232,.62)); --gbdr:var(--s2-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.sgl--dark  { --gbg:var(--s1-bg, #0A0A0A); --gfg:var(--s1-fg, #F5F0E8); --gacc:var(--gold, #C8A96E); --gmut:var(--s1-mut, rgba(245,240,232,.62)); --gbdr:var(--s1-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.sgl--warm  { --gbg:var(--s3-bg, #1A1714); --gfg:var(--s3-fg, #F5F0E8); --gacc:var(--gold, #C8A96E); --gmut:var(--s3-mut, rgba(245,240,232,.62)); --gbdr:var(--s3-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.sgl--theme { --gbg:var(--s1-bg, #0A0A0A); --gfg:var(--s1-fg, #F5F0E8); --gacc:var(--gold, #C8A96E); --gmut:var(--s1-mut, rgba(245,240,232,.62)); --gbdr:var(--s1-bdr, rgba(245,240,232,.16)); }
 
   #section-{{ section.id }} {
     background: var(--gbg);
@@ -106,7 +106,7 @@
   }
   .sgl-tile {
     position: relative; display: block; overflow: hidden;
-    aspect-ratio: 1 / 1; background: var(--img-placeholder);
+    aspect-ratio: 1 / 1; background: var(--img-placeholder, #1A1714);
   }
   .sgl-tile__img {
     width: 100%; height: 100%; object-fit: cover; display: block;

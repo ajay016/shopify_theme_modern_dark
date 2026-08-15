@@ -4,7 +4,7 @@
   assign count = s.products_to_show
 -%}
 
-<section class="fcs section" id="section-{{ section.id }}" style="background:{% if s.bg == 'charcoal' %}var(--charcoal){% else %}var(--black){% endif %};">
+<section class="fcs section" id="section-{{ section.id }}" style="background:{% if s.bg == 'charcoal' %}var(--charcoal, #161616){% else %}var(--black, #0A0A0A){% endif %};">
   <div class="container">
     <div class="fcs__head">
       <div class="fcs__head-text">
@@ -88,13 +88,13 @@
   #section-{{ section.id }} .fcs__nav { display: flex; gap: 10px; }
   #section-{{ section.id }} .fcs__arrow {
     width: 52px; height: 52px; border-radius: 50%;
-    border: 1px solid var(--border-strong); background: transparent; color: var(--cream);
+    border: 1px solid var(--border-strong, rgba(200,169,110,.35)); background: transparent; color: var(--cream, #F5F0E8);
     display: flex; align-items: center; justify-content: center; cursor: pointer;
     transition: background var(--transition), color var(--transition), border-color var(--transition), opacity var(--transition);
   }
-  #section-{{ section.id }} .fcs__arrow:hover { background: var(--gold); border-color: var(--gold); color: var(--black); }
+  #section-{{ section.id }} .fcs__arrow:hover { background: var(--gold, #C8A96E); border-color: var(--gold, #C8A96E); color: var(--black, #0A0A0A); }
   #section-{{ section.id }} .fcs__arrow:disabled { opacity: 0.3; cursor: default; }
-  #section-{{ section.id }} .fcs__arrow:disabled:hover { background: transparent; color: var(--cream); border-color: var(--border-strong); }
+  #section-{{ section.id }} .fcs__arrow:disabled:hover { background: transparent; color: var(--cream, #F5F0E8); border-color: var(--border-strong, rgba(200,169,110,.35)); }
 
   #section-{{ section.id }} .fcs__viewport { overflow: hidden; margin-inline: -8px; }
   #section-{{ section.id }} .fcs__track {
@@ -110,11 +110,11 @@
 
   /* Progress bar */
   #section-{{ section.id }} .fcs__progress {
-    margin-top: 40px; height: 2px; background: var(--border); position: relative; overflow: hidden;
+    margin-top: 40px; height: 2px; background: var(--border, rgba(200,169,110,.18)); position: relative; overflow: hidden;
   }
   #section-{{ section.id }} .fcs__progress-bar {
     position: absolute; top: 0; left: 0; height: 100%; width: 20%;
-    background: var(--gold); transition: left 0.3s var(--ease-out), width 0.3s var(--ease-out);
+    background: var(--gold, #C8A96E); transition: left 0.3s var(--ease-out), width 0.3s var(--ease-out);
   }
 
   /* Placeholder card */
@@ -127,13 +127,13 @@
   #section-{{ section.id }} .fcs-bg-3 { background: linear-gradient(145deg, #1c1420, #28182c); }
   #section-{{ section.id }} .fcs__ph-tag {
     position: absolute; top: 16px; left: 16px;
-    background: var(--gold); color: var(--black);
+    background: var(--gold, #C8A96E); color: var(--black, #0A0A0A);
     font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 500;
     padding: 5px 11px;
   }
-  #section-{{ section.id }} .fcs__ph-brand { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
-  #section-{{ section.id }} .fcs__ph-name { font-family: var(--ff-display); font-size: calc(19px * var(--fs-scale, 1)); font-weight: 400; color: var(--cream); margin-bottom: 6px; }
-  #section-{{ section.id }} .fcs__ph-price { font-size: calc(14px * var(--fs-scale, 1)); color: var(--cream); opacity: 0.85; }
+  #section-{{ section.id }} .fcs__ph-brand { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold, #C8A96E); margin-bottom: 6px; }
+  #section-{{ section.id }} .fcs__ph-name { font-family: var(--ff-display); font-size: calc(19px * var(--fs-scale, 1)); font-weight: 400; color: var(--cream, #F5F0E8); margin-bottom: 6px; }
+  #section-{{ section.id }} .fcs__ph-price { font-size: calc(14px * var(--fs-scale, 1)); color: var(--cream, #F5F0E8); opacity: 0.85; }
 
   @media (max-width: 1100px) {
     #section-{{ section.id }} .fcs__slide { flex-basis: calc((100% - 24px) / 2); }

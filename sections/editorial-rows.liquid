@@ -66,10 +66,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.edr--light { --ebg:var(--s2-bg); --efg:var(--s2-fg); --eacc:var(--gold); --emut:var(--s2-mut); --ebdr:var(--s2-bdr); }
-  #section-{{ section.id }}.edr--dark  { --ebg:var(--s1-bg); --efg:var(--s1-fg); --eacc:var(--gold); --emut:var(--s1-mut); --ebdr:var(--s1-bdr); }
-  #section-{{ section.id }}.edr--warm  { --ebg:var(--s3-bg); --efg:var(--s3-fg); --eacc:var(--gold); --emut:var(--s3-mut); --ebdr:var(--s3-bdr); }
-  #section-{{ section.id }}.edr--theme { --ebg:var(--s1-bg); --efg:var(--s1-fg); --eacc:var(--gold); --emut:var(--s1-mut); --ebdr:var(--s1-bdr); }
+  #section-{{ section.id }}.edr--light { --ebg:var(--s2-bg, #131313); --efg:var(--s2-fg, #F5F0E8); --eacc:var(--gold, #C8A96E); --emut:var(--s2-mut, rgba(245,240,232,.62)); --ebdr:var(--s2-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.edr--dark  { --ebg:var(--s1-bg, #0A0A0A); --efg:var(--s1-fg, #F5F0E8); --eacc:var(--gold, #C8A96E); --emut:var(--s1-mut, rgba(245,240,232,.62)); --ebdr:var(--s1-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.edr--warm  { --ebg:var(--s3-bg, #1A1714); --efg:var(--s3-fg, #F5F0E8); --eacc:var(--gold, #C8A96E); --emut:var(--s3-mut, rgba(245,240,232,.62)); --ebdr:var(--s3-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.edr--theme { --ebg:var(--s1-bg, #0A0A0A); --efg:var(--s1-fg, #F5F0E8); --eacc:var(--gold, #C8A96E); --emut:var(--s1-mut, rgba(245,240,232,.62)); --ebdr:var(--s1-bdr, rgba(245,240,232,.16)); }
 
   #section-{{ section.id }} { background: var(--ebg); color: var(--efg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }
   .edr-inner { max-width: var(--container-width,1440px); margin: 0 auto; }
@@ -86,13 +86,13 @@
   .edr-row:nth-child(even) .edr-row__body  { order: 1; }
 
   .edr-row__media { position: relative; }
-  .edr-row__img-link { display: block; position: relative; overflow: hidden; border-radius: 3px; background: var(--img-placeholder); }
+  .edr-row__img-link { display: block; position: relative; overflow: hidden; border-radius: 3px; background: var(--img-placeholder, #1A1714); }
   .edr-row__img { width:100%; aspect-ratio: 4/3; object-fit: cover; display:block; transition: transform .8s cubic-bezier(.4,0,.2,1); }
   .edr-row__img-link:hover .edr-row__img { transform: scale(1.04); }
   .edr-row__pill {
     position:absolute; top:18px; left:18px;
     font-family: var(--ff-body,'Outfit',sans-serif); font-size:calc(10px * var(--fs-scale, 1)); font-weight:500; letter-spacing:.16em; text-transform:uppercase;
-    background: var(--on-image); color:#0A0A0A; padding:8px 14px; border-radius:2px;
+    background: var(--on-image, #FFFFFF); color:#0A0A0A; padding:8px 14px; border-radius:2px;
   }
 
   .edr-row__body { max-width: 460px; }

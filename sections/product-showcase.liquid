@@ -53,10 +53,10 @@
 </section>
 
 <style>
-  #section-{{ section.id }}.psc--light { --sbg:var(--s2-bg); --sfg:var(--s2-fg); --sacc:var(--gold); --smut:var(--s2-mut); --sbdr:var(--s2-bdr); }
-  #section-{{ section.id }}.psc--dark  { --sbg:var(--s1-bg); --sfg:var(--s1-fg); --sacc:var(--gold); --smut:var(--s1-mut); --sbdr:var(--s1-bdr); }
-  #section-{{ section.id }}.psc--warm  { --sbg:var(--s3-bg); --sfg:var(--s3-fg); --sacc:var(--gold); --smut:var(--s3-mut); --sbdr:var(--s3-bdr); }
-  #section-{{ section.id }}.psc--theme { --sbg:var(--s1-bg); --sfg:var(--s1-fg); --sacc:var(--gold); --smut:var(--s1-mut); --sbdr:var(--s1-bdr); }
+  #section-{{ section.id }}.psc--light { --sbg:var(--s2-bg, #131313); --sfg:var(--s2-fg, #F5F0E8); --sacc:var(--gold, #C8A96E); --smut:var(--s2-mut, rgba(245,240,232,.62)); --sbdr:var(--s2-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.psc--dark  { --sbg:var(--s1-bg, #0A0A0A); --sfg:var(--s1-fg, #F5F0E8); --sacc:var(--gold, #C8A96E); --smut:var(--s1-mut, rgba(245,240,232,.62)); --sbdr:var(--s1-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.psc--warm  { --sbg:var(--s3-bg, #1A1714); --sfg:var(--s3-fg, #F5F0E8); --sacc:var(--gold, #C8A96E); --smut:var(--s3-mut, rgba(245,240,232,.62)); --sbdr:var(--s3-bdr, rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.psc--theme { --sbg:var(--s1-bg, #0A0A0A); --sfg:var(--s1-fg, #F5F0E8); --sacc:var(--gold, #C8A96E); --smut:var(--s1-mut, rgba(245,240,232,.62)); --sbdr:var(--s1-bdr, rgba(245,240,232,.16)); }
 
   #section-{{ section.id }} { background: var(--sbg); color: var(--sfg); padding: var(--section-spacing,80px) var(--side-padding,5vw); }
   .psc-inner { max-width: var(--container-width,1440px); margin: 0 auto; }

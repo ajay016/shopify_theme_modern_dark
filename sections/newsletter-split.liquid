@@ -22,7 +22,7 @@
   </div>
 
   {%- comment -%}——— Right: form panel ———{%- endcomment -%}
-  <div class="nls__form-panel" style="background:{% if section.settings.panel_bg == 'gold' %}var(--gold){% elsif section.settings.panel_bg == 'ivory' %}var(--ivory){% elsif section.settings.panel_bg == 'charcoal' %}var(--charcoal){% else %}var(--black){% endif %};">
+  <div class="nls__form-panel nls__form-panel--{{ section.settings.panel_bg | default: 'black' }}">
     <div class="nls__form-inner">
       {%- if section.settings.eyebrow != blank -%}
         <p class="nls__eyebrow">{{ section.settings.eyebrow }}</p>
@@ -92,7 +92,7 @@
   #section-{{ section.id }} .nls__visual-img { width: 100%; height: 100%; object-fit: cover; display: block; }
   #section-{{ section.id }} .nls__visual-ph {
     width: 100%; height: 100%;
-    background: radial-gradient(110% 110% at 60% 30%, #26201a, #0a0a0a);
+    background: radial-gradient(110% 110% at 60% 30%, var(--img-placeholder), #0a0a0a);
     display: flex; align-items: center; justify-content: center;
   }
   #section-{{ section.id }} .nls__visual-overlay {
@@ -116,6 +116,13 @@
   #section-{{ section.id }} .nls__form-panel {
     display: flex; align-items: center; justify-content: center;
   }
+  /* Panel tone as a role on the active scheme's ladder. Each role sets both
+     its background and the foreground its text should use, so the two can
+     never drift apart the way the old inline-style sniffing allowed. */
+  #section-{{ section.id }} .nls__form-panel--black    { background: var(--s1-bg); --nls-fg: var(--s1-fg); --nls-mut: var(--s1-mut); --nls-bdr: var(--s1-bdr); }
+  #section-{{ section.id }} .nls__form-panel--charcoal { background: var(--s2-bg); --nls-fg: var(--s2-fg); --nls-mut: var(--s2-mut); --nls-bdr: var(--s2-bdr); }
+  #section-{{ section.id }} .nls__form-panel--ivory    { background: var(--s3-bg); --nls-fg: var(--s3-fg); --nls-mut: var(--s3-mut); --nls-bdr: var(--s3-bdr); }
+  #section-{{ section.id }} .nls__form-panel--gold     { background: var(--gold);  --nls-fg: var(--on-gold); --nls-mut: var(--on-gold); --nls-bdr: var(--on-gold); }
   #section-{{ section.id }} .nls__form-inner {
     width: 100%; max-width: 420px;
     padding: var(--section-spacing, 80px) var(--side-padding, 5vw);
@@ -127,51 +134,51 @@
     color: var(--gold); display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
   }
   #section-{{ section.id }} .nls__eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
-  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__eyebrow,
-  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__eyebrow { color: rgba(10,10,10,0.6); }
-  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__eyebrow::before,
-  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__eyebrow::before { background: rgba(10,10,10,0.4); }
+  #section-{{ section.id }} .nls__form-panel--gold .nls__eyebrow,
+  #section-{{ section.id }} .nls__form-panel--ivory .nls__eyebrow { color: var(--nls-mut); }
+  #section-{{ section.id }} .nls__form-panel--gold .nls__eyebrow::before,
+  #section-{{ section.id }} .nls__form-panel--ivory .nls__eyebrow::before { background: var(--nls-mut); }
 
   /* Heading */
   #section-{{ section.id }} .nls__heading {
     font-family: var(--ff-display); font-size: calc(clamp(28px, 3.2vw, 46px) * var(--fs-scale, 1)); font-weight: 300;
-    line-height: 1.1; color: var(--cream); margin-bottom: 16px;
+    line-height: 1.1; color: var(--nls-fg, var(--cream)); margin-bottom: 16px;
   }
-  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__heading,
-  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__heading { color: var(--black); }
+  #section-{{ section.id }} .nls__form-panel--gold .nls__heading,
+  #section-{{ section.id }} .nls__form-panel--ivory .nls__heading { color: var(--nls-fg); }
 
   /* Subtext */
-  #section-{{ section.id }} .nls__sub { font-size: calc(13px * var(--fs-scale, 1)); line-height: 1.75; color: var(--cream); opacity: 0.65; margin-bottom: 24px; }
-  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__sub,
-  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__sub { color: var(--black); }
+  #section-{{ section.id }} .nls__sub { font-size: calc(13px * var(--fs-scale, 1)); line-height: 1.75; color: var(--nls-mut, var(--muted)); margin-bottom: 24px; }
+  #section-{{ section.id }} .nls__form-panel--gold .nls__sub,
+  #section-{{ section.id }} .nls__form-panel--ivory .nls__sub { color: var(--nls-fg); }
 
   /* Perks list */
   #section-{{ section.id }} .nls__perks { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 10px; }
   #section-{{ section.id }} .nls__perk {
     display: flex; align-items: center; gap: 10px;
-    font-size: calc(12px * var(--fs-scale, 1)); letter-spacing: 0.04em; color: var(--cream); opacity: 0.8;
+    font-size: calc(12px * var(--fs-scale, 1)); letter-spacing: 0.04em; color: var(--nls-fg, var(--cream));
   }
   #section-{{ section.id }} .nls__perk svg { color: var(--gold); flex-shrink: 0; }
-  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__perk,
-  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__perk { color: var(--black); }
-  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__perk svg,
-  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__perk svg { color: var(--black); }
+  #section-{{ section.id }} .nls__form-panel--gold .nls__perk,
+  #section-{{ section.id }} .nls__form-panel--ivory .nls__perk { color: var(--nls-fg); }
+  #section-{{ section.id }} .nls__form-panel--gold .nls__perk svg,
+  #section-{{ section.id }} .nls__form-panel--ivory .nls__perk svg { color: var(--nls-fg); }
 
   /* Input row */
   #section-{{ section.id }} .nls__input-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
   #section-{{ section.id }} .nls__input-row input[type="email"] {
     width: 100%; background: transparent;
     border: 0; border-bottom: 1px solid var(--border-strong);
-    color: var(--cream); font-family: var(--ff-body); font-size: calc(14px * var(--fs-scale, 1));
+    color: var(--nls-fg, var(--cream)); font-family: var(--ff-body); font-size: calc(14px * var(--fs-scale, 1));
     padding: 14px 0; outline: none; transition: border-color 0.3s;
     letter-spacing: 0.03em;
   }
   #section-{{ section.id }} .nls__input-row input[type="email"]::placeholder { color: var(--muted); }
   #section-{{ section.id }} .nls__input-row input[type="email"]:focus { border-bottom-color: var(--gold); }
-  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] input[type="email"],
-  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] input[type="email"] { color: var(--black); border-bottom-color: rgba(10,10,10,0.35); }
-  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] input[type="email"]::placeholder,
-  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] input[type="email"]::placeholder { color: rgba(10,10,10,0.5); }
+  #section-{{ section.id }} .nls__form-panel--gold input[type="email"],
+  #section-{{ section.id }} .nls__form-panel--ivory input[type="email"] { color: var(--nls-fg); border-bottom-color: var(--nls-bdr); }
+  #section-{{ section.id }} .nls__form-panel--gold input[type="email"]::placeholder,
+  #section-{{ section.id }} .nls__form-panel--ivory input[type="email"]::placeholder { color: var(--nls-mut); }
   #section-{{ section.id }} .nls__input-row button {
     display: inline-flex; align-items: center; gap: 10px; justify-content: center;
     width: 100%; padding: 16px 24px;
@@ -180,15 +187,15 @@
     border: none; cursor: pointer; transition: background var(--transition), transform 0.2s;
   }
   #section-{{ section.id }} .nls__input-row button:hover { background: var(--gold-light); transform: translateY(-1px); }
-  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__input-row button { background: var(--black); color: var(--gold); }
-  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__input-row button:hover { background: #111; }
+  #section-{{ section.id }} .nls__form-panel--gold .nls__input-row button { background: var(--black); color: var(--gold); }
+  #section-{{ section.id }} .nls__form-panel--gold .nls__input-row button:hover { background: var(--s1-bg); color: var(--s1-fg); }
 
   /* Feedback */
   #section-{{ section.id }} .nls__success { color: var(--gold); font-size: calc(13px * var(--fs-scale, 1)); letter-spacing: 0.06em; }
   #section-{{ section.id }} .nls__error   { color: var(--sale-text); font-size: calc(12px * var(--fs-scale, 1)); margin-top: 8px; }
   #section-{{ section.id }} .nls__disclaimer { font-size: calc(11px * var(--fs-scale, 1)); line-height: 1.6; color: var(--cream); opacity: 0.45; margin-top: 14px; }
-  #section-{{ section.id }} .nls__form-panel[style*="var(--gold)"] .nls__disclaimer,
-  #section-{{ section.id }} .nls__form-panel[style*="var(--ivory)"] .nls__disclaimer { color: var(--black); }
+  #section-{{ section.id }} .nls__form-panel--gold .nls__disclaimer,
+  #section-{{ section.id }} .nls__form-panel--ivory .nls__disclaimer { color: var(--black); }
 
   /* ── Responsive ── */
   @media (max-width: 900px) {

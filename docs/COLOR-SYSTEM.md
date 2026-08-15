@@ -1,6 +1,6 @@
 # Color System & Theme Settings Overhaul
 
-**Status:** In progress
+**Status:** Complete for all five homepages and global components. Inner pages not yet audited — see "What's left".
 **Goal:** One coherent color scheme controls the entire template. No text ever blends into its background, in any scheme, anywhere.
 
 ---
@@ -50,7 +50,7 @@ Stored template values are preserved (no template rewrites needed), but their *m
 | `theme` | `base` |
 | `light` | `soft` |
 | `warm` | `deep` |
-| `dark` | `deep` (richest tone — **not** forced dark) |
+| `dark` | `base` (richest tone — **not** forced dark) |
 
 Schema labels are relabelled to match ("Primary surface", "Alternate", "Deep", "Follow theme").
 
@@ -65,6 +65,8 @@ Schema labels are relabelled to match ("Primary surface", "Alternate", "Deep", "
 - [x] **Phase 5 — Typography.** Make Base Font Size actually scale body copy.
 - [x] **Phase 6 — Cart.** Implement Notification and Page cart types.
 - [x] **Phase 7 — Audit.** Sweep for surviving hardcoded colors; contrast-check every scheme; validate; push.
+- [x] **Phase 8 — Homepages #1–#4.** Convert the 12 sections that have no scheme select and were missed by Phase 3.
+- [x] **Phase 9 — Re-audit.** Verify every section on all five homepages; record what is left.
 
 ---
 
@@ -89,3 +91,34 @@ Schema labels are relabelled to match ("Primary surface", "Alternate", "Deep", "
 - 498 `calc()` expressions balanced after Liquid rendering.
 - Range settings valid; `theme.js` passes `node --check`.
 - Live homepage: 10 sections, all types resolve.
+
+---
+
+**Phase 8 — done. Homepages #1–#4.**
+
+Phases 1–7 were verified against Home #5 and the global components only. Auditing the other four homepages exposed a real gap: Phase 3 converted the 27 sections that *have* a "Surface tone" select, but **12 sections have no such select and were never touched** — and Home #1 Classic is built entirely from those 12:
+
+`blog-posts, brand-logos, campaign-banner, collection-list, featured-products, hero-banner, image-with-text, marquee, newsletter, newsletter-split, stats-row, testimonials`
+
+Findings and fixes:
+
+- **`newsletter-split` (Homes #2/#3/#4) — the significant one.** Its panel set its background with an inline `style="background:var(--ivory)"` and then re-coloured text with `[style*="var(--ivory)"]` attribute selectors — background and foreground chosen in two unrelated places, which is exactly how they drift apart. Replaced with role classes (`--black/--charcoal/--ivory/--gold`) that set the background *and* the paired `--nls-fg/--nls-mut/--nls-bdr` together. **All 14 `[style*=…]` selectors removed.**
+- **Image placeholders** (`#cbbfa9`, `#2a221a`, `#2a2a2a`, `#1a1612`, `#15110d`, `#e7e0d4` across 9 sections) now use a new `--img-placeholder` token. These deliberately stay dark: they stand in for photographs and always carry `--on-image` (white) captions, so making them follow the scheme would make that text vanish on a light scheme. The token records that intent.
+- **Text on the gold accent** (`campaign-noir`, `campaign-banner`) → `--on-gold`.
+- **White-on-photo text** across `hero-lookbook`, `lookbook-gallery`, `runway-strip`, `lookbook-scroll`, `campaign-noir`, `editorial-rows` → `--on-image` / `--on-image-mut`.
+
+**Phase 9 — done.** Re-audited every section used by all five homepages, excluding legitimately fixed values (photographic scrims, shadows, `var(--x, #fallback)` fallbacks, the error red). Result: **all five homepages clean.**
+
+---
+
+## What's left
+
+Nothing outstanding for the color system on the homepages. Known scope boundaries, stated plainly:
+
+| Item | Status |
+|---|---|
+| Homepages #1–#5, header, footer, cart drawer, cart notification, quick view, product cards | Audited clean across all four schemes |
+| **Inner pages** (product, collection, blog, cart, search, account, 404) | **Not yet audited.** They share the same tokens and `theme.css`, so they inherit the fixes, but their section-specific styles have not been inspected the way the homepages were |
+| Contrast | Verified numerically for body/muted/accent on every rung of all four schemes (WCAG AA). Not verified for text over photographs, which depends on the merchant's images |
+| Custom scheme | Ladder derives from the pickers; a merchant choosing two similar colors can still produce low contrast. Consider a warning in the editor |
+| Visual/browser check | All verification here is static analysis. Nothing has been rendered in a browser |

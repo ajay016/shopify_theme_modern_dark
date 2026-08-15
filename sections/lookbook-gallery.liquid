@@ -80,7 +80,7 @@
     grid-auto-rows: clamp(120px, 14vw, 200px);
     gap: clamp(12px, 1.4vw, 22px);
   }
-  .lkb-tile { position: relative; overflow: hidden; border-radius: 3px; text-decoration: none; display: block; background: #2a2a2a; }
+  .lkb-tile { position: relative; overflow: hidden; border-radius: 3px; text-decoration: none; display: block; background: var(--img-placeholder); }
   .lkb-tile--tall  { grid-column: span 4; grid-row: span 3; }
   .lkb-tile--wide  { grid-column: span 8; grid-row: span 2; }
   .lkb-tile--sq    { grid-column: span 4; grid-row: span 2; }
@@ -98,11 +98,11 @@
     opacity: .9; transition: opacity .3s;
   }
   .lkb-tile:hover .lkb-tile__overlay { opacity: 1; }
-  .lkb-tile__tag { align-self:flex-start; font-family:var(--ff-body,'Outfit',sans-serif); font-size:calc(9px * var(--fs-scale, 1)); font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#0A0A0A; background:rgba(255,255,255,.92); padding:6px 11px; border-radius:2px; }
+  .lkb-tile__tag { align-self:flex-start; font-family:var(--ff-body,'Outfit',sans-serif); font-size:calc(9px * var(--fs-scale, 1)); font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#0A0A0A; background: var(--on-image); padding:6px 11px; border-radius:2px; }
   .lkb-tile__foot { display:flex; flex-direction:column; gap:3px; transform: translateY(6px); opacity:.92; transition: transform .35s, opacity .35s; }
   .lkb-tile:hover .lkb-tile__foot { transform: none; opacity:1; }
   .lkb-tile__label { font-family:var(--ff-display,'Cormorant Garamond',serif); font-size:calc(clamp(18px,2vw,26px) * var(--fs-scale, 1)); font-weight:400; color: var(--on-image); }
-  .lkb-tile__meta { font-family:var(--ff-body,'Outfit',sans-serif); font-size:calc(10px * var(--fs-scale, 1)); letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.8); }
+  .lkb-tile__meta { font-family:var(--ff-body,'Outfit',sans-serif); font-size:calc(10px * var(--fs-scale, 1)); letter-spacing:.14em; text-transform:uppercase; color: var(--on-image-mut); }
 
   .lkb-section .reveal.reveal-armed { opacity:0; transform:translateY(26px); transition: opacity .65s ease, transform .65s ease; }
   .lkb-section .reveal.is-visible { opacity:1; transform:none; }

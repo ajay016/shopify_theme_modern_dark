@@ -93,7 +93,7 @@
   }
 
   /* ── Media ── */
-  .hlb-section .hlb-media { position: relative; overflow: hidden; background: #1a1410; }
+  .hlb-section .hlb-media { position: relative; overflow: hidden; background: var(--img-placeholder); }
   .hlb-section .hlb-media__img {
     width: 100%; height: 100%; object-fit: cover; display: block;
     animation: hlbKen{{ section.id }} 16s ease-out forwards;
@@ -138,9 +138,9 @@
   #section-{{ section.id }}.hlb--overlay .hlb-eyebrow { color: var(--on-image-mut) !important; }
   #section-{{ section.id }}.hlb--overlay .hlb-heading,
   #section-{{ section.id }}.hlb--overlay .hlb-heading em { color: var(--on-image) !important; }
-  #section-{{ section.id }}.hlb--overlay .hlb-desc { color: rgba(255,255,255,0.82) !important; }
+  #section-{{ section.id }}.hlb--overlay .hlb-desc { color: var(--on-image-mut) !important; }
   #section-{{ section.id }}.hlb--overlay .hlb-btn--line { border-color: rgba(255,255,255,0.5); color: var(--on-image); }
-  #section-{{ section.id }}.hlb--overlay .hlb-scroll__txt { color: rgba(255,255,255,0.7); }
+  #section-{{ section.id }}.hlb--overlay .hlb-scroll__txt { color: var(--on-image-mut); }
   #section-{{ section.id }}.hlb--overlay .hlb-scroll__line { background: rgba(255,255,255,0.3); }
 
   /* ═══════════════════════════════════════════════════
@@ -162,7 +162,7 @@
   #section-{{ section.id }}.hlb--frame .hlb-eyebrow { color: var(--on-image-mut) !important; }
   #section-{{ section.id }}.hlb--frame .hlb-heading,
   #section-{{ section.id }}.hlb--frame .hlb-heading em { color: var(--on-image) !important; }
-  #section-{{ section.id }}.hlb--frame .hlb-desc { color: rgba(255,255,255,0.82) !important; }
+  #section-{{ section.id }}.hlb--frame .hlb-desc { color: var(--on-image-mut) !important; }
   #section-{{ section.id }}.hlb--frame .hlb-btn--line { border-color: rgba(255,255,255,0.5); color: var(--on-image); }
 
   /* ── Typography — no .reveal, always visible via CSS animations ── */

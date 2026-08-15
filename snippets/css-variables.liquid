@@ -226,7 +226,11 @@
     --black-overlay: {{ s1_bg | color_modify: 'alpha', 0.75 }};
 
     /* Scrim over imagery — always dark so overlaid white text reads,
-       regardless of scheme (images are photographic, not themed). */
+       regardless of scheme (images are photographic, not themed).
+       --img-placeholder is the stand-in shown where a merchant has not
+       uploaded an image yet; it stays dark for the same reason: the
+       captions drawn on top of it are always --on-image (white). */
+    --img-placeholder:  #1A1714;
     --img-scrim:        rgba(10, 10, 11, 0.55);
     --img-scrim-strong: rgba(10, 10, 11, 0.78);
     --on-image:         #FFFFFF;

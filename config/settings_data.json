@@ -9,7 +9,7 @@
  */
 {
   "current": {
-    "color_scheme": "custom",
+    "color_scheme": "light",
     "color_black": "#0a0a0a",
     "color_charcoal": "#161616",
     "color_cream": "#f5f0e8",
@@ -36,7 +36,7 @@
     "announcement_style": "ticker",
     "announcement_text_1": "New Arrivals ✦ Free Shipping Over $500 ✦ SS 2025 Collection Now Live",
     "announcement_text_2": "Exclusive Members Preview ✦ Sustainable Luxury ✦ Complimentary Gift Wrapping",
-    "cart_type": "drawer",
+    "cart_type": "notification",
     "cart_free_shipping_bar": true,
     "cart_free_shipping_threshold": "500",
     "cart_show_recommendations": true,
@@ -64,6 +64,7 @@
     "footer_menu_2_title": "Brand",
     "footer_menu_3_title": "Help",
     "footer_show_payment_icons": true,
+    "favicon": "shopify://shop_images/pngwing.com.png",
     "sections": {
       "announcement-bar": {
         "type": "announcement-bar",
@@ -79,21 +80,7 @@
       },
       "footer": {
         "type": "footer",
-        "settings": {
-          "description": "<p>Luxury fashion with a considered approach to design, craft, and the world we inhabit.</p>",
-          "menu_1": "footer",
-          "menu_1_title": "Shop",
-          "menu_2": "",
-          "menu_2_title": "Brand",
-          "menu_3": "",
-          "menu_3_title": "Help",
-          "instagram": "",
-          "pinterest": "",
-          "tiktok": "",
-          "facebook": "",
-          "twitter": "",
-          "show_payment_icons": true
-        }
+        "settings": {}
       }
     },
     "content_for_index": []

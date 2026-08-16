@@ -1,6 +1,7 @@
 # Color System & Theme Settings Overhaul
 
 **Status:** Complete for all five homepages and global components. Inner pages not yet audited — see "What's left".
+**Last verified:** after Phase 12.
 **Goal:** One coherent color scheme controls the entire template. No text ever blends into its background, in any scheme, anywhere.
 
 ---
@@ -67,12 +68,17 @@ Schema labels are relabelled to match ("Primary surface", "Alternate", "Deep", "
 - [x] **Phase 7 — Audit.** Sweep for surviving hardcoded colors; contrast-check every scheme; validate; push.
 - [x] **Phase 8 — Homepages #1–#4.** Convert the 12 sections that have no scheme select and were missed by Phase 3.
 - [x] **Phase 9 — Re-audit.** Verify every section on all five homepages; record what is left.
+- [x] **Phase 10 — On-photo controls.** Stop UI drawn over photography from following the page surface.
+- [x] **Phase 11 — Filter-free tokens.** Remove every Liquid colour filter from the `:root` block.
+- [x] **Phase 12 — Component polish.** Cart drawer, quick view and count badge, each contrast-measured.
 
 ---
 
 ## Progress log
 
-**Phase 1 — done.** `css-variables.liquid` rewritten. Emits `--s1..s4` (bg/fg/mut/bdr) per scheme plus header, modal, drawer, card, field, button, image-scrim and `--on-gold` tokens, and `--fs-scale`. Muted alphas and on-gold text are *derived from measured brightness*, not assumed. Legacy `--black`/`--charcoal`/`--cream` aliases were re-pointed at the ladder, so several hundred existing rules became scheme-correct with no edit.
+**Phase 1 — done.** `css-variables.liquid` rewritten. Emits `--s1..s4` (bg/fg/mut/bdr) per scheme plus header, modal, drawer, card, field, button, image-scrim and `--on-gold` tokens, and `--fs-scale`. Legacy `--black`/`--charcoal`/`--cream` aliases were re-pointed at the ladder, so several hundred existing rules became scheme-correct with no edit.
+
+> **Superseded by Phase 11.** This version derived its alphas and its on-gold colour at render time with `color_modify` / `color_brightness` / `color_lighten`. That turned out to be the single point of failure described in Phase 11 and has been replaced with literal values. The token *contract* above is unchanged — only how the values are produced.
 
 **Phase 2 — done.** Header no longer hardcodes `rgba(10,10,10,…)`. Transparent state is a flat translucent wash of the header surface (gradient removed, as requested) with blur; scrolled state uses the same hue, so scrolling can no longer flip the bar to a color its text cannot sit on. Logo, nav links, icons and count badges follow header tokens.
 
@@ -111,6 +117,38 @@ Findings and fixes:
 
 ---
 
+**Phase 10 — done. On-photo controls.**
+
+Phase 4 pointed controls that sit *on top of product photography* at the page-surface tokens. On the light scheme `--s1-bg` is `#FFFFFF`, so the card's add-to-bag bar, wishlist and quick-view icon buttons and badges rendered white on white and disappeared over pale garment shots. The quick-view popup lost its edge entirely for the same reason, because `--modal-scrim` was also derived from the surface — a white scrim behind a white modal on a white page has no boundary at all.
+
+**The rule this established:** UI drawn over photography must never follow the page surface, because the image behind it is photographic, not themed.
+
+- Added `--onphoto-light` / `--onphoto-light-fg` and `--onphoto-dark` / `--onphoto-dark-fg` — opaque, mutually high-contrast pairs that are deliberately scheme-independent. Card icons and badges use the light pair; the add-to-bag bar uses the dark pair, restoring the original design. Same fix applied to the overlay pills in `hero-lumiere`, `product-vitrine` and `shop-the-look`.
+- `--modal-scrim` is hardcoded dark again. A scrim's job is to dim the page behind a modal, so deriving it from the surface was wrong in principle, not only in the light scheme.
+- The quick-view panel gained a token border plus elevation so it reads against the scrim in every scheme.
+
+**Phase 11 — done. The token block is now filter-free.**
+
+Symptom: the colour scheme setting stopped having any effect, everything rendered dark and text was unreadable.
+
+Cause: the `:root` block built every colour by *deriving* it at render time with `color_modify` / `color_brightness` / `color_lighten`. When that derivation failed the entire block was lost, so no token resolved. Compounding it, the literal fallbacks added defensively in Phase 10 are **dark-scheme values**, so with the tokens gone they repainted the whole site dark regardless of the setting — which is exactly why changing the scheme appeared to do nothing. Those fallbacks turned a visible failure into a silent one and made the cause harder to find.
+
+Fix: `css-variables.liquid` was rebuilt with **no colour filters at all**. Each scheme emits one `:root` block of literal values, followed by a shared `:root` for aliases, scrims, on-photo colours, type and layout. Only the custom scheme interpolates settings, and it derives its tints with CSS `color-mix()` in the browser rather than Liquid filters at render time — so nothing colour-related can fail while the page is being built.
+
+Verified by simulating the Liquid render for all four schemes: each produces balanced braces, two `:root` blocks and zero empty declarations, and every core token is present in every branch, so the dark fallbacks cannot fire.
+
+**Phase 12 — done. Component polish, all contrast-measured.**
+
+| Fix | Measurement |
+|---|---|
+| Light-scheme `--on-gold` / `--btn-primary-fg` | black on `#9B7B3F` is 5.00:1 vs white's 3.96:1 — switched to black |
+| Cart drawer "Continue Shopping" | was `--cream` at `opacity .6` = **4.44:1**, under AA. Now full drawer foreground with an underline: 15.85 / 16.38 / 13.09 across light / dark / warm |
+| Cart/wishlist count badge | badge used `--gold`; on light that is a deep bronze giving **5.00:1** for 8.5px type in a 15px circle. Added a dedicated `--badge-bg` / `--badge-fg` pair; light now uses the lighter gold at **8.82:1**, matching dark |
+
+Also non-colour but recorded here for completeness: the cart drawer's type scale was pulled back from editorial to UI sizes (item titles 17px serif → 13px body; drawer title 22 → 16; empty state 28 → 19; subtotal 22 → 18; item price left at 14px), and the quick-view modal's empty band above the image was removed — its grid reserved an `auto` row holding only the close button, so both columns started ~52px down. The close button is now absolutely positioned and the grid is a single row.
+
+---
+
 ## What's left
 
 Nothing outstanding for the color system on the homepages. Known scope boundaries, stated plainly:
@@ -121,4 +159,5 @@ Nothing outstanding for the color system on the homepages. Known scope boundarie
 | **Inner pages** (product, collection, blog, cart, search, account, 404) | **Not yet audited.** They share the same tokens and `theme.css`, so they inherit the fixes, but their section-specific styles have not been inspected the way the homepages were |
 | Contrast | Verified numerically for body/muted/accent on every rung of all four schemes (WCAG AA). Not verified for text over photographs, which depends on the merchant's images |
 | Custom scheme | Ladder derives from the pickers; a merchant choosing two similar colors can still produce low contrast. Consider a warning in the editor |
-| Visual/browser check | All verification here is static analysis. Nothing has been rendered in a browser |
+| Visual/browser check | All verification here is static analysis. Phases 10–12 exist because static analysis **passed** on defects the browser then exposed — a white button on a white photo and a white modal on a white scrim are both valid CSS. Treat a real browser pass as required, not optional |
+| Regression risk from fallbacks | `theme.css` and the sections carry literal `var(--token, fallback)` values, and those fallbacks are **dark-scheme** colours. They are inert while the token block renders, but if it ever fails again the site goes dark rather than obviously broken. Phase 11 removed the failure mode; keep the block filter-free |

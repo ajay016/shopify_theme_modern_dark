@@ -10,284 +10,251 @@
 {
   "sections": {
     "hero": {
-      "type": "hero-lumiere",
+      "type": "hero-noir",
       "settings": {
-        "scheme": "theme",
-        "mast_left": "Issue Nº 05",
-        "mast_center": "Maison Noir",
-        "mast_right": "Autumn / Winter 2025",
-        "heading_a": "The",
-        "heading_em": "Light",
-        "heading_b": "Issue",
-        "description": "Champagne silks, pearl tailoring and jewellery that catches the afternoon — the season, photographed like a magazine and shoppable like a boutique.",
-        "btn1_label": "Shop the Issue",
+        "scheme": "dark",
+        "meta_left": "Maison Noir — The Collection",
+        "meta_right": "Autumn / Winter 2025",
+        "eyebrow": "The Noir Edit",
+        "heading_line1": "Form",
+        "heading_line2": "Meets",
+        "heading_line3": "Function",
+        "description": "Sharp tailoring and uncompromising lines. A modern wardrobe built on contrast — architectural, deliberate, and quietly powerful.",
+        "btn1_label": "Shop the Collection",
         "btn1_link": "/collections/all",
-        "btn2_label": "Read the Editor's Note",
+        "btn2_label": "View Lookbook",
         "btn2_link": "/collections/all",
-        "caption_1": "The Morning Silk",
-        "caption_2": "The Champagne Gown",
-        "tag_label": "New Season",
-        "caption_3": "The Pearl Tailoring"
+        "scroll_label": "Scroll",
+        "watermark": "Noir",
+        "tag_label": "New Arrivals",
+        "index_label": "04",
+        "ticker": "Made to Last"
       }
     },
     "marquee": {
       "type": "marquee",
       "settings": {
-        "text": "The Light Issue, Champagne Silks, Pearl Tailoring, Jewellery of Note, By Appointment",
+        "text": "Modern Tailoring, Made to Last, Architectural Lines, Responsibly Made",
         "style": "caps",
         "separator": "diamond",
         "direction": "left",
-        "speed": 30,
+        "speed": 28,
         "padding": 16,
         "pause_on_hover": true,
-        "bg_color": "#b99657",
-        "text_color": "#14110a"
+        "bg_color": "#18181A",
+        "text_color": "#ECE9E2"
       }
     },
-    "stories": {
-      "type": "story-covers",
+    "index": {
+      "type": "category-index",
       "blocks": {
-        "cv1": {
-          "type": "cover",
+        "cat1": {
+          "type": "category",
           "settings": {
-            "masthead": "Maison Noir",
-            "title": "Eveningwear",
-            "link_label": "Shop",
-            "link": "/collections/all"
-          }
-        },
-        "cv2": {
-          "type": "cover",
-          "settings": {
-            "masthead": "Maison Noir",
-            "title": "Tailoring",
-            "link_label": "Shop",
-            "link": "/collections/all"
-          }
-        },
-        "cv3": {
-          "type": "cover",
-          "settings": {
-            "masthead": "Maison Noir",
-            "title": "Jewellery",
-            "link_label": "Shop",
-            "link": "/collections/all"
-          }
-        },
-        "cv4": {
-          "type": "cover",
-          "settings": {
-            "masthead": "Maison Noir",
+            "kicker": "The Structure",
             "title": "Outerwear",
-            "link_label": "Shop",
+            "cta": "Explore",
+            "link": "/collections/all"
+          }
+        },
+        "cat2": {
+          "type": "category",
+          "settings": {
+            "kicker": "The Cut",
+            "title": "Tailoring",
+            "cta": "Explore",
+            "link": "/collections/all"
+          }
+        },
+        "cat3": {
+          "type": "category",
+          "settings": {
+            "kicker": "The Comfort",
+            "title": "Knitwear",
+            "cta": "Explore",
+            "link": "/collections/all"
+          }
+        },
+        "cat4": {
+          "type": "category",
+          "settings": {
+            "kicker": "The Detail",
+            "title": "Accessories",
+            "cta": "Explore",
             "link": "/collections/all"
           }
         }
       },
       "block_order": [
-        "cv1",
-        "cv2",
-        "cv3",
-        "cv4"
+        "cat1",
+        "cat2",
+        "cat3",
+        "cat4"
       ],
       "settings": {
         "scheme": "light",
-        "eyebrow": "In This Issue",
-        "heading": "The Stories",
-        "intro": "Every category, shot like a cover story — pick an issue and step inside."
+        "eyebrow": "Browse",
+        "heading": "The Index",
+        "intro": "Four pillars of the collection — engineered for movement, made for the modern wardrobe."
       }
     },
-    "arrivals": {
-      "type": "arrivals-lumiere",
+    "products": {
+      "type": "product-noir",
       "settings": {
-        "scheme": "theme",
-        "eyebrow": "Just In",
-        "heading": "New This Week",
-        "collection": "dresses",
+        "scheme": "dark",
+        "eyebrow": "The Edit",
+        "heading": "Defining Pieces",
+        "note": "Investment essentials, cut from the season's finest materials.",
         "products_to_show": 8,
-        "cta_label": "View all new arrivals",
+        "columns": "4",
+        "cta_label": "Shop All",
         "cta_url": "/collections/all"
       }
     },
-    "vitrine": {
-      "type": "product-vitrine",
+    "lookbook": {
+      "type": "lookbook-scroll",
+      "blocks": {
+        "lk1": {
+          "type": "frame",
+          "settings": {
+            "kicker": "Look 01",
+            "title": "The Overcoat",
+            "link_label": "Shop the look",
+            "link": "/collections/all",
+            "tall": false
+          }
+        },
+        "lk2": {
+          "type": "frame",
+          "settings": {
+            "kicker": "Look 02",
+            "title": "Soft Tailoring",
+            "link_label": "Shop the look",
+            "link": "/collections/all",
+            "tall": true
+          }
+        },
+        "lk3": {
+          "type": "frame",
+          "settings": {
+            "kicker": "Look 03",
+            "title": "Evening Edit",
+            "link_label": "Shop the look",
+            "link": "/collections/all",
+            "tall": false
+          }
+        },
+        "lk4": {
+          "type": "frame",
+          "settings": {
+            "kicker": "Look 04",
+            "title": "Knit Stories",
+            "link_label": "Shop the look",
+            "link": "/collections/all",
+            "tall": true
+          }
+        },
+        "lk5": {
+          "type": "frame",
+          "settings": {
+            "kicker": "Look 05",
+            "title": "Leather Goods",
+            "link_label": "Shop the look",
+            "link": "/collections/all",
+            "tall": false
+          }
+        }
+      },
+      "block_order": [
+        "lk1",
+        "lk2",
+        "lk3",
+        "lk4",
+        "lk5"
+      ],
       "settings": {
         "scheme": "light",
-        "eyebrow": "The Vitrine",
-        "heading": "Pieces of Light",
-        "text": "A cabinet of the season's most luminous pieces — silks that hold candlelight, tailoring that carves shadow.",
-        "collection": "dresses",
-        "products_to_show": 6,
-        "cta_label": "Shop the Vitrine",
-        "cta_url": "/collections/all",
-        "note": "Complimentary shipping worldwide",
-        "panel_caption": "From the atelier"
+        "eyebrow": "Lookbook",
+        "heading": "AW25 In Motion",
+        "hint": "Drag / scroll"
+      }
+    },
+    "manifesto": {
+      "type": "manifesto",
+      "settings": {
+        "scheme": "dark",
+        "marquee_word": "Maison Noir",
+        "marquee_word_2": "Modern Tailoring",
+        "eyebrow": "Our Philosophy",
+        "statement": "<p>We design for the people who notice the <em>details</em> — the weight of a fabric, the fall of a hem, the quiet confidence of clothes built to last.</p>",
+        "signature": "— The Maison Noir Atelier",
+        "btn_label": "Read Our Story",
+        "btn_link": "/collections/all"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter-split",
+      "settings": {
+        "panel_bg": "charcoal",
+        "eyebrow": "Stay Close",
+        "heading": "Join the Inner Circle",
+        "subtext": "Be the first to know about new collections, exclusive events, and private sales.",
+        "perks": "Early access to new arrivals, Exclusive member discounts, Private event invitations",
+        "placeholder": "Your email address",
+        "btn_label": "Subscribe",
+        "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time."
       }
     },
     "campaign": {
-      "type": "campaign-lumiere",
+      "type": "campaign-noir",
+      "blocks": {
+        "st1": {
+          "type": "stat",
+          "settings": {
+            "value": "12",
+            "label": "Pieces"
+          }
+        },
+        "st2": {
+          "type": "stat",
+          "settings": {
+            "value": "01",
+            "label": "Atelier"
+          }
+        },
+        "st3": {
+          "type": "stat",
+          "settings": {
+            "value": "AW25",
+            "label": "Season"
+          }
+        }
+      },
+      "block_order": [
+        "st1",
+        "st2",
+        "st3"
+      ],
       "settings": {
-        "scheme": "theme",
-        "min_height": 70,
-        "eyebrow": "The Golden Hour",
-        "heading_line1": "Dressed in",
-        "heading_line2": "Last Light",
-        "description": "The capsule for evenings that begin at golden hour — champagne satin, liquid pearl, and tailoring that glows.",
+        "scheme": "dark",
+        "min_height": 75,
+        "eyebrow": "The Capsule",
+        "heading_line1": "Twelve Pieces",
+        "heading_line2": "One Statement",
+        "description": "A limited atelier capsule — made to order, numbered by hand, and gone by the end of the season.",
         "btn_label": "Shop the Capsule",
-        "btn_link": "/collections/all",
-        "link_label": "See the Campaign",
-        "link_url": "/collections/all"
-      }
-    },
-    "directory": {
-      "type": "collection-reveal",
-      "blocks": {
-        "dr1": {
-          "type": "row",
-          "settings": {
-            "title": "Eveningwear",
-            "meta": "18 pieces",
-            "link": "/collections/all"
-          }
-        },
-        "dr2": {
-          "type": "row",
-          "settings": {
-            "title": "Tailoring",
-            "meta": "24 pieces",
-            "link": "/collections/all"
-          }
-        },
-        "dr3": {
-          "type": "row",
-          "settings": {
-            "title": "Silks & Satin",
-            "meta": "12 pieces",
-            "link": "/collections/all"
-          }
-        },
-        "dr4": {
-          "type": "row",
-          "settings": {
-            "title": "Outerwear",
-            "meta": "16 pieces",
-            "link": "/collections/all"
-          }
-        },
-        "dr5": {
-          "type": "row",
-          "settings": {
-            "title": "Jewellery",
-            "meta": "30 pieces",
-            "link": "/collections/all"
-          }
-        }
-      },
-      "block_order": [
-        "dr1",
-        "dr2",
-        "dr3",
-        "dr4",
-        "dr5"
-      ],
-      "settings": {
-        "scheme": "light",
-        "eyebrow": "The Directory",
-        "heading": "Browse the Maison",
-        "cta_label": "View everything",
-        "cta_url": "/collections/all"
-      }
-    },
-    "look": {
-      "type": "shop-the-look",
-      "settings": {
-        "scheme": "theme",
-        "tag_label": "Look 05 — Eveningwear",
-        "eyebrow": "Shop the Look",
-        "heading": "Worn Together",
-        "text": "The gown and the pearls from the cover story — exactly as photographed, ready to wear.",
-        "collection": "",
-        "cta_label": "Shop the full look",
-        "cta_url": "/collections/all"
-      }
-    },
-    "reviews": {
-      "type": "reviews-ticker",
-      "blocks": {
-        "rv1": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "quote": "The silk gown arrived like something couture — the weight, the fall, the finish.",
-            "author": "Camille R.",
-            "detail": "Paris"
-          }
-        },
-        "rv2": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "quote": "Tailoring that fits better than bespoke I have paid triple for.",
-            "author": "Sofia M.",
-            "detail": "Milan"
-          }
-        },
-        "rv3": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "quote": "Ordered on Monday, worn to a vernissage on Friday. Flawless.",
-            "author": "Elena V.",
-            "detail": "London"
-          }
-        },
-        "rv4": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "quote": "The only maison whose emails I actually open.",
-            "author": "Margaux D.",
-            "detail": "Brussels"
-          }
-        }
-      },
-      "block_order": [
-        "rv1",
-        "rv2",
-        "rv3",
-        "rv4"
-      ],
-      "settings": {
-        "scheme": "light",
-        "eyebrow": "Le Carnet",
-        "heading": "Words from the Clientele"
-      }
-    },
-    "invitation": {
-      "type": "newsletter-invitation",
-      "settings": {
-        "scheme": "theme",
-        "eyebrow": "You Are Invited",
-        "heading": "The Private Salon",
-        "subtext": "First viewings, midnight releases, and pieces reserved for the inner circle — delivered like an invitation, never a newsletter.",
-        "placeholder": "Your email address",
-        "btn_label": "RSVP",
-        "disclaimer": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time.",
-        "foot_left": "Maison Noir",
-        "foot_right": "Est. 2009"
+        "btn_link": "/collections/all"
       }
     }
   },
   "order": [
     "hero",
     "marquee",
-    "stories",
-    "arrivals",
-    "vitrine",
+    "index",
+    "products",
     "campaign",
-    "directory",
-    "look",
-    "reviews",
-    "invitation"
+    "lookbook",
+    "manifesto",
+    "newsletter"
   ]
 }

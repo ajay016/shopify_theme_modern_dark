@@ -174,6 +174,15 @@ These are what make a section behave correctly across the whole theme — see **
 
 ---
 
+## Beyond the homepages
+
+Everything on this page covers `/` only. Collection, product, blog and page layouts are
+specified in **[ROADMAP.md](ROADMAP.md)** and not yet built — including homepage **#6**,
+which is planned as the page that demonstrates the colour system, cart notification and
+font scaling.
+
+---
+
 ## Sections not used by any design
 
 `sections/hero-modern.liquid` and `sections/featured-collection-slider.liquid` are working sections left over from an earlier homepage that was removed. They are still addable from the theme editor and may be useful for a future design.

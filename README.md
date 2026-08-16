@@ -181,6 +181,20 @@ section should follow.
 
 ---
 
+## What's built, and what isn't
+
+The homepages and the colour system are done. The collection, product, blog and page
+layouts are **specified but not built** — the alternate template files
+(`collection.list.json`, `product.wide.json`, …) exist as identical stubs and do not yet
+differ from each other.
+
+**`docs/ROADMAP.md`** is the source of truth for the remaining scope: every layout and
+feature still to build, how the layouts get addressed by URL (`?view=`), the demo mega
+menu a ThemeForest buyer clicks through, and the phase order. Read it before starting
+anything new.
+
+---
+
 ## Notes
 
 - Demo products with images appear in every product section until you connect a real collection, so the homepages look complete on a store with no products yet.

@@ -174,7 +174,7 @@ Nothing outstanding for the color system on the homepages. Known scope boundarie
 | Item | Status |
 |---|---|
 | Homepages #1–#5, header, footer, cart drawer, cart notification, quick view, product cards | Audited clean across all four schemes |
-| Inner pages (product, collection, blog, cart, …) | **Out of scope, not debt.** No inner page has been designed yet — the templates are scaffold, 1–3 `main-*` sections each. They inherit the tokens and `theme.css`, so they follow the scheme; they simply have no bespoke design to audit. Revisit when one is actually built |
+| Inner pages (product, collection, blog, cart, …) | **Not yet designed, now scheduled.** The templates are scaffold — 1–3 `main-*` sections each — and the alternate templates (`collection.list.json`, `product.wide.json`, …) are identical stubs. They inherit the tokens and `theme.css`, so they follow the scheme, but there is no bespoke design to audit yet. Scope and build order are in **[ROADMAP.md](ROADMAP.md)**; every new section must follow the conventions in [HOMEPAGES.md](HOMEPAGES.md), and each phase needs a colour audit of its own |
 | Contrast | Verified numerically for body/muted/accent on every rung of all four schemes (WCAG AA). Not verified for text over photographs, which depends on the merchant's images |
 | Custom scheme | Ladder derives from the pickers; a merchant choosing two similar colors can still produce low contrast. Consider a warning in the editor |
 | Visual/browser check | All verification here is static analysis. Phases 10–12 exist because static analysis **passed** on defects the browser then exposed — a white button on a white photo and a white modal on a white scrim are both valid CSS. Treat a real browser pass as required, not optional |

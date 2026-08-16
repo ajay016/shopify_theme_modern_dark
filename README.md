@@ -175,7 +175,9 @@ Set globally in **Theme settings → Colors → Color scheme**: `Dark Luxury`, `
 
 Every section, plus the header, cart, quick view and product cards, derives from that one setting. Each section's **Surface tone** dropdown picks a *step* on the active scheme's ladder (Primary / Alternate / Deep) rather than a fixed colour — so a section can't fight the scheme, and text always ships paired with the background it sits on.
 
-See `docs/COLOR-SYSTEM.md` for the token contract and the reasoning behind it.
+See **`docs/COLOR-SYSTEM.md`** for the token contract and the reasoning behind it, and
+**`docs/HOMEPAGES.md`** for what each homepage is built from plus the conventions a new
+section should follow.
 
 ---
 

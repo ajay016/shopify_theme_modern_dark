@@ -2,6 +2,7 @@
 
 **Status:** Complete for all five homepages and global components. Inner pages not yet audited — see "What's left".
 **Last verified:** after Phase 12.
+**Related:** [HOMEPAGES.md](HOMEPAGES.md) records what each homepage is built from · [README.md](../README.md) has the day-to-day commands.
 **Goal:** One coherent color scheme controls the entire template. No text ever blends into its background, in any scheme, anywhere.
 
 ---

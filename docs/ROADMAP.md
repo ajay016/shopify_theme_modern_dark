@@ -87,7 +87,7 @@ What a ThemeForest visitor clicks. Built once, exactly as the tree above, every 
 Step-by-step instructions are in **[demo/navigation.md](demo/navigation.md)**. Two findings from writing them:
 
 - A top-level link needs entries in **two** places — Navigation for the links, and a **Mega menu item** block in the Header section for the panel. Links alone give a plain drop-down.
-- Only mega-menu **style V3** renders the third level. V1 shows two levels, V2 shows two plus a count. Extending V1 and V2 to three levels is Phase F work.
+- Only mega-menu **style V3** renders the third level. V1 shows two levels, V2 shows two plus a count. Extending V1 and V2 to three levels is Phase F work, alongside the with-images / text-only modes specified under Scope.
 
 ### Job 2 — the buyer's store: the Layout Explorer
 
@@ -149,7 +149,27 @@ Post: left sidebar · right sidebar · no sidebar · formats: gallery, video, au
 
 ### Pages & navigation
 
-2–3 About and Contact layouts · 2–3 navbar styles beyond the current three · **three-level support in mega-menu styles V1 and V2** (V3 already renders three levels; V1 stops at two and V2 shows a count instead of the links)
+2–3 About and Contact layouts · 2–3 navbar styles beyond the current three
+
+### Mega menu — three modern layouts, each with and without images
+
+Three designs, and every one of them must work in two modes: **with imagery** and **text-only**. Six presentations from three layouts.
+
+**Text-only is a designed mode, not the same layout with the pictures deleted.** Dropping an image out of a layout built around one leaves a hole where it was. So each style specifies its own text-only composition — the panel narrows, the columns re-flow to fill the width, and the type does the work the image was doing.
+
+| Style | With images | Text-only |
+|---|---|---|
+| **V1** — full-width columns | Column list plus a large featured image panel on one side | Panel narrows to the columns' own width; columns re-flow to use the space; a lead column carries a short heading and description |
+| **V2** — thumbnail grid | Each child is a card: image, title, and its third-level links underneath | Cards become type-only tiles with a rule and hover accent, tighter grid, more per row |
+| **V3** — flyout + promo | Vertical child list with grandchildren, plus a promo banner | Flyout only, at reduced width, promo replaced by an optional text call-to-action |
+
+**Controls.** `mega_menu_style` stays global. A new **Show images in mega menu** setting sets the default; each *Mega menu item* block can override it, so `Shop` can be visual while `Pages` is plain text.
+
+**All three must render three levels.** Today only V3 does — V1 stops at two, V2 shows a *"n styles"* count where grandchildren exist.
+
+**Per-child images are missing and must be fixed.** `snippets/mega-menu.liquid:92` assigns `child_img` from `block.settings.featured_image` — the single image belonging to the whole menu, so V2's grid renders the *same* picture on every card. A thumbnail grid of identical thumbnails looks broken. The fix: take each child's image from the collection or product it links to, with an optional per-child override block on the header for links that point somewhere without an image.
+
+Also required, since these are the buyer's first impression: keyboard navigation and focus trapping, sensible behaviour when a menu has only two or three children rather than twelve, and correct rendering on the light, warm and custom colour schemes.
 
 ---
 

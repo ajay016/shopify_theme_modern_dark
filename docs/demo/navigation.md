@@ -84,13 +84,21 @@ Home ▾            Shop ▾                    Product ▾              Blog �
 
 **Theme settings → Header → Mega Menu Style.**
 
-| Style | Levels rendered |
-|---|---|
-| V1 — Full-width columns + featured image | Two. Third level is not shown |
-| V2 — Compact thumbnails grid | Two, plus a *"n styles"* count where a third level exists |
-| V3 — Flyout panel + promo banner | **Three.** Grandchild links render under each child |
+| Style | Levels rendered | Images |
+|---|---|---|
+| V1 — Full-width columns + featured image | Two. Third level is not shown | One featured image beside the columns |
+| V2 — Compact thumbnails grid | Two, plus a *"n styles"* count where a third level exists | Currently the **same** image on every card — see below |
+| V3 — Flyout panel + promo banner | **Three.** Grandchild links render under each child | Promo banner |
 
-So a three-level menu needs **V3** today. Extending V1 and V2 to render the third level is on the list for Phase F.
+So a three-level menu needs **V3** today.
+
+### Planned for Phase F
+
+- All three styles render three levels.
+- All three gain a **text-only mode** as well as the image mode, each designed separately rather than the same layout with the picture removed.
+- **Per-child images.** V2's grid takes every thumbnail from the one featured image, so all the cards show the same picture. They will instead come from the collection or product each child links to, with an optional per-child override.
+
+Until that lands, V2 is only worth using with images off — or with a single child, where the repetition does not show.
 
 ---
 

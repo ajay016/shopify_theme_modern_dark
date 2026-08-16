@@ -22,7 +22,11 @@ list_available() {
 }
 
 if [ -z "$NAME" ]; then
-  echo "Usage: ./scripts/use-home.sh <name>"
+  echo "Usage: ./scripts/use-home.sh <name> [--push]"
+  echo
+  echo "  <name>    which homepage to install"
+  echo "  --push    also commit and push to main, so the published store updates"
+  echo "            (omit it when running 'shopify theme dev' — that needs no push)"
   echo
   list_available
   exit 1
@@ -69,3 +73,37 @@ fi
 mv "$DST.tmp" "$DST"
 echo "Homepage is now: $NAME"
 echo "Run 'shopify theme dev' (or restart it) to see the change."
+
+# ---------------------------------------------------------------
+# Optional: --push commits the switch and sends it to main, which is
+# what the published storefront reads. Skip it when previewing with
+# 'shopify theme dev' — that uploads straight to a development theme
+# and needs no commit at all.
+# ---------------------------------------------------------------
+if [ "$2" = "--push" ]; then
+  cd "$ROOT"
+
+  if ! git diff --quiet -- templates/index.json; then
+    git add templates/index.json
+    git commit -q -m "switch homepage to $NAME"
+    echo "Committed."
+  else
+    echo "Nothing to commit — templates/index.json already matches $NAME."
+  fi
+
+  echo "Pulling latest first (avoids a rejected push)..."
+  if ! git pull --rebase origin main; then
+    echo
+    echo "The pull hit a conflict. templates/index.json is generated, so:"
+    echo "  git checkout --theirs templates/index.json"
+    echo "  git add templates/index.json"
+    echo "  git rebase --continue"
+    echo "  ./scripts/use-home.sh $NAME --push"
+    exit 1
+  fi
+
+  git push origin main
+  echo
+  echo "Pushed. Shopify syncs from main automatically — give it about a minute,"
+  echo "then reload your store."
+fi

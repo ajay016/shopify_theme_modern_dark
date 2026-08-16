@@ -12,7 +12,9 @@ This repository is connected to Shopify through the **GitHub integration**, on t
 - **Changes only reach the store when you push.** Saving a file locally does nothing on its own.
 - **Shopify pushes back to `main` too.** When you change something in the admin theme editor, Shopify commits it here by itself — those are the commits authored by `shopify[bot]`.
 
-So: *yes, you have to push.* Unless you use the local preview (Method B below), which needs no push at all.
+So: to change the **published** store, you push.
+
+But you do **not** have to push to test. `shopify theme dev` uploads to a *development theme* on the same store and gives you a real preview URL — see below. That is the fast way to go through the designs.
 
 ---
 
@@ -66,39 +68,49 @@ All it does is copy `templates/index.<name>.json` over `templates/index.json` �
 
 ---
 
-## Method A — test on your real store
+## Testing the designs on Shopify
 
-Use this to see a design on the actual storefront.
+### The fast way — `shopify theme dev` (recommended)
 
-```sh
-git pull origin main
-./scripts/use-home.sh noir
-git add templates/index.json
-git commit -m "switch homepage to noir"
-git push origin main
-```
+**This is testing on Shopify.** It uploads to a *development theme* on your real store and gives you a real `.myshopify.com` preview URL — your actual products, cart and checkout. It is not a fake local copy. It just isn't your *published* theme, so customers don't see it.
 
-Wait about a minute, then reload your store — Shopify syncs from `main` on its own.
-
-To try the next one, repeat with a different name at step 2.
-
-## Method B — preview locally (faster, no push)
-
-Use this while comparing designs. Nothing touches your live store.
+No git. No pushing. No waiting.
 
 ```sh
 git pull origin main
 shopify theme dev
 ```
 
-That prints a preview URL. **Leave it running.** Open a *second* terminal in the same folder and switch freely:
+Leave that running. It prints a preview URL — open it. Now open a **second terminal** in the same folder and flip between designs:
 
 ```sh
-./scripts/use-home.sh lumiere
+./scripts/use-home.sh classic
+./scripts/use-home.sh blanc
 ./scripts/use-home.sh atelier
+./scripts/use-home.sh noir
+./scripts/use-home.sh lumiere
 ```
 
-The preview refreshes in a few seconds each time. When you've decided, push that one with Method A.
+Each one shows up in the preview within a few seconds. Go through all five in a couple of minutes, decide, and only then publish the winner.
+
+### Publishing to the live store — one command
+
+When you've picked one, add `--push`:
+
+```sh
+./scripts/use-home.sh noir --push
+```
+
+That switches the homepage, commits it, pulls anything new (rebasing, so it won't be rejected), and pushes to `main`. Shopify syncs from `main` on its own — give it about a minute and reload your store.
+
+If you'd rather do it by hand, that flag is exactly equivalent to:
+
+```sh
+git add templates/index.json
+git commit -m "switch homepage to noir"
+git pull --rebase origin main
+git push origin main
+```
 
 ---
 

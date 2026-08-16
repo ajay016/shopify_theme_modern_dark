@@ -84,6 +84,11 @@ Two separate jobs follow from that.
 
 What a ThemeForest visitor clicks. Built once, exactly as the tree above, every leaf a `?view=` URL. This works without qualification and is the browsing experience the buyer is judging.
 
+Step-by-step instructions are in **[demo/navigation.md](demo/navigation.md)**. Two findings from writing them:
+
+- A top-level link needs entries in **two** places — Navigation for the links, and a **Mega menu item** block in the Header section for the panel. Links alone give a plain drop-down.
+- Only mega-menu **style V3** renders the third level. V1 shows two levels, V2 shows two plus a count. Extending V1 and V2 to three levels is Phase F work.
+
 ### Job 2 — the buyer's store: the Layout Explorer
 
 Their navbar is empty, so nothing tells them the other layouts exist. Shopify has no screen that lists a theme's templates. Without help, a buyer uses one layout out of forty because they never discover the rest.
@@ -144,7 +149,7 @@ Post: left sidebar · right sidebar · no sidebar · formats: gallery, video, au
 
 ### Pages & navigation
 
-2–3 About and Contact layouts · 2–3 navbar styles beyond the current three · mega menu supporting three levels
+2–3 About and Contact layouts · 2–3 navbar styles beyond the current three · **three-level support in mega-menu styles V1 and V2** (V3 already renders three levels; V1 stops at two and V2 shows a count instead of the links)
 
 ---
 

@@ -42,8 +42,10 @@
       {%- for link in linklists[menu_handle].links -%}
         {%- liquid
           assign has_mega = false
+          assign link_title_key = link.title | downcase | strip
           for block in section.blocks
-            if block.type == 'mega_menu_item' and block.settings.menu_item == link.title
+            assign block_title_key = block.settings.menu_item | downcase | strip
+            if block.type == 'mega_menu_item' and block_title_key == link_title_key
               assign has_mega = true
               assign mega_block = block
             endif

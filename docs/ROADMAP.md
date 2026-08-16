@@ -76,15 +76,19 @@ Home ▾            Shop ▾                    Product ▾              Blog �
 
 Three sub-levels, which Shopify's link lists support. Every leaf is a `?view=` URL.
 
-**This menu is data, not code.** It lives in the Shopify admin under Navigation. Theme files cannot contain it — Shopify has no mechanism for a theme to install a menu. So on the demo store the navbar is full, and on a fresh install it is whatever the buyer's store already has. That gap has to be closed deliberately, in three layers:
+**A menu is store data, not a theme file.** It is saved in the store's admin under Navigation, and Shopify gives a theme no way to install one. So the same theme shows a full navbar on the demo store and an empty navbar on a buyer's store. Nothing can be added to the theme files to change that; it is how every Shopify theme on ThemeForest behaves.
 
-### Layer 1 — the demo store: the mega menu
+Two separate jobs follow from that.
 
-What a ThemeForest visitor clicks. Built once in the demo store's admin, exactly as the tree above. This is the primary browsing experience and the thing the buyer is judging.
+### Job 1 — the demo store: build the mega menu in the admin
 
-### Layer 2 — the buyer's install: the Layout Explorer
+What a ThemeForest visitor clicks. Built once, exactly as the tree above, every leaf a `?view=` URL. This works without qualification and is the browsing experience the buyer is judging.
 
-A panel shipped **in theme code**, so it works the moment the theme is installed, with no menus, no pages and no demo content:
+### Job 2 — the buyer's store: the Layout Explorer
+
+Their navbar is empty, so nothing tells them the other layouts exist. Shopify has no screen that lists a theme's templates. Without help, a buyer uses one layout out of forty because they never discover the rest.
+
+The fix is a list of the layout URLs shipped **in the theme files**, so it survives installation and works with no menus, no pages and no demo content:
 
 - `snippets/demo-explorer.liquid`, rendered from `layout/theme.liquid` on every page
 - a slim tab pinned to the screen edge; opens a drawer listing every layout, grouped exactly like the mega menu, each entry a `?view=` link
@@ -94,7 +98,7 @@ A panel shipped **in theme code**, so it works the moment the theme is installed
 
 This is what makes ~40 layouts discoverable to someone who just bought the theme and has an empty navbar. It is not decoration; without it most of what they paid for is invisible.
 
-### Layer 3 — handover: menu export + setup guide
+### Also shipped: menu export + setup guide
 
 So the buyer can reproduce the demo navbar rather than rebuild it by hand:
 
@@ -192,13 +196,36 @@ Shopify moved this out of themes years ago. The theme reads `collection.filters`
 
 My call, following Shopify convention: settings on one section, thin `?view=` templates, `product-card` reused everywhere. Anything that is genuinely one variable — grid column count, title style — becomes a setting rather than its own template, with a handful of `?view=` templates that preset it so the menu still has something to link to.
 
-### Demo products
+### Demo products — static wherever static works
 
-Two different things, and only one of them is already solved:
+The products are fake either way. The only question is *where the fake products live*.
 
-- **Product cards** — solved. The homepage sections already fall back to static demo products with images when no collection is connected, so a fresh install looks complete. That stays, and every new card style and collection layout will use the same fallback.
-- **Product *detail* pages** — not solvable that way. Swatches, variant images, sticky add-to-cart, stock countdown and pickup availability all need a real `product` object with real variants; a static fallback cannot demonstrate them. So the **demo store** needs perhaps 8–12 real products with variants and colour swatches. That is demo-store content, not theme code, and it is only needed for Phase H. Nothing blocks Phases A–G.
+**Static, in theme code — the default, and it covers most of the theme.** Product cards already fall back to hardcoded demo products with images when no collection is connected. That is why the homepages look finished on an empty store. It stays, and every new card style and every collection layout uses the same fallback. Collection pages, homepages, search results, recently-viewed — all static, no admin content needed.
 
-### Homepage #6
+**Typed into Shopify admin — only the product detail page, only for the demo store.** A ThemeForest Shopify demo is a live store, and a reviewer will click Add to Cart. The product page has to *behave*: choosing a size swaps the price and image, Add to Cart opens the drawer with the item in it, quantity changes update the total. Those read from Shopify's `product` object and its variants. Hardcoded HTML cannot produce them — the buttons would be dead, which reads as a broken theme.
+
+So roughly **10 invented products** entered in the demo store's admin, each with a couple of variants and colour options. Still fake products; just fake products living in Shopify rather than in Liquid. Perhaps half an hour of typing, needed **only for Phase H**, and it changes nothing about Phases A–G.
+
+*Rule of thumb for the rest of the build: anything that only has to be looked at is static; anything that has to respond to a click needs a real product.*
+
+### Empty-collection fallback
+
+Collection pages use the same hardcoded demo products the homepage cards use, so the layouts can be reviewed on a store with no products. It fires only when a collection is genuinely empty, and a theme setting turns it off before launch so a live shop never shows invented stock to a customer.
+
+### Product card style — where the merchant picks it
+
+One global setting in Theme settings, so every card in the shop matches by default, with a per-section override so a homepage can deliberately mix styles. This is the pattern nearly every premium theme uses.
+
+### Layout Explorer default
+
+Ships **on**, so a buyer sees the layouts the moment they install. A theme setting hides it before launch, and the setup guide says to do that.
+
+### Homepage #6 — deferred by you
 
 Waiting on your structure, after you have gone through #1–#5. Phase G is last anyway.
+
+---
+
+## Status: planning only
+
+Nothing in this file has been built. **No phase starts until you say go.** The docs are current as of this line; the code has not moved past the homepages and the colour system.

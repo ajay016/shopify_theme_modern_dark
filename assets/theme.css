@@ -600,12 +600,12 @@ body.has-announcement .site-header { top: 44px; }
 .header-wishlist-count {
   position: absolute;
   top: -4px; right: -6px;
-  background: var(--gold, #C8A96E);
-  color: var(--on-gold, #0A0A0A);
-  width: 15px; height: 15px;
+  background: var(--badge-bg, #C8A96E);
+  color: var(--badge-fg, #0A0A0A);
+  width: 16px; height: 16px;
   border-radius: 50%;
-  font-size: calc(8.5px * var(--fs-scale, 1));
-  font-weight: 500;
+  font-size: calc(9.5px * var(--fs-scale, 1));
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;

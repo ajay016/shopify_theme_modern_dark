@@ -1,7 +1,7 @@
 # Color System & Theme Settings Overhaul
 
 **Status:** Complete for all five homepages and global components. Inner pages not yet audited — see "What's left".
-**Last verified:** after Phase 12.
+**Last verified:** after Phase 13 — every count in this document re-checked against the repository.
 **Related:** [HOMEPAGES.md](HOMEPAGES.md) records what each homepage is built from · [README.md](../README.md) has the day-to-day commands.
 **Goal:** One coherent color scheme controls the entire template. No text ever blends into its background, in any scheme, anywhere.
 
@@ -72,6 +72,7 @@ Schema labels are relabelled to match ("Primary surface", "Alternate", "Deep", "
 - [x] **Phase 10 — On-photo controls.** Stop UI drawn over photography from following the page surface.
 - [x] **Phase 11 — Filter-free tokens.** Remove every Liquid colour filter from the `:root` block.
 - [x] **Phase 12 — Component polish.** Cart drawer, quick view and count badge, each contrast-measured.
+- [x] **Phase 13 — Verification pass.** Re-check every claim against the code; fix a mangled selector the tokeniser left behind.
 
 ---
 
@@ -83,11 +84,11 @@ Schema labels are relabelled to match ("Primary surface", "Alternate", "Deep", "
 
 **Phase 2 — done.** Header no longer hardcodes `rgba(10,10,10,…)`. Transparent state is a flat translucent wash of the header surface (gradient removed, as requested) with blur; scrolled state uses the same hue, so scrolling can no longer flip the bar to a color its text cannot sit on. Logo, nav links, icons and count badges follow header tokens.
 
-**Phase 3 — done.** 27 sections × 107 variant blocks × 542 declarations converted to ladder tokens. Stored template values still work but now mean tonal roles. Schema label renamed "Surface tone" with role-based options. Also tokenised on-gold text, on-image text and glass pills inside section bodies (29 declarations).
+**Phase 3 — done.** 27 sections, 108 scheme selectors (106 rule blocks — `campaign-noir` groups three selectors into one), 542 declarations converted to ladder tokens. Stored template values still work but now mean tonal roles. Schema label renamed "Surface tone" with role-based options. Also tokenised on-gold text, on-image text and glass pills inside section bodies (29 declarations).
 
 **Phase 4 — done.** Quick-view modal shell/gallery were fixed dark (`#111`, `#0d0d0d`) — now `--modal-bg`/`--modal-surface`. **Deleted 89 lines** of `[data-qv-scheme="light"|"warm"]` overrides, which only existed to patch the modal per-section and could never cover every case. Product-card palettes (`.pcard--light/dark/warm/theme`) were hardcoded too and now follow the ladder.
 
-**Phase 5 — done.** `--fs-base` previously only set `html{font-size}` while every size in the theme was literal `px`/`clamp()`, so the slider did nothing. `html` is left at the browser default (respecting user accessibility settings); `body` takes the setting directly, and **457 font-size declarations** (92 in `theme.css`, 365 in sections) are wrapped in `calc(… * var(--fs-scale))`. Heading declarations already governed by `--heading-scale` were deliberately skipped to avoid double-scaling.
+**Phase 5 — done.** `--fs-base` previously only set `html{font-size}` while every size in the theme was literal `px`/`clamp()`, so the slider did nothing. `html` is left at the browser default (respecting user accessibility settings); `body` takes the setting directly, and **460 font-size declarations** (95 in `theme.css`, 365 in sections) are wrapped in `calc(… * var(--fs-scale))`. Heading declarations already governed by `--heading-scale` were deliberately skipped to avoid double-scaling.
 
 **Phase 6 — done.** Notification mode was never implemented — `addToCart()` always opened the drawer, and the drawer isn't rendered outside drawer mode, so it was a silent no-op. `addToCart()` now branches on `cart_type`: drawer (unchanged), **notification** (new token-driven popover under the cart icon showing the added item, running total, View bag / Continue shopping), and **page** (adds, then redirects to `/cart`). `cart_type` is exposed via `window.theme_settings`. Quick view auto-closes in notification mode so the popover isn't hidden behind it.
 
@@ -150,6 +151,22 @@ Also non-colour but recorded here for completeness: the cart drawer's type scale
 
 ---
 
+**Phase 13 — done. Verification pass against the code.**
+
+Re-checked every factual claim in this document against the repository rather than trusting it. Three counts had drifted and one real defect surfaced:
+
+| Claim | Was | Verified |
+|---|---|---|
+| Scheme variant blocks | 107 | **108 selectors / 106 blocks.** "Blocks" was ambiguous: `campaign-noir` groups three selectors into one rule, so the two counts legitimately differ. The doc now states both |
+| `--fs-scale` font-sizes in `theme.css` | 92 | **95** — three more were added later with the cart-notification styles |
+| Total `--fs-scale` font-sizes | 457 | **460** |
+
+**Defect found and fixed.** The Phase 3 tokeniser had mangled one selector in `sections/campaign-noir.liquid`: `#section-{{ section.id }}.cno--dark` became `#section-{  }}.cno--dark`. This matters more than it looks — in CSS a single invalid selector invalidates the **entire rule**, so `.cno--light`, `.cno--dark` and `.cno--warm` were all silently losing their `--acc` declaration. Repaired, then swept the whole theme for the same signature: **831 `#section-` selectors checked, zero malformed**.
+
+This is the second time a scripted bulk edit introduced damage that every schema/JSON/JS check passed over — the first being the white-on-white regression in Phase 10. Bulk edits need a targeted scan afterwards for the specific shape of damage the script could produce, not just a validity check.
+
+---
+
 ## What's left
 
 Nothing outstanding for the color system on the homepages. Known scope boundaries, stated plainly:
@@ -157,7 +174,7 @@ Nothing outstanding for the color system on the homepages. Known scope boundarie
 | Item | Status |
 |---|---|
 | Homepages #1–#5, header, footer, cart drawer, cart notification, quick view, product cards | Audited clean across all four schemes |
-| **Inner pages** (product, collection, blog, cart, search, account, 404) | **Not yet audited.** They share the same tokens and `theme.css`, so they inherit the fixes, but their section-specific styles have not been inspected the way the homepages were |
+| Inner pages (product, collection, blog, cart, …) | **Out of scope, not debt.** No inner page has been designed yet — the templates are scaffold, 1–3 `main-*` sections each. They inherit the tokens and `theme.css`, so they follow the scheme; they simply have no bespoke design to audit. Revisit when one is actually built |
 | Contrast | Verified numerically for body/muted/accent on every rung of all four schemes (WCAG AA). Not verified for text over photographs, which depends on the merchant's images |
 | Custom scheme | Ladder derives from the pickers; a merchant choosing two similar colors can still produce low contrast. Consider a warning in the editor |
 | Visual/browser check | All verification here is static analysis. Phases 10–12 exist because static analysis **passed** on defects the browser then exposed — a white button on a white photo and a white modal on a white scrim are both valid CSS. Treat a real browser pass as required, not optional |

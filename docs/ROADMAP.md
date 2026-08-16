@@ -76,7 +76,35 @@ Home ▾            Shop ▾                    Product ▾              Blog �
 
 Three sub-levels, which Shopify's link lists support. Every leaf is a `?view=` URL.
 
-**This menu is data, not code** — it lives in the Shopify admin (Navigation), so it ships as part of the demo content, not the theme files. The theme must therefore also provide a **menu JSON export** and setup instructions, or the buyer gets an empty navbar.
+**This menu is data, not code.** It lives in the Shopify admin under Navigation. Theme files cannot contain it — Shopify has no mechanism for a theme to install a menu. So on the demo store the navbar is full, and on a fresh install it is whatever the buyer's store already has. That gap has to be closed deliberately, in three layers:
+
+### Layer 1 — the demo store: the mega menu
+
+What a ThemeForest visitor clicks. Built once in the demo store's admin, exactly as the tree above. This is the primary browsing experience and the thing the buyer is judging.
+
+### Layer 2 — the buyer's install: the Layout Explorer
+
+A panel shipped **in theme code**, so it works the moment the theme is installed, with no menus, no pages and no demo content:
+
+- `snippets/demo-explorer.liquid`, rendered from `layout/theme.liquid` on every page
+- a slim tab pinned to the screen edge; opens a drawer listing every layout, grouped exactly like the mega menu, each entry a `?view=` link
+- built from a static list in the snippet — it does not read `linklists`, so nothing in the admin can empty it
+- gated by a theme setting, **Theme settings → Demo → Show layout explorer**, default **on**. The merchant switches it off before launch
+- it highlights the layout currently being viewed, so it doubles as "which template am I looking at?"
+
+This is what makes ~40 layouts discoverable to someone who just bought the theme and has an empty navbar. It is not decoration; without it most of what they paid for is invisible.
+
+### Layer 3 — handover: menu export + setup guide
+
+So the buyer can reproduce the demo navbar rather than rebuild it by hand:
+
+- `docs/demo/navigation.md` — the full menu tree as copy-pasteable link/URL pairs
+- `docs/demo/setup.md` — install order: theme → menus → pages → products → homepage choice
+- `docs/demo/settings_data.json` — the demo's theme settings, so colours and typography land correctly
+
+### Homepages have the same problem, and a different answer
+
+`/pages/home-noir` needs a **Page record**, which is also admin data. So on the demo store the six homepages are Pages in the menu; on a fresh install they are not. For the buyer, the Layout Explorer's Home group instead links to `/` and states which design is live, and the switcher (`scripts/use-home.sh`, documented in the README) is how they change it. Templates for the Page variants still ship, so the moment they create a page and assign the template it works.
 
 ---
 
@@ -136,6 +164,7 @@ Each phase ends shippable, so the theme is never half-broken.
 
 | Phase | Scope | Why this order |
 |---|---|---|
+| **A0** | Layout Explorer panel + theme setting | Built first, not last. Every layout from Phase A onward registers itself in it, so it stays complete by construction — and it is how you test each layout without touching the admin |
 | **A** | Collection layouts + filters | Biggest surface, most-judged page, unblocks the Shop menu |
 | **B** | Product card styles + card features | Feeds both collection and homepage |
 | **C** | Product detail layouts + thumbnails | Second most-judged page |
@@ -143,15 +172,33 @@ Each phase ends shippable, so the theme is never half-broken.
 | **E** | Blog + post layouts | Smaller, self-contained |
 | **F** | Pages, navbar styles, mega menu | Needs the others to exist to link to |
 | **G** | Homepage #6 | Best built last so it can showcase everything |
-| **H** | Demo package | Menu export, setup guide, demo content, ThemeForest checklist |
+| **H** | Demo package | Menu export, setup guide, demo products with variants, ThemeForest checklist |
 
 **Every new section follows the conventions in `HOMEPAGES.md`** — surface-tone select mapped to the ladder, no hardcoded colour on a themed surface, `--onphoto-*` over photography, `--fs-scale` on body copy, fallback images, and `product-card` for anything product-shaped.
 
 ---
 
-## Open questions
+## Decisions taken
 
-1. **Filters** — Shopify's native filtering needs the Search & Discovery app and only works on collection/search pages. Confirm you're happy depending on it; the alternative is a custom tag-based filter that behaves worse.
-2. **Sub-sub-menus** — Shopify link lists nest three levels, but the *admin UI* only builds two comfortably. Third level usually comes from the mega-menu section's own block settings. Fine, just worth knowing.
-3. **Layout count** — the full list above is roughly **40 template files**. All are thin, but each needs checking in the browser. Worth deciding whether every one earns its place or whether some collapse into a setting on a single template.
-4. **Demo content** — products with real images, multiple variants and swatches make or break the demo. Needed before Phase H.
+### Filters — the app is optional, the theme is not dependent on it
+
+Storefront filtering on Shopify is **faceted filtering**: the checkbox panel on a collection page that narrows results by price, size, colour, availability, vendor, type or tag, with live counts, combinable, and reflected in the URL so a filtered view can be linked and shared.
+
+Shopify moved this out of themes years ago. The theme reads `collection.filters`, and that object is only populated once the free first-party **Search & Discovery** app is installed and the merchant has chosen which filters to expose. No theme — Dawn included — can produce it alone.
+
+**The theme does not depend on it.** The filter UI renders inside `{% if collection.filters.size > 0 %}`. With the app: full filter panel in whichever presentation the template picked (sidebar, drawer, dropdown, hidden/toggle). Without it: the panel is absent, sorting and pagination still work, the grid reflows to full width, nothing looks broken or empty. So a buyer who never installs the app gets a working shop; a buyer who does gets the demo. Documented in the setup guide as a recommended one-click install.
+
+### Layout count and structure
+
+My call, following Shopify convention: settings on one section, thin `?view=` templates, `product-card` reused everywhere. Anything that is genuinely one variable — grid column count, title style — becomes a setting rather than its own template, with a handful of `?view=` templates that preset it so the menu still has something to link to.
+
+### Demo products
+
+Two different things, and only one of them is already solved:
+
+- **Product cards** — solved. The homepage sections already fall back to static demo products with images when no collection is connected, so a fresh install looks complete. That stays, and every new card style and collection layout will use the same fallback.
+- **Product *detail* pages** — not solvable that way. Swatches, variant images, sticky add-to-cart, stock countdown and pickup availability all need a real `product` object with real variants; a static fallback cannot demonstrate them. So the **demo store** needs perhaps 8–12 real products with variants and colour swatches. That is demo-store content, not theme code, and it is only needed for Phase H. Nothing blocks Phases A–G.
+
+### Homepage #6
+
+Waiting on your structure, after you have gone through #1–#5. Phase G is last anyway.

@@ -176,7 +176,9 @@ Each phase ends shippable, so the theme is never half-broken.
 | **E** | Blog + post layouts | Smaller, self-contained |
 | **F** | Pages, navbar styles, mega menu | Needs the others to exist to link to |
 | **G** | Homepage #6 | Best built last so it can showcase everything |
-| **H** | Demo package | Menu export, setup guide, demo products with variants, ThemeForest checklist |
+| **H** | Demo package | Menu export, setup guide, ThemeForest checklist |
+
+**Demo store content runs alongside, not at the end.** The ~10–15 invented products with variants should exist as soon as you can add them: they make Phase A–C reviews realistic, and the demo store is not presentable without them. Nothing in the build waits on them.
 
 **Every new section follows the conventions in `HOMEPAGES.md`** — surface-tone select mapped to the ladder, no hardcoded colour on a themed surface, `--onphoto-*` over photography, `--fs-scale` on body copy, fallback images, and `product-card` for anything product-shaped.
 
@@ -196,17 +198,21 @@ Shopify moved this out of themes years ago. The theme reads `collection.filters`
 
 My call, following Shopify convention: settings on one section, thin `?view=` templates, `product-card` reused everywhere. Anything that is genuinely one variable — grid column count, title style — becomes a setting rather than its own template, with a handful of `?view=` templates that preset it so the menu still has something to link to.
 
-### Demo products — static wherever static works
+### Demo products — the fallback is for the buyer, not for the demo
 
-The products are fake either way. The only question is *where the fake products live*.
+The products are invented either way. The question is *where they live*, and the answer is different for the two audiences.
 
-**Static, in theme code — the default, and it covers most of the theme.** Product cards already fall back to hardcoded demo products with images when no collection is connected. That is why the homepages look finished on an empty store. It stays, and every new card style and every collection layout uses the same fallback. Collection pages, homepages, search results, recently-viewed — all static, no admin content needed.
+**The buyer's freshly installed store — static, in theme code.** Product cards fall back to hardcoded demo products with images when no collection is connected, which is why the homepages look finished on a store with nothing in it. That stays, and every new card style and collection layout uses the same fallback.
 
-**Typed into Shopify admin — only the product detail page, only for the demo store.** A ThemeForest Shopify demo is a live store, and a reviewer will click Add to Cart. The product page has to *behave*: choosing a size swaps the price and image, Add to Cart opens the drawer with the item in it, quantity changes update the total. Those read from Shopify's `product` object and its variants. Hardcoded HTML cannot produce them — the buttons would be dead, which reads as a broken theme.
+**The ThemeForest demo store — real products, entered in the admin.** Corrected after checking a live competitor demo: on Ella's demo store, clicking a product on the homepage opens its product page. Ours would not. `snippets/product-card.liquid` gives a fallback card `demo_url`, defaulting to `/collections/all`, so a reviewer clicking a homepage product lands on a collection listing — a visible dead end on the most-looked-at page of the demo.
 
-So roughly **10 invented products** entered in the demo store's admin, each with a couple of variants and colour options. Still fake products; just fake products living in Shopify rather than in Liquid. Perhaps half an hour of typing, needed **only for Phase H**, and it changes nothing about Phases A–G.
+A static card also cannot demonstrate anything interactive: choosing a size and watching price and image change, Add to Cart opening the drawer with the item in it, quantity updating the total, swatches, stock countdown. All of that reads from Shopify's `product` object and its variants.
 
-*Rule of thumb for the rest of the build: anything that only has to be looked at is static; anything that has to respond to a click needs a real product.*
+So the demo store needs roughly **10–15 invented products** with a couple of variants and colour options each, and real collections connected to the homepage sections. Still fake merchandise; just fake merchandise living in Shopify rather than in Liquid.
+
+**This is needed earlier than first written.** It is not a Phase H detail — the demo store is not presentable without it, and it also makes reviewing the collection and product layouts realistic. It does not block building Phases A–G, which is why no phase waits on it.
+
+*Rule of thumb: the static fallback exists so an empty store never looks broken. It is not a substitute for content on the demo store.*
 
 ### Empty-collection fallback
 

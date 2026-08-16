@@ -59,8 +59,6 @@ Commands:
 ./scripts/use-home.sh lumiere
 ```
 
-> `templates/index.modern.json` is an unused leftover from early development. It is not one of the five and can be deleted — say the word and it goes.
-
 ---
 
 ## Adding a sixth homepage

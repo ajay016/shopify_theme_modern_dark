@@ -1,0 +1,256 @@
+{%- liquid
+  assign s = section.settings
+  assign fallback = 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1600&q=85'
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="ocd ocd--{{ s.scheme }}{% if s.show_image %} ocd--with-image{% endif %}"
+  data-section-id="{{ section.id }}"
+  data-ocd-end="{{ s.end_date }}"
+>
+  {%- if s.show_image -%}
+    <div class="ocd-bg" aria-hidden="true">
+      {%- if s.image != blank -%}
+        {{ s.image | image_url: width: 1800 | image_tag: loading: 'lazy', class: 'ocd-bg__img', sizes: '100vw', widths: '900,1400,1800', alt: '' }}
+      {%- else -%}
+        <img class="ocd-bg__img" src="{{ fallback }}" alt="" loading="lazy" />
+      {%- endif -%}
+      <span class="ocd-bg__scrim"></span>
+    </div>
+  {%- endif -%}
+
+  <div class="ocd-inner reveal">
+    <div class="ocd-copy">
+      {%- if s.eyebrow != blank -%}<p class="ocd-eyebrow">{{ s.eyebrow }}</p>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="ocd-heading">{{ s.heading }}</h2>{%- endif -%}
+      {%- if s.description != blank -%}<p class="ocd-desc">{{ s.description }}</p>{%- endif -%}
+      {%- if s.btn_label != blank -%}
+        <a class="ocd-btn" href="{{ s.btn_link | default: '/collections/all' }}">{{ s.btn_label }}</a>
+      {%- endif -%}
+    </div>
+
+    <div class="ocd-timer" data-ocd-timer hidden>
+      <div class="ocd-unit"><span class="ocd-num" data-ocd-days>00</span><span class="ocd-lbl">{{ 'Days' }}</span></div>
+      <span class="ocd-sep" aria-hidden="true">:</span>
+      <div class="ocd-unit"><span class="ocd-num" data-ocd-hours>00</span><span class="ocd-lbl">{{ 'Hours' }}</span></div>
+      <span class="ocd-sep" aria-hidden="true">:</span>
+      <div class="ocd-unit"><span class="ocd-num" data-ocd-mins>00</span><span class="ocd-lbl">{{ 'Minutes' }}</span></div>
+      <span class="ocd-sep" aria-hidden="true">:</span>
+      <div class="ocd-unit"><span class="ocd-num" data-ocd-secs>00</span><span class="ocd-lbl">{{ 'Seconds' }}</span></div>
+    </div>
+
+    {%- if s.expired_text != blank -%}
+      <p class="ocd-expired" data-ocd-expired hidden>{{ s.expired_text }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }}.ocd--light { --bg:var(--s2-bg,#131313); --fg:var(--s2-fg,#F5F0E8); --acc:var(--gold,#C8A96E); --mut:var(--s2-mut,rgba(245,240,232,.62)); --bdr:var(--s2-bdr,rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.ocd--dark  { --bg:var(--s1-bg,#0A0A0A); --fg:var(--s1-fg,#F5F0E8); --acc:var(--gold,#C8A96E); --mut:var(--s1-mut,rgba(245,240,232,.62)); --bdr:var(--s1-bdr,rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.ocd--warm  { --bg:var(--s3-bg,#1A1714); --fg:var(--s3-fg,#F5F0E8); --acc:var(--gold,#C8A96E); --mut:var(--s3-mut,rgba(245,240,232,.62)); --bdr:var(--s3-bdr,rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.ocd--theme { --bg:var(--s1-bg,#0A0A0A); --fg:var(--s1-fg,#F5F0E8); --acc:var(--gold,#C8A96E); --mut:var(--s1-mut,rgba(245,240,232,.62)); --bdr:var(--s1-bdr,rgba(245,240,232,.16)); }
+
+  /* With a photograph behind it the type must stop following the page
+     surface, or it inverts to white-on-white the moment the scheme is light. */
+  #section-{{ section.id }}.ocd--with-image { --fg: var(--on-image, #FFFFFF); --mut: var(--on-image-mut, rgba(255,255,255,.78)); --bdr: rgba(255,255,255,.28); }
+
+  #section-{{ section.id }} {
+    position: relative; isolation: isolate; overflow: hidden;
+    background: var(--bg); color: var(--fg);
+    padding: clamp(56px,7vh,88px) var(--side-padding,5vw);
+  }
+  #section-{{ section.id }} .ocd-bg { position: absolute; z-index: 0; inset: 0; }
+  #section-{{ section.id }} .ocd-bg__img { display: block; width: 100%; height: 100%; object-fit: cover; filter: saturate(.6); }
+  #section-{{ section.id }} .ocd-bg__scrim { position: absolute; inset: 0; background: rgba(10,10,11,.58); }
+
+  #section-{{ section.id }} .ocd-inner {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: clamp(28px,4vw,56px);
+  }
+  #section-{{ section.id }} .ocd-copy { max-width: 560px; }
+  #section-{{ section.id }} .ocd-eyebrow {
+    margin: 0 0 12px;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(12px * var(--fs-scale, 1));
+    font-weight: 600; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--acc);
+  }
+  #section-{{ section.id }}.ocd--with-image .ocd-eyebrow { color: var(--on-image, #FFFFFF); }
+  #section-{{ section.id }} .ocd-heading {
+    margin: 0 0 14px;
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-weight: 300;
+    font-size: calc(clamp(32px,4vw,52px) * var(--heading-scale,1));
+    line-height: 1.04;
+  }
+  #section-{{ section.id }} .ocd-desc {
+    max-width: 440px; margin: 0 0 26px;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(15px * var(--fs-scale, 1));
+    line-height: 1.66; color: var(--mut);
+  }
+  #section-{{ section.id }} .ocd-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 48px; padding: 0 30px;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(12px * var(--fs-scale, 1));
+    font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    text-decoration: none;
+    background: var(--btn-primary-bg, #C8A96E);
+    color: var(--btn-primary-fg, #0A0A0A);
+    border: 1px solid transparent;
+    transition: transform .2s ease, opacity .2s ease;
+  }
+  #section-{{ section.id }}.ocd--with-image .ocd-btn {
+    background: var(--onphoto-light, rgba(252,251,249,.96));
+    color: var(--onphoto-light-fg, #16130F);
+  }
+  #section-{{ section.id }} .ocd-btn:hover { transform: translateY(-2px); opacity: .92; }
+
+  #section-{{ section.id }} .ocd-timer { display: flex; align-items: flex-start; gap: clamp(8px,1.2vw,16px); }
+  #section-{{ section.id }} .ocd-timer[hidden] { display: none; }
+  #section-{{ section.id }} .ocd-unit {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    min-width: clamp(72px,7vw,96px); padding: clamp(14px,1.6vw,20px) 8px;
+    border: 1px solid var(--bdr);
+  }
+  #section-{{ section.id }} .ocd-num {
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-weight: 300; line-height: 1;
+    font-size: calc(clamp(30px,3.2vw,44px) * var(--heading-scale,1));
+    font-variant-numeric: tabular-nums;
+  }
+  #section-{{ section.id }} .ocd-lbl {
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(11px * var(--fs-scale, 1));
+    font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--mut);
+  }
+  #section-{{ section.id }} .ocd-sep {
+    align-self: center;
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-size: calc(24px * var(--fs-scale, 1)); color: var(--mut);
+  }
+  #section-{{ section.id }} .ocd-expired {
+    margin: 0;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(14px * var(--fs-scale, 1));
+    font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--acc);
+  }
+  #section-{{ section.id }} .ocd-expired[hidden] { display: none; }
+  /* Over a photograph the accent is not guaranteed legible — the deep wine
+     of Ivory / Wine reads under 2:1 on the dark scrim — so fall back to
+     the on-image pair, same as the eyebrow above. */
+  #section-{{ section.id }}.ocd--with-image .ocd-expired { color: var(--on-image, #FFFFFF); }
+
+  #section-{{ section.id }} .reveal.reveal-armed { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s ease; }
+  #section-{{ section.id }} .reveal.is-visible { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    #section-{{ section.id }} .ocd-inner { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 560px) {
+    #section-{{ section.id }} .ocd-timer { width: 100%; gap: 6px; }
+    #section-{{ section.id }} .ocd-unit { flex: 1; min-width: 0; padding: 12px 4px; }
+    #section-{{ section.id }} .ocd-sep { display: none; }
+    #section-{{ section.id }} .ocd-btn { width: 100%; }
+  }
+</style>
+
+<script>
+(function(){
+  var SEC='{{ section.id }}';
+  var timer=null;
+
+  function root(){return document.getElementById('section-'+SEC);}
+  function pad(n){return (n<10?'0':'')+n;}
+
+  function startCountdown(r){
+    var raw=(r.getAttribute('data-ocd-end')||'').trim();
+    var box=r.querySelector('[data-ocd-timer]');
+    var expired=r.querySelector('[data-ocd-expired]');
+    if(!box)return;
+
+    // Accept "2026-12-31 23:59" as well as ISO; Safari rejects the space form.
+    var end=new Date(raw.replace(' ','T'));
+    if(!raw||isNaN(end.getTime())){box.setAttribute('hidden','');return;}
+
+    var d=r.querySelector('[data-ocd-days]'),h=r.querySelector('[data-ocd-hours]'),
+        m=r.querySelector('[data-ocd-mins]'),s=r.querySelector('[data-ocd-secs]');
+
+    function tick(){
+      var diff=end.getTime()-Date.now();
+      if(diff<=0){
+        clearInterval(timer);
+        box.setAttribute('hidden','');
+        if(expired)expired.removeAttribute('hidden');
+        return;
+      }
+      box.removeAttribute('hidden');
+      if(expired)expired.setAttribute('hidden','');
+      var sec=Math.floor(diff/1000);
+      d.textContent=pad(Math.floor(sec/86400));
+      h.textContent=pad(Math.floor(sec%86400/3600));
+      m.textContent=pad(Math.floor(sec%3600/60));
+      s.textContent=pad(sec%60);
+    }
+    tick();
+    clearInterval(timer);
+    timer=setInterval(tick,1000);
+  }
+
+  function arm(r){
+    var els=r.querySelectorAll('.reveal');
+    els.forEach(function(el){el.classList.add('reveal-armed');});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target);}});},{threshold:.12});
+    els.forEach(function(el){io.observe(el);});
+    setTimeout(function(){els.forEach(function(el){el.classList.add('is-visible');});},800);
+  }
+
+  function init(){var r=root();if(!r)return;arm(r);startCountdown(r);}
+  document.addEventListener('DOMContentLoaded',init);
+  document.addEventListener('shopify:section:load',function(e){
+    if(e.detail.sectionId!==SEC)return;
+    var r=root();if(!r)return;
+    arm(r);startCountdown(r);
+    r.querySelectorAll('.reveal').forEach(function(el){el.classList.add('is-visible');});
+  });
+  document.addEventListener('shopify:section:unload',function(e){
+    if(e.detail.sectionId===SEC)clearInterval(timer);
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Offer Countdown",
+  "tag": "section",
+  "class": "section-offer-countdown",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Surface tone",
+      "options": [
+        { "value": "light", "label": "Alternate surface (soft)" },
+        { "value": "dark",  "label": "Primary surface" },
+        { "value": "warm",  "label": "Deep surface" },
+        { "value": "theme", "label": "Primary surface (follow theme)" }
+      ],
+      "default": "warm"
+    },
+    { "type": "checkbox", "id": "show_image", "label": "Use a background image", "default": false },
+    { "type": "image_picker", "id": "image", "label": "Background image" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Private sale" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The archive, for a week only" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Selected pieces from past collections, released in limited numbers and not restocked." },
+    { "type": "text", "id": "end_date", "label": "Ends at", "default": "2026-12-31 23:59", "info": "Format: YYYY-MM-DD HH:MM in the visitor's own time zone. Leave blank to hide the timer." },
+    { "type": "text", "id": "expired_text", "label": "Text shown once it ends", "default": "This offer has closed." },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Shop the archive" },
+    { "type": "url",  "id": "btn_link",  "label": "Button link" }
+  ],
+  "presets": [{ "name": "Offer Countdown" }]
+}
+{% endschema %}

@@ -1,0 +1,214 @@
+{%- liquid
+  assign s = section.settings
+  assign fallback = 'https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?auto=format&fit=crop&w=1600&q=85'
+  assign form_id = 'nled-' | append: section.id
+-%}
+
+<section
+  id="section-{{ section.id }}"
+  class="nled nled--{{ s.scheme }}{% if s.media_position == 'left' %} nled--flip{% endif %}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="nled-copy reveal">
+    {%- if s.eyebrow != blank -%}<p class="nled-eyebrow">{{ s.eyebrow }}</p>{%- endif -%}
+    {%- if s.heading != blank -%}<h2 class="nled-heading">{{ s.heading }}</h2>{%- endif -%}
+    {%- if s.description != blank -%}<p class="nled-desc">{{ s.description }}</p>{%- endif -%}
+
+    {%- form 'customer', id: form_id, class: 'nled-form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      {%- if form.posted_successfully? -%}
+        <p class="nled-success">{{ s.success_text }}</p>
+      {%- else -%}
+        <div class="nled-field">
+          <label class="visually-hidden" for="{{ form_id }}-email">{{ s.placeholder }}</label>
+          <input
+            id="{{ form_id }}-email"
+            class="nled-input"
+            type="email"
+            name="contact[email]"
+            placeholder="{{ s.placeholder }}"
+            autocomplete="email"
+            required
+          >
+          <button class="nled-submit" type="submit" aria-label="{{ s.btn_label | escape }}">
+            <span class="nled-submit__label">{{ s.btn_label }}</span>
+            <span class="nled-submit__arrow" aria-hidden="true">&#8594;</span>
+          </button>
+        </div>
+        {%- if form.errors -%}
+          <p class="nled-error">{{ form.errors | default_errors }}</p>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endform -%}
+
+    {%- if s.disclaimer != blank -%}<p class="nled-note">{{ s.disclaimer }}</p>{%- endif -%}
+  </div>
+
+  <div class="nled-media reveal">
+    {%- if s.image != blank -%}
+      {{ s.image | image_url: width: 1600 | image_tag: loading: 'lazy', class: 'nled-img', sizes: '(max-width: 900px) 100vw, 54vw', widths: '800,1200,1600', alt: s.heading }}
+    {%- else -%}
+      <img class="nled-img" src="{{ fallback }}" alt="{{ s.heading }}" loading="lazy" />
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }}.nled--light { --bg:var(--s2-bg,#131313); --fg:var(--s2-fg,#F5F0E8); --acc:var(--gold,#C8A96E); --mut:var(--s2-mut,rgba(245,240,232,.62)); --bdr:var(--s2-bdr,rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.nled--dark  { --bg:var(--s1-bg,#0A0A0A); --fg:var(--s1-fg,#F5F0E8); --acc:var(--gold,#C8A96E); --mut:var(--s1-mut,rgba(245,240,232,.62)); --bdr:var(--s1-bdr,rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.nled--warm  { --bg:var(--s3-bg,#1A1714); --fg:var(--s3-fg,#F5F0E8); --acc:var(--gold,#C8A96E); --mut:var(--s3-mut,rgba(245,240,232,.62)); --bdr:var(--s3-bdr,rgba(245,240,232,.16)); }
+  #section-{{ section.id }}.nled--theme { --bg:var(--s1-bg,#0A0A0A); --fg:var(--s1-fg,#F5F0E8); --acc:var(--gold,#C8A96E); --mut:var(--s1-mut,rgba(245,240,232,.62)); --bdr:var(--s1-bdr,rgba(245,240,232,.16)); }
+
+  #section-{{ section.id }} {
+    display: grid; grid-template-columns: .92fr 1.08fr;
+    background: var(--bg); color: var(--fg);
+    border-top: 1px solid var(--bdr);
+  }
+  #section-{{ section.id }}.nled--flip .nled-media { order: -1; }
+
+  #section-{{ section.id }} .nled-copy {
+    display: flex; flex-direction: column; justify-content: center;
+    min-height: clamp(460px,60vh,580px);
+    padding: clamp(40px,5vw,72px);
+  }
+  #section-{{ section.id }} .nled-eyebrow {
+    margin: 0 0 14px;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(12px * var(--fs-scale, 1));
+    font-weight: 600; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--acc);
+  }
+  #section-{{ section.id }} .nled-heading {
+    max-width: 520px; margin: 0 0 18px;
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-weight: 300;
+    font-size: calc(clamp(34px,4.4vw,58px) * var(--heading-scale,1));
+    line-height: 1.02;
+  }
+  #section-{{ section.id }} .nled-desc {
+    max-width: 400px; margin: 0 0 30px;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(15px * var(--fs-scale, 1));
+    line-height: 1.66; color: var(--mut);
+  }
+
+  #section-{{ section.id }} .nled-field {
+    display: flex; align-items: center; gap: 12px;
+    max-width: 520px;
+    border-bottom: 1px solid var(--fg);
+  }
+  #section-{{ section.id }} .nled-input {
+    flex: 1; min-width: 0; height: 54px;
+    padding: 0; border: 0; outline: 0; background: transparent;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(15px * var(--fs-scale, 1));
+    color: var(--fg);
+  }
+  #section-{{ section.id }} .nled-input::placeholder { color: var(--mut); opacity: 1; }
+  #section-{{ section.id }} .nled-input:focus-visible { outline: 2px solid var(--acc); outline-offset: 4px; }
+  #section-{{ section.id }} .nled-submit {
+    display: inline-flex; align-items: center; gap: 9px;
+    flex: 0 0 auto; padding: 0 0 0 6px; height: 54px;
+    border: 0; background: transparent; cursor: pointer;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(12px * var(--fs-scale, 1));
+    font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--fg);
+    transition: color .2s ease;
+  }
+  #section-{{ section.id }} .nled-submit:hover { color: var(--acc); }
+  #section-{{ section.id }} .nled-submit__arrow { transition: transform .2s ease; }
+  #section-{{ section.id }} .nled-submit:hover .nled-submit__arrow { transform: translateX(4px); }
+
+  #section-{{ section.id }} .nled-success,
+  #section-{{ section.id }} .nled-error {
+    margin: 0;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(14px * var(--fs-scale, 1));
+    line-height: 1.6;
+  }
+  #section-{{ section.id }} .nled-success { color: var(--acc); font-weight: 600; }
+  #section-{{ section.id }} .nled-error { margin-top: 12px; color: var(--sale-text, #E86A6A); }
+  #section-{{ section.id }} .nled-note {
+    max-width: 420px; margin: 18px 0 0;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(12px * var(--fs-scale, 1));
+    line-height: 1.65; color: var(--mut);
+  }
+
+  #section-{{ section.id }} .nled-media {
+    min-height: clamp(460px,60vh,580px); overflow: hidden;
+    background: var(--img-placeholder, #1A1714);
+  }
+  #section-{{ section.id }} .nled-img {
+    display: block; width: 100%; height: 100%;
+    object-fit: cover; object-position: center 25%;
+    filter: saturate(.6);
+  }
+
+  #section-{{ section.id }} .reveal.reveal-armed { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s ease; }
+  #section-{{ section.id }} .reveal.is-visible { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    #section-{{ section.id }} { grid-template-columns: 1fr; }
+    #section-{{ section.id }}.nled--flip .nled-media { order: 0; }
+    #section-{{ section.id }} .nled-copy { min-height: 0; padding: clamp(40px,7vw,56px) var(--side-padding,5vw); }
+    #section-{{ section.id }} .nled-media { min-height: 420px; }
+  }
+  @media (max-width: 480px) {
+    #section-{{ section.id }} .nled-submit__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  }
+</style>
+
+<script>
+(function(){
+  var SEC='{{ section.id }}';
+  function arm(root){
+    var els=root.querySelectorAll('.reveal');
+    els.forEach(function(el){el.classList.add('reveal-armed');});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target);}});},{threshold:.12});
+    els.forEach(function(el){io.observe(el);});
+    setTimeout(function(){els.forEach(function(el){el.classList.add('is-visible');});},800);
+  }
+  function root(){return document.getElementById('section-'+SEC);}
+  document.addEventListener('DOMContentLoaded',function(){var r=root();if(r)arm(r);});
+  document.addEventListener('shopify:section:load',function(e){if(e.detail.sectionId!==SEC)return;var r=root();if(r){arm(r);r.querySelectorAll('.reveal').forEach(function(el){el.classList.add('is-visible');});}});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Newsletter Editorial",
+  "tag": "section",
+  "class": "section-newsletter-editorial",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Surface tone",
+      "options": [
+        { "value": "light", "label": "Alternate surface (soft)" },
+        { "value": "dark",  "label": "Primary surface" },
+        { "value": "warm",  "label": "Deep surface" },
+        { "value": "theme", "label": "Primary surface (follow theme)" }
+      ],
+      "default": "dark"
+    },
+    {
+      "type": "select", "id": "media_position", "label": "Image position",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "left",  "label": "Left" }
+      ],
+      "default": "right"
+    },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Private correspondence" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Notes from the Maison" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Collections, atelier stories and private releases. Sent with consideration, never noise." },
+    { "type": "text", "id": "placeholder", "label": "Field placeholder", "default": "Email address" },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Subscribe" },
+    { "type": "text", "id": "success_text", "label": "Success message", "default": "Thank you. You are now on the list." },
+    { "type": "textarea", "id": "disclaimer", "label": "Disclaimer", "default": "By subscribing you agree to our Privacy Policy. Unsubscribe at any time." }
+  ],
+  "presets": [{ "name": "Newsletter Editorial" }]
+}
+{% endschema %}

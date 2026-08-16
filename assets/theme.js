@@ -577,10 +577,18 @@
         const btns = values.map(val =>
           `<button class="qv-opt-btn qv-opt-btn--size" data-opt-index="${oi}" data-opt-value="${val}">${val}</button>`
         ).join('');
+        // Size guide sits opposite the label — only when the merchant has set a page for it.
+        const guideUrl = (window.theme_settings || {}).size_guide_url;
+        const guideHtml = guideUrl
+          ? `<a class="qv-size-guide" href="${guideUrl}">Size guide</a>`
+          : '';
         return `
           <div class="qv-option">
-            <p class="qv-option__label">${optName}: <span class="qv-opt-selected" data-opt-sel="${oi}"></span></p>
-            <div class="qv-option__values">${btns}</div>
+            <div class="qv-option__head">
+              <p class="qv-option__label">${optName}: <span class="qv-opt-selected" data-opt-sel="${oi}"></span></p>
+              ${guideHtml}
+            </div>
+            <div class="qv-option__values qv-option__values--grid">${btns}</div>
           </div>`;
       }
       const btns = values.map(val =>

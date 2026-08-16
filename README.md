@@ -1,6 +1,6 @@
 # Fashion Theme Shopify Modern Dark
 
-A Shopify theme with **five interchangeable homepage designs** and one global colour system that drives the entire storefront.
+A Shopify theme with **six interchangeable homepage designs** and one global colour system that drives the entire storefront.
 
 ---
 
@@ -56,7 +56,7 @@ All it does is copy `templates/index.<name>.json` over `templates/index.json` �
 >
 > **Prefer doing it by hand?** `cp templates/index.noir.json templates/index.json` is the whole operation.
 
-### The five homepages
+### The six homepages
 
 | # | Name | Command | Sections | Character |
 |---|------|---------|----------|-----------|
@@ -65,6 +65,7 @@ All it does is copy `templates/index.<name>.json` over `templates/index.json` �
 | 3 | **Atelier** | `./scripts/use-home.sh atelier` | 10 | Warm sand, arch category cards, duo spotlight, runway strip |
 | 4 | **Noir** | `./scripts/use-home.sh noir` | 8 | High-contrast architectural, split-slab hero, expanding panels |
 | 5 | **Lumière** | `./scripts/use-home.sh lumiere` | 10 | Magazine issue, masthead hero + triptych, sticky vitrine |
+| 6 | **Aureline** | `./scripts/use-home.sh aureline` | 11 | Commerce-led: service bar, tabbed grid, countdown offer, wine accent |
 
 ---
 
@@ -89,9 +90,10 @@ Leave that running. It prints a preview URL — open it. Now open a **second ter
 ./scripts/use-home.sh atelier
 ./scripts/use-home.sh noir
 ./scripts/use-home.sh lumiere
+./scripts/use-home.sh aureline
 ```
 
-Each one shows up in the preview within a few seconds. Go through all five in a couple of minutes, decide, and only then publish the winner.
+Each one shows up in the preview within a few seconds. Go through all six in a couple of minutes, decide, and only then publish the winner.
 
 ### Publishing to the live store — one command
 
@@ -145,7 +147,7 @@ Two habits avoid nearly all of this: **pull before you start**, **push when you'
 
 ---
 
-## Adding a sixth homepage
+## Adding another homepage
 
 1. Build any new sections you need in `sections/`, or reuse existing ones.
 2. Create `templates/index.<yourname>.json`:
@@ -171,7 +173,7 @@ Two habits avoid nearly all of this: **pull before you start**, **push when you'
 
 ## Colour schemes
 
-Set globally in **Theme settings → Colors → Color scheme**: `Dark Luxury`, `Light / Ivory`, `Warm Taupe`, or `Custom`.
+Set globally in **Theme settings → Colors → Color scheme**: `Dark Luxury`, `Light / Ivory`, `Ivory / Wine`, `Warm Taupe`, or `Custom`.
 
 Every section, plus the header, cart, quick view and product cards, derives from that one setting. Each section's **Surface tone** dropdown picks a *step* on the active scheme's ladder (Primary / Alternate / Deep) rather than a fixed colour — so a section can't fight the scheme, and text always ships paired with the background it sits on.
 

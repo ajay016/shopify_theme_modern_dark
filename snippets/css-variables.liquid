@@ -89,6 +89,82 @@
     --btn-ghost-bdr: rgba(26,26,26,0.28);
   }
 
+{%- comment -%}
+  IVORY / WINE — light ladder, deep burgundy accent.
+
+  Two deliberate departures from the other schemes, both of them
+  the reason this scheme exists:
+
+  1. The accent is wine, not gold. Wine #762B36 reads 9.7:1 on
+     white and 9.0:1 on the paper rung, but only 1.97:1 on the
+     s4 contrast band — unreadable. So --gold carries the accent
+     for the three light rungs and --gold-light carries the
+     lightened wine used on s4, which is exactly the split the
+     gold schemes already use.
+
+  2. The primary button is ink, not accent. Wine stays for
+     labels, rules and small marks; the button is near-black
+     with paper text. --on-gold therefore ships white, because
+     white is what is legible on a wine fill.
+{%- endcomment -%}
+{%- when 'ivory-wine' -%}
+  :root {
+    --s1-bg: #FFFFFF; --s1-fg: #11110F; --s1-mut: rgba(17,17,15,0.66); --s1-bdr: rgba(17,17,15,0.17);
+    --s2-bg: #F6F5F1; --s2-fg: #11110F; --s2-mut: rgba(17,17,15,0.66); --s2-bdr: rgba(17,17,15,0.17);
+    --s3-bg: #E6E3DB; --s3-fg: #11110F; --s3-mut: rgba(17,17,15,0.66); --s3-bdr: rgba(17,17,15,0.17);
+    --s4-bg: #11110F; --s4-fg: #F6F5F1; --s4-mut: rgba(246,245,241,0.66); --s4-bdr: rgba(246,245,241,0.17);
+
+    --black: #FFFFFF;
+    --charcoal: #F6F5F1;
+    --cream: #11110F;
+    --muted: rgba(17,17,15,0.66);
+    --ivory: #0A0A0A;
+    --gold: #762B36;
+    --gold-light: #C57F8A;
+    --on-gold: #FFFFFF;
+    --sale-text: #8B1A1A;
+    --sale-bg: #F3DADA;
+
+    --border: rgba(118,43,54,0.30);
+    --border-strong: rgba(118,43,54,0.55);
+    --gold-dim: rgba(118,43,54,0.14);
+    --gold-glow: rgba(118,43,54,0.09);
+    --cream-faint: rgba(17,17,15,0.06);
+    --black-overlay: rgba(255,255,255,0.78);
+
+    --hdr-bg: #F6F5F1;
+    --hdr-fg: #11110F;
+    --hdr-mut: rgba(17,17,15,0.66);
+    --hdr-bdr: rgba(17,17,15,0.17);
+    --hdr-bg-scroll: rgba(246,245,241,0.96);
+    --hdr-bg-trans: rgba(246,245,241,0.40);
+    --hdr-hover: rgba(17,17,15,0.07);
+
+    --modal-bg: #FFFFFF;
+    --modal-fg: #11110F;
+    --modal-mut: rgba(17,17,15,0.66);
+    --modal-bdr: rgba(17,17,15,0.18);
+    --modal-surface: #F6F5F1;
+
+    --drawer-bg: #FFFFFF;
+    --drawer-fg: #11110F;
+    --drawer-mut: rgba(17,17,15,0.66);
+    --drawer-bdr: rgba(17,17,15,0.17);
+
+    --field-bg: rgba(17,17,15,0.04);
+    --field-bdr: rgba(17,17,15,0.22);
+    --field-fg: #11110F;
+    --field-ph: rgba(17,17,15,0.45);
+
+    --badge-bg: #762B36;
+    --badge-fg: #FFFFFF;
+
+    --btn-primary-bg: #11110F;
+    --btn-primary-fg: #F6F5F1;
+    --btn-ghost-fg: #11110F;
+    --btn-ghost-bdr: rgba(17,17,15,0.28);
+  }
+
 {%- when 'warm' -%}
   :root {
     --s1-bg: #1C1410; --s1-fg: #EDE0CC; --s1-mut: rgba(237,224,204,0.62); --s1-bdr: rgba(237,224,204,0.16);

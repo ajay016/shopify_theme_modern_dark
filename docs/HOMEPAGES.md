@@ -1,12 +1,12 @@
 # Homepage System
 
-Five interchangeable homepage designs. Shopify renders `templates/index.json` at `/`; each design is kept in its own `templates/index.<name>.json`, so switching is a copy and nothing is ever lost.
+Six interchangeable homepage designs. Shopify renders `templates/index.json` at `/`; each design is kept in its own `templates/index.<name>.json`, so switching is a copy and nothing is ever lost.
 
 For the day-to-day commands (switching, previewing, publishing) see **[README.md](../README.md)**. This file records *what the designs are made of*.
 
 ---
 
-## The five designs
+## The six designs
 
 ### #1 — Classic  ·  `templates/index.classic.json`  ·  10 sections
 
@@ -78,15 +78,44 @@ For the day-to-day commands (switching, previewing, publishing) see **[README.md
 | 9 | `reviews-ticker` | **exclusive** |
 | 10 | `newsletter-invitation` | **exclusive** |
 
+
+### #6 — Aureline  ·  `templates/index.aureline.json`  ·  11 sections
+
+| # | Section | Shared? |
+|---|---------|---------|
+| 1 | `hero-aureline` | **exclusive** |
+| 2 | `service-bar` | **exclusive** |
+| 3 | `category-showcase` | **exclusive** |
+| 4 | `product-tabs` | **exclusive** |
+| 5 | `campaign-split` | **exclusive** |
+| 6 | `complete-the-look` | **exclusive** |
+| 7 | `offer-countdown` | **exclusive** |
+| 8 | `signature-panel` | **exclusive** |
+| 9 | `marquee` | shared |
+| 10 | `journal-trio` | **exclusive** |
+| 11 | `newsletter-editorial` | **exclusive** |
+
+Built from a supplied reference design and paired with the **Ivory / Wine** scheme. It is the only homepage that is commerce-led rather than editorial: a service bar, a tabbed product grid, a countdown offer and a "complete the look" trio, alongside the campaign and journal work the other designs do.
+
+Three things in it are new to the theme and reusable elsewhere:
+
+- **`product-tabs`** — the first tabbed product grid. Keyboard-navigable, arrow keys move between tabs, panels use `hidden` rather than `display:none` so assistive tech follows.
+- **`offer-countdown`** — the first live countdown. Parses `YYYY-MM-DD HH:MM` in the visitor's own time zone, hides itself when the date is blank or unparseable, and swaps to an expiry message when it runs out. The interval is cleared on `shopify:section:unload` so editing it in the theme editor cannot leave timers stacking up.
+- **`signature-panel`** — takes a background/foreground **pair** (`--gold`/`--on-gold`, or `--s4-bg`/`--s4-fg`) rather than a single colour, and its button simply inverts that pair. It cannot produce an unreadable combination in any scheme, and it is the first section to use the `s4` contrast rung.
+
+The `marquee` here carries **empty** colour pickers on purpose, so it falls back to `--gold` / `--black` and follows the scheme. Every other homepage pins those two values.
+
+---
+
 ---
 
 ## Section reuse
 
-Which sections appear on more than one design:
+Which sections appear on more than one design. **49 distinct sections across the six homepages, 47 of them exclusive to one design.**
 
 | Section | Used by |
 |---------|---------|
-| `marquee` | Blanc, Atelier, Noir, Lumière |
+| `marquee` | Blanc, Atelier, Noir, Lumière, Aureline |
 | `newsletter-split` | Blanc, Atelier, Noir |
 | `arrivals-lumiere` | Lumière |
 | `blog-posts` | Classic |
@@ -94,37 +123,48 @@ Which sections appear on more than one design:
 | `campaign-banner` | Blanc |
 | `campaign-lumiere` | Lumière |
 | `campaign-noir` | Noir |
+| `campaign-split` | Aureline |
 | `category-index` | Noir |
+| `category-showcase` | Aureline |
 | `collection-arches` | Atelier |
 | `collection-list` | Classic |
 | `collection-reveal` | Lumière |
+| `complete-the-look` | Aureline |
 | `duo-spotlight` | Atelier |
 | `editorial-rows` | Blanc |
 | `featured-products` | Classic |
+| `hero-aureline` | Aureline |
 | `hero-banner` | Classic |
 | `hero-editorial` | Atelier |
 | `hero-lookbook` | Blanc |
 | `hero-lumiere` | Lumière |
 | `hero-noir` | Noir |
 | `image-with-text` | Classic |
+| `journal-trio` | Aureline |
 | `lookbook-gallery` | Blanc |
 | `lookbook-scroll` | Noir |
 | `manifesto` | Noir |
 | `newsletter` | Classic |
+| `newsletter-editorial` | Aureline |
 | `newsletter-invitation` | Lumière |
+| `offer-countdown` | Aureline |
 | `product-noir` | Noir |
 | `product-rail` | Atelier |
 | `product-showcase` | Blanc |
+| `product-tabs` | Aureline |
 | `product-vitrine` | Lumière |
 | `quote-editorial` | Atelier |
 | `reviews-ticker` | Lumière |
 | `runway-strip` | Atelier |
+| `service-bar` | Aureline |
 | `shop-the-look` | Lumière |
+| `signature-panel` | Aureline |
 | `social-gallery` | Atelier |
 | `statement-inline` | Atelier |
 | `stats-row` | Classic |
 | `story-covers` | Lumière |
 | `testimonials` | Classic |
+
 ---
 
 ## Switching designs
@@ -141,7 +181,7 @@ New variant files are picked up automatically — the script lists whatever matc
 
 ---
 
-## Adding a sixth design
+## Adding another design
 
 1. Build any new sections in `sections/`, or reuse the ones above.
 2. Create `templates/index.<yourname>.json`:
@@ -173,6 +213,7 @@ These are what make a section behave correctly across the whole theme — see **
 - **Render `product-card`** for anything product-shaped, so it inherits quick view, wishlist, add-to-bag and the demo-product fallbacks.
 
 ---
+
 
 ## Beyond the homepages
 

@@ -18,6 +18,7 @@
         "options": [
           { "value": "dark",  "label": "Dark Luxury (Default)" },
           { "value": "light", "label": "Light / Ivory" },
+          { "value": "ivory-wine", "label": "Ivory / Wine" },
           { "value": "warm",  "label": "Warm Taupe" },
           { "value": "custom","label": "Custom (use pickers below)" }
         ],
@@ -270,7 +271,8 @@
       { "type": "paragraph", "content": "A product details modal opens when customers click Quick View on any product card." },
       { "type": "checkbox",  "id": "quickview_enabled",         "label": "Enable quick view",              "default": true },
       { "type": "checkbox",  "id": "quickview_show_description","label": "Show description in quick view", "default": true },
-      { "type": "checkbox",  "id": "quickview_show_shipping",   "label": "Show shipping info",             "default": true }
+      { "type": "checkbox",  "id": "quickview_show_shipping",   "label": "Show shipping info",             "default": true },
+      { "type": "url",       "id": "size_guide_url",            "label": "Size guide page",                "info": "Adds a Size guide link beside the size options in quick view. Leave empty to hide it." }
     ]
   },
   {

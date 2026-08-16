@@ -1,7 +1,7 @@
 # Color System & Theme Settings Overhaul
 
-**Status:** Complete for all five homepages and global components. Inner pages not yet audited — see "What's left".
-**Last verified:** after Phase 13 — every count in this document re-checked against the repository.
+**Status:** Complete for all six homepages and global components. Inner pages not yet audited — see "What's left".
+**Last verified:** after Phase 14 — every count in this document re-checked against the repository.
 **Related:** [HOMEPAGES.md](HOMEPAGES.md) records what each homepage is built from · [README.md](../README.md) has the day-to-day commands.
 **Goal:** One coherent color scheme controls the entire template. No text ever blends into its background, in any scheme, anywhere.
 
@@ -73,6 +73,7 @@ Schema labels are relabelled to match ("Primary surface", "Alternate", "Deep", "
 - [x] **Phase 11 — Filter-free tokens.** Remove every Liquid colour filter from the `:root` block.
 - [x] **Phase 12 — Component polish.** Cart drawer, quick view and count badge, each contrast-measured.
 - [x] **Phase 13 — Verification pass.** Re-check every claim against the code; fix a mangled selector the tokeniser left behind.
+- [x] **Phase 14 — Ivory / Wine.** Add a fifth scheme with a wine accent and an ink primary button, and build homepage #6 on it.
 
 ---
 
@@ -167,15 +168,31 @@ This is the second time a scripted bulk edit introduced damage that every schema
 
 ---
 
+**Phase 14 — done.** Added **Ivory / Wine** as a fifth scheme and built homepage #6 (Aureline) on it, from a supplied reference design.
+
+The palette turned out to be a near-exact match for the existing Light / Ivory ladder — paper `#F6F5F1` against `--s2-bg #F7F4EE`, muted `#6F6E69` against a computed `#656462`, borders within a percent — so it drops onto the existing tokens rather than needing new machinery. Two things genuinely differ, and both are why the scheme exists:
+
+**The accent is wine, not gold, and wine does not survive the dark rung.** `#762B36` measures 9.68:1 on white and 8.87:1 on paper, but **1.95:1** on the `s4` contrast band — unreadable. Rather than add a token, this uses the split the gold schemes already have: `--gold` carries the accent for the three light rungs, `--gold-light` (`#C57F8A`, 6.10:1 on `s4`) carries it on the inverted band. Verified that no section currently maps a scheme option to `s4`, so `--gold` never lands there by accident today — but `offer-countdown` did need an explicit override, because its expiry message sits on a photographic scrim where the deep wine drops under 2:1.
+
+**The primary button is ink, not accent** — `--btn-primary-bg #11110F` with `--btn-primary-fg #F6F5F1`, 17.33:1. `--on-gold` ships **white** here rather than near-black, because white is what is legible on a wine fill. This is exactly the reason the token exists: the fill and the text on it are chosen together, per scheme, not assumed.
+
+Measured across the new scheme: body 14.7–18.9:1, muted 5.55–7.86:1, accent 7.55–9.68:1, badge and button pairs 9.68:1 and 17.33:1. Every pairing passes AA except the one deliberately routed to `--gold-light`.
+
+Verified that all five scheme branches now emit an **identical 58-token set**, so no branch can fall through to the dark literals in `theme.css`.
+
+`signature-panel` is the first section to consume the `s4` rung, and it does so by taking a background/foreground **pair** — either `--gold`/`--on-gold` or `--s4-bg`/`--s4-fg` — with its button inverting that same pair. It cannot produce an unreadable combination in any scheme by construction, rather than by audit.
+
+---
+
 ## What's left
 
 Nothing outstanding for the color system on the homepages. Known scope boundaries, stated plainly:
 
 | Item | Status |
 |---|---|
-| Homepages #1–#5, header, footer, cart drawer, cart notification, quick view, product cards | Audited clean across all four schemes |
+| Homepages #1–#6, header, footer, cart drawer, cart notification, quick view, product cards | Audited clean across all five schemes |
 | Inner pages (product, collection, blog, cart, …) | **Not yet designed, now scheduled.** The templates are scaffold — 1–3 `main-*` sections each — and the alternate templates (`collection.list.json`, `product.wide.json`, …) are identical stubs. They inherit the tokens and `theme.css`, so they follow the scheme, but there is no bespoke design to audit yet. Scope and build order are in **[ROADMAP.md](ROADMAP.md)**; every new section must follow the conventions in [HOMEPAGES.md](HOMEPAGES.md), and each phase needs a colour audit of its own |
-| Contrast | Verified numerically for body/muted/accent on every rung of all four schemes (WCAG AA). Not verified for text over photographs, which depends on the merchant's images |
+| Contrast | Verified numerically for body/muted/accent on every rung of all five schemes (WCAG AA). Not verified for text over photographs, which depends on the merchant's images |
 | Custom scheme | Ladder derives from the pickers; a merchant choosing two similar colors can still produce low contrast. Consider a warning in the editor |
 | Visual/browser check | All verification here is static analysis. Phases 10–12 exist because static analysis **passed** on defects the browser then exposed — a white button on a white photo and a white modal on a white scrim are both valid CSS. Treat a real browser pass as required, not optional |
 | Regression risk from fallbacks | `theme.css` and the sections carry literal `var(--token, fallback)` values, and those fallbacks are **dark-scheme** colours. They are inert while the token block renders, but if it ever fails again the site goes dark rather than obviously broken. Phase 11 removed the failure mode; keep the block filter-free |

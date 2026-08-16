@@ -1,6 +1,6 @@
 # Theme Roadmap — full scope
 
-**Status: this is the plan, not the build.** Only the homepage and colour work is done. Everything on this page beyond that is specified, not implemented.
+**Status: mostly plan, not build.** The homepages and the colour system are done. Everything else on this page is specified, not implemented — the collection, product and blog layouts do not exist yet.
 
 This file exists because the original brief was never recorded anywhere. It is now the source of truth for scope.
 
@@ -10,8 +10,8 @@ This file exists because the original brief was never recorded anywhere. It is n
 
 | Area | State |
 |---|---|
-| Homepages | **5 built** (Classic, Blanc, Atelier, Noir, Lumière). #6 specified below |
-| Colour system | **Done** — one global scheme drives every section (`COLOR-SYSTEM.md`) |
+| Homepages | **6 built** (Classic, Blanc, Atelier, Noir, Lumière, Aureline) |
+| Colour system | **Done** — five schemes, one global setting drives every section (`COLOR-SYSTEM.md`) |
 | Product card | **Done** — one shared card with quick view, wishlist, add-to-bag, demo fallbacks |
 | Collection layouts | **Not built.** `collection.list/wide/no-sidebar.json` exist but are *identical stubs* — same bare `main-collection`, no differentiating settings |
 | Product layouts | **Not built.** `product.wide/gradient/digital.json` are identical stubs |
@@ -173,17 +173,13 @@ Also required, since these are the buyer's first impression: keyboard navigation
 
 ---
 
-## Homepage #6
+## Homepage #6 — built
 
-Includes the work finished after Lumière was built, which no homepage currently demonstrates:
+`index.aureline.json`, 11 sections, on the **Ivory / Wine** scheme. Built from a reference design you supplied rather than from the speculative spec that used to sit here.
 
-- **Colour scheme switching** — the scheme selector applies across the whole page, the point being that one setting repaints everything
-- **Cart notification** mode (the popover, not the drawer)
-- **Base font size** scaling
-- **On-photo controls** that stay legible over any product image
-- Contrast-corrected badges, cart drawer and quick view
+It is the only commerce-led homepage — service bar, tabbed product grid, countdown offer, complete-the-look trio — where the other five are editorial. Full section list in [HOMEPAGES.md](HOMEPAGES.md).
 
-Design to come from you. It should also be the demo page that shows the colour system off, since that is the theme's strongest differentiator and nothing currently showcases it.
+**Still not demonstrated by any homepage**, and worth a dedicated section when the demo is assembled: live colour-scheme switching, the cart *notification* mode as distinct from the drawer, and base-font-size scaling. These are theme settings rather than page content, so they show up only when a visitor changes them — which a demo visitor never will.
 
 ---
 
@@ -200,7 +196,7 @@ Each phase ends shippable, so the theme is never half-broken.
 | **D** | Product features + boost-sale | Long tail; each is independent |
 | **E** | Blog + post layouts | Smaller, self-contained |
 | **F** | Pages, navbar styles, mega menu | Needs the others to exist to link to |
-| **G** | Homepage #6 | Best built last so it can showcase everything |
+| ~~**G**~~ | ~~Homepage #6~~ | **Done, out of order.** Built from a supplied reference design with the new Ivory / Wine scheme |
 | **H** | Demo package | Menu export, setup guide, ThemeForest checklist |
 
 **Demo store content runs alongside, not at the end.** The ~10–15 invented products with variants should exist as soon as you can add them: they make Phase A–C reviews realistic, and the demo store is not presentable without them. Nothing in the build waits on them.
@@ -251,12 +247,14 @@ One global setting in Theme settings, so every card in the shop matches by defau
 
 Ships **on**, so a buyer sees the layouts the moment they install. A theme setting hides it before launch, and the setup guide says to do that.
 
-### Homepage #6 — deferred by you
+### Homepage #6 — built
 
-Waiting on your structure, after you have gone through #1–#5. Phase G is last anyway.
+You supplied a reference design instead of waiting for #1–#5 review, so Phase G ran early. Built as `index.aureline.json` on the new Ivory / Wine scheme.
 
 ---
 
-## Status: planning only
+## Status
 
-Nothing in this file has been built. **No phase starts until you say go.** The docs are current as of this line; the code has not moved past the homepages and the colour system.
+Built: the six homepages, the five colour schemes, the shared product card and quick view.
+
+Not built: **every phase in the build order except G.** No further phase starts until you say go.

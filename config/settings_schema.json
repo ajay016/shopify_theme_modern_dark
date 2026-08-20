@@ -344,6 +344,13 @@
     ]
   },
   {
+    "name": "Demo",
+    "settings": [
+      { "type": "paragraph", "content": "The Layout Explorer is a panel pinned to the edge of the screen listing every layout this theme ships, each one a link. It exists because a Shopify theme cannot install a navigation menu — so on a freshly installed store nothing else shows the buyer what layouts they have. Turn it off before going live." },
+      { "type": "checkbox", "id": "show_layout_explorer", "label": "Show layout explorer", "default": true }
+    ]
+  },
+  {
     "name": "Favicon",
     "settings": [
       { "type": "image_picker", "id": "favicon", "label": "Favicon", "info": "32×32px .png recommended" }

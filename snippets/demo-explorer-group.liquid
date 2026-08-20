@@ -1,0 +1,46 @@
+{%- comment -%}
+  One group of layout links inside the Layout Explorer.
+
+  Accepts:
+    - title   {String}  group heading
+    - entries {Array}   each "Label|url|template|suffix|state"
+    - tname   {String}  template.name of the current page
+    - tsuffix {String}  template.suffix of the current page ('' when default)
+    - note    {String}  optional line under the heading
+{%- endcomment -%}
+
+{%- if entries.size > 0 -%}
+  <div class="lxp-group">
+    <p class="lxp-group__title">{{ title }}</p>
+    {%- if note != blank -%}<p class="lxp-group__note">{{ note }}</p>{%- endif -%}
+    <ul class="lxp-list">
+      {%- for entry in entries -%}
+        {%- liquid
+          assign parts = entry | strip | split: '|'
+          assign label = parts[0] | strip
+          assign url = parts[1] | strip
+          assign etmpl = parts[2] | strip
+          assign esuffix = parts[3] | strip | default: ''
+          assign estate = parts[4] | strip | default: 'ready'
+
+          assign is_current = false
+          if etmpl == tname and esuffix == tsuffix
+            assign is_current = true
+          endif
+        -%}
+        {%- if label != blank and url != blank -%}
+          <li>
+            <a class="lxp-link{% if is_current %} is-current{% endif %}" href="{{ url }}">
+              <span>{{ label }}</span>
+              {%- if is_current -%}
+                <span class="lxp-here">You are here</span>
+              {%- elsif estate == 'stub' -%}
+                <span class="lxp-badge lxp-badge--stub">Not yet styled</span>
+              {%- endif -%}
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}

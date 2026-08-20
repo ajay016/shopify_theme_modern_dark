@@ -20,7 +20,7 @@ This file exists because the original brief was never recorded anywhere. It is n
 | Blog / post layouts | **Not built.** `blog.sidebar-left/right.json` are identical stubs |
 | Pages (About / Contact) | Two About variants and two Contact variants exist, lightly differentiated |
 | Navbar styles | 3 exist (V1 classic, V2 centred, V3 hamburger). Mega menu exists but is not wired to a demo structure |
-| Demo navigation | **Not built.** This is the piece that makes the template sellable — see below |
+| Demo navigation | **Half done.** The Layout Explorer ships (Phase A0). The demo-store mega menu is admin work and the menu export is Phase H |
 
 ---
 
@@ -95,13 +95,15 @@ Step-by-step instructions are in **[demo/navigation.md](demo/navigation.md)**. T
 
 Their navbar is empty, so nothing tells them the other layouts exist. Shopify has no screen that lists a theme's templates. Without help, a buyer uses one layout out of forty because they never discover the rest.
 
-The fix is a list of the layout URLs shipped **in the theme files**, so it survives installation and works with no menus, no pages and no demo content:
+**Built in Phase A0.** A list of the layout URLs shipped **in the theme files**, so it survives installation and works with no menus, no pages and no demo content:
 
-- `snippets/demo-explorer.liquid`, rendered from `layout/theme.liquid` on every page
-- a slim tab pinned to the screen edge; opens a drawer listing every layout, grouped exactly like the mega menu, each entry a `?view=` link
+- `snippets/demo-explorer.liquid` + `snippets/demo-explorer-group.liquid`, rendered from `layout/theme.liquid` on every page
+- a slim tab pinned to the screen edge; opens a drawer listing every layout, grouped like the mega menu, each entry a `?view=` link
 - built from a static list in the snippet — it does not read `linklists`, so nothing in the admin can empty it
-- gated by a theme setting, **Theme settings → Demo → Show layout explorer**, default **on**. The merchant switches it off before launch
-- it highlights the layout currently being viewed, so it doubles as "which template am I looking at?"
+- gated by **Theme settings → Demo → Show layout explorer**, default **on**. The merchant switches it off before launch
+- highlights the layout currently being viewed, using Shopify's `template.suffix` rather than the URL, since Liquid cannot read a query string
+- sits at `--z-explorer: 300` — above the header, below the cart drawer and quick view, so it never covers a real interaction
+- groups self-hide when their target does not exist, so no entry can 404
 
 This is what makes ~40 layouts discoverable to someone who just bought the theme and has an empty navbar. It is not decoration; without it most of what they paid for is invisible.
 
@@ -191,7 +193,7 @@ Each phase ends shippable, so the theme is never half-broken.
 
 | Phase | Scope | Why this order |
 |---|---|---|
-| **A0** | Layout Explorer panel + theme setting | Built first, not last. Every layout from Phase A onward registers itself in it, so it stays complete by construction — and it is how you test each layout without touching the admin |
+| ~~**A0**~~ | ~~Layout Explorer panel + theme setting~~ | **Done.** Built first so every later layout registers itself in it. Stub entries carry a *Not yet styled* badge, which each phase flips as it makes a layout real |
 | **A** | Collection layouts + filters | Biggest surface, most-judged page, unblocks the Shop menu |
 | **B** | Product card styles + card features | Feeds both collection and homepage |
 | **C** | Product detail layouts + thumbnails | Second most-judged page |
@@ -259,4 +261,6 @@ You supplied a reference design instead of waiting for #1–#5 review, so Phase 
 
 Built: the six homepages, the five colour schemes, the shared product card and quick view.
 
-Not built: **every phase in the build order except G.** No further phase starts until you say go.
+Not built: every phase in the build order except **A0** and **G**. Phase A is next.
+
+Fine-grained position, including anything half-finished, lives in [STATUS.md](STATUS.md).

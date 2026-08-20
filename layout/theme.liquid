@@ -151,6 +151,10 @@
     };
   </script>
 
+  {%- if settings.show_layout_explorer -%}
+    {%- render 'demo-explorer' -%}
+  {%- endif -%}
+
   {{ 'theme.js' | asset_url | script_tag }}
 
   {%- if settings.custom_cursor -%}

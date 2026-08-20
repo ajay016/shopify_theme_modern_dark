@@ -1,0 +1,278 @@
+{%- comment -%}
+  ============================================================
+  LAYOUT EXPLORER
+
+  A Shopify theme cannot install a navigation menu — menus are
+  store data. So a buyer installs this theme into whatever
+  navbar their store already has, and nothing anywhere tells
+  them the other layouts exist. Shopify has no admin screen
+  that lists a theme's templates either.
+
+  This panel is that list, shipped in the theme files. It reads
+  no linklists and needs no pages, products or menus, so it
+  cannot be emptied by anything in the admin.
+
+  Entries are declared below as:
+      Label | url | template | suffix | state
+
+  `template` + `suffix` drive the "you are here" highlight via
+  Shopify's own `template` object — when ?view=list renders
+  collection.list.json, template.suffix is "list".
+
+  `state` is `ready` or `stub`. A stub is a template file that
+  exists but is not yet differentiated from the default. It is
+  listed and labelled rather than hidden, so this panel stays
+  complete by construction: each phase flips its entries to
+  `ready` instead of remembering to add them.
+
+  Groups whose target does not exist on the store are dropped
+  entirely, so no entry here can 404.
+
+  Turn off in Theme settings → Demo → Show layout explorer.
+  ============================================================
+{%- endcomment -%}
+
+{%- liquid
+  assign first_product = collections.all.products.first
+  assign blog_url = blank
+  for b in blogs limit: 1
+    assign blog_url = b.url
+  endfor
+  if blog_url == blank and blogs.news != blank
+    assign blog_url = blogs.news.url
+  endif
+
+  assign tname = template.name
+  assign tsuffix = template.suffix | default: ''
+-%}
+
+<div class="lxp" data-lxp>
+  <button class="lxp-tab" type="button" data-lxp-toggle aria-expanded="false" aria-controls="lxp-panel">
+    <span class="lxp-tab__text">Layouts</span>
+  </button>
+
+  <aside class="lxp-panel" id="lxp-panel" aria-label="Theme layouts" hidden>
+    <div class="lxp-head">
+      <div>
+        <p class="lxp-kicker">Theme demo</p>
+        <h2 class="lxp-title">Layouts</h2>
+      </div>
+      <button class="lxp-close" type="button" data-lxp-close aria-label="Close layouts panel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="lxp-body">
+      <p class="lxp-intro">Every layout in this theme, with a link to each. Hide this panel in <strong>Theme settings &rarr; Demo</strong> before going live.</p>
+
+      {%- comment -%}——— HOME ———{%- endcomment -%}
+      {%- assign home_entries = 'Current homepage|/|index||ready' | split: '~~' -%}
+      {%- render 'demo-explorer-group', title: 'Home', entries: home_entries, tname: tname, tsuffix: tsuffix, note: 'Six designs ship. Only one renders at / — switch with scripts/use-home.sh.' -%}
+
+      {%- comment -%}——— SHOP ———{%- endcomment -%}
+      {%- capture shop_raw -%}
+Default grid|/collections/all|collection||ready~~List view|/collections/all?view=list|collection|list|stub~~Wide container|/collections/all?view=wide|collection|wide|stub~~No sidebar|/collections/all?view=no-sidebar|collection|no-sidebar|stub
+      {%- endcapture -%}
+      {%- assign shop_entries = shop_raw | strip | split: '~~' -%}
+      {%- render 'demo-explorer-group', title: 'Shop', entries: shop_entries, tname: tname, tsuffix: tsuffix -%}
+
+      {%- comment -%}——— PRODUCT ———{%- endcomment -%}
+      {%- if first_product != blank -%}
+        {%- capture product_raw -%}
+Default|{{ first_product.url }}|product||ready~~Wide|{{ first_product.url }}?view=wide|product|wide|stub~~Gradient|{{ first_product.url }}?view=gradient|product|gradient|stub~~Digital|{{ first_product.url }}?view=digital|product|digital|stub
+        {%- endcapture -%}
+        {%- assign product_entries = product_raw | strip | split: '~~' -%}
+        {%- render 'demo-explorer-group', title: 'Product', entries: product_entries, tname: tname, tsuffix: tsuffix -%}
+      {%- endif -%}
+
+      {%- comment -%}——— BLOG ———{%- endcomment -%}
+      {%- if blog_url != blank -%}
+        {%- capture blog_raw -%}
+Default|{{ blog_url }}|blog||ready~~Sidebar left|{{ blog_url }}?view=sidebar-left|blog|sidebar-left|stub~~Sidebar right|{{ blog_url }}?view=sidebar-right|blog|sidebar-right|stub
+        {%- endcapture -%}
+        {%- assign blog_entries = blog_raw | strip | split: '~~' -%}
+        {%- render 'demo-explorer-group', title: 'Blog', entries: blog_entries, tname: tname, tsuffix: tsuffix -%}
+      {%- endif -%}
+
+      {%- comment -%}——— PAGES ———{%- endcomment -%}
+      {%- capture pages_raw -%}
+        {%- if pages.about != blank -%}About|{{ pages.about.url }}|page||ready~~{%- endif -%}
+        {%- if pages.contact != blank -%}Contact|{{ pages.contact.url }}|page|contact|ready~~{%- endif -%}
+        Search|/search|search||ready~~Cart|/cart|cart||ready
+      {%- endcapture -%}
+      {%- assign pages_entries = pages_raw | strip | split: '~~' -%}
+      {%- render 'demo-explorer-group', title: 'Pages', entries: pages_entries, tname: tname, tsuffix: tsuffix -%}
+
+      <p class="lxp-foot">
+        <span class="lxp-badge lxp-badge--stub">Not yet styled</span>
+        marks a template that exists but still renders the default layout.
+      </p>
+    </div>
+  </aside>
+</div>
+
+<style>
+  .lxp { position: fixed; z-index: var(--z-explorer, 300); inset: 0; pointer-events: none; }
+  .lxp-tab, .lxp-panel { pointer-events: auto; }
+
+  .lxp-tab {
+    position: fixed; top: 50%; right: 0;
+    transform: translateY(-50%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 18px 9px; border: 0; border-right: 0; cursor: pointer;
+    background: var(--gold, #C8A96E);
+    color: var(--on-gold, #0A0A0A);
+    border-radius: 3px 0 0 3px;
+    box-shadow: -2px 0 14px -6px rgba(0,0,0,.45);
+    transition: padding .2s ease;
+  }
+  .lxp-tab:hover { padding-right: 13px; }
+  .lxp-tab:focus-visible { outline: 2px solid var(--gold, #C8A96E); outline-offset: 3px; }
+  .lxp-tab__text {
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(11px * var(--fs-scale, 1));
+    font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+    writing-mode: vertical-rl; text-orientation: mixed;
+  }
+  .lxp[data-open="true"] .lxp-tab { display: none; }
+
+  .lxp-panel {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    display: flex; flex-direction: column;
+    width: min(340px, 100%);
+    background: var(--modal-bg, #111);
+    color: var(--modal-fg, #F5F0E8);
+    border-left: 1px solid var(--modal-bdr, rgba(245,240,232,.18));
+    box-shadow: -12px 0 40px -18px rgba(0,0,0,.6);
+    transform: translateX(100%);
+    transition: transform .28s ease;
+  }
+  .lxp-panel[hidden] { display: none; }
+  .lxp[data-open="true"] .lxp-panel { transform: none; }
+
+  .lxp-head {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--modal-bdr, rgba(245,240,232,.18));
+  }
+  .lxp-kicker {
+    margin: 0 0 5px;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(11px * var(--fs-scale, 1));
+    font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--gold, #C8A96E);
+  }
+  .lxp-title {
+    margin: 0;
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-weight: 300; line-height: 1;
+    font-size: calc(26px * var(--fs-scale, 1));
+  }
+  .lxp-close {
+    flex: 0 0 auto; display: grid; place-items: center;
+    width: 34px; height: 34px; padding: 0;
+    border: 1px solid var(--modal-bdr, rgba(245,240,232,.18));
+    background: transparent; color: inherit; cursor: pointer;
+    transition: border-color .2s ease;
+  }
+  .lxp-close:hover { border-color: var(--gold, #C8A96E); }
+  .lxp-close:focus-visible { outline: 2px solid var(--gold, #C8A96E); outline-offset: 2px; }
+
+  .lxp-body { flex: 1; overflow-y: auto; padding: 18px 20px 24px; }
+  .lxp-intro, .lxp-foot {
+    margin: 0 0 18px;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(12px * var(--fs-scale, 1));
+    line-height: 1.6; color: var(--modal-mut, rgba(245,240,232,.62));
+  }
+  .lxp-foot { margin: 22px 0 0; }
+
+  .lxp-group { margin-bottom: 20px; }
+  .lxp-group__title {
+    margin: 0 0 4px;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(11px * var(--fs-scale, 1));
+    font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--gold, #C8A96E);
+  }
+  .lxp-group__note {
+    margin: 0 0 9px;
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(11px * var(--fs-scale, 1));
+    line-height: 1.55; color: var(--modal-mut, rgba(245,240,232,.62));
+  }
+  .lxp-list { margin: 0; padding: 0; list-style: none; }
+  .lxp-link {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--modal-bdr, rgba(245,240,232,.18));
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(13px * var(--fs-scale, 1));
+    text-decoration: none; color: inherit;
+    transition: color .2s ease, padding-left .2s ease;
+  }
+  .lxp-link:hover { color: var(--gold, #C8A96E); padding-left: 4px; }
+  .lxp-link:focus-visible { outline: 2px solid var(--gold, #C8A96E); outline-offset: 2px; }
+  .lxp-link.is-current { color: var(--gold, #C8A96E); font-weight: 600; }
+  .lxp-link.is-current .lxp-here { display: inline-flex; }
+
+  .lxp-here {
+    display: none; flex: 0 0 auto;
+    font-size: calc(10px * var(--fs-scale, 1));
+    font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+  }
+  .lxp-badge {
+    flex: 0 0 auto; padding: 3px 7px;
+    font-size: calc(10px * var(--fs-scale, 1));
+    font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+    border: 1px solid var(--modal-bdr, rgba(245,240,232,.18));
+    color: var(--modal-mut, rgba(245,240,232,.62));
+    white-space: nowrap;
+  }
+
+  @media (max-width: 700px) {
+    .lxp-panel { width: min(310px, 88%); }
+    .lxp-tab { padding: 14px 8px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lxp-panel { transition: none; }
+  }
+</style>
+
+<script>
+(function(){
+  var wrap = document.querySelector('[data-lxp]');
+  if (!wrap) return;
+  var tab   = wrap.querySelector('[data-lxp-toggle]');
+  var panel = wrap.querySelector('#lxp-panel');
+  var KEY   = 'maison-layout-explorer-open';
+
+  function open(){
+    panel.removeAttribute('hidden');
+    // let the browser apply the hidden->shown layout before transforming
+    requestAnimationFrame(function(){ wrap.setAttribute('data-open','true'); });
+    tab.setAttribute('aria-expanded','true');
+    try { localStorage.setItem(KEY,'1'); } catch (e) {}
+  }
+  function close(){
+    wrap.setAttribute('data-open','false');
+    tab.setAttribute('aria-expanded','false');
+    try { localStorage.setItem(KEY,'0'); } catch (e) {}
+    setTimeout(function(){
+      if (wrap.getAttribute('data-open') !== 'true') panel.setAttribute('hidden','');
+    }, 300);
+  }
+
+  tab.addEventListener('click', open);
+  wrap.querySelector('[data-lxp-close]').addEventListener('click', close);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && wrap.getAttribute('data-open') === 'true') close();
+  });
+
+  // Reading storage can throw outright in some privacy modes, so the panel
+  // must render correctly with no stored value at all.
+  var remembered = null;
+  try { remembered = localStorage.getItem(KEY); } catch (e) {}
+  if (remembered === '1') open();
+})();
+</script>

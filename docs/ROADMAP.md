@@ -4,6 +4,8 @@
 
 This file exists because the original brief was never recorded anywhere. It is now the source of truth for scope.
 
+**For where the work actually stands right now — mid-phase included — see [STATUS.md](STATUS.md).** This file is the plan; that one is the position.
+
 ---
 
 ## Where things actually stand

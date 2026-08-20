@@ -190,6 +190,8 @@ layouts are **specified but not built** — the alternate template files
 (`collection.list.json`, `product.wide.json`, …) exist as identical stubs and do not yet
 differ from each other.
 
+**`docs/STATUS.md`** says what is being worked on right now and what is next.
+
 **`docs/ROADMAP.md`** is the source of truth for the remaining scope: every layout and
 feature still to build, how the layouts get addressed by URL (`?view=`), the demo mega
 menu a ThemeForest buyer clicks through, and the phase order. Read it before starting

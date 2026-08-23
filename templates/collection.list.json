@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -5,13 +14,17 @@
       "settings": {
         "sidebar_position": "left",
         "filter_style": "sidebar",
-        "grid_columns": "list",
+        "grid_columns": "3",
         "container_style": "boxed",
         "title_style": "style-1",
-        "products_per_page": 12,
-        "pagination_style": "load_more"
+        "view_default": "list",
+        "products_per_page": 24,
+        "pagination_style": "numbered",
+        "show_demo_when_empty": true
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }

@@ -16,7 +16,7 @@
         "filter_style": "sidebar",
         "grid_columns": "3",
         "container_style": "boxed",
-        "title_style": "style-1",
+        "title_style": "style-5",
         "view_default": "grid",
         "products_per_page": 24,
         "pagination_style": "numbered",

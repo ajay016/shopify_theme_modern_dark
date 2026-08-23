@@ -13,7 +13,7 @@
       "type": "main-collection",
       "settings": {
         "sidebar_position": "left",
-        "filter_style": "sidebar",
+        "filter_style": "toggle",
         "grid_columns": "3",
         "container_style": "boxed",
         "title_style": "style-1",

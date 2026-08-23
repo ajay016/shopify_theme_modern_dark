@@ -6,11 +6,28 @@
   assign pagination_style = section.settings.pagination_style
   assign title_style      = section.settings.title_style
   assign products_per_page = section.settings.products_per_page
+  assign container_style  = section.settings.container_style | default: 'boxed'
+
+  comment
+    Demo products keep an empty or brand-new store from showing a blank shop
+    page while the layouts are being reviewed. It fires only when the
+    collection genuinely has no products, and the merchant can switch it off
+    before going live.
+  endcomment
+  assign use_demo = false
+  if collection.products.size == 0 and section.settings.show_demo_when_empty
+    assign use_demo = true
+  endif
 %}
 
 {%- paginate collection.products by products_per_page -%}
 
-<div class="collection-page" id="section-{{ section.id }}" data-sidebar="{{ sidebar_position }}" data-filter-style="{{ filter_style }}">
+<div
+  class="collection-page collection-page--{{ container_style }}"
+  id="section-{{ section.id }}"
+  data-sidebar="{{ sidebar_position }}"
+  data-filter-style="{{ filter_style }}"
+>
 
   {%- comment -%} Collection Title Area {%- endcomment -%}
   <div class="collection-title collection-title--{{ title_style }}">
@@ -91,7 +108,7 @@
       <div class="toolbar-right">
         {%- render 'collection-sort' -%}
         {%- if sidebar_position == 'none' -%}
-          {%- render 'collection-view-toggle', columns: columns -%}
+          {%- render 'collection-view-toggle', columns: columns, current: view_default -%}
         {%- endif -%}
       </div>
     </div>
@@ -114,13 +131,27 @@
             {%- endif -%}
           </div>
 
+          {%- comment -%}
+            "Toggle groups" is the same sidebar with every group collapsed, so a
+            long filter set reads as a short list of headings. A group holding an
+            active value still opens, otherwise the applied filter is hidden.
+          {%- endcomment -%}
           {%- for filter in collection.filters -%}
+            {%- liquid
+              assign group_open = true
+              if filter_style == 'toggle'
+                assign group_open = false
+                if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value
+                  assign group_open = true
+                endif
+              endif
+            -%}
             <div class="filter-group" data-filter-group>
-              <button class="filter-group__toggle" aria-expanded="true">
+              <button class="filter-group__toggle" aria-expanded="{% if group_open %}true{% else %}false{% endif %}">
                 {{ filter.label }}
                 {%- render 'icon-chevron-down' -%}
               </button>
-              <div class="filter-group__body">
+              <div class="filter-group__body{% unless group_open %} is-collapsed{% endunless %}">
                 {%- case filter.type -%}
                   {%- when 'list' -%}
                     <ul class="filter-list">
@@ -159,7 +190,7 @@
         {%- else -%}
           <div class="sidebar-sort">
             {%- render 'collection-sort' -%}
-            {%- render 'collection-view-toggle', columns: columns -%}
+            {%- render 'collection-view-toggle', columns: columns, current: view_default -%}
           </div>
         {%- endif -%}
       </aside>
@@ -170,7 +201,7 @@
       {%- if sidebar_position == 'none' and filter_style != 'drawer' and filter_style != 'dropdown' -%}
         <div class="collection-toolbar collection-toolbar--inline">
           {%- render 'collection-sort' -%}
-          {%- render 'collection-view-toggle', columns: columns -%}
+          {%- render 'collection-view-toggle', columns: columns, current: view_default -%}
         </div>
       {%- endif -%}
 
@@ -199,7 +230,44 @@
         </div>
       {%- endif -%}
 
-      {%- if collection.products.size == 0 -%}
+      {%- if use_demo and has_active_filters == false -%}
+        {%- liquid
+          assign demo_names = 'Alba Draped Coat,Sera Silk Dress,No. 03 Soft Bag,Linea Leather Mule,Vela Wool Blazer,Onda Pleated Skirt,Rive Cashmere Knit,Sable Leather Tote,Structured Wool Coat,Tailored Trouser,Cashmere Roll Neck,Belted Trench' | split: ','
+          assign demo_prices = '$890|$540|$620|$390|$760|$420|$480|$690|$1,290|$420|$540|$1,150' | split: '|'
+          assign demo_cats = 'Outerwear,Dresses,Leather goods,Shoes,Tailoring,Skirts,Knitwear,Leather goods,Outerwear,Tailoring,Knitwear,Outerwear' | split: ','
+          assign k1 = 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=700&q=80'
+          assign k2 = 'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=700&q=80'
+          assign k3 = 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=700&q=80'
+          assign k4 = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=700&q=80'
+          assign k5 = 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=700&q=80'
+          assign k6 = 'https://images.unsplash.com/photo-1520975954732-35dd22299614?auto=format&fit=crop&w=700&q=80'
+          assign k7 = 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=700&q=80'
+          assign k8 = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80'
+          assign k9 = 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=700&q=80'
+          assign k10 = 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=700&q=80'
+          assign k11 = 'https://images.unsplash.com/photo-1496217590455-aa63a8350eea?auto=format&fit=crop&w=700&q=80'
+          assign k12 = 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=700&q=80'
+          assign demo_imgs_str = k1 | append: '||' | append: k2 | append: '||' | append: k3 | append: '||' | append: k4 | append: '||' | append: k5 | append: '||' | append: k6 | append: '||' | append: k7 | append: '||' | append: k8 | append: '||' | append: k9 | append: '||' | append: k10 | append: '||' | append: k11 | append: '||' | append: k12
+          assign demo_imgs = demo_imgs_str | split: '||'
+        -%}
+        <p class="collection-demo-note">
+          Showing demo products — this collection has no products yet. Turn this off in
+          <strong>Collection &rarr; Show demo products when empty</strong>.
+        </p>
+        <div class="product-grid product-grid--{{ columns }}" id="product-grid" data-view="{{ view_default }}">
+          {%- for i in (1..12) -%}
+            {%- assign idx = forloop.index0 -%}
+            {%- render 'product-card',
+              demo_index: idx,
+              demo_title: demo_names[idx],
+              demo_price: demo_prices[idx],
+              demo_category: demo_cats[idx],
+              demo_image: demo_imgs[idx],
+              demo_url: '/collections/all' -%}
+          {%- endfor -%}
+        </div>
+
+      {%- elsif collection.products.size == 0 -%}
         <div class="collection-empty">
           <p>{{ 'collections.general.no_matches' | t }}</p>
           {%- if has_active_filters -%}
@@ -467,12 +535,22 @@
       "default": "sidebar"
     },
     {
+      "type": "select", "id": "container_style", "label": "Container Width",
+      "options": [
+        { "value": "boxed", "label": "Boxed — follows the theme container width" },
+        { "value": "wide",  "label": "Wide — 1780px" },
+        { "value": "full",  "label": "Full width" }
+      ],
+      "default": "boxed"
+    },
+    {
       "type": "select", "id": "grid_columns", "label": "Default Grid Columns",
       "options": [
         { "value": "2", "label": "2" },
         { "value": "3", "label": "3" },
         { "value": "4", "label": "4" },
-        { "value": "5", "label": "5" }
+        { "value": "5", "label": "5" },
+        { "value": "6", "label": "6" }
       ],
       "default": "3"
     },
@@ -496,6 +574,13 @@
     {
       "type": "range", "id": "products_per_page", "label": "Products Per Page",
       "min": 12, "max": 48, "step": 4, "default": 24
+    },
+    { "type": "header", "content": "Demo" },
+    {
+      "type": "checkbox", "id": "show_demo_when_empty",
+      "label": "Show demo products when empty",
+      "info": "Fills a collection that has no products with placeholder items, so the layout can be reviewed on a store with no catalogue. Turn off before going live.",
+      "default": true
     }
   ],
   "presets": [{ "name": "Collection" }]

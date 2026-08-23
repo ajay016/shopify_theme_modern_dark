@@ -12,9 +12,9 @@
     "main": {
       "type": "main-collection",
       "settings": {
-        "sidebar_position": "left",
-        "filter_style": "sidebar",
-        "grid_columns": "3",
+        "sidebar_position": "none",
+        "filter_style": "drawer",
+        "grid_columns": "2",
         "container_style": "boxed",
         "title_style": "style-1",
         "view_default": "grid",

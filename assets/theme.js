@@ -833,11 +833,15 @@
      Filter Sidebar — collapsible groups
      ============================================================ */
   function initFilters() {
-    document.querySelectorAll('.filter-group__title[data-toggle-filter]').forEach(title => {
-      title.addEventListener('click', () => {
-        title.classList.toggle('is-open');
-        const body = title.nextElementSibling;
-        if (body) body.classList.toggle('is-collapsed');
+    // The collection section renders `.filter-group__toggle` buttons; the
+    // previous selector (`.filter-group__title[data-toggle-filter]`) matched
+    // nothing, so filter groups could not be collapsed or expanded at all.
+    document.querySelectorAll('.filter-group__toggle').forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        const body = toggle.nextElementSibling;
+        if (body) body.classList.toggle('is-collapsed', expanded);
       });
     });
 
@@ -872,31 +876,139 @@
 
 
   /* ============================================================
-     Collection View Toggle (grid columns)
+     Collection view toggle — grid / list
+
+     The previous implementation targeted `.view-btn[data-grid]` and
+     swapped `grid-cols-*` classes. Neither exists: the snippet renders
+     `.view-toggle__btn[data-view]` and the grid is styled from a
+     `data-view` attribute, so clicking the toggle did nothing at all.
      ============================================================ */
+  const VIEW_KEY = 'mn_collection_view';
+
+  function applyView(view) {
+    const grid = document.getElementById('product-grid');
+    if (!grid) return;
+    grid.setAttribute('data-view', view);
+    document.querySelectorAll('.view-toggle__btn[data-view]').forEach(b => {
+      const on = b.dataset.view === view;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
   function initViewToggle() {
-    document.querySelectorAll('.view-btn[data-grid]').forEach(btn => {
+    const grid = document.getElementById('product-grid');
+    if (!grid) return;
+
+    // The section's own default, before any stored preference.
+    let view = grid.getAttribute('data-view') || 'grid';
+    try {
+      const saved = localStorage.getItem(VIEW_KEY);
+      if (saved === 'grid' || saved === 'list') view = saved;
+    } catch (e) { /* storage can throw outright in private modes */ }
+    applyView(view);
+
+    document.querySelectorAll('.view-toggle__btn[data-view]').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        const grid = document.getElementById('product-grid');
-        if (!grid) return;
-        // Remove all grid-cols-* classes
-        grid.className = grid.className.replace(/\bgrid-cols-\S+|\bgrid-list\b/g, '').trim();
-        grid.classList.add(btn.dataset.grid);
-        // Persist preference
-        try { localStorage.setItem('mn_grid', btn.dataset.grid); } catch {}
+        applyView(btn.dataset.view);
+        try { localStorage.setItem(VIEW_KEY, btn.dataset.view); } catch (e) {}
       });
     });
+  }
 
-    // Restore preference
-    try {
-      const saved = localStorage.getItem('mn_grid');
-      if (saved) {
-        const btn = document.querySelector(`.view-btn[data-grid="${saved}"]`);
-        if (btn) btn.click();
+
+  /* ============================================================
+     Collection pagination — Load more / Infinite scroll
+
+     Both modes rendered their markup but had no behaviour, so the
+     button was inert and the infinite sentinel never fired. Each
+     fetches the next page, lifts its cards out, and appends them.
+     ============================================================ */
+  function collectionCards(doc) {
+    const nextGrid = doc.getElementById('product-grid');
+    return nextGrid ? Array.from(nextGrid.children) : [];
+  }
+
+  function nextPageUrlFrom(doc) {
+    const el = doc.querySelector('[data-load-more], [data-infinite-scroll]');
+    return el ? el.getAttribute('data-next-url') : null;
+  }
+
+  async function appendNextPage(url) {
+    const grid = document.getElementById('product-grid');
+    if (!grid || !url) return null;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Failed to load page: ' + res.status);
+    const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+
+    collectionCards(doc).forEach(card => grid.appendChild(card));
+
+    // Wishlist and quick view are bound by delegation on `document`, so the
+    // new cards are already clickable. What does NOT carry over is the saved
+    // wishlist state, which is only painted on load — so repaint it here.
+    getWishlist().forEach(id => updateWishlistUI(id));
+    document.dispatchEvent(new CustomEvent('collection:appended', { detail: { url } }));
+
+    return nextPageUrlFrom(doc);
+  }
+
+  function initLoadMore() {
+    const btn = document.querySelector('[data-load-more]');
+    if (!btn) return;
+
+    btn.addEventListener('click', async () => {
+      const url = btn.getAttribute('data-next-url');
+      if (!url || btn.disabled) return;
+      const original = btn.innerHTML;
+      btn.disabled = true;
+      btn.textContent = 'Loading…';
+      try {
+        const next = await appendNextPage(url);
+        if (next) {
+          btn.setAttribute('data-next-url', next);
+          btn.innerHTML = original;
+          btn.disabled = false;
+        } else {
+          btn.closest('.pagination-load-more')?.remove();
+        }
+      } catch (err) {
+        btn.innerHTML = original;
+        btn.disabled = false;
+        showToast('Could not load more products. Please try again.');
       }
-    } catch {}
+    });
+  }
+
+  function initInfiniteScroll() {
+    const sentinel = document.querySelector('[data-infinite-scroll]');
+    if (!sentinel || !('IntersectionObserver' in window)) return;
+
+    let loading = false;
+    const io = new IntersectionObserver(async entries => {
+      if (!entries[0].isIntersecting || loading) return;
+      const url = sentinel.getAttribute('data-next-url');
+      if (!url) { io.disconnect(); sentinel.remove(); return; }
+
+      loading = true;
+      try {
+        const next = await appendNextPage(url);
+        if (next) {
+          sentinel.setAttribute('data-next-url', next);
+        } else {
+          io.disconnect();
+          sentinel.remove();
+        }
+      } catch (err) {
+        // Stop rather than hammer a failing endpoint on every scroll.
+        io.disconnect();
+        sentinel.remove();
+      } finally {
+        loading = false;
+      }
+    }, { rootMargin: '400px' });
+
+    io.observe(sentinel);
   }
 
 
@@ -1083,6 +1195,8 @@
     initWishlist();
     initFilters();
     initViewToggle();
+    initLoadMore();
+    initInfiniteScroll();
     initTabs();
     initPriceRange();
     initAnnouncementRotation();

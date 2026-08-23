@@ -12,7 +12,7 @@
     "main": {
       "type": "main-collection",
       "settings": {
-        "sidebar_position": "left",
+        "sidebar_position": "right",
         "filter_style": "sidebar",
         "grid_columns": "3",
         "container_style": "boxed",

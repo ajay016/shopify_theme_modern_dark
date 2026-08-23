@@ -1600,6 +1600,19 @@ body.has-announcement .site-header { top: 44px; }
 .collection-layout--no-sidebar { grid-template-columns: 1fr; }
 .collection-layout--right-sidebar { grid-template-columns: 1fr 240px; }
 
+/* The section emits `--sidebar-left` / `--sidebar-right`; the rules above
+   were written for a different naming and so never matched, leaving every
+   collection on the default left-hand grid regardless of the setting. */
+.collection-layout--sidebar-left  { grid-template-columns: 264px 1fr; }
+.collection-layout--sidebar-right { grid-template-columns: 1fr 264px; }
+.collection-layout--sidebar-right .collection-sidebar { order: 2; }
+.collection-layout:not(.collection-layout--has-sidebar) { grid-template-columns: 1fr; }
+@media (max-width: 1000px) {
+  .collection-layout--sidebar-left,
+  .collection-layout--sidebar-right { grid-template-columns: 1fr; }
+  .collection-layout--sidebar-right .collection-sidebar { order: 0; }
+}
+
 /* Sidebar */
 .filter-sidebar {
   border-right: 1px solid var(--border, rgba(200,169,110,.18));
@@ -1789,16 +1802,96 @@ body.has-announcement .site-header { top: 44px; }
   .product-grid--2, .product-grid--3, .product-grid--4, .product-grid--5, .product-grid--6 { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* List view card */
+/* ------------------------------------------------------------------
+   List view
+
+   The grid is switched by a `data-view` attribute, not by a class. The
+   original rules here were keyed to `.grid-list`, which the collection
+   section never emits — so list view rendered as an ordinary grid. Both
+   selectors are kept so either naming works.
+   ------------------------------------------------------------------ */
+.product-grid[data-view="list"],
+.product-grid.grid-list {
+  grid-template-columns: 1fr !important;
+  gap: 0;
+}
+.product-grid[data-view="list"] .pcard,
 .product-grid.grid-list .pcard {
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 24px;
+  grid-template-columns: 220px 1fr;
+  gap: 28px;
   align-items: center;
-  padding: 20px 0;
+  padding: 22px 0;
   border-bottom: 1px solid var(--border, rgba(200,169,110,.18));
 }
-.product-grid.grid-list .pcard__info { padding-top: 0; }
+.product-grid[data-view="list"] .pcard__info,
+.product-grid.grid-list .pcard__info {
+  padding-top: 0;
+  align-self: center;
+}
+/* In a list row the name has room to breathe, so let it. */
+.product-grid[data-view="list"] .pcard__name {
+  font-size: calc(17px * var(--fs-scale, 1));
+}
+.product-grid[data-view="list"] .pcard__price {
+  margin-top: 6px;
+}
+/* The slide-up add-to-bag is designed for a card footer; in a row it
+   would cover the image, so pin it into the text column instead. */
+.product-grid[data-view="list"] .pcard-atc {
+  position: static;
+  opacity: 1;
+  transform: none;
+  margin-top: 14px;
+  width: fit-content;
+  min-width: 180px;
+}
+@media (max-width: 700px) {
+  .product-grid[data-view="list"] .pcard,
+  .product-grid.grid-list .pcard {
+    grid-template-columns: 120px 1fr;
+    gap: 16px;
+    padding: 16px 0;
+  }
+  .product-grid[data-view="list"] .pcard__name { font-size: calc(15px * var(--fs-scale, 1)); }
+  .product-grid[data-view="list"] .pcard-atc { min-width: 0; width: 100%; }
+}
+
+/* Demo-product notice on an empty collection */
+.collection-demo-note {
+  margin: 0 0 20px;
+  padding: 11px 14px;
+  border: 1px dashed var(--border-strong, rgba(200,169,110,.35));
+  font-size: calc(12px * var(--fs-scale, 1));
+  line-height: 1.55;
+  color: var(--muted, rgba(245,240,232,.62));
+}
+
+/* ------------------------------------------------------------------
+   Collection container width
+
+   `container_style` was set by every collection template but read by
+   nothing, so "wide" and "boxed" rendered identically. These wrap the
+   whole collection layout rather than the grid, so the sidebar moves
+   with it.
+   ------------------------------------------------------------------ */
+.collection-page--boxed .collection-layout,
+.collection-page--boxed .collection-toolbar,
+.collection-page--boxed .collection-title > .container {
+  max-width: var(--container-width, 1440px);
+  margin-inline: auto;
+}
+.collection-page--wide .collection-layout,
+.collection-page--wide .collection-toolbar,
+.collection-page--wide .collection-title > .container {
+  max-width: 1780px;
+  margin-inline: auto;
+}
+.collection-page--full .collection-layout,
+.collection-page--full .collection-toolbar,
+.collection-page--full .collection-title > .container {
+  max-width: none;
+}
 
 /* Products area */
 .products-area { padding: 40px var(--side-padding); }

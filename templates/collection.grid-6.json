@@ -12,10 +12,10 @@
     "main": {
       "type": "main-collection",
       "settings": {
-        "sidebar_position": "left",
-        "filter_style": "sidebar",
-        "grid_columns": "3",
-        "container_style": "boxed",
+        "sidebar_position": "none",
+        "filter_style": "drawer",
+        "grid_columns": "6",
+        "container_style": "wide",
         "title_style": "style-1",
         "view_default": "grid",
         "products_per_page": 24,

@@ -8,10 +8,10 @@
 
 ## Current position
 
-**Phase:** none running — **paused between phases, by agreement**
-**Last completed:** Phase A0 — Layout Explorer (before it, Phase G — homepage #6 and the Ivory / Wine scheme)
-**Next up:** Phase A — collection layouts and filters. **Do not start it without a clear go-ahead.**
-**Blocked on:** homepage testing in progress
+**Phase:** A — collection layouts and filters · **complete**
+**Last completed:** Phase A (before it, A0 — Layout Explorer; G — homepage #6 and Ivory / Wine)
+**Next up:** Phase B — product card styles
+**Blocked on:** nothing
 
 **Working state:** clean. Nothing half-finished. Everything committed and pushed to `main` and `claude/maison-noir-shopify-theme-2cxtip`. Published homepage is Aureline.
 
@@ -25,9 +25,9 @@
 |---|---|
 | Files touched so far | — |
 | Done within the phase | — |
-| Next concrete step | Wait. On the word go: begin Phase A — turn `main-collection` into a settings-driven section, then add the thin `?view=` templates |
+| Next concrete step | Begin Phase B: product card styles (4–5 variants) driven by a global setting with a per-section override |
 | Known-incomplete | — |
-| Not yet verified | Phase A0 has not been opened in a browser — see "Not verified" below |
+| Not yet verified | Phases A0 and A have not been opened in a browser — see "Not verified" |
 
 ---
 
@@ -37,14 +37,14 @@
 |---|---|---|
 | 1–14 | Colour system, tokens, header, cart modes, font scaling, on-photo controls, component polish | done |
 | G | Homepage #6 (Aureline) + Ivory / Wine scheme | done, out of order |
-| **A0** | **Layout Explorer panel + Demo theme setting** | **done** |
+| A0 | Layout Explorer panel + Demo theme setting | done |
+| **A** | **Collection layouts, filters, list view, pagination** | **done** |
 
 ## What is left
 
 | Phase | Scope |
 |---|---|
-| **A** | Collection layouts + filters — **next** |
-| B | Product card styles + card features |
+| **B** | Product card styles + card features — **next** |
 | C | Product detail layouts + thumbnails |
 | D | Product features + boost-sale |
 | E | Blog + post layouts |
@@ -77,21 +77,43 @@ When a phase makes a layout real, flip its entries in `snippets/demo-explorer.li
 
 | Phase | Entries to flip |
 |---|---|
-| A | Shop → List view, Wide container, No sidebar (+ add the new grid/filter/title entries) |
+| ~~A~~ | ~~Shop entries~~ — **done**, and five Shop groups added |
 | C | Product → Wide, Gradient, Digital |
 | E | Blog → Sidebar left, Sidebar right |
 
 ---
 
+## Phase A — what was built
+
+**The headline finding: most of the collection page was wired to markup that did not exist.** Four separate controls rendered correctly and did nothing when clicked. This was not visible in any schema or JSON check — only in comparing selectors against markup.
+
+| Broken | Why | Fixed |
+|---|---|---|
+| Grid/list view toggle | JS targeted `.view-btn[data-grid]`, swapping `grid-cols-*` classes. The snippet renders `.view-toggle__btn[data-view]` and the grid reads a `data-view` attribute | `initViewToggle` rewritten to the real markup; honours the section default, then a stored preference |
+| List view itself | CSS existed but was keyed to `.grid-list`, which the section never emits | Re-keyed to `[data-view="list"]`, both selectors kept |
+| Filter group accordion | JS targeted `.filter-group__title[data-toggle-filter]`; the section renders `.filter-group__toggle` | Rewritten, and now drives `aria-expanded` as well as the collapsed class |
+| Sidebar position | CSS defined `.collection-layout--right-sidebar`; the section emits `--sidebar-right` | Added the matching rules, plus a mobile collapse |
+| Load more | Button rendered; no JS at all | Implemented — fetches, appends, re-reads the next URL, removes itself at the end |
+| Infinite scroll | Sentinel rendered; no JS at all | Implemented with `IntersectionObserver`, 400px rootMargin, stops on error rather than hammering |
+| `container_style` | Set by every collection template, read by nothing — so "wide" and "boxed" were identical | Added as a real setting with boxed / wide / full CSS |
+
+**New in the section:** 6-column option, working `toggle` filter style (groups collapsed unless they hold an active value), and demo products on an empty collection so the layouts can be reviewed on a store with no catalogue.
+
+**23 collection templates**, every setting validated against the schema. Previously four templates carried values the section could not honour — `grid_columns: "list"`, `pagination_style: "paginate"`, and `container_style` on all four.
+
+### Correction to an earlier claim
+
+I previously recorded the collection templates as "identical stubs". That was wrong — they carried different settings. The check behind it grouped templates by section *type* only. What was true is that the differences largely did not work, for the reasons above.
+
+---
+
 ## Not verified
 
-Everything below is static analysis. **Nothing in Phase A0 has been opened in a browser.** Specifically unverified:
+Everything below is static analysis. **Nothing in Phase A0 or Phase A has been opened in a browser.** Specifically unverified:
 
-- the edge tab's position and vertical text rendering across browsers
-- the slide-out transition, and the `hidden` → `requestAnimationFrame` → transform sequence
-- whether `blogs` is iterable in this store's Liquid (there is a `blogs.news` fallback if it is not)
-- the panel against the cart drawer and quick view at the same time
-- appearance in all five colour schemes
+**A0** — the edge tab's position and vertical text; the slide transition; whether `blogs` is iterable on this store (there is a `blogs.news` fallback); the panel alongside the cart drawer and quick view; appearance in all five schemes.
+
+**A** — list view row proportions; load-more and infinite scroll against a real paginated collection (both need more products than one page); the filter panel, which needs Shopify's Search & Discovery app installed before `collection.filters` is populated at all; sidebar-right ordering; the 6-column grid on a narrow screen.
 
 ---
 
@@ -109,13 +131,12 @@ Homepage bugs reported mid-phase, so a fix never gets lost and the phase can be 
 
 Set deliberately, and it holds until changed:
 
-1. **Bugs come before new work.** Anything found while testing is fixed first — whether it is in a homepage or in the phase just built — and only then does the next phase start.
-2. **No phase begins without an explicit go-ahead.** Finishing one phase is not permission to start the next.
-3. **Every report is written down** in the interrupt log below, at the time it arrives, whether it is fixed immediately or deferred. Nothing lives only in the conversation.
-4. **Docs and plan are updated after every piece of work**, not at the end of a phase — this file, plus `ROADMAP.md`, `HOMEPAGES.md` and `COLOR-SYSTEM.md` when what they describe changes.
-5. **A report only needs the page and the section** — "Lumière, sticky vitrine, cards overlap on tablet" is enough to act on.
-
-Testing is deliberately slow and thorough; implementation waits for it rather than racing ahead of it.
+1. **Work continues phase by phase without waiting.** Implementation does not pause for review — testing happens alongside it, whenever there is time.
+2. **Every phase ends with a handover**, written in chat and mirrored here: what was built, which files changed, **what to look at and where**, what was fixed, and what is still outstanding. The handover is the thing that makes reviewing possible in spare moments.
+3. **Reports arrive whenever they arrive.** A bug or a suggestion — about the phase just delivered or about any homepage — is fixed next, ahead of new work, then the phases resume from the recorded point.
+4. **Every report is written down** in the interrupt log below at the time it arrives, whether fixed immediately or deferred. Nothing lives only in the conversation.
+5. **Docs and plan are updated after every piece of work**, not at the end of a phase — this file, plus `ROADMAP.md`, `HOMEPAGES.md` and `COLOR-SYSTEM.md` when what they describe changes.
+6. **A report only needs the page and the section** — "Lumière, sticky vitrine, cards overlap on tablet" is enough to act on.
 
 ---
 

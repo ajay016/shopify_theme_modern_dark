@@ -1,17 +1,30 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "main-collection",
       "settings": {
-        "sidebar_position": "left",
-        "filter_style": "sidebar",
-        "grid_columns": "4",
+        "sidebar_position": "none",
+        "filter_style": "drawer",
+        "grid_columns": "5",
         "container_style": "wide",
         "title_style": "style-2",
-        "products_per_page": 16,
-        "pagination_style": "infinite"
+        "view_default": "grid",
+        "products_per_page": 24,
+        "pagination_style": "numbered",
+        "show_demo_when_empty": true
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }

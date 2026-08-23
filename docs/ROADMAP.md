@@ -1,6 +1,6 @@
 # Theme Roadmap — full scope
 
-**Status: mostly plan, not build.** The homepages and the colour system are done. Everything else on this page is specified, not implemented — the collection, product and blog layouts do not exist yet.
+**Status: part built.** The homepages, the colour system, the Layout Explorer and the collection page are done. Product, blog and page layouts are still specified rather than implemented.
 
 This file exists because the original brief was never recorded anywhere. It is now the source of truth for scope.
 
@@ -15,7 +15,7 @@ This file exists because the original brief was never recorded anywhere. It is n
 | Homepages | **6 built** (Classic, Blanc, Atelier, Noir, Lumière, Aureline) |
 | Colour system | **Done** — five schemes, one global setting drives every section (`COLOR-SYSTEM.md`) |
 | Product card | **Done** — one shared card with quick view, wishlist, add-to-bag, demo fallbacks |
-| Collection layouts | **Not built.** `collection.list/wide/no-sidebar.json` exist but are *identical stubs* — same bare `main-collection`, no differentiating settings |
+| Collection layouts | **Built (Phase A).** 23 `?view=` templates — sidebar position, container width, list view, grid 2–6, four filter presentations, five headers, three pagination modes |
 | Product layouts | **Not built.** `product.wide/gradient/digital.json` are identical stubs |
 | Blog / post layouts | **Not built.** `blog.sidebar-left/right.json` are identical stubs |
 | Pages (About / Contact) | Two About variants and two Contact variants exist, lightly differentiated |
@@ -194,7 +194,7 @@ Each phase ends shippable, so the theme is never half-broken.
 | Phase | Scope | Why this order |
 |---|---|---|
 | ~~**A0**~~ | ~~Layout Explorer panel + theme setting~~ | **Done.** Built first so every later layout registers itself in it. Stub entries carry a *Not yet styled* badge, which each phase flips as it makes a layout real |
-| **A** | Collection layouts + filters | Biggest surface, most-judged page, unblocks the Shop menu |
+| ~~**A**~~ | ~~Collection layouts + filters~~ | **Done.** Four controls turned out to be wired to markup that did not exist — view toggle, list view, filter accordion and sidebar position — plus load-more and infinite scroll with no JS at all |
 | **B** | Product card styles + card features | Feeds both collection and homepage |
 | **C** | Product detail layouts + thumbnails | Second most-judged page |
 | **D** | Product features + boost-sale | Long tail; each is independent |
@@ -261,6 +261,6 @@ You supplied a reference design instead of waiting for #1–#5 review, so Phase 
 
 Built: the six homepages, the five colour schemes, the shared product card and quick view.
 
-Not built: every phase in the build order except **A0** and **G**. Phase A is next.
+Not built: every phase in the build order except **A0**, **A** and **G**. Phase B is next.
 
 Fine-grained position, including anything half-finished, lives in [STATUS.md](STATUS.md).

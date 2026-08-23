@@ -1,14 +1,48 @@
+{%- comment -%}
+  Grid / list toggle for the collection toolbar.
+
+  Accepts:
+    - current {String} 'grid' (default) or 'list' — the section's default view
+
+  The active button must match the grid's starting `data-view`, otherwise the
+  control claims "grid" while the page renders a list. A stored visitor
+  preference is applied afterwards by theme.js, which repaints both.
+{%- endcomment -%}
+
+{%- assign current = current | default: 'grid' -%}
+
 <div class="view-toggle" role="group" aria-label="{{ 'accessibility.view_toggle' | t }}">
-  <button class="view-toggle__btn view-toggle__btn--grid is-active" data-view="grid" aria-pressed="true" aria-label="Grid view">
+  <button
+    class="view-toggle__btn view-toggle__btn--grid{% if current != 'list' %} is-active{% endif %}"
+    data-view="grid"
+    type="button"
+    aria-pressed="{% if current != 'list' %}true{% else %}false{% endif %}"
+    aria-label="Grid view"
+  >
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
   </button>
-  <button class="view-toggle__btn view-toggle__btn--list" data-view="list" aria-pressed="false" aria-label="List view">
+  <button
+    class="view-toggle__btn view-toggle__btn--list{% if current == 'list' %} is-active{% endif %}"
+    data-view="list"
+    type="button"
+    aria-pressed="{% if current == 'list' %}true{% else %}false{% endif %}"
+    aria-label="List view"
+  >
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
 </div>
 
 <style>
   .view-toggle { display: flex; gap: 4px; }
-  .view-toggle__btn { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 8px 10px; cursor: pointer; transition: all 0.2s; }
-  .view-toggle__btn.is-active, .view-toggle__btn:hover { border-color: var(--gold); color: var(--gold); }
+  .view-toggle__btn {
+    display: grid; place-items: center;
+    background: transparent;
+    border: 1px solid var(--border, rgba(200,169,110,.18));
+    color: var(--muted, rgba(245,240,232,.62));
+    padding: 8px 10px; cursor: pointer;
+    transition: border-color .2s, color .2s;
+  }
+  .view-toggle__btn.is-active,
+  .view-toggle__btn:hover { border-color: var(--gold, #C8A96E); color: var(--gold, #C8A96E); }
+  .view-toggle__btn:focus-visible { outline: 2px solid var(--gold, #C8A96E); outline-offset: 2px; }
 </style>

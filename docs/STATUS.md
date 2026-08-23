@@ -8,10 +8,10 @@
 
 ## Current position
 
-**Phase:** A0 — Layout Explorer · **complete**
-**Last completed:** Phase A0 (before it, Phase G — homepage #6 and the Ivory / Wine scheme)
-**Next up:** Phase A — collection layouts and filters
-**Blocked on:** nothing
+**Phase:** none running — **paused between phases, by agreement**
+**Last completed:** Phase A0 — Layout Explorer (before it, Phase G — homepage #6 and the Ivory / Wine scheme)
+**Next up:** Phase A — collection layouts and filters. **Do not start it without a clear go-ahead.**
+**Blocked on:** homepage testing in progress
 
 **Working state:** clean. Nothing half-finished. Everything committed and pushed to `main` and `claude/maison-noir-shopify-theme-2cxtip`. Published homepage is Aureline.
 
@@ -25,7 +25,7 @@
 |---|---|
 | Files touched so far | — |
 | Done within the phase | — |
-| Next concrete step | Begin Phase A: turn `main-collection` into a settings-driven section, then add the thin `?view=` templates |
+| Next concrete step | Wait. On the word go: begin Phase A — turn `main-collection` into a settings-driven section, then add the thin `?view=` templates |
 | Known-incomplete | — |
 | Not yet verified | Phase A0 has not been opened in a browser — see "Not verified" below |
 
@@ -102,6 +102,20 @@ Homepage bugs reported mid-phase, so a fix never gets lost and the phase can be 
 | # | Reported | What | Where it belongs | Status |
 |---|---|---|---|---|
 | 1 | after #6 shipped | Category cards go square on wide monitors — fixed `min-height` with a full-bleed container, so shape drifts with screen width. Not a bug, a shape choice; fix is `aspect-ratio` or a width cap | `sections/category-showcase.liquid` | **Deferred by you** — revisit after homepage testing |
+
+---
+
+## The working agreement
+
+Set deliberately, and it holds until changed:
+
+1. **Bugs come before new work.** Anything found while testing is fixed first — whether it is in a homepage or in the phase just built — and only then does the next phase start.
+2. **No phase begins without an explicit go-ahead.** Finishing one phase is not permission to start the next.
+3. **Every report is written down** in the interrupt log below, at the time it arrives, whether it is fixed immediately or deferred. Nothing lives only in the conversation.
+4. **Docs and plan are updated after every piece of work**, not at the end of a phase — this file, plus `ROADMAP.md`, `HOMEPAGES.md` and `COLOR-SYSTEM.md` when what they describe changes.
+5. **A report only needs the page and the section** — "Lumière, sticky vitrine, cards overlap on tablet" is enough to act on.
+
+Testing is deliberately slow and thorough; implementation waits for it rather than racing ahead of it.
 
 ---
 

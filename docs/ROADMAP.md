@@ -1,26 +1,145 @@
-# Theme Roadmap — full scope
+# The build plan
 
-**Status: part built.** The homepages, the colour system, the Layout Explorer, the collection page and the product card are done. Product-detail, blog and page layouts are still specified rather than implemented.
+**Scope comes from [BRIEF.md](BRIEF.md)** — your words, verbatim. This file is how it gets built.
+**Position lives in [STATUS.md](STATUS.md)** — what is in flight right now.
+**Each phase ends with [HANDOVER.md](HANDOVER.md)** — what changed and what to check.
 
-**[BRIEF.md](BRIEF.md) holds your plan verbatim and is the source of truth for scope.** This file is how that scope gets built — the architecture, the order, the decisions. Where the two disagree, the brief wins.
+---
 
-**For where the work actually stands right now — mid-phase included — see [STATUS.md](STATUS.md).** This file is the plan; that one is the position.
+## Why this file was rewritten
+
+Three phases were reported done and were not:
+
+1. **Phase A** was checked against what had been built, not against the brief. Its Features list was two of six.
+2. **The collection page** was built and never designed — 45 of its classes had no CSS rule at all.
+3. **Every page except two** still has no surface-tone setting, so it cannot follow the global colour scheme the way the homepage sections do.
+
+Each is the same mistake: treating structure as the work, and treating styling and the colour system as something to do afterwards. The fix is not a longer task list. It is a definition of done that contains them, and a check that can be **run** rather than judged.
+
+---
+
+## Definition of done
+
+**A page is not finished until all six pass. No phase is reported complete until every page it touches passes all six.**
+
+| # | Requirement | How it is checked |
+|---|---|---|
+| 1 | **Every class the section renders has a CSS rule** | Script: pull every `class="…"`, look each up in `theme.css` and the section's own `<style>`. Must be zero |
+| 2 | **The section exposes a Surface tone** mapped to the ladder (`--s1..s4`), like every homepage section | Script: schema contains a `scheme` select with the four options |
+| 3 | **No hardcoded colour on a themed surface** — only photographic scrims and on-photo controls may be literal | Script: hex values outside the allowed list |
+| 4 | **Body copy scales** with `calc(… * var(--fs-scale, 1))` | Script: every `font-size` wrapped, or governed by `--heading-scale` |
+| 5 | **Contrast passes AA on all five schemes**, for body, muted and accent on every rung used | Script: relative-luminance calculation |
+| 6 | **Responsive** — no horizontal scroll, no overlap, at 360 / 768 / 1024 / 1440 / 1920 | **You, in a browser.** The one I cannot verify, and will keep saying so |
+
+Checks 1–5 run as one script, `scripts/check-page.sh`, before any phase is reported done.
 
 ---
 
 ## Where things actually stand
 
-| Area | State |
-|---|---|
-| Homepages | **6 built** (Classic, Blanc, Atelier, Noir, Lumière, Aureline) |
-| Colour system | **Done** — five schemes, one global setting drives every section (`COLOR-SYSTEM.md`) |
-| Product card | **Done (Phase B).** Five styles; quick view, wishlist, add-to-bag, sizes on hover, colour swatches, star rating, low stock, demo fallbacks |
-| Collection layouts | **Built (Phase A).** 23 `?view=` templates; plus image banner, best sellers, recently viewed and boolean filters. **Collections list still missing** |
-| Product layouts | **Not built.** `product.wide/gradient/digital.json` are identical stubs |
-| Blog / post layouts | **Not built.** `blog.sidebar-left/right.json` are identical stubs |
-| Pages (About / Contact) | Two About variants and two Contact variants exist, lightly differentiated |
-| Navbar styles | 3 exist (V1 classic, V2 centred, V3 hamburger). Mega menu exists but is not wired to a demo structure |
-| Demo navigation | **Half done.** The Layout Explorer ships (Phase A0). The demo-store mega menu is admin work and the menu export is Phase H |
+Measured, not remembered.
+
+| Page section | Surface tone | Unstyled classes |
+|---|---|---|
+| `main-collection` | yes | 0 |
+| `main-list-collections` | yes | 0 |
+| `main-product` | **no** | 1 |
+| `main-blog` · `main-article` | **no** | 0 |
+| `main-cart` | **no** | 0 |
+| `main-page` · `main-contact` | **no** | 0 |
+| `main-search` · `main-404` | **no** | 0 |
+| `main-account` · `main-login` · `main-register` · `main-addresses` · `main-order` | **no** | 0 |
+
+**Styling is largely fixed. The colour system is not — 13 of 15 pages cannot follow the scheme.**
+
+---
+
+## Phase 0 — the colour system reaches every page
+
+Before any new feature. This is the complaint that keeps recurring, and it is mechanical work rather than design work.
+
+- [ ] Surface tone select on all 13 remaining `main-*` sections
+- [ ] Each page's CSS driven through a per-page token block off the ladder, as `main-collection` does
+- [ ] Legacy aliases re-pointed so nothing sits on a fixed colour
+- [ ] `scripts/check-page.sh` written, and checks 1–5 green on every page
+- [ ] Contrast audited on all five schemes, every page
+
+---
+
+## Phase 1 — Collection / Shop · **done**
+
+Every line of the brief, ticked individually.
+
+**Layouts** — done: left sidebar · right sidebar · box container · wide container · list view · collections list · filter sidebar · drawer sidebar filter · dropdown sidebar filter · grid 2 · 3 · 4 · 5 · 6 · title styles 01–05.
+**Partial:** *filter hidden/toggle* — toggle is built, "hidden" was folded into it rather than shipped as its own option.
+
+**Features** — done: best seller products · image banner · pagination page · infinite scrolling · product recently viewed.
+
+**"All sorts of filters"** — done: availability · on sale · price slider · price presets · colour swatches · size pills · every other variant option · brand · product type · tags · in-stock-only modifier · discount tiers · new in · rating.
+
+---
+
+## Phase 2 — Product card · **nearly done**
+
+**Styles** — done: five (atelier, minimal, editorial overlay, bordered, plaque).
+**Basics** — done: discount badge · price + compare-at · add to cart · wishlist · quick view on hover.
+
+**Card features** — done: media auto · media carousel · toggle quick add · popup quick add.
+**Outstanding: media carousel autoplay (NEW) · media video (NEW)** — both flagged NEW in the brief.
+
+**Beyond the brief** — colour swatches · sizes on hover · star rating · low stock · sold out.
+
+---
+
+## Phase 3 — Product detail
+
+The largest phase in the brief. Itemised so none of it can be skimmed.
+
+**Layouts** — [ ] default · [ ] box container · [ ] wide container · [ ] digital products · [ ] default tab · [ ] tab accordion inner · [ ] background gradient · [ ] separate accordion styles for description / shipping / customer reviews
+
+**Thumbnail positions** — [ ] left · [ ] right · [ ] top · [ ] bottom · [ ] none · [ ] grid 1 column · [ ] grid 2 columns · [ ] grid mix · [ ] slider 2 columns · [ ] slider full-width · [ ] slider container
+
+**Features** — [ ] size guide · [ ] compare colour · [ ] ask a question · [ ] share products · [ ] pickup available · [ ] terms & conditions · [ ] custom buy button · [ ] shipping information · [ ] special offer · [ ] inner zoom · [ ] lightbox image · [ ] real-time visitor · [ ] buy now · [ ] image swatch · [ ] colour swatch · [ ] radio swatch · [ ] text swatch · [ ] trust badge · [ ] sticky add to cart · [ ] recently viewed
+
+**Boost sale** — [ ] countdown timer · [ ] stock countdown · [ ] smart product sticky · [ ] complementary products · [ ] recommendations · [ ] dynamic checkout buttons · [ ] variant image group · [ ] image banner · [ ] popup video
+
+---
+
+## Phase 4 — Blog
+
+Four groups, not two.
+
+**Blog layout** — [ ] left sidebar · [ ] right sidebar · [ ] without sidebar
+**Post layout** — [ ] left sidebar · [ ] right sidebar · [ ] without sidebar
+**Blog style** — [ ] list · [ ] grid · [ ] masonry
+**Post format** — [ ] gallery · [ ] video · [ ] audio
+
+---
+
+## Phase 5 — Pages and navigation
+
+- [ ] 2–3 About layouts
+- [ ] 2–3 Contact layouts
+- [ ] 2–3 navbar styles beyond the current three
+- [ ] Mega menu — three layouts, each **with images and text-only**, all rendering three levels, with per-child images
+
+---
+
+## Phase 6 — Demo package
+
+- [ ] Menu export — the full tree as copy-paste link/URL pairs
+- [ ] Setup guide — install order
+- [ ] `settings_data.json` for the demo store
+- [ ] ThemeForest submission checklist
+
+---
+
+## Standing rules
+
+- **Work continues phase by phase** without waiting for review.
+- **Bugs jump the queue.** Anything reported is fixed before the next phase resumes, and logged in `STATUS.md` whether fixed or deferred.
+- **Every phase ends with a handover** — what changed, what to check, where.
+- **Static analysis is not verification.** Everything handed over is unopened in a browser unless it says otherwise.
 
 ---
 
@@ -121,106 +240,7 @@ So the buyer can reproduce the demo navbar rather than rebuild it by hand:
 
 ---
 
-## Scope
-
-### Collection / Shop
-
-**Layouts** — left sidebar · right sidebar · box container · wide container · list view · **collections list** · filter sidebar · **filter hidden/toggle** · drawer sidebar filter · dropdown sidebar filter · grid 2/3/4/5/6 · collection title styles 01–05
-
-The brief adds a note on this group: *"in the filter put all sorts of filters"* — price, size, colour, availability, vendor, type, tag.
-
-**Features** — best seller products · image banner · pagination page · infinite scrolling · product recently viewed
-
-Built in Phase A except **collections list**, and *filter hidden* is currently folded into *filter toggle* rather than being its own option.
-
-### Product card (4–5 styles)
-
-Discount badge · price + compare-at · add to cart · wishlist · quick view on hover.
-
-**Card features:** media auto · media carousel · **media carousel autoplay (NEW)** · **media video (NEW)** · toggle quick add · popup quick add.
-
-Built in Phase B: five styles, swatches, star rating, low stock, sizes on hover, plus the additions below. **Not built: carousel autoplay and media video** — both marked NEW in the brief, so both are wanted. They are the open Phase B items.
-
-*Added beyond the brief:* colour-swatch preview on the card, "sold out" and "low stock" states, star rating slot, size-list-on-hover.
-
-### Product detail
-
-**Layouts** — default · box container · wide container · digital products · default tab · tab accordion inner · background gradient · separate accordion styles for description / shipping / customer reviews
-
-**Features** — size guide · compare colour · ask a question · share products · pickup available · terms & conditions · custom buy button · shipping information · special offer · inner zoom · lightbox image · real-time visitor count · buy now · **image swatch · colour swatch · radio swatch · text swatch (four separate features)** · trust badge · sticky add to cart · recently viewed
-
-**Thumbnails** — left · right · top · bottom · none · grid 1 · grid 2 · grid mix · slider 2 · slider full-width · slider container
-
-**Boost sale** — countdown timer · stock countdown · smart sticky · complementary products · recommendations · dynamic checkout · variant image group · image banner · popup video
-
-### Blog
-
-Four separate groups in the brief, not two:
-
-- **Blog layout** — left sidebar · right sidebar · without sidebar
-- **Post layout** — left sidebar · right sidebar · without sidebar
-- **Blog style** — list · grid · masonry
-- **Post format** — gallery · video · audio
-
-### Pages & navigation
-
-2–3 About and Contact layouts · 2–3 navbar styles beyond the current three
-
-### Mega menu — three modern layouts, each with and without images
-
-Three designs, and every one of them must work in two modes: **with imagery** and **text-only**. Six presentations from three layouts.
-
-**Text-only is a designed mode, not the same layout with the pictures deleted.** Dropping an image out of a layout built around one leaves a hole where it was. So each style specifies its own text-only composition — the panel narrows, the columns re-flow to fill the width, and the type does the work the image was doing.
-
-| Style | With images | Text-only |
-|---|---|---|
-| **V1** — full-width columns | Column list plus a large featured image panel on one side | Panel narrows to the columns' own width; columns re-flow to use the space; a lead column carries a short heading and description |
-| **V2** — thumbnail grid | Each child is a card: image, title, and its third-level links underneath | Cards become type-only tiles with a rule and hover accent, tighter grid, more per row |
-| **V3** — flyout + promo | Vertical child list with grandchildren, plus a promo banner | Flyout only, at reduced width, promo replaced by an optional text call-to-action |
-
-**Controls.** `mega_menu_style` stays global. A new **Show images in mega menu** setting sets the default; each *Mega menu item* block can override it, so `Shop` can be visual while `Pages` is plain text.
-
-**All three must render three levels.** Today only V3 does — V1 stops at two, V2 shows a *"n styles"* count where grandchildren exist.
-
-**Per-child images are missing and must be fixed.** `snippets/mega-menu.liquid:92` assigns `child_img` from `block.settings.featured_image` — the single image belonging to the whole menu, so V2's grid renders the *same* picture on every card. A thumbnail grid of identical thumbnails looks broken. The fix: take each child's image from the collection or product it links to, with an optional per-child override block on the header for links that point somewhere without an image.
-
-Also required, since these are the buyer's first impression: keyboard navigation and focus trapping, sensible behaviour when a menu has only two or three children rather than twelve, and correct rendering on the light, warm and custom colour schemes.
-
----
-
-## Homepage #6 — built
-
-`index.aureline.json`, 11 sections, on the **Ivory / Wine** scheme. Built from a reference design you supplied rather than from the speculative spec that used to sit here.
-
-It is the only commerce-led homepage — service bar, tabbed product grid, countdown offer, complete-the-look trio — where the other five are editorial. Full section list in [HOMEPAGES.md](HOMEPAGES.md).
-
-**Still not demonstrated by any homepage**, and worth a dedicated section when the demo is assembled: live colour-scheme switching, the cart *notification* mode as distinct from the drawer, and base-font-size scaling. These are theme settings rather than page content, so they show up only when a visitor changes them — which a demo visitor never will.
-
----
-
-## Build order
-
-Each phase ends shippable, so the theme is never half-broken.
-
-| Phase | Scope | Why this order |
-|---|---|---|
-| ~~**A0**~~ | ~~Layout Explorer panel + theme setting~~ | **Done.** Built first so every later layout registers itself in it. Stub entries carry a *Not yet styled* badge, which each phase flips as it makes a layout real |
-| ~~**A**~~ | ~~Collection layouts + filters~~ | **Done.** Four controls turned out to be wired to markup that did not exist — view toggle, list view, filter accordion and sidebar position — plus load-more and infinite scroll with no JS at all |
-| ~~**B**~~ | ~~Product card styles + card features~~ | **Done.** Two settings existed in the editor that nothing read; five styles now, plus swatches, rating, low stock and working sizes-on-hover |
-| **C** | Product detail layouts + thumbnails | Second most-judged page |
-| **D** | Product features + boost-sale | Long tail; each is independent |
-| **E** | Blog + post layouts | Smaller, self-contained |
-| **F** | Pages, navbar styles, mega menu | Needs the others to exist to link to |
-| ~~**G**~~ | ~~Homepage #6~~ | **Done, out of order.** Built from a supplied reference design with the new Ivory / Wine scheme |
-| **H** | Demo package | Menu export, setup guide, ThemeForest checklist |
-
-**Demo store content runs alongside, not at the end.** The ~10–15 invented products with variants should exist as soon as you can add them: they make Phase A–C reviews realistic, and the demo store is not presentable without them. Nothing in the build waits on them.
-
-**Every new section follows the conventions in `HOMEPAGES.md`** — surface-tone select mapped to the ladder, no hardcoded colour on a themed surface, `--onphoto-*` over photography, `--fs-scale` on body copy, fallback images, and `product-card` for anything product-shaped.
-
----
-
-## Decisions taken
+---\n\n## Decisions taken
 
 ### Filters — the app is optional, the theme is not dependent on it
 
@@ -268,10 +288,3 @@ You supplied a reference design instead of waiting for #1–#5 review, so Phase 
 
 ---
 
-## Status
-
-Built: the six homepages, the five colour schemes, the shared product card and quick view.
-
-Not built: every phase in the build order except **A0**, **A**, **B** and **G**. Phase C is next.
-
-Fine-grained position, including anything half-finished, lives in [STATUS.md](STATUS.md).

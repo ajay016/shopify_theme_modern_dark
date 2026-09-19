@@ -8,9 +8,11 @@
 
 ## Current position
 
-**Phase:** A (completion pass) · **complete** — B was reported done earlier and was; A was reported done and was **not**
+**Phase:** 0 — the colour system reaching every page · **not started**
 **Last completed:** Phase B (before it, A — collection layouts; A0 — Layout Explorer; G — homepage #6)
-**Next up:** close the gaps the verbatim brief exposed — **collections list** (Phase A), **media carousel autoplay** and **media video** (Phase B) — then Phase C
+**Next up:** Phase 0. Then the two card gaps (carousel autoplay, media video), then Phase 3 — product detail.
+
+**The plan was rewritten** — see [ROADMAP.md](ROADMAP.md). It now has a definition of done with six requirements, five of which run as a script (`./scripts/check-page.sh`), so "styled" and "follows the colour scheme" are measured rather than claimed. Current score: **2 of 15 pages pass**.
 **Blocked on:** nothing
 
 **Working state:** clean. Nothing half-finished. Everything committed and pushed to `main` and `claude/maison-noir-shopify-theme-2cxtip`. Published homepage is Aureline.

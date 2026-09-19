@@ -4,7 +4,7 @@ Rewritten at the end of every phase. `STATUS.md` holds the full position, `BRIEF
 
 ---
 
-# Phase A — collection page, design pass
+# Design pass — every page that was unstyled
 
 **Status:** done · committed · pushed
 **Half-done:** nothing.
@@ -52,6 +52,27 @@ Now styled: all five title styles, the toolbar and filter button, the sidebar an
 ## Not verified
 
 Static analysis only. Nothing opened in a browser: the drawer's open/close classes, the dropdown panel's position, the price-range slider (markup exists, no slider behaviour is implemented yet), and the page across all five schemes.
+
+---
+
+## Theme-wide audit
+
+The collection page was not the only one. Running the same class-against-CSS check over every section and snippet found **159 unstyled classes across 62 files**. Most were my regex catching Liquid variable names; the real ones were whole pages with no design behind them.
+
+Now styled:
+
+| Page | Was |
+|---|---|
+| **Cart** | grid, summary panel, quantity controls, note field, empty state — all bare |
+| **Article** | content typography, meta, tags, share, comments, and the entire blog sidebar |
+| **Contact** | form layout, info panel, success and error states |
+| **Account** | nav, order list, headers, empty state |
+| **Login / register** | the auth card itself, and the shared form field used by contact and addresses too |
+| **Blog & search cards** | media, meta, title, excerpt |
+| **Product page** | variant block, lightbox trigger, size-guide modal |
+| **Header** | nav alignment variants, v2 logo, submenu arrow |
+
+**Remaining: 45 flagged, almost all false positives** — Liquid string literals inside class attributes (`'portrait'`, `'left'`), and the explorer's classes, which are styled in a sibling snippet's inline `<style>` that a per-file check cannot see.
 
 ---
 

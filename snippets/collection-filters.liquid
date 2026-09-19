@@ -29,6 +29,18 @@
   assign style = style | default: 'sidebar'
   assign demo = demo | default: false
 
+  assign vendors = ''
+  assign types = ''
+  assign opt_names = ''
+  assign tags_all = ''
+  assign price_min = 999999999
+  assign price_max = 0
+  assign any_sale = false
+  assign any_out = false
+  assign any_new = false
+  assign any_rated = false
+  assign now_s = 'now' | date: '%s' | plus: 0
+
   # On a store with no catalogue — or one whose products are single-variant,
   # single-vendor and untagged — the derived facets collapse to Availability
   # and Price, and the panel reads as broken rather than empty. Demo mode
@@ -47,18 +59,6 @@
     assign any_new = true
     assign any_rated = true
   endif
-
-  assign vendors = ''
-  assign types = ''
-  assign opt_names = ''
-  assign tags_all = ''
-  assign price_min = 999999999
-  assign price_max = 0
-  assign any_sale = false
-  assign any_out = false
-  assign any_new = false
-  assign any_rated = false
-  assign now_s = 'now' | date: '%s' | plus: 0
 
   unless demo
   for p in products

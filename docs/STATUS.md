@@ -155,12 +155,27 @@ The phase was checked against *what I built* rather than against *the plan as re
 
 ---
 
+## Collection page design pass
+
+Reported by you: "no style, all the styles are broken, no filters at all", and the colour scheme not applying.
+
+All three were correct. A class-by-class check of what the section renders against what `theme.css` defines found **45 rendered classes with no rule at all** — every title style, the entire filter UI, the drawer, the dropdown and all pagination. The page had been built and never designed; the earlier phase work fixed its plumbing and added layouts, which made it *function* without making it *look* like anything.
+
+The colour complaint was a real design gap too: the collection page had no surface-tone setting, so unlike every homepage section it had no mapping onto the scheme ladder. It now has one.
+
+The filter complaint is two separate things: the filter *UI* was unstyled, which is fixed; and `collection.filters` is empty without Shopify's Search & Discovery app, which no theme can work around. The sidebar now collapses to full width rather than holding an empty column open.
+
+**Lesson, alongside the Phase A one:** "every class the section renders has a rule" is a check that can be run mechanically, and it would have caught this before the phase was reported done.
+
+---
+
 ## Interrupt log
 
 Homepage bugs reported mid-phase, so a fix never gets lost and the phase can be resumed exactly.
 
 | # | Reported | What | Where it belongs | Status |
 |---|---|---|---|---|
+| 2 | during Phase B | Collection page unstyled, scheme not applying, no filters | `assets/theme.css`, `sections/main-collection.liquid` | **Fixed** — 45 unstyled classes styled, surface tone added, empty sidebar collapses |
 | 1 | after #6 shipped | Category cards go square on wide monitors — fixed `min-height` with a full-bleed container, so shape drifts with screen width. Not a bug, a shape choice; fix is `aspect-ratio` or a width cap | `sections/category-showcase.liquid` | **Deferred by you** — revisit after homepage testing |
 
 ---

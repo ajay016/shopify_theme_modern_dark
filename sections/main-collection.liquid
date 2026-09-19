@@ -7,6 +7,21 @@
   assign title_style      = section.settings.title_style
   assign products_per_page = section.settings.products_per_page
   assign container_style  = section.settings.container_style | default: 'boxed'
+  assign scheme           = section.settings.scheme | default: 'theme'
+
+  comment
+    An empty sidebar is worse than no sidebar: with no Search & Discovery app
+    installed collection.filters is empty, and the layout would otherwise hold
+    a blank 264px column open beside the grid.
+  endcomment
+  assign has_filters = false
+  if collection.filters.size > 0
+    assign has_filters = true
+  endif
+  assign effective_sidebar = sidebar_position
+  if has_filters == false
+    assign effective_sidebar = 'none'
+  endif
 
   comment
     Demo products keep an empty or brand-new store from showing a blank shop
@@ -23,7 +38,7 @@
 {%- paginate collection.products by products_per_page -%}
 
 <div
-  class="collection-page collection-page--{{ container_style }}"
+  class="collection-page collection-page--{{ container_style }} collection-page--tone-{{ scheme }}"
   id="section-{{ section.id }}"
   data-sidebar="{{ sidebar_position }}"
   data-filter-style="{{ filter_style }}"
@@ -146,17 +161,17 @@
 
       <div class="toolbar-right">
         {%- render 'collection-sort' -%}
-        {%- if sidebar_position == 'none' -%}
+        {%- if effective_sidebar == 'none' -%}
           {%- render 'collection-view-toggle', columns: columns, current: view_default -%}
         {%- endif -%}
       </div>
     </div>
   {%- endif -%}
 
-  <div class="collection-layout container {% if sidebar_position != 'none' %}collection-layout--has-sidebar collection-layout--sidebar-{{ sidebar_position }}{% endif %}">
+  <div class="collection-layout container {% if effective_sidebar != 'none' %}collection-layout--has-sidebar collection-layout--sidebar-{{ effective_sidebar }}{% endif %}">
 
     {%- comment -%} Left Sidebar {%- endcomment -%}
-    {%- if sidebar_position == 'left' or sidebar_position == 'right' -%}
+    {%- if effective_sidebar == 'left' or effective_sidebar == 'right' -%}
       <aside class="collection-sidebar" aria-label="Filters">
         {%- if filter_style != 'drawer' and filter_style != 'dropdown' -%}
           <div class="sidebar-header">
@@ -258,7 +273,7 @@
 
     {%- comment -%} Main Products Area {%- endcomment -%}
     <div class="collection-main" id="collection-products">
-      {%- if sidebar_position == 'none' and filter_style != 'drawer' and filter_style != 'dropdown' -%}
+      {%- if effective_sidebar == 'none' and filter_style != 'drawer' and filter_style != 'dropdown' -%}
         <div class="collection-toolbar collection-toolbar--inline">
           {%- render 'collection-sort' -%}
           {%- render 'collection-view-toggle', columns: columns, current: view_default -%}
@@ -635,6 +650,17 @@
         { "value": "toggle",   "label": "Toggle Groups" }
       ],
       "default": "sidebar"
+    },
+    {
+      "type": "select", "id": "scheme", "label": "Surface tone",
+      "info": "Picks a step on the active colour scheme's ladder, exactly like the homepage sections.",
+      "options": [
+        { "value": "light", "label": "Alternate surface (soft)" },
+        { "value": "dark",  "label": "Primary surface" },
+        { "value": "warm",  "label": "Deep surface" },
+        { "value": "theme", "label": "Primary surface (follow theme)" }
+      ],
+      "default": "theme"
     },
     {
       "type": "select", "id": "container_style", "label": "Container Width",

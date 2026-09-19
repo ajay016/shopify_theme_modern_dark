@@ -104,18 +104,36 @@
         Price {%- render 'icon-chevron-down' -%}
       </button>
       <div class="filter-group__body">
-        <div class="price-range-filter">
-          <div class="price-range-inputs">
-            <input type="number" data-facet="price-min" placeholder="{{ price_min | money_without_currency | remove: ',' }}" min="0" aria-label="Minimum price">
+        <div class="cfilter-price" data-cfilter-price
+             data-floor="{{ price_min | divided_by: 100 | floor }}"
+             data-ceil="{{ price_max | divided_by: 100 | ceil }}">
+          <div class="cfilter-price__track">
+            <span class="cfilter-price__fill" data-price-fill></span>
+            <input class="cfilter-price__range" type="range" data-price-range="min"
+                   min="{{ price_min | divided_by: 100 | floor }}" max="{{ price_max | divided_by: 100 | ceil }}"
+                   value="{{ price_min | divided_by: 100 | floor }}" aria-label="Minimum price">
+            <input class="cfilter-price__range" type="range" data-price-range="max"
+                   min="{{ price_min | divided_by: 100 | floor }}" max="{{ price_max | divided_by: 100 | ceil }}"
+                   value="{{ price_max | divided_by: 100 | ceil }}" aria-label="Maximum price">
+          </div>
+          <div class="cfilter-price__vals">
+            <input type="number" data-facet="price-min" aria-label="Minimum price"
+                   placeholder="{{ price_min | divided_by: 100 | floor }}">
             <span>–</span>
-            <input type="number" data-facet="price-max" placeholder="{{ price_max | money_without_currency | remove: ',' }}" min="0" aria-label="Maximum price">
+            <input type="number" data-facet="price-max" aria-label="Maximum price"
+                   placeholder="{{ price_max | divided_by: 100 | ceil }}">
           </div>
         </div>
       </div>
     </div>
   {%- endif -%}
 
-  {%- comment -%}One group per variant option — Size, Colour, Material, whatever the merchant named them.{%- endcomment -%}
+  {%- comment -%}
+    One group per variant option, rendered by what the option IS rather than as
+    a uniform checkbox list: colours become swatches, sizes become pills,
+    anything else stays a labelled list. A fashion filter that renders "Black"
+    as a tickbox rather than a black circle is doing the shopper no favours.
+  {%- endcomment -%}
   {%- for opt_name in opt_name_list -%}
     {%- if opt_name != blank and opt_name != 'Title' -%}
       {%- liquid
@@ -130,6 +148,15 @@
           endfor
         endfor
         assign val_list = vals | split: '~' | uniq | sort
+
+        assign key = opt_name | downcase | strip
+        assign render_as = 'list'
+        if key == 'color' or key == 'colour'
+          assign render_as = 'swatch'
+        endif
+        if key == 'size'
+          assign render_as = 'pill'
+        endif
       -%}
       {%- if val_list.size > 0 -%}
         <div class="cfilter-group" data-cfilter-group>
@@ -137,14 +164,41 @@
             {{ opt_name }} {%- render 'icon-chevron-down' -%}
           </button>
           <div class="filter-group__body">
-            <ul class="filter-list">
-              {%- for v in val_list -%}
-                <li><label class="filter-check">
-                  <input type="checkbox" data-facet="options" value="{{ v | escape }}">
-                  <span>{{ v }}</span>
-                </label></li>
-              {%- endfor -%}
-            </ul>
+
+            {%- case render_as -%}
+              {%- when 'swatch' -%}
+                <div class="cfilter-swatches">
+                  {%- for v in val_list -%}
+                    {%- assign css_col = v | downcase | strip | replace: ' ', '' -%}
+                    <label class="cfilter-swatch" title="{{ v | escape }}">
+                      <input type="checkbox" data-facet="options" value="{{ v | escape }}">
+                      <span class="cfilter-swatch__dot" style="--sw: {{ css_col }};" aria-hidden="true"></span>
+                      <span class="visually-hidden">{{ v }}</span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+
+              {%- when 'pill' -%}
+                <div class="cfilter-pills">
+                  {%- for v in val_list -%}
+                    <label class="cfilter-pill">
+                      <input type="checkbox" data-facet="options" value="{{ v | escape }}">
+                      <span>{{ v }}</span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+
+              {%- else -%}
+                <ul class="filter-list">
+                  {%- for v in val_list -%}
+                    <li><label class="filter-check">
+                      <input type="checkbox" data-facet="options" value="{{ v | escape }}">
+                      <span>{{ v }}</span>
+                    </label></li>
+                  {%- endfor -%}
+                </ul>
+            {%- endcase -%}
+
           </div>
         </div>
       {%- endif -%}

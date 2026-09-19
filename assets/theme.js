@@ -1021,6 +1021,44 @@
     // filters already applied, otherwise they arrive unfiltered.
     document.addEventListener('collection:appended', apply);
 
+    // Dual-range price slider. Two overlaid inputs; each is clamped so the
+    // handles cannot cross, and the filled segment between them is drawn
+    // from their positions.
+    const priceBox = root.querySelector('[data-cfilter-price]');
+    if (priceBox) {
+      const lo = priceBox.querySelector('[data-price-range="min"]');
+      const hi = priceBox.querySelector('[data-price-range="max"]');
+      const fill = priceBox.querySelector('[data-price-fill]');
+      const numMin = root.querySelector('[data-facet="price-min"]');
+      const numMax = root.querySelector('[data-facet="price-max"]');
+      const floor = parseFloat(priceBox.dataset.floor || '0');
+      const ceil = parseFloat(priceBox.dataset.ceil || '0');
+      const span = Math.max(ceil - floor, 1);
+
+      function paint() {
+        const a = parseFloat(lo.value), b = parseFloat(hi.value);
+        fill.style.left = ((a - floor) / span * 100) + '%';
+        fill.style.right = (100 - (b - floor) / span * 100) + '%';
+      }
+      function fromSlider() {
+        let a = parseFloat(lo.value), b = parseFloat(hi.value);
+        if (a > b) { if (this === lo) { a = b; lo.value = a; } else { b = a; hi.value = b; } }
+        numMin.value = a > floor ? a : '';
+        numMax.value = b < ceil ? b : '';
+        paint();
+        apply();
+      }
+      lo.addEventListener('input', fromSlider);
+      hi.addEventListener('input', fromSlider);
+
+      [numMin, numMax].forEach(inp => inp && inp.addEventListener('change', () => {
+        lo.value = numMin.value === '' ? floor : numMin.value;
+        hi.value = numMax.value === '' ? ceil : numMax.value;
+        paint();
+      }));
+      paint();
+    }
+
     apply();
   }
 

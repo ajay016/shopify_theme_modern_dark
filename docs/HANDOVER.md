@@ -58,6 +58,13 @@ Shopify only populates `collection.filters` when the Search & Discovery app is i
 | **Brand** | `product.vendor` |
 | **Product type** | `product.type` |
 | **Tags** | `collection.all_tags` |
+| **Stock** — only show sizes in stock | variant-level availability |
+| **Discount** — 20/30/50/70%+ | compare-at against price |
+| **New in** — 14 / 30 / 60 days | `published_at` |
+| **Rating** — 4★ / 3★ and up | reviews metafield |
+| **Price presets** — under 100, 100–250, 250–500, 500+ | price, alongside the slider |
+
+**"Only show sizes in stock" is a modifier, not a filter.** With a size chosen it narrows the match to sizes that are actually buyable rather than merely offered — the difference between a product that *comes in* Large and one where a Large can be bought. With no size chosen it simply hides sold-out products. The plain Size group is kept as well, because someone browsing wants to see everything and someone buying wants only what they can have.
 
 Within a group values OR together (Small *or* Medium); across groups they AND (Small *and* Black *and* in stock) — how shoppers expect faceted filtering to behave. There is a live result count, a Clear all, and an empty state when nothing matches. Cards arriving from load-more or infinite scroll obey the filters already applied.
 

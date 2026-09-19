@@ -36,6 +36,9 @@
   assign price_max = 0
   assign any_sale = false
   assign any_out = false
+  assign any_new = false
+  assign any_rated = false
+  assign now_s = 'now' | date: '%s' | plus: 0
 
   for p in products
     if p.price < price_min
@@ -50,6 +53,14 @@
     unless p.available
       assign any_out = true
     endunless
+    assign pub_s = p.published_at | date: '%s' | plus: 0
+    assign age_d = now_s | minus: pub_s | divided_by: 86400
+    if age_d <= 60
+      assign any_new = true
+    endif
+    if p.metafields.reviews.rating.value != blank
+      assign any_rated = true
+    endif
     if p.vendor != blank
       assign vendors = vendors | append: p.vendor | append: '~'
     endif
@@ -104,6 +115,14 @@
         Price {%- render 'icon-chevron-down' -%}
       </button>
       <div class="filter-group__body">
+        <div class="cfilter-pills cfilter-pills--price">
+          {%- assign ceil_major = price_max | divided_by: 100 -%}
+          <label class="cfilter-pill"><input type="checkbox" data-facet="price-preset" value="0-100"><span>Under 100</span></label>
+          {%- if ceil_major > 100 -%}<label class="cfilter-pill"><input type="checkbox" data-facet="price-preset" value="100-250"><span>100–250</span></label>{%- endif -%}
+          {%- if ceil_major > 250 -%}<label class="cfilter-pill"><input type="checkbox" data-facet="price-preset" value="250-500"><span>250–500</span></label>{%- endif -%}
+          {%- if ceil_major > 500 -%}<label class="cfilter-pill"><input type="checkbox" data-facet="price-preset" value="500-999999"><span>500+</span></label>{%- endif -%}
+        </div>
+
         <div class="cfilter-price" data-cfilter-price
              data-floor="{{ price_min | divided_by: 100 | floor }}"
              data-ceil="{{ price_max | divided_by: 100 | ceil }}">
@@ -204,6 +223,71 @@
       {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
+
+  {%- comment -%}
+    Size availability. The option groups above match a product that OFFERS a
+    size; this matches one where that size is actually buyable. Kept separate
+    rather than replacing the other, because a shopper browsing wants to see
+    everything and a shopper buying wants only what they can have.
+  {%- endcomment -%}
+  <div class="cfilter-group" data-cfilter-group>
+    <button class="filter-group__toggle" type="button" aria-expanded="true">
+      Stock {%- render 'icon-chevron-down' -%}
+    </button>
+    <div class="filter-group__body">
+      <ul class="filter-list">
+        <li><label class="filter-check">
+          <input type="checkbox" data-facet="instock-only" value="true">
+          <span>Only show sizes in stock</span>
+        </label></li>
+      </ul>
+    </div>
+  </div>
+
+  {%- if any_sale -%}
+    <div class="cfilter-group" data-cfilter-group>
+      <button class="filter-group__toggle" type="button" aria-expanded="true">
+        Discount {%- render 'icon-chevron-down' -%}
+      </button>
+      <div class="filter-group__body">
+        <div class="cfilter-pills">
+          <label class="cfilter-pill"><input type="checkbox" data-facet="discount" value="20"><span>20%+</span></label>
+          <label class="cfilter-pill"><input type="checkbox" data-facet="discount" value="30"><span>30%+</span></label>
+          <label class="cfilter-pill"><input type="checkbox" data-facet="discount" value="50"><span>50%+</span></label>
+          <label class="cfilter-pill"><input type="checkbox" data-facet="discount" value="70"><span>70%+</span></label>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if any_new -%}
+    <div class="cfilter-group" data-cfilter-group>
+      <button class="filter-group__toggle" type="button" aria-expanded="true">
+        New in {%- render 'icon-chevron-down' -%}
+      </button>
+      <div class="filter-group__body">
+        <div class="cfilter-pills">
+          <label class="cfilter-pill"><input type="checkbox" data-facet="age" value="14"><span>14 days</span></label>
+          <label class="cfilter-pill"><input type="checkbox" data-facet="age" value="30"><span>30 days</span></label>
+          <label class="cfilter-pill"><input type="checkbox" data-facet="age" value="60"><span>60 days</span></label>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if any_rated -%}
+    <div class="cfilter-group" data-cfilter-group>
+      <button class="filter-group__toggle" type="button" aria-expanded="true">
+        Rating {%- render 'icon-chevron-down' -%}
+      </button>
+      <div class="filter-group__body">
+        <div class="cfilter-pills">
+          <label class="cfilter-pill"><input type="checkbox" data-facet="rating" value="4"><span>4★ &amp; up</span></label>
+          <label class="cfilter-pill"><input type="checkbox" data-facet="rating" value="3"><span>3★ &amp; up</span></label>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
 
   {%- if vendor_list.size > 1 -%}
     <div class="cfilter-group" data-cfilter-group>

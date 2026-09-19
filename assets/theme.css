@@ -3268,3 +3268,10 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
+
+/* Price presets sit above the slider, slightly tighter than size pills */
+.cfilter-pills--price { margin-bottom: 14px; }
+.cfilter-pills--price .cfilter-pill span { min-width: 0; height: 32px; padding: 0 11px; font-size: calc(11px * var(--fs-scale,1)); }
+
+/* Collections list head — the text column beside the controls */
+.clist-head__text { min-width: 0; flex: 1 1 320px; }

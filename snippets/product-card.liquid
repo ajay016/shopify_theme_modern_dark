@@ -183,10 +183,46 @@
         assign opt_vals = opt_vals | append: val | append: '|'
       endfor
     endfor
+
+    comment
+      Option values that are ACTUALLY BUYABLE, not merely offered. "Large" on
+      the card above means the product comes in Large; here it means a Large is
+      in stock — which is what a shopper filtering by their size wants.
+    endcomment
+    assign opt_instock = ''
+    for v in product.variants
+      if v.available
+        for ov in v.options
+          if ov != blank
+            assign opt_instock = opt_instock | append: ov | append: '|'
+          endif
+        endfor
+      endif
+    endfor
+
     assign on_sale = false
+    assign discount_pc = 0
     if product.compare_at_price > product.price
       assign on_sale = true
+      assign discount_pc = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price
     endif
+
+    comment
+      Age in days, so a "New in" filter can ask for the last 14/30/60 without
+      the browser having to parse a date on every card.
+    endcomment
+    assign now_s = 'now' | date: '%s' | plus: 0
+    assign pub_s = product.published_at | date: '%s' | plus: 0
+    assign age_days = now_s | minus: pub_s | divided_by: 86400
+
+    assign card_rating = product.metafields.reviews.rating.value.rating | default: product.metafields.reviews.rating.value | default: 0
+    assign colour_count = 0
+    for opt in product.options_with_values
+      assign ok2 = opt.name | downcase | strip
+      if ok2 == 'color' or ok2 == 'colour'
+        assign colour_count = opt.values.size
+      endif
+    endfor
   -%}
   <div
     class="product-card pcard pcard--{{ scheme }} pcard--{{ card_style }} pcard--align-{{ text_align }} pcard--rad-{{ radius }}{% if rail %} pcard--rail{% endif %}"
@@ -200,6 +236,11 @@
     data-type="{{ product.type | escape }}"
     data-tags="{{ product.tags | join: '|' | escape }}"
     data-options="{{ opt_vals | escape }}"
+    data-options-instock="{{ opt_instock | escape }}"
+    data-discount="{{ discount_pc }}"
+    data-age="{{ age_days }}"
+    data-rating="{{ card_rating }}"
+    data-colours="{{ colour_count }}"
   >
     <script type="application/json" class="product-card__json">{"id":{{ product.id }},"title":{{ product.title | json }},"vendor":{{ product.vendor | json }},"url":{{ product.url | json }},"price":{{ product.price }},"compare_at_price":{{ product.compare_at_price | default: 0 }},"body_html":{{ product.description | json }},"images":{{ imgs_j }},"options":{{ product.options | json }},"variants":{{ vars_j }}}</script>
 

@@ -966,9 +966,39 @@
 
           if (facet === 'available' || facet === 'onsale') {
             ok = ok && wanted.includes((card.dataset[facet] || '').toLowerCase());
+
           } else if (facet === 'options' || facet === 'tags') {
-            const have = parseList(card.dataset[facet]);
+            // "Only show sizes in stock" narrows which option list is consulted:
+            // the buyable values rather than every value offered.
+            const useStock = !!groups['instockOnly'];
+            const src = (facet === 'options' && useStock) ? card.dataset.optionsInstock : card.dataset[facet];
+            const have = parseList(src);
             ok = ok && wanted.some(w => have.includes(w));
+
+          } else if (facet === 'instockOnly') {
+            // A modifier on the option facet, not a filter of its own. When no
+            // size is chosen it still means something: show only buyable items.
+            if (!groups['options']) ok = ok && (card.dataset.available || '') === 'true';
+
+          } else if (facet === 'discount') {
+            const d = parseFloat(card.dataset.discount || '0');
+            ok = ok && wanted.some(w => d >= parseFloat(w));
+
+          } else if (facet === 'age') {
+            const a = parseFloat(card.dataset.age || '99999');
+            ok = ok && wanted.some(w => a <= parseFloat(w));
+
+          } else if (facet === 'rating') {
+            const r = parseFloat(card.dataset.rating || '0');
+            ok = ok && wanted.some(w => r >= parseFloat(w));
+
+          } else if (facet === 'pricePreset') {
+            const p = parseInt(card.dataset.price || '0', 10) / 100;
+            ok = ok && wanted.some(w => {
+              const [lo, hi] = w.split('-').map(parseFloat);
+              return p >= lo && p <= hi;
+            });
+
           } else {
             const have = (card.dataset[facet] || '').toLowerCase();
             ok = ok && wanted.includes(have);

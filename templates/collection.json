@@ -12,7 +12,7 @@
     "main": {
       "type": "main-collection",
       "settings": {
-        "title_style": "style-3",
+        "title_style": "style-2",
         "sidebar_position": "left",
         "filter_style": "sidebar",
         "scheme": "theme",
@@ -20,7 +20,7 @@
         "grid_columns": "4",
         "view_default": "grid",
         "pagination_style": "numbered",
-        "products_per_page": 24,
+        "products_per_page": 12,
         "show_banner": true,
         "banner_height": 40,
         "banner_text_position": "center",
@@ -32,7 +32,7 @@
         "bestsellers_count": 4,
         "bestsellers_position": "above",
         "builtin_filters": true,
-        "show_demo_when_empty": true
+        "show_demo_when_empty": false
       }
     },
     "recently": {

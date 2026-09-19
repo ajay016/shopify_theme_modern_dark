@@ -185,10 +185,13 @@ section should follow.
 
 ## What's built, and what isn't
 
-The homepages and the colour system are done. The collection, product, blog and page
-layouts are **specified but not built** — the alternate template files
-(`collection.list.json`, `product.wide.json`, …) exist as identical stubs and do not yet
-differ from each other.
+The homepages, the colour system, the collection page and the product card are done.
+The **product detail, blog and page layouts are specified but not built** — those
+alternate template files (`product.wide.json`, `blog.sidebar-left.json`, …) still render
+the default layout.
+
+A **Layouts** tab on the edge of every page lists every layout the theme ships, each as a
+link. Hide it before going live in **Theme settings → Demo**.
 
 **`docs/HANDOVER.md`** is the short read after each phase: what changed, what to check and where.
 

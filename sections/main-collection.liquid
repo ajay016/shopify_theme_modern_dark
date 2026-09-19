@@ -18,8 +18,17 @@
   if collection.filters.size > 0
     assign has_filters = true
   endif
+  comment
+    With Search & Discovery installed we render Shopify's own filters. Without
+    it the sidebar renders the built-in set derived from the products, so the
+    page has working filters either way and the column is never empty.
+  endcomment
+  assign use_builtin_filters = false
+  if has_filters == false and section.settings.builtin_filters
+    assign use_builtin_filters = true
+  endif
   assign effective_sidebar = sidebar_position
-  if has_filters == false
+  if has_filters == false and use_builtin_filters == false
     assign effective_sidebar = 'none'
   endif
 
@@ -184,6 +193,10 @@
               <a href="{{ collection.url }}" class="sidebar-clear">{{ 'collections.filtering.clear_all' | t }}</a>
             {%- endif -%}
           </div>
+
+          {%- if use_builtin_filters -%}
+            {%- render 'collection-filters', products: collection.products, style: filter_style -%}
+          {%- endif -%}
 
           {%- comment -%}
             "Toggle groups" is the same sidebar with every group collapsed, so a
@@ -433,6 +446,9 @@
         <button class="filter-drawer__close" data-close-filter-drawer aria-label="{{ 'accessibility.close' | t }}">{%- render 'icon-close' -%}</button>
       </div>
       <div class="filter-drawer__body">
+        {%- if use_builtin_filters -%}
+          {%- render 'collection-filters', products: collection.products, style: 'drawer' -%}
+        {%- endif -%}
         {%- for filter in collection.filters -%}
           <div class="filter-group" data-filter-group>
             <button class="filter-group__toggle" aria-expanded="true">
@@ -732,6 +748,8 @@
       ],
       "default": "above"
     },
+
+    { "type": "checkbox", "id": "builtin_filters", "label": "Use built-in filters when no filter app is installed", "info": "Builds Availability, On sale, Price, Size, Colour, Brand, Product type and Tag filters from your own products and applies them to the products on the page. Shopify's own filters are used instead whenever the Search & Discovery app provides them.", "default": true },
 
     { "type": "header", "content": "Demo" },
     {

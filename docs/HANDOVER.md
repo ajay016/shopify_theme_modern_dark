@@ -45,7 +45,25 @@ Now styled: all five title styles, the toolbar and filter button, the sidebar an
 | Med | No blank sidebar column when there are no filters | `?view=sidebar-left` |
 | Low | Drawer and dropdown filter panels | `?view=filter-drawer`, `?view=filter-dropdown` |
 
-**Filters still need Shopify's free Search & Discovery app.** Without it `collection.filters` is empty — there is nothing for the theme to render. That is a Shopify platform requirement, not a theme bug, and the sidebar now collapses instead of sitting empty.
+## Filters — the theme now has its own
+
+Shopify only populates `collection.filters` when the Search & Discovery app is installed, which is why the page had none. Rather than leave that as the answer, the theme now builds its own filter set from the catalogue, so filtering works on any store with no app:
+
+| Filter | Built from |
+|---|---|
+| **Availability** — in stock / out of stock | `product.available` |
+| **On sale** | compare-at price above price |
+| **Price** — min / max | the collection's own price span |
+| **Size, Colour, Material…** | every variant option the products define — one group per option, named as the merchant named it |
+| **Brand** | `product.vendor` |
+| **Product type** | `product.type` |
+| **Tags** | `collection.all_tags` |
+
+Within a group values OR together (Small *or* Medium); across groups they AND (Small *and* Black *and* in stock) — how shoppers expect faceted filtering to behave. There is a live result count, a Clear all, and an empty state when nothing matches. Cards arriving from load-more or infinite scroll obey the filters already applied.
+
+**Where Search & Discovery *is* installed, Shopify's native filters are used instead** and the built-in set never appears. Toggle in **Collection → Use built-in filters when no filter app is installed**.
+
+**The honest limit:** the built-in filters narrow *the products on the page*, since a theme cannot re-query the catalogue without the app. Pair with a higher products-per-page value. Native filters do not have this limit.
 
 ---
 

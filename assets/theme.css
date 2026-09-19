@@ -3132,3 +3132,32 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 /* Testimonial stars */
 .star { color: var(--gold, #C8A96E); font-size: calc(13px * var(--fs-scale,1)); line-height: 1; }
 .star.is-off { color: var(--border, rgba(200,169,110,.3)); }
+
+/* ---------- Built-in collection filters ---------- */
+.cfilter { display: block; }
+.cfilter-group { border-bottom: 1px solid var(--cp-bdr, var(--border, rgba(200,169,110,.18))); }
+.cfilter-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding-top: 14px;
+}
+.cfilter-count {
+  font-size: calc(11px * var(--fs-scale,1));
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--cp-mut, var(--muted, rgba(245,240,232,.62)));
+}
+.cfilter-clear {
+  border: 0; background: transparent; cursor: pointer; padding: 0;
+  font-family: var(--ff-body,'Outfit',sans-serif);
+  font-size: calc(11px * var(--fs-scale,1));
+  font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--cp-acc, var(--gold, #C8A96E));
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.cfilter-clear[hidden] { display: none; }
+.cfilter-empty {
+  padding: clamp(40px,7vh,72px) 0; text-align: center;
+  font-size: calc(15px * var(--fs-scale,1));
+  color: var(--cp-mut, var(--muted, rgba(245,240,232,.62)));
+}
+/* A hidden card must leave the grid flow, not just go invisible. */
+.product-grid [data-pcard][hidden] { display: none !important; }

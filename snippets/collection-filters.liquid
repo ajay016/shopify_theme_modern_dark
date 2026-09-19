@@ -1,0 +1,216 @@
+{%- comment -%}
+  ============================================================
+  BUILT-IN COLLECTION FILTERS
+
+  Shopify only populates `collection.filters` when the Search &
+  Discovery app is installed and configured. Without it a theme
+  has no filters to render — which is why this page had none.
+
+  This snippet builds a filter set out of the catalogue itself,
+  so filtering works on any store with no app at all:
+
+    Availability · On sale · Price · Size / Colour / any other
+    variant option · Vendor · Product type · Tags
+
+  It filters the products on the page, in the browser. That is
+  the honest limit: it narrows the current page rather than
+  re-querying the whole collection, so it is paired with a
+  larger products-per-page value. Where the app IS installed,
+  `main-collection` renders Shopify's native filters instead and
+  this never appears.
+
+  Accepts:
+    - products {Array}  the products to derive facets from
+    - style    {String} 'sidebar' | 'drawer' | 'dropdown' | 'toggle'
+  ============================================================
+{%- endcomment -%}
+
+{%- liquid
+  assign style = style | default: 'sidebar'
+
+  assign vendors = ''
+  assign types = ''
+  assign opt_names = ''
+  assign tags_all = ''
+  assign price_min = 999999999
+  assign price_max = 0
+  assign any_sale = false
+  assign any_out = false
+
+  for p in products
+    if p.price < price_min
+      assign price_min = p.price
+    endif
+    if p.price > price_max
+      assign price_max = p.price
+    endif
+    if p.compare_at_price > p.price
+      assign any_sale = true
+    endif
+    unless p.available
+      assign any_out = true
+    endunless
+    if p.vendor != blank
+      assign vendors = vendors | append: p.vendor | append: '~'
+    endif
+    if p.type != blank
+      assign types = types | append: p.type | append: '~'
+    endif
+    for opt in p.options_with_values
+      assign opt_names = opt_names | append: opt.name | append: '~'
+    endfor
+  endfor
+
+  assign vendor_list = vendors | split: '~' | uniq | sort
+  assign type_list = types | split: '~' | uniq | sort
+  assign opt_name_list = opt_names | split: '~' | uniq
+  assign tag_list = collection.all_tags | default: tags_all
+  if price_min > price_max
+    assign price_min = 0
+  endif
+-%}
+
+<div class="cfilter" data-cfilter data-cfilter-style="{{ style }}">
+
+  <div class="cfilter-group" data-cfilter-group>
+    <button class="filter-group__toggle" type="button" aria-expanded="true">
+      Availability {%- render 'icon-chevron-down' -%}
+    </button>
+    <div class="filter-group__body">
+      <ul class="filter-list">
+        <li><label class="filter-check">
+          <input type="checkbox" data-facet="available" value="true">
+          <span>In stock</span>
+        </label></li>
+        {%- if any_out -%}
+          <li><label class="filter-check">
+            <input type="checkbox" data-facet="available" value="false">
+            <span>Out of stock</span>
+          </label></li>
+        {%- endif -%}
+        {%- if any_sale -%}
+          <li><label class="filter-check">
+            <input type="checkbox" data-facet="onsale" value="true">
+            <span>On sale</span>
+          </label></li>
+        {%- endif -%}
+      </ul>
+    </div>
+  </div>
+
+  {%- if price_max > 0 -%}
+    <div class="cfilter-group" data-cfilter-group>
+      <button class="filter-group__toggle" type="button" aria-expanded="true">
+        Price {%- render 'icon-chevron-down' -%}
+      </button>
+      <div class="filter-group__body">
+        <div class="price-range-filter">
+          <div class="price-range-inputs">
+            <input type="number" data-facet="price-min" placeholder="{{ price_min | money_without_currency | remove: ',' }}" min="0" aria-label="Minimum price">
+            <span>–</span>
+            <input type="number" data-facet="price-max" placeholder="{{ price_max | money_without_currency | remove: ',' }}" min="0" aria-label="Maximum price">
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%}One group per variant option — Size, Colour, Material, whatever the merchant named them.{%- endcomment -%}
+  {%- for opt_name in opt_name_list -%}
+    {%- if opt_name != blank and opt_name != 'Title' -%}
+      {%- liquid
+        assign vals = ''
+        for p in products
+          for opt in p.options_with_values
+            if opt.name == opt_name
+              for v in opt.values
+                assign vals = vals | append: v | append: '~'
+              endfor
+            endif
+          endfor
+        endfor
+        assign val_list = vals | split: '~' | uniq | sort
+      -%}
+      {%- if val_list.size > 0 -%}
+        <div class="cfilter-group" data-cfilter-group>
+          <button class="filter-group__toggle" type="button" aria-expanded="true">
+            {{ opt_name }} {%- render 'icon-chevron-down' -%}
+          </button>
+          <div class="filter-group__body">
+            <ul class="filter-list">
+              {%- for v in val_list -%}
+                <li><label class="filter-check">
+                  <input type="checkbox" data-facet="options" value="{{ v | escape }}">
+                  <span>{{ v }}</span>
+                </label></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if vendor_list.size > 1 -%}
+    <div class="cfilter-group" data-cfilter-group>
+      <button class="filter-group__toggle" type="button" aria-expanded="true">
+        Brand {%- render 'icon-chevron-down' -%}
+      </button>
+      <div class="filter-group__body">
+        <ul class="filter-list">
+          {%- for v in vendor_list -%}
+            {%- if v != blank -%}
+              <li><label class="filter-check">
+                <input type="checkbox" data-facet="vendor" value="{{ v | escape }}">
+                <span>{{ v }}</span>
+              </label></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if type_list.size > 1 -%}
+    <div class="cfilter-group" data-cfilter-group>
+      <button class="filter-group__toggle" type="button" aria-expanded="true">
+        Product type {%- render 'icon-chevron-down' -%}
+      </button>
+      <div class="filter-group__body">
+        <ul class="filter-list">
+          {%- for v in type_list -%}
+            {%- if v != blank -%}
+              <li><label class="filter-check">
+                <input type="checkbox" data-facet="type" value="{{ v | escape }}">
+                <span>{{ v }}</span>
+              </label></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if tag_list.size > 0 -%}
+    <div class="cfilter-group" data-cfilter-group>
+      <button class="filter-group__toggle" type="button" aria-expanded="false">
+        Tags {%- render 'icon-chevron-down' -%}
+      </button>
+      <div class="filter-group__body is-collapsed">
+        <ul class="filter-list">
+          {%- for t in tag_list limit: 30 -%}
+            <li><label class="filter-check">
+              <input type="checkbox" data-facet="tags" value="{{ t | escape }}">
+              <span>{{ t }}</span>
+            </label></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="cfilter-foot">
+    <span class="cfilter-count" data-cfilter-count></span>
+    <button type="button" class="cfilter-clear" data-cfilter-clear hidden>Clear all</button>
+  </div>
+</div>

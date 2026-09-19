@@ -917,6 +917,113 @@
   }
 
 
+
+  /* ============================================================
+     Built-in collection filters
+
+     Shopify only populates collection.filters with the Search &
+     Discovery app installed. This filters the rendered grid from
+     facets the product card publishes as data- attributes, so a
+     store with no app still has working filters.
+
+     Within one facet the values OR together (Small OR Medium);
+     across facets they AND (Small AND Black AND in stock), which
+     is how shoppers expect faceted filtering to behave.
+     ============================================================ */
+  function initBuiltInFilters() {
+    const root = document.querySelector('[data-cfilter]');
+    const grid = document.getElementById('product-grid');
+    if (!root || !grid) return;
+
+    const countEl = root.querySelector('[data-cfilter-count]');
+    const clearBtn = root.querySelector('[data-cfilter-clear]');
+
+    function parseList(v) {
+      return (v || '').split('|').map(s => s.trim().toLowerCase()).filter(Boolean);
+    }
+
+    function apply() {
+      const checks = [...root.querySelectorAll('input[type="checkbox"][data-facet]:checked')];
+      const groups = {};
+      checks.forEach(c => {
+        (groups[c.dataset.facet] = groups[c.dataset.facet] || []).push(c.value.toLowerCase());
+      });
+
+      const minRaw = root.querySelector('[data-facet="price-min"]');
+      const maxRaw = root.querySelector('[data-facet="price-max"]');
+      const min = minRaw && minRaw.value !== '' ? parseFloat(minRaw.value) * 100 : null;
+      const max = maxRaw && maxRaw.value !== '' ? parseFloat(maxRaw.value) * 100 : null;
+
+      let shown = 0;
+      const cards = [...grid.querySelectorAll('[data-pcard]')];
+
+      cards.forEach(card => {
+        let ok = true;
+
+        for (const facet in groups) {
+          const wanted = groups[facet];
+          if (!wanted.length) continue;
+
+          if (facet === 'available' || facet === 'onsale') {
+            ok = ok && wanted.includes((card.dataset[facet] || '').toLowerCase());
+          } else if (facet === 'options' || facet === 'tags') {
+            const have = parseList(card.dataset[facet]);
+            ok = ok && wanted.some(w => have.includes(w));
+          } else {
+            const have = (card.dataset[facet] || '').toLowerCase();
+            ok = ok && wanted.includes(have);
+          }
+          if (!ok) break;
+        }
+
+        if (ok && (min !== null || max !== null)) {
+          const price = parseInt(card.dataset.price || '0', 10);
+          if (min !== null && price < min) ok = false;
+          if (max !== null && price > max) ok = false;
+        }
+
+        card.hidden = !ok;
+        if (ok) shown++;
+      });
+
+      const anyActive = checks.length > 0 || min !== null || max !== null;
+      if (countEl) countEl.textContent = anyActive ? shown + ' of ' + cards.length : cards.length + ' products';
+      if (clearBtn) clearBtn.hidden = !anyActive;
+
+      let empty = grid.parentElement.querySelector('[data-cfilter-empty]');
+      if (shown === 0) {
+        if (!empty) {
+          empty = document.createElement('p');
+          empty.setAttribute('data-cfilter-empty', '');
+          empty.className = 'cfilter-empty';
+          empty.textContent = 'No products match these filters.';
+          grid.parentElement.insertBefore(empty, grid.nextSibling);
+        }
+      } else if (empty) {
+        empty.remove();
+      }
+    }
+
+    root.addEventListener('change', e => {
+      if (e.target.matches('[data-facet]')) apply();
+    });
+    root.addEventListener('input', e => {
+      if (e.target.matches('[data-facet="price-min"], [data-facet="price-max"]')) apply();
+    });
+    clearBtn && clearBtn.addEventListener('click', () => {
+      root.querySelectorAll('input[data-facet]').forEach(i => {
+        if (i.type === 'checkbox') i.checked = false; else i.value = '';
+      });
+      apply();
+    });
+
+    // Cards appended by load-more or infinite scroll must obey the
+    // filters already applied, otherwise they arrive unfiltered.
+    document.addEventListener('collection:appended', apply);
+
+    apply();
+  }
+
   /* ============================================================
      Collection view toggle — grid / list
 
@@ -1237,6 +1344,7 @@
     initQuickView();
     initWishlist();
     initFilters();
+    initBuiltInFilters();
     initViewToggle();
     initLoadMore();
     initInfiniteScroll();

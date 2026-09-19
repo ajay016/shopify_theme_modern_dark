@@ -170,11 +170,36 @@
     endfor
     assign vars_j = vars_j | append: ']'
   -%}
+  {%- comment -%}
+    Facets published on the card itself, so the collection page can filter
+    without Shopify's Search & Discovery app. Option values are flattened into
+    one list because a filter only needs to know "does this product offer
+    Large" — not which option position holds it.
+  {%- endcomment -%}
+  {%- liquid
+    assign opt_vals = ''
+    for opt in product.options_with_values
+      for val in opt.values
+        assign opt_vals = opt_vals | append: val | append: '|'
+      endfor
+    endfor
+    assign on_sale = false
+    if product.compare_at_price > product.price
+      assign on_sale = true
+    endif
+  -%}
   <div
     class="product-card pcard pcard--{{ scheme }} pcard--{{ card_style }} pcard--align-{{ text_align }} pcard--rad-{{ radius }}{% if rail %} pcard--rail{% endif %}"
     data-pcard
     data-product-id="{{ product.id }}"
     data-quickadd="{{ quickadd_style }}"
+    data-price="{{ product.price }}"
+    data-available="{{ product.available }}"
+    data-onsale="{{ on_sale }}"
+    data-vendor="{{ product.vendor | escape }}"
+    data-type="{{ product.type | escape }}"
+    data-tags="{{ product.tags | join: '|' | escape }}"
+    data-options="{{ opt_vals | escape }}"
   >
     <script type="application/json" class="product-card__json">{"id":{{ product.id }},"title":{{ product.title | json }},"vendor":{{ product.vendor | json }},"url":{{ product.url | json }},"price":{{ product.price }},"compare_at_price":{{ product.compare_at_price | default: 0 }},"body_html":{{ product.description | json }},"images":{{ imgs_j }},"options":{{ product.options | json }},"variants":{{ vars_j }}}</script>
 

@@ -2,7 +2,7 @@
 
 **This file is the recovery point.** It is rewritten as work proceeds, not at phase boundaries. If a session is lost, compacted, or restarted, this is the first file to read — it says what was being done, how far it got, and what the next concrete step is.
 
-`ROADMAP.md` says what the phases *are*. This file says where inside them the work actually stands.
+[BRIEF.md](BRIEF.md) is the plan verbatim. `ROADMAP.md` says what the phases *are*. This file says where inside them the work actually stands.
 
 ---
 
@@ -10,7 +10,7 @@
 
 **Phase:** A (completion pass) · **complete** — B was reported done earlier and was; A was reported done and was **not**
 **Last completed:** Phase B (before it, A — collection layouts; A0 — Layout Explorer; G — homepage #6)
-**Next up:** finish the last Phase A gap — the **collections list** layout — then Phase C
+**Next up:** close the gaps the verbatim brief exposed — **collections list** (Phase A), **media carousel autoplay** and **media video** (Phase B) — then Phase C
 **Blocked on:** nothing
 
 **Working state:** clean. Nothing half-finished. Everything committed and pushed to `main` and `claude/maison-noir-shopify-theme-2cxtip`. Published homepage is Aureline.

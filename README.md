@@ -193,6 +193,8 @@ the default layout.
 A **Layouts** tab on the edge of every page lists every layout the theme ships, each as a
 link. Hide it before going live in **Theme settings → Demo**.
 
+**`docs/BRIEF.md`** is the original plan, verbatim — the source of truth for scope.
+
 **`docs/HANDOVER.md`** is the short read after each phase: what changed, what to check and where.
 
 **`docs/STATUS.md`** says what is being worked on right now and what is next.

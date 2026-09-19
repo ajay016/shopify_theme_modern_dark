@@ -2,7 +2,7 @@
 
 **Status: part built.** The homepages, the colour system, the Layout Explorer, the collection page and the product card are done. Product-detail, blog and page layouts are still specified rather than implemented.
 
-This file exists because the original brief was never recorded anywhere. It is now the source of truth for scope.
+**[BRIEF.md](BRIEF.md) holds your plan verbatim and is the source of truth for scope.** This file is how that scope gets built — the architecture, the order, the decisions. Where the two disagree, the brief wins.
 
 **For where the work actually stands right now — mid-phase included — see [STATUS.md](STATUS.md).** This file is the plan; that one is the position.
 
@@ -125,22 +125,29 @@ So the buyer can reproduce the demo navbar rather than rebuild it by hand:
 
 ### Collection / Shop
 
-**Layouts** — left sidebar · right sidebar · box container · wide container · list view · collections list · filter sidebar · filter hidden/toggle · drawer filter · dropdown filter · grid 2/3/4/5/6 · collection title styles 01–05
+**Layouts** — left sidebar · right sidebar · box container · wide container · list view · **collections list** · filter sidebar · **filter hidden/toggle** · drawer sidebar filter · dropdown sidebar filter · grid 2/3/4/5/6 · collection title styles 01–05
 
-**Features** — best sellers · image banner · pagination · infinite scroll · recently viewed · full filter set (price, size, colour, availability, vendor, type, tag)
+The brief adds a note on this group: *"in the filter put all sorts of filters"* — price, size, colour, availability, vendor, type, tag.
+
+**Features** — best seller products · image banner · pagination page · infinite scrolling · product recently viewed
+
+Built in Phase A except **collections list**, and *filter hidden* is currently folded into *filter toggle* rather than being its own option.
 
 ### Product card (4–5 styles)
 
 Discount badge · price + compare-at · add to cart · wishlist · quick view on hover.
-Plus: media auto · media carousel · carousel autoplay · media video · toggle quick add · popup quick add.
 
-*Missing from the original list, worth adding:* colour-swatch preview on the card, "sold out" and "low stock" states, star rating slot, and a size-list-on-hover.
+**Card features:** media auto · media carousel · **media carousel autoplay (NEW)** · **media video (NEW)** · toggle quick add · popup quick add.
+
+Built in Phase B: five styles, swatches, star rating, low stock, sizes on hover, plus the additions below. **Not built: carousel autoplay and media video** — both marked NEW in the brief, so both are wanted. They are the open Phase B items.
+
+*Added beyond the brief:* colour-swatch preview on the card, "sold out" and "low stock" states, star rating slot, size-list-on-hover.
 
 ### Product detail
 
-**Layouts** — default · box · wide · digital · default tab · accordion inner · background gradient · accordion styles for description / shipping / reviews
+**Layouts** — default · box container · wide container · digital products · default tab · tab accordion inner · background gradient · separate accordion styles for description / shipping / customer reviews
 
-**Features** — size guide · compare colour · ask a question · share · pickup availability · terms · custom buy button · shipping info · special offer · inner zoom · lightbox · live visitor count · buy now · image/colour/radio/text swatches · trust badges · sticky add to cart · recently viewed
+**Features** — size guide · compare colour · ask a question · share products · pickup available · terms & conditions · custom buy button · shipping information · special offer · inner zoom · lightbox image · real-time visitor count · buy now · **image swatch · colour swatch · radio swatch · text swatch (four separate features)** · trust badge · sticky add to cart · recently viewed
 
 **Thumbnails** — left · right · top · bottom · none · grid 1 · grid 2 · grid mix · slider 2 · slider full-width · slider container
 
@@ -148,8 +155,12 @@ Plus: media auto · media carousel · carousel autoplay · media video · toggle
 
 ### Blog
 
-Blog: left sidebar · right sidebar · no sidebar · list · grid · masonry
-Post: left sidebar · right sidebar · no sidebar · formats: gallery, video, audio
+Four separate groups in the brief, not two:
+
+- **Blog layout** — left sidebar · right sidebar · without sidebar
+- **Post layout** — left sidebar · right sidebar · without sidebar
+- **Blog style** — list · grid · masonry
+- **Post format** — gallery · video · audio
 
 ### Pages & navigation
 

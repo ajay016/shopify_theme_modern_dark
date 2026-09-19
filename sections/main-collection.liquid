@@ -9,20 +9,16 @@
   assign container_style  = section.settings.container_style | default: 'boxed'
   assign scheme           = section.settings.scheme | default: 'theme'
 
-  comment
-    An empty sidebar is worse than no sidebar: with no Search & Discovery app
-    installed collection.filters is empty, and the layout would otherwise hold
-    a blank 264px column open beside the grid.
-  endcomment
+    # An empty sidebar is worse than no sidebar: with no Search & Discovery app
+    # installed collection.filters is empty, and the layout would otherwise hold
+    # a blank 264px column open beside the grid.
   assign has_filters = false
   if collection.filters.size > 0
     assign has_filters = true
   endif
-  comment
-    With Search & Discovery installed we render Shopify's own filters. Without
-    it the sidebar renders the built-in set derived from the products, so the
-    page has working filters either way and the column is never empty.
-  endcomment
+    # With Search & Discovery installed we render Shopify's own filters. Without
+    # it the sidebar renders the built-in set derived from the products, so the
+    # page has working filters either way and the column is never empty.
   assign use_builtin_filters = false
   if has_filters == false and section.settings.builtin_filters
     assign use_builtin_filters = true
@@ -32,12 +28,10 @@
     assign effective_sidebar = 'none'
   endif
 
-  comment
-    Demo products keep an empty or brand-new store from showing a blank shop
-    page while the layouts are being reviewed. It fires only when the
-    collection genuinely has no products, and the merchant can switch it off
-    before going live.
-  endcomment
+    # Demo products keep an empty or brand-new store from showing a blank shop
+    # page while the layouts are being reviewed. It fires only when the
+    # collection genuinely has no products, and the merchant can switch it off
+    # before going live.
   assign use_demo = false
   if collection.products.size == 0 and section.settings.show_demo_when_empty
     assign use_demo = true

@@ -184,11 +184,9 @@
       endfor
     endfor
 
-    comment
-      Option values that are ACTUALLY BUYABLE, not merely offered. "Large" on
-      the card above means the product comes in Large; here it means a Large is
-      in stock — which is what a shopper filtering by their size wants.
-    endcomment
+      # Option values that are ACTUALLY BUYABLE, not merely offered. "Large" on
+      # the card above means the product comes in Large; here it means a Large is
+      # in stock — which is what a shopper filtering by their size wants.
     assign opt_instock = ''
     for v in product.variants
       if v.available
@@ -207,10 +205,8 @@
       assign discount_pc = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price
     endif
 
-    comment
-      Age in days, so a "New in" filter can ask for the last 14/30/60 without
-      the browser having to parse a date on every card.
-    endcomment
+      # Age in days, so a "New in" filter can ask for the last 14/30/60 without
+      # the browser having to parse a date on every card.
     assign now_s = 'now' | date: '%s' | plus: 0
     assign pub_s = product.published_at | date: '%s' | plus: 0
     assign age_days = now_s | minus: pub_s | divided_by: 86400
@@ -273,11 +269,9 @@
       {%- endif -%}
 
       {%- liquid
-        comment
-          Low stock reads real inventory, so it only speaks when Shopify is
-          actually tracking it. An untracked variant reports null, which would
-          otherwise read as zero and mark every product "last few".
-        endcomment
+          # Low stock reads real inventory, so it only speaks when Shopify is
+          # actually tracking it. An untracked variant reports null, which would
+          # otherwise read as zero and mark every product "last few".
         assign stock_total = 0
         assign stock_tracked = false
         for v in product.variants

@@ -1,0 +1,409 @@
+{%- liquid
+  assign s = section.settings
+  assign scheme = s.scheme | default: 'theme'
+  assign cols = s.columns | default: '3'
+
+  assign list = collections
+  if s.only_menu != blank and linklists[s.only_menu] != blank
+    assign list = linklists[s.only_menu].links
+  endif
+
+  assign f1 = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1000&q=85'
+  assign f2 = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=85'
+  assign f3 = 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=1000&q=85'
+  assign f4 = 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1000&q=85'
+  assign f5 = 'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=1000&q=85'
+  assign f6 = 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1000&q=85'
+  assign fb_str = f1 | append: '||' | append: f2 | append: '||' | append: f3 | append: '||' | append: f4 | append: '||' | append: f5 | append: '||' | append: f6
+  assign fallbacks = fb_str | split: '||'
+-%}
+
+<div
+  class="clist clist--tone-{{ scheme }} clist--{{ s.card_style }}"
+  id="section-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  style="--clist-cols: {{ cols }};"
+>
+  <div class="clist-inner">
+
+    <header class="clist-head">
+      <div class="clist-head__text">
+        {%- if s.eyebrow != blank -%}<p class="clist-eyebrow">{{ s.eyebrow }}</p>{%- endif -%}
+        <h1 class="clist-title">{{ s.heading | default: 'Collections' }}</h1>
+        {%- if s.intro != blank -%}<p class="clist-intro">{{ s.intro }}</p>{%- endif -%}
+      </div>
+
+      <div class="clist-controls" data-clist-controls>
+        {%- if s.show_search -%}
+          <div class="clist-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" data-clist-search placeholder="{{ s.search_placeholder | default: 'Search collections' }}" aria-label="Search collections">
+          </div>
+        {%- endif -%}
+
+        {%- if s.show_sort -%}
+          <label class="clist-sort">
+            <span class="visually-hidden">Sort collections</span>
+            <select data-clist-sort>
+              <option value="az">A – Z</option>
+              <option value="za">Z – A</option>
+              <option value="most">Most products</option>
+              <option value="least">Fewest products</option>
+            </select>
+          </label>
+        {%- endif -%}
+      </div>
+    </header>
+
+    {%- if s.show_index -%}
+      <nav class="clist-index" data-clist-index aria-label="Jump to letter"></nav>
+    {%- endif -%}
+
+    <div class="clist-grid" data-clist-grid>
+      {%- for item in list -%}
+        {%- liquid
+          if item.object
+            assign col = item.object
+          else
+            assign col = item
+          endif
+          assign idx = forloop.index0 | modulo: 6
+          assign feature = false
+          if s.feature_first and forloop.first
+            assign feature = true
+          endif
+        -%}
+        {%- if col.title != blank -%}
+          <a
+            class="clist-card{% if feature %} clist-card--feature{% endif %}"
+            href="{{ col.url }}"
+            data-clist-item
+            data-name="{{ col.title | downcase | escape }}"
+            data-count="{{ col.products_count | default: 0 }}"
+          >
+            <span class="clist-card__media">
+              {%- if col.image != blank -%}
+                {{ col.image | image_url: width: 1200 | image_tag: loading: 'lazy', class: 'clist-card__img', sizes: '(max-width: 760px) 92vw, 33vw', widths: '500,800,1200', alt: col.title }}
+              {%- elsif col.products.first.featured_image != blank -%}
+                {{ col.products.first.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy', class: 'clist-card__img', sizes: '(max-width: 760px) 92vw, 33vw', widths: '500,800,1200', alt: col.title }}
+              {%- else -%}
+                <img class="clist-card__img" src="{{ fallbacks[idx] }}" alt="{{ col.title }}" loading="lazy" />
+              {%- endif -%}
+              <span class="clist-card__veil" aria-hidden="true"></span>
+            </span>
+
+            <span class="clist-card__copy">
+              <span class="clist-card__row">
+                <span class="clist-card__title">{{ col.title }}</span>
+                {%- if s.show_count and col.products_count -%}
+                  <span class="clist-card__count">{{ col.products_count }}</span>
+                {%- endif -%}
+              </span>
+              {%- if s.show_desc and col.description != blank -%}
+                <span class="clist-card__desc">{{ col.description | strip_html | truncatewords: 16 }}</span>
+              {%- endif -%}
+              <span class="clist-card__cta">{{ s.cta_label | default: 'Shop' }}<span aria-hidden="true">&#8594;</span></span>
+            </span>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <p class="clist-empty" data-clist-empty hidden>No collections match that search.</p>
+  </div>
+</div>
+
+<style>
+  #section-{{ section.id }}.clist--tone-light { --cl-bg:var(--s2-bg,#131313); --cl-fg:var(--s2-fg,#F5F0E8); --cl-mut:var(--s2-mut,rgba(245,240,232,.62)); --cl-bdr:var(--s2-bdr,rgba(245,240,232,.16)); --cl-acc:var(--gold,#C8A96E); }
+  #section-{{ section.id }}.clist--tone-dark  { --cl-bg:var(--s1-bg,#0A0A0A); --cl-fg:var(--s1-fg,#F5F0E8); --cl-mut:var(--s1-mut,rgba(245,240,232,.62)); --cl-bdr:var(--s1-bdr,rgba(245,240,232,.16)); --cl-acc:var(--gold,#C8A96E); }
+  #section-{{ section.id }}.clist--tone-warm  { --cl-bg:var(--s3-bg,#1A1714); --cl-fg:var(--s3-fg,#F5F0E8); --cl-mut:var(--s3-mut,rgba(245,240,232,.62)); --cl-bdr:var(--s3-bdr,rgba(245,240,232,.16)); --cl-acc:var(--gold,#C8A96E); }
+  #section-{{ section.id }}.clist--tone-theme { --cl-bg:var(--s1-bg,#0A0A0A); --cl-fg:var(--s1-fg,#F5F0E8); --cl-mut:var(--s1-mut,rgba(245,240,232,.62)); --cl-bdr:var(--s1-bdr,rgba(245,240,232,.16)); --cl-acc:var(--gold,#C8A96E); }
+
+  #section-{{ section.id }} {
+    background: var(--cl-bg); color: var(--cl-fg);
+    padding: clamp(40px,7vh,88px) 0 clamp(56px,9vh,112px);
+  }
+  #section-{{ section.id }} .clist-inner { padding: 0 var(--side-padding,5vw); }
+
+  #section-{{ section.id }} .clist-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: clamp(20px,4vw,48px); flex-wrap: wrap;
+    padding-bottom: clamp(18px,3vh,28px); margin-bottom: clamp(22px,3.5vh,36px);
+    border-bottom: 1px solid var(--cl-bdr);
+  }
+  #section-{{ section.id }} .clist-eyebrow {
+    margin: 0 0 12px;
+    font-size: calc(12px * var(--fs-scale,1));
+    font-weight: 600; letter-spacing: .24em; text-transform: uppercase;
+    color: var(--cl-acc);
+  }
+  #section-{{ section.id }} .clist-title {
+    margin: 0;
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-weight: 300; line-height: 1;
+    font-size: calc(clamp(34px,5.4vw,68px) * var(--heading-scale,1));
+  }
+  #section-{{ section.id }} .clist-intro {
+    max-width: 52ch; margin: 14px 0 0;
+    font-size: calc(15px * var(--fs-scale,1)); line-height: 1.68; color: var(--cl-mut);
+  }
+
+  #section-{{ section.id }} .clist-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  #section-{{ section.id }} .clist-search { position: relative; display: flex; align-items: center; }
+  #section-{{ section.id }} .clist-search svg { position: absolute; left: 12px; width: 16px; height: 16px; color: var(--cl-mut); pointer-events: none; }
+  #section-{{ section.id }} .clist-search input {
+    width: clamp(180px,22vw,260px); padding: 11px 14px 11px 36px;
+    background: transparent; color: var(--cl-fg);
+    border: 1px solid var(--cl-bdr);
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(13px * var(--fs-scale,1));
+  }
+  #section-{{ section.id }} .clist-search input::placeholder { color: var(--cl-mut); }
+  #section-{{ section.id }} .clist-search input:focus-visible { outline: 2px solid var(--cl-acc); outline-offset: 1px; }
+  #section-{{ section.id }} .clist-sort select {
+    padding: 11px 14px; cursor: pointer;
+    background: transparent; color: var(--cl-fg); border: 1px solid var(--cl-bdr);
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(13px * var(--fs-scale,1));
+  }
+  #section-{{ section.id }} .clist-sort select option { background: var(--cl-bg); color: var(--cl-fg); }
+
+  #section-{{ section.id }} .clist-index { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: clamp(20px,3vh,30px); }
+  #section-{{ section.id }} .clist-index button {
+    min-width: 28px; height: 28px; padding: 0 6px; cursor: pointer;
+    border: 1px solid transparent; background: transparent; color: var(--cl-mut);
+    font-family: var(--ff-body,'Outfit',sans-serif);
+    font-size: calc(12px * var(--fs-scale,1)); font-weight: 600; letter-spacing: .06em;
+  }
+  #section-{{ section.id }} .clist-index button:hover,
+  #section-{{ section.id }} .clist-index button.is-active { border-color: var(--cl-acc); color: var(--cl-acc); }
+
+  #section-{{ section.id }} .clist-grid {
+    display: grid; gap: clamp(10px,1.2vw,16px);
+    grid-template-columns: repeat(var(--clist-cols,3), minmax(0,1fr));
+  }
+  #section-{{ section.id }} .clist-card {
+    position: relative; display: block; overflow: hidden;
+    aspect-ratio: 4/5; text-decoration: none; color: inherit;
+    background: var(--img-placeholder,#1A1714);
+  }
+  #section-{{ section.id }} .clist-card--feature { grid-column: span 2; aspect-ratio: 8/5; }
+  #section-{{ section.id }} .clist-card[hidden] { display: none; }
+  #section-{{ section.id }} .clist-card__media { position: absolute; inset: 0; }
+  #section-{{ section.id }} .clist-card__img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    filter: saturate(.72); transition: transform .7s ease, filter .4s ease;
+  }
+  #section-{{ section.id }} .clist-card:hover .clist-card__img { transform: scale(1.04); filter: saturate(.9); }
+  /* Scrim is scheme-independent: the caption is white over a photograph. */
+  #section-{{ section.id }} .clist-card__veil {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(10,10,11,.05) 38%, rgba(10,10,11,.72) 100%);
+    transition: background .35s ease;
+  }
+  #section-{{ section.id }} .clist-card:hover .clist-card__veil {
+    background: linear-gradient(180deg, rgba(10,10,11,.02) 30%, rgba(10,10,11,.62) 100%);
+  }
+
+  #section-{{ section.id }} .clist-card__copy {
+    position: absolute; z-index: 2; right: 20px; bottom: 18px; left: 20px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  #section-{{ section.id }} .clist-card__row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  #section-{{ section.id }} .clist-card__title {
+    font-family: var(--ff-display,'Cormorant Garamond',serif);
+    font-weight: 300; line-height: 1.04;
+    font-size: calc(clamp(22px,2.3vw,34px) * var(--heading-scale,1));
+    color: var(--on-image,#FFFFFF);
+  }
+  #section-{{ section.id }} .clist-card--feature .clist-card__title { font-size: calc(clamp(28px,3.2vw,46px) * var(--heading-scale,1)); }
+  #section-{{ section.id }} .clist-card__count {
+    flex: 0 0 auto;
+    font-size: calc(11px * var(--fs-scale,1));
+    font-weight: 600; letter-spacing: .14em;
+    color: var(--on-image-mut,rgba(255,255,255,.78));
+  }
+  #section-{{ section.id }} .clist-card__desc {
+    font-size: calc(13px * var(--fs-scale,1)); line-height: 1.55;
+    color: var(--on-image-mut,rgba(255,255,255,.78));
+    max-height: 0; opacity: 0; overflow: hidden;
+    transition: max-height .4s ease, opacity .3s ease;
+  }
+  #section-{{ section.id }} .clist-card:hover .clist-card__desc { max-height: 80px; opacity: 1; }
+  #section-{{ section.id }} .clist-card__cta {
+    display: inline-flex; align-items: center; gap: 8px; width: fit-content;
+    padding-bottom: 3px; margin-top: 4px;
+    border-bottom: 1px solid currentColor;
+    font-size: calc(11px * var(--fs-scale,1));
+    font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--on-image,#FFFFFF);
+    opacity: 0; transform: translateY(6px);
+    transition: opacity .3s ease, transform .3s ease;
+  }
+  #section-{{ section.id }} .clist-card:hover .clist-card__cta,
+  #section-{{ section.id }} .clist-card:focus-visible .clist-card__cta { opacity: 1; transform: none; }
+
+  /* List style — a row per collection rather than a tile */
+  #section-{{ section.id }}.clist--rows .clist-grid { grid-template-columns: 1fr; gap: 0; }
+  #section-{{ section.id }}.clist--rows .clist-card {
+    aspect-ratio: auto; display: grid; grid-template-columns: 180px 1fr;
+    gap: clamp(18px,2.4vw,34px); align-items: center;
+    padding: 18px 0; background: transparent;
+    border-bottom: 1px solid var(--cl-bdr);
+  }
+  #section-{{ section.id }}.clist--rows .clist-card--feature { grid-column: auto; }
+  #section-{{ section.id }}.clist--rows .clist-card__media { position: relative; aspect-ratio: 4/3; overflow: hidden; }
+  #section-{{ section.id }}.clist--rows .clist-card__veil { display: none; }
+  #section-{{ section.id }}.clist--rows .clist-card__copy { position: static; right: auto; bottom: auto; left: auto; }
+  #section-{{ section.id }}.clist--rows .clist-card__title,
+  #section-{{ section.id }}.clist--rows .clist-card__count,
+  #section-{{ section.id }}.clist--rows .clist-card__desc,
+  #section-{{ section.id }}.clist--rows .clist-card__cta { color: var(--cl-fg); }
+  #section-{{ section.id }}.clist--rows .clist-card__count,
+  #section-{{ section.id }}.clist--rows .clist-card__desc { color: var(--cl-mut); }
+  #section-{{ section.id }}.clist--rows .clist-card__desc { max-height: none; opacity: 1; }
+  #section-{{ section.id }}.clist--rows .clist-card__cta { opacity: 1; transform: none; }
+
+  #section-{{ section.id }} .clist-empty {
+    padding: clamp(40px,7vh,80px) 0; text-align: center;
+    font-size: calc(15px * var(--fs-scale,1)); color: var(--cl-mut);
+  }
+  #section-{{ section.id }} .clist-empty[hidden] { display: none; }
+
+  @media (max-width: 1000px) {
+    #section-{{ section.id }} .clist-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    #section-{{ section.id }} .clist-card--feature { grid-column: span 2; }
+  }
+  @media (max-width: 640px) {
+    #section-{{ section.id }} .clist-head { flex-direction: column; align-items: flex-start; }
+    #section-{{ section.id }} .clist-controls { width: 100%; }
+    #section-{{ section.id }} .clist-search { flex: 1; }
+    #section-{{ section.id }} .clist-search input { width: 100%; }
+    #section-{{ section.id }} .clist-grid { grid-template-columns: 1fr; }
+    #section-{{ section.id }} .clist-card--feature { grid-column: auto; aspect-ratio: 4/5; }
+    #section-{{ section.id }}.clist--rows .clist-card { grid-template-columns: 110px 1fr; gap: 14px; }
+  }
+</style>
+
+<script>
+(function(){
+  var SEC='{{ section.id }}';
+  function root(){ return document.getElementById('section-'+SEC); }
+
+  function init(){
+    var r=root(); if(!r) return;
+    var grid=r.querySelector('[data-clist-grid]');
+    var cards=[].slice.call(r.querySelectorAll('[data-clist-item]'));
+    var search=r.querySelector('[data-clist-search]');
+    var sort=r.querySelector('[data-clist-sort]');
+    var indexBar=r.querySelector('[data-clist-index]');
+    var empty=r.querySelector('[data-clist-empty]');
+    if(!grid||!cards.length) return;
+
+    var activeLetter='';
+
+    function applyFilter(){
+      var q=(search&&search.value||'').trim().toLowerCase();
+      var shown=0;
+      cards.forEach(function(c){
+        var name=c.getAttribute('data-name')||'';
+        var okQ=!q||name.indexOf(q)!==-1;
+        var okL=!activeLetter||name.charAt(0).toUpperCase()===activeLetter;
+        var ok=okQ&&okL;
+        c.hidden=!ok;
+        if(ok) shown++;
+      });
+      if(empty) empty.hidden=shown!==0;
+    }
+
+    function applySort(){
+      var mode=sort?sort.value:'az';
+      var sorted=cards.slice().sort(function(a,b){
+        var an=a.getAttribute('data-name')||'', bn=b.getAttribute('data-name')||'';
+        var ac=parseInt(a.getAttribute('data-count')||'0',10), bc=parseInt(b.getAttribute('data-count')||'0',10);
+        if(mode==='za') return bn.localeCompare(an);
+        if(mode==='most') return bc-ac;
+        if(mode==='least') return ac-bc;
+        return an.localeCompare(bn);
+      });
+      // Re-ordering drops the feature span, which only makes sense in source order.
+      sorted.forEach(function(c){
+        if(mode!=='az') c.classList.remove('clist-card--feature');
+        grid.appendChild(c);
+      });
+      if(mode==='az'&&cards[0]) cards[0].classList.toggle('clist-card--feature', grid.dataset.hadFeature==='1');
+    }
+
+    if(cards[0]&&cards[0].classList.contains('clist-card--feature')) grid.dataset.hadFeature='1';
+
+    if(indexBar){
+      var letters={};
+      cards.forEach(function(c){ letters[(c.getAttribute('data-name')||'').charAt(0).toUpperCase()]=1; });
+      var keys=Object.keys(letters).filter(Boolean).sort();
+      indexBar.innerHTML='<button type="button" data-letter="">All</button>'+
+        keys.map(function(k){ return '<button type="button" data-letter="'+k+'">'+k+'</button>'; }).join('');
+      indexBar.addEventListener('click', function(e){
+        var b=e.target.closest('button[data-letter]'); if(!b) return;
+        activeLetter=b.getAttribute('data-letter');
+        indexBar.querySelectorAll('button').forEach(function(x){ x.classList.toggle('is-active', x===b); });
+        applyFilter();
+      });
+    }
+
+    search&&search.addEventListener('input', applyFilter);
+    sort&&sort.addEventListener('change', function(){ applySort(); applyFilter(); });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('shopify:section:load', function(e){ if(e.detail.sectionId===SEC) init(); });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Collections List",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "select", "id": "scheme", "label": "Surface tone",
+      "options": [
+        { "value": "light", "label": "Alternate surface (soft)" },
+        { "value": "dark",  "label": "Primary surface" },
+        { "value": "warm",  "label": "Deep surface" },
+        { "value": "theme", "label": "Primary surface (follow theme)" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "select", "id": "card_style", "label": "Layout",
+      "options": [
+        { "value": "tiles", "label": "Image tiles" },
+        { "value": "rows",  "label": "List rows" }
+      ],
+      "default": "tiles"
+    },
+    {
+      "type": "select", "id": "columns", "label": "Columns",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    },
+    { "type": "checkbox", "id": "feature_first", "label": "Make the first collection wide", "default": true },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Browse" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Collections" },
+    { "type": "textarea", "id": "intro", "label": "Intro", "default": "Every edit in the house, from the seasonal collections to the permanent wardrobe." },
+    { "type": "text", "id": "cta_label", "label": "Card link label", "default": "Shop" },
+    { "type": "header", "content": "Controls" },
+    { "type": "checkbox", "id": "show_search", "label": "Show search", "default": true },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Search collections" },
+    { "type": "checkbox", "id": "show_sort", "label": "Show sort", "default": true },
+    { "type": "checkbox", "id": "show_index", "label": "Show A–Z index", "default": true },
+    { "type": "header", "content": "Card content" },
+    { "type": "checkbox", "id": "show_count", "label": "Show product count", "default": true },
+    { "type": "checkbox", "id": "show_desc", "label": "Show description on hover", "default": true },
+    { "type": "link_list", "id": "only_menu", "label": "Limit to a menu", "info": "Leave empty to list every collection. Choose a menu to control which collections appear, and their order." }
+  ],
+  "presets": [{ "name": "Collections List" }]
+}
+{% endschema %}

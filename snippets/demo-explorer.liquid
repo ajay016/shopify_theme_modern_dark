@@ -71,7 +71,7 @@
 
       {%- comment -%}——— SHOP ———{%- endcomment -%}
       {%- capture shop_raw -%}
-Default|/collections/all|collection||ready~~Sidebar left|/collections/all?view=sidebar-left|collection|sidebar-left|ready~~Sidebar right|/collections/all?view=sidebar-right|collection|sidebar-right|ready~~No sidebar|/collections/all?view=no-sidebar|collection|no-sidebar|ready~~List view|/collections/all?view=list|collection|list|ready~~Boxed container|/collections/all?view=boxed|collection|boxed|ready~~Wide container|/collections/all?view=wide|collection|wide|ready
+Default|/collections/all|collection||ready~~Sidebar left|/collections/all?view=sidebar-left|collection|sidebar-left|ready~~Sidebar right|/collections/all?view=sidebar-right|collection|sidebar-right|ready~~No sidebar|/collections/all?view=no-sidebar|collection|no-sidebar|ready~~List view|/collections/all?view=list|collection|list|ready~~Boxed container|/collections/all?view=boxed|collection|boxed|ready~~Wide container|/collections/all?view=wide|collection|wide|ready~~Collections list|/collections|list-collections||ready~~Collections — rows|/collections?view=rows|list-collections|rows|ready~~Collections — 4 col|/collections?view=grid-4|list-collections|grid-4|ready
       {%- endcapture -%}
       {%- assign shop_entries = shop_raw | strip | split: '~~' -%}
       {%- render 'demo-explorer-group', title: 'Shop — layouts', entries: shop_entries, tname: tname, tsuffix: tsuffix -%}
@@ -86,7 +86,7 @@ Default|/collections/all|collection||ready~~Sidebar left|/collections/all?view=s
 Sidebar filters|/collections/all?view=filter-sidebar|collection|filter-sidebar|ready~~Drawer filters|/collections/all?view=filter-drawer|collection|filter-drawer|ready~~Dropdown filters|/collections/all?view=filter-dropdown|collection|filter-dropdown|ready~~Collapsed groups|/collections/all?view=filter-toggle|collection|filter-toggle|ready
       {%- endcapture -%}
       {%- assign filter_entries = filter_raw | strip | split: '~~' -%}
-      {%- render 'demo-explorer-group', title: 'Shop — filters', entries: filter_entries, tname: tname, tsuffix: tsuffix, note: 'Filter options need Shopify’s free Search & Discovery app. Without it the panel is simply absent and sorting still works.' -%}
+      {%- render 'demo-explorer-group', title: 'Shop — filters', entries: filter_entries, tname: tname, tsuffix: tsuffix, note: 'Filters work with no app installed — the theme builds them from your own products. Shopify’s Search &amp; Discovery app, if installed, takes over automatically.' -%}
 
       {%- capture title_raw -%}
 Title 01 — simple|/collections/all?view=title-1|collection|title-1|ready~~Title 02 — banner|/collections/all?view=title-2|collection|title-2|ready~~Title 03 — breadcrumb|/collections/all?view=title-3|collection|title-3|ready~~Title 04 — centred|/collections/all?view=title-4|collection|title-4|ready~~Title 05 — with count|/collections/all?view=title-5|collection|title-5|ready

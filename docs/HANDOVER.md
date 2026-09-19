@@ -4,7 +4,7 @@ Rewritten at the end of every phase. `STATUS.md` holds the full position, `BRIEF
 
 ---
 
-# Design pass — every page that was unstyled
+# Collections List, and the filter UI rebuilt
 
 **Status:** done · committed · pushed
 **Half-done:** nothing.
@@ -91,6 +91,27 @@ Now styled:
 | **Header** | nav alignment variants, v2 logo, submenu arrow |
 
 **Remaining: 45 flagged, almost all false positives** — Liquid string literals inside class attributes (`'portrait'`, `'left'`), and the explorer's classes, which are styled in a sibling snippet's inline `<style>` that a per-file check cannot see.
+
+---
+
+## Collections List — the last collection layout
+
+`/collections` now has a real page, `sections/main-list-collections.liquid`, with six `?view=` templates.
+
+**Design:** full-bleed image tiles on a 4:5 ratio, the first collection spanning two columns by default, a scrim that keeps the caption readable on any photograph, the image easing to a slow zoom on hover, the description sliding open and a Shop link rising underneath. A **List rows** layout swaps the tiles for a row per collection.
+
+**Controls** — collections are not products, so product facets do not apply. What is there instead:
+
+| Control | Behaviour |
+|---|---|
+| **Search** | narrows by name as you type |
+| **Sort** | A–Z, Z–A, most products, fewest products |
+| **A–Z index** | jump strip, built from the letters actually present |
+| **Limit to a menu** | optional — pick a menu to control which collections appear and in what order |
+
+Sorting re-orders in place and drops the wide first tile, since a feature tile only makes sense in source order. Empty state when a search matches nothing. Falls back to demo imagery for collections with no image.
+
+**Templates:** `list-collections` · `.grid-2` · `.grid-3` · `.grid-4` · `.rows` · `.minimal`
 
 ---
 

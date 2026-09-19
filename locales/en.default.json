@@ -3,8 +3,24 @@
     "continue_shopping": "Continue Shopping",
     "close": "Close",
     "open": "Open",
-    "search": "Search",
-    "loading": "Loading..."
+    "search": {
+      "title": "Search",
+      "placeholder": "Search products, collections and journal",
+      "submit": "Search",
+      "no_results": "No results found. Try a different search.",
+      "results_for": "Results for",
+      "results_count": {
+        "one": "{{ count }} result",
+        "other": "{{ count }} results"
+      }
+    },
+    "loading": "Loading...",
+    "home": "Home",
+    "breadcrumb_separator": "/",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    }
   },
   "accessibility": {
     "skip_to_text": "Skip to content",
@@ -33,7 +49,12 @@
     "next_slide": "Next slide",
     "previous_slide": "Previous slide",
     "zoom_in": "Zoom in on image",
-    "go_to_slide": "Go to slide {{ slideNumber }}"
+    "go_to_slide": "Go to slide {{ slideNumber }}",
+    "close": "Close",
+    "pagination": "Pagination",
+    "view_toggle": "Change product layout",
+    "increase_quantity": "Increase quantity",
+    "decrease_quantity": "Decrease quantity"
   },
   "header": {
     "search_placeholder": "Search for pieces...",
@@ -59,7 +80,14 @@
     "order_subtotal": "Subtotal",
     "subtotal": "Subtotal",
     "taxes_and_shipping": "Taxes and shipping calculated at checkout",
-    "recommendations_title": "You May Also Like"
+    "recommendations_title": "You May Also Like",
+    "item": "Item",
+    "price": "Price",
+    "total": "Total",
+    "item_quantity": "Quantity",
+    "taxes_note": "Taxes and shipping calculated at checkout.",
+    "free_shipping_earned": "You have earned complimentary shipping.",
+    "free_shipping_remaining": "Spend {{ amount }} more for complimentary shipping."
   },
   "products": {
     "product": {
@@ -96,7 +124,19 @@
       "tab_description": "Description",
       "tab_details": "Details & Care",
       "tab_shipping": "Shipping & Returns",
-      "tab_reviews": "Reviews"
+      "tab_reviews": "Reviews",
+      "sku": "SKU",
+      "variant": "Variant",
+      "save": "Save",
+      "stock_remaining": {
+        "one": "Only {{ count }} left",
+        "other": "Only {{ count }} left"
+      },
+      "visitors": {
+        "one": "{{ count }} person is viewing this",
+        "other": "{{ count }} people are viewing this"
+      },
+      "zoom_hint": "Hover to zoom"
     },
     "listing": {
       "load_more": "Load More",
@@ -148,7 +188,23 @@
       "title": "All Products"
     },
     "general": {
-      "view_all": "View All"
+      "view_all": "View All",
+      "collection": "Collection",
+      "items": {
+        "one": "{{ count }} item",
+        "other": "{{ count }} items"
+      },
+      "no_matches": "No products match your selection.",
+      "load_more": "Load more"
+    },
+    "sorting": {
+      "sort_by": "Sort by"
+    },
+    "filtering": {
+      "filters": "Filters",
+      "filter_button": "Filter",
+      "clear_all": "Clear all",
+      "apply": "Apply"
     }
   },
   "quick_view": {
@@ -191,7 +247,8 @@
       "message": "Message",
       "submit": "Send Message",
       "success": "Thanks for reaching out. We'll get back to you shortly.",
-      "error": "Please check the form for errors"
+      "error": "Please check the form for errors",
+      "send": "Send message"
     }
   },
   "customer": {
@@ -203,7 +260,9 @@
       "forgot_password": "Forgot password?",
       "no_account": "Don't have an account?",
       "create_account": "Create one",
-      "guest_title": "Continue as Guest"
+      "guest_title": "Continue as Guest",
+      "sign_in": "Sign in",
+      "create_account_prompt": "New here?"
     },
     "register": {
       "title": "Create Account",
@@ -213,7 +272,8 @@
       "password": "Password",
       "submit": "Create Account",
       "have_account": "Already have an account?",
-      "sign_in": "Sign in"
+      "sign_in": "Sign in",
+      "login_link": "Already have an account?"
     },
     "account": {
       "title": "My Account",
@@ -221,7 +281,8 @@
       "details": "Account Details",
       "logout": "Sign Out",
       "no_orders": "You have no orders yet.",
-      "start_shopping": "Start Shopping"
+      "start_shopping": "Start Shopping",
+      "return": "Back to account"
     },
     "recover_password": {
       "title": "Reset Password",
@@ -238,7 +299,21 @@
       "default": "Default",
       "set_default": "Set as Default",
       "save": "Save Address",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "add": "Add address",
+      "update": "Update address",
+      "delete_confirm": "Delete this address?",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "company": "Company",
+      "address1": "Address",
+      "address2": "Apartment, suite, etc.",
+      "city": "City",
+      "country": "Country/region",
+      "province": "State/province",
+      "province_select": "Select a state/province",
+      "zip": "Postcode",
+      "phone": "Phone"
     },
     "order": {
       "title": "Order {{ name }}",
@@ -247,6 +322,28 @@
       "product": "Product",
       "sku": "SKU",
       "quantity": "Qty",
+      "total": "Total",
+      "items": "Items",
+      "price": "Price",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "shipping": "Shipping",
+      "tax": "Tax",
+      "track": "Track shipment",
+      "payment_status": "Payment status",
+      "fulfillment_status": "Fulfilment status",
+      "fulfilled_at": "Fulfilled",
+      "billing_address": "Billing address",
+      "shipping_address": "Shipping address"
+    },
+    "log_out": "Log out",
+    "orders": {
+      "title": "Order history",
+      "none": "You have not placed any orders yet.",
+      "order_number": "Order",
+      "date": "Date",
+      "payment_status": "Payment",
+      "fulfillment_status": "Fulfilment",
       "total": "Total"
     }
   },
@@ -255,6 +352,50 @@
       "title": "Page Not Found",
       "subtitle": "The page you're looking for has moved or doesn't exist.",
       "cta": "Return Home"
+    }
+  },
+  "blogs": {
+    "article": {
+      "blog": "Journal",
+      "read_more": "Read more",
+      "reading_time": "{{ minutes }} min read",
+      "share": "Share"
+    },
+    "sidebar": {
+      "search": "Search the journal",
+      "recent": "Recent posts"
+    },
+    "comments": {
+      "title": "Comments",
+      "comments_with_count": {
+        "one": "{{ count }} comment",
+        "other": "{{ count }} comments"
+      },
+      "name": "Name",
+      "email": "Email",
+      "message": "Comment",
+      "post": "Post comment",
+      "success": "Thank you. Your comment has been posted.",
+      "error": "Your comment could not be posted. Please check the fields above."
+    }
+  },
+  "404": {
+    "title": "Page not found",
+    "subtext": "The page you are looking for does not exist, or has moved.",
+    "homepage_link": "Back to home",
+    "shop_link": "Continue shopping",
+    "search_label": "Search instead"
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Your gift card",
+      "subtext": "Use this code at checkout.",
+      "gift_card_code": "Gift card code",
+      "remaining_html": "{{ balance }} remaining",
+      "expired": "This gift card has expired.",
+      "print": "Print",
+      "qr_image_alt": "QR code for this gift card",
+      "shop_link": "Start shopping"
     }
   }
 }

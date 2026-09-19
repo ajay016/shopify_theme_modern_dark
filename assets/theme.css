@@ -3699,3 +3699,30 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 
 .collection-sidebar .sidebar-header { padding-bottom: 14px; border-bottom: 1px solid var(--cp-fg, var(--cream, #F5F0E8)); }
 .collection-sidebar .sidebar-header__title { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: .28em; }
+
+/* The count was pushed to the far right of the row by a flex:1 on the label,
+   which put it directly under the scroll rail — so on a long list it sat
+   half-hidden behind the scrollbar. It now sits beside the label it counts,
+   and the list reserves room for the rail rather than letting it overlap. */
+.collection-sidebar .filter-check,
+.filter-drawer .filter-check {
+  justify-content: flex-start;
+  gap: 10px;
+}
+.collection-sidebar .filter-check span:first-of-type,
+.filter-drawer .filter-check span:first-of-type {
+  flex: 0 1 auto;
+  margin-right: 2px;
+}
+.collection-sidebar .filter-count-pill,
+.filter-drawer .filter-count-pill {
+  flex: 0 0 auto;
+  margin-left: 0;
+  opacity: .4;
+  font-size: calc(10px * var(--fs-scale, 1));
+}
+.collection-sidebar .filter-list,
+.filter-drawer .filter-list {
+  padding-right: 14px;
+  scrollbar-gutter: stable;
+}

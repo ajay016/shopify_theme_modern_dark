@@ -26,22 +26,81 @@
     "services": {
       "type": "service-bar",
       "blocks": {
-        "sv1": { "type": "service", "settings": { "icon": "delivery", "label": "Complimentary delivery" } },
-        "sv2": { "type": "service", "settings": { "icon": "returns", "label": "Returns within 30 days" } },
-        "sv3": { "type": "service", "settings": { "icon": "appointment", "label": "Private appointments" } },
-        "sv4": { "type": "service", "settings": { "icon": "service", "label": "Client services" } }
+        "sv1": {
+          "type": "service",
+          "settings": {
+            "icon": "delivery",
+            "label": "Complimentary delivery"
+          }
+        },
+        "sv2": {
+          "type": "service",
+          "settings": {
+            "icon": "returns",
+            "label": "Returns within 30 days"
+          }
+        },
+        "sv3": {
+          "type": "service",
+          "settings": {
+            "icon": "appointment",
+            "label": "Private appointments"
+          }
+        },
+        "sv4": {
+          "type": "service",
+          "settings": {
+            "icon": "service",
+            "label": "Client services"
+          }
+        }
       },
-      "block_order": ["sv1", "sv2", "sv3", "sv4"],
-      "settings": { "scheme": "light" }
+      "block_order": [
+        "sv1",
+        "sv2",
+        "sv3",
+        "sv4"
+      ],
+      "settings": {
+        "scheme": "light"
+      }
     },
     "categories": {
       "type": "category-showcase",
       "blocks": {
-        "ct1": { "type": "category", "settings": { "title": "Ready-to-wear", "cta": "Explore", "link": "/collections/all" } },
-        "ct2": { "type": "category", "settings": { "title": "Leather goods", "cta": "Explore", "link": "/collections/all" } },
-        "ct3": { "type": "category", "settings": { "title": "Shoes", "cta": "Explore", "link": "/collections/all" } }
+        "ct1": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "Ready-to-wear",
+            "cta": "Explore",
+            "link": "/collections/all"
+          }
+        },
+        "ct2": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "Leather goods",
+            "cta": "Explore",
+            "link": "/collections/all"
+          }
+        },
+        "ct3": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "Shoes",
+            "cta": "Explore",
+            "link": "/collections/all"
+          }
+        }
       },
-      "block_order": ["ct1", "ct2", "ct3"],
+      "block_order": [
+        "ct1",
+        "ct2",
+        "ct3"
+      ],
       "settings": {
         "scheme": "light",
         "eyebrow": "The wardrobe",
@@ -52,11 +111,33 @@
     "arrivals": {
       "type": "product-tabs",
       "blocks": {
-        "tb1": { "type": "tab", "settings": { "label": "View all" } },
-        "tb2": { "type": "tab", "settings": { "label": "Ready-to-wear" } },
-        "tb3": { "type": "tab", "settings": { "label": "Accessories" } }
+        "tb1": {
+          "type": "tab",
+          "settings": {
+            "label": "View all",
+            "collection": ""
+          }
+        },
+        "tb2": {
+          "type": "tab",
+          "settings": {
+            "label": "Ready-to-wear",
+            "collection": ""
+          }
+        },
+        "tb3": {
+          "type": "tab",
+          "settings": {
+            "label": "Accessories",
+            "collection": ""
+          }
+        }
       },
-      "block_order": ["tb1", "tb2", "tb3"],
+      "block_order": [
+        "tb1",
+        "tb2",
+        "tb3"
+      ],
       "settings": {
         "scheme": "dark",
         "eyebrow": "New arrivals",
@@ -64,7 +145,7 @@
         "products_to_show": 4,
         "columns": "4",
         "cta_label": "View all new arrivals",
-        "cta_url": "/collections/all"
+        "cta_url": "shopify://collections/new-arrival"
       }
     },
     "campaign": {
@@ -84,6 +165,7 @@
       "settings": {
         "scheme": "dark",
         "look_label": "Look 04",
+        "collection": "",
         "eyebrow": "Styled together",
         "heading": "Complete the look",
         "description": "Three pieces cut to be worn together — layered through the season, and just as easily apart.",
@@ -135,6 +217,7 @@
       "type": "journal-trio",
       "settings": {
         "scheme": "light",
+        "blog": "",
         "eyebrow": "From the atelier",
         "heading": "Journal",
         "cta_label": "View all stories",

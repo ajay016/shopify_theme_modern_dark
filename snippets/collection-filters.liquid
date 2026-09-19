@@ -27,6 +27,26 @@
 
 {%- liquid
   assign style = style | default: 'sidebar'
+  assign demo = demo | default: false
+
+  # On a store with no catalogue — or one whose products are single-variant,
+  # single-vendor and untagged — the derived facets collapse to Availability
+  # and Price, and the panel reads as broken rather than empty. Demo mode
+  # publishes the same facets the demo cards carry, so the filter set is a
+  # working demonstration.
+  if demo
+    assign vendor_list = 'Atelier Series,Maison Noir' | split: ','
+    assign type_list = 'Dresses,Knitwear,Leather goods,Outerwear,Shoes,Skirts,Tailoring' | split: ','
+    assign tag_list = 'archive,essentials,limited,new,sale' | split: ','
+    assign demo_sizes = 'XS,S,M,L,XL' | split: ','
+    assign demo_colours = 'Black,Charcoal,Ivory,Sand,Wine' | split: ','
+    assign price_min = 28000
+    assign price_max = 129000
+    assign any_sale = true
+    assign any_out = false
+    assign any_new = true
+    assign any_rated = true
+  endif
 
   assign vendors = ''
   assign types = ''
@@ -40,6 +60,7 @@
   assign any_rated = false
   assign now_s = 'now' | date: '%s' | plus: 0
 
+  unless demo
   for p in products
     if p.price < price_min
       assign price_min = p.price
@@ -79,6 +100,7 @@
   if price_min > price_max
     assign price_min = 0
   endif
+  endunless
 -%}
 
 <div class="cfilter" data-cfilter data-cfilter-style="{{ style }}">
@@ -153,6 +175,41 @@
     anything else stays a labelled list. A fashion filter that renders "Black"
     as a tickbox rather than a black circle is doing the shopper no favours.
   {%- endcomment -%}
+  {%- if demo -%}
+    <div class="cfilter-group" data-cfilter-group>
+      <button class="filter-group__toggle" type="button" aria-expanded="true">
+        Colour {%- render 'icon-chevron-down' -%}
+      </button>
+      <div class="filter-group__body">
+        <div class="cfilter-swatches">
+          {%- for v in demo_colours -%}
+            <label class="cfilter-swatch" title="{{ v }}">
+              <input type="checkbox" data-facet="options" value="{{ v }}">
+              <span class="cfilter-swatch__dot" style="--sw: {{ v | downcase }};" aria-hidden="true"></span>
+              <span class="visually-hidden">{{ v }}</span>
+            </label>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="cfilter-group" data-cfilter-group>
+      <button class="filter-group__toggle" type="button" aria-expanded="true">
+        Size {%- render 'icon-chevron-down' -%}
+      </button>
+      <div class="filter-group__body">
+        <div class="cfilter-pills">
+          {%- for v in demo_sizes -%}
+            <label class="cfilter-pill">
+              <input type="checkbox" data-facet="options" value="{{ v }}">
+              <span>{{ v }}</span>
+            </label>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
   {%- for opt_name in opt_name_list -%}
     {%- if opt_name != blank and opt_name != 'Title' -%}
       {%- liquid
@@ -289,7 +346,7 @@
     </div>
   {%- endif -%}
 
-  {%- if vendor_list.size > 1 -%}
+  {%- if vendor_list.size > 1 or demo -%}
     <div class="cfilter-group" data-cfilter-group>
       <button class="filter-group__toggle" type="button" aria-expanded="true">
         Brand {%- render 'icon-chevron-down' -%}
@@ -309,7 +366,7 @@
     </div>
   {%- endif -%}
 
-  {%- if type_list.size > 1 -%}
+  {%- if type_list.size > 1 or demo -%}
     <div class="cfilter-group" data-cfilter-group>
       <button class="filter-group__toggle" type="button" aria-expanded="true">
         Product type {%- render 'icon-chevron-down' -%}
@@ -329,7 +386,7 @@
     </div>
   {%- endif -%}
 
-  {%- if tag_list.size > 0 -%}
+  {%- if tag_list.size > 0 or demo -%}
     <div class="cfilter-group" data-cfilter-group>
       <button class="filter-group__toggle" type="button" aria-expanded="false">
         Tags {%- render 'icon-chevron-down' -%}

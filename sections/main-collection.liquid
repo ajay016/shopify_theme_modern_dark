@@ -36,6 +36,20 @@
   if collection.products.size == 0 and section.settings.show_demo_when_empty
     assign use_demo = true
   endif
+
+    # A thin catalogue yields only Availability and Price, which reads as a
+    # broken panel. Fall back to the demo facet set, which matches the demo
+    # cards, whenever the real products cannot produce a useful filter set.
+  assign facet_variety = 0
+  for p in collection.products limit: 30
+    if p.options_with_values.size > 1
+      assign facet_variety = facet_variety | plus: 1
+    endif
+  endfor
+  assign filters_are_demo = use_demo
+  if use_builtin_filters and facet_variety == 0 and collection.all_tags.size == 0
+    assign filters_are_demo = true
+  endif
 %}
 
 {%- paginate collection.products by products_per_page -%}
@@ -189,7 +203,7 @@
           </div>
 
           {%- if use_builtin_filters -%}
-            {%- render 'collection-filters', products: collection.products, style: filter_style -%}
+            {%- render 'collection-filters', products: collection.products, style: filter_style, demo: filters_are_demo -%}
           {%- endif -%}
 
           {%- comment -%}
@@ -441,7 +455,7 @@
       </div>
       <div class="filter-drawer__body">
         {%- if use_builtin_filters -%}
-          {%- render 'collection-filters', products: collection.products, style: 'drawer' -%}
+          {%- render 'collection-filters', products: collection.products, style: 'drawer', demo: filters_are_demo -%}
         {%- endif -%}
         {%- for filter in collection.filters -%}
           <div class="filter-group" data-filter-group>

@@ -79,10 +79,43 @@
     # derive cents from the display price so the quick-view popup shows it
     assign d_cents = d_price | remove: '$' | remove: '€' | remove: '£' | remove: ',' | strip | times: 100
   -%}
+  {%- liquid
+    # Demo cards carry the same facets a real product would, so the filter
+    # panel on a store with no catalogue is a working demonstration rather
+    # than two lonely groups. Values are deterministic from demo_index, so
+    # the filters and the cards always agree.
+    assign di = demo_index | default: 0 | modulo: 6
+    assign d_sizes_all = 'XS|S|M|L~S|M|L|XL~XS|S|M~M|L|XL~S|M|L~XS|S|M|L|XL' | split: '~'
+    assign d_cols_all  = 'Black|Ivory~Ivory|Sand~Black|Wine~Sand|Charcoal~Black|Ivory|Sand~Charcoal|Wine' | split: '~'
+    assign d_vendors   = 'Maison Noir~Atelier Series~Maison Noir~Maison Noir~Atelier Series~Maison Noir' | split: '~'
+    assign d_tagsets   = 'new|essentials~sale|archive~new|limited~essentials~sale|essentials~new|limited' | split: '~'
+    assign d_discounts = '0~30~0~20~50~0' | split: '~'
+    assign d_ages      = '7~120~21~200~45~9' | split: '~'
+    assign d_ratings   = '5~4~4~3~5~4' | split: '~'
+
+    assign d_opts = d_sizes_all[di] | append: '|' | append: d_cols_all[di] | append: '|'
+    assign d_disc = d_discounts[di] | plus: 0
+    assign d_onsale = false
+    if d_disc > 0
+      assign d_onsale = true
+    endif
+  -%}
   <div
     class="product-card pcard pcard--{{ scheme }} pcard--{{ card_style }} pcard--align-{{ text_align }} pcard--rad-{{ radius }}{% if rail %} pcard--rail{% endif %}"
     data-pcard
     data-quickadd="{{ quickadd_style }}"
+    data-price="{{ d_cents }}"
+    data-available="true"
+    data-onsale="{{ d_onsale }}"
+    data-vendor="{{ d_vendors[di] }}"
+    data-type="{{ d_cat }}"
+    data-tags="{{ d_tagsets[di] }}"
+    data-options="{{ d_opts }}"
+    data-options-instock="{{ d_opts }}"
+    data-discount="{{ d_disc }}"
+    data-age="{{ d_ages[di] }}"
+    data-rating="{{ d_ratings[di] }}"
+    data-colours="{{ d_cols_all[di] | split: '|' | size }}"
   >
     <script type="application/json" class="product-card__json">{"id":0,"title":{{ d_title | json }},"vendor":{{ shop.name | json }},"url":{{ d_url | json }},"price":{{ d_cents }},"compare_at_price":0,"body_html":"Demo product — connect a collection in the theme editor to show your own pieces.","images":[{{ d_img | json }}],"options":["Title"],"variants":[{"id":0,"price":{{ d_cents }},"compare_at_price":0,"available":true,"options":["Default Title"]}]}</script>
 

@@ -15,7 +15,7 @@ This file exists because the original brief was never recorded anywhere. It is n
 | Homepages | **6 built** (Classic, Blanc, Atelier, Noir, Lumière, Aureline) |
 | Colour system | **Done** — five schemes, one global setting drives every section (`COLOR-SYSTEM.md`) |
 | Product card | **Done (Phase B).** Five styles; quick view, wishlist, add-to-bag, sizes on hover, colour swatches, star rating, low stock, demo fallbacks |
-| Collection layouts | **Built (Phase A).** 23 `?view=` templates — sidebar position, container width, list view, grid 2–6, four filter presentations, five headers, three pagination modes |
+| Collection layouts | **Built (Phase A).** 23 `?view=` templates; plus image banner, best sellers, recently viewed and boolean filters. **Collections list still missing** |
 | Product layouts | **Not built.** `product.wide/gradient/digital.json` are identical stubs |
 | Blog / post layouts | **Not built.** `blog.sidebar-left/right.json` are identical stubs |
 | Pages (About / Contact) | Two About variants and two Contact variants exist, lightly differentiated |

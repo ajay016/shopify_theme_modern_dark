@@ -22,9 +22,18 @@
         "pagination_style": "numbered",
         "show_demo_when_empty": true
       }
+    },
+    "recently": {
+      "type": "recently-viewed",
+      "settings": {
+        "heading": "Recently viewed",
+        "products_to_show": 4,
+        "columns": "4"
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "recently"
   ]
 }

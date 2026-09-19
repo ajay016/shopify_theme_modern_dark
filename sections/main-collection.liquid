@@ -29,7 +29,45 @@
   data-filter-style="{{ filter_style }}"
 >
 
-  {%- comment -%} Collection Title Area {%- endcomment -%}
+  {%- comment -%}
+    Image banner — a real banner above the header, separate from the title
+    styles. Falls back to the collection's own image, so it works the moment a
+    merchant uploads one in the admin without touching the theme.
+  {%- endcomment -%}
+  {%- liquid
+    assign banner_img = section.settings.banner_image
+    if banner_img == blank
+      assign banner_img = collection.image
+    endif
+  assign banner_on = false
+  if section.settings.show_banner and banner_img != blank
+    assign banner_on = true
+  endif
+  -%}
+  {%- if banner_on -%}
+    <div class="collection-banner collection-banner--{{ section.settings.banner_text_position }}" style="--cb-h: {{ section.settings.banner_height }}vh;">
+      {{ banner_img | image_url: width: 2000 | image_tag:
+         loading: 'eager', fetchpriority: 'high', class: 'collection-banner__img',
+         sizes: '100vw', widths: '800,1200,1600,2000', alt: collection.title }}
+      <span class="collection-banner__scrim" aria-hidden="true"></span>
+      <div class="collection-banner__copy">
+        {%- if section.settings.banner_eyebrow != blank -%}
+          <p class="collection-banner__eyebrow">{{ section.settings.banner_eyebrow }}</p>
+        {%- endif -%}
+        <h1 class="collection-banner__title">{{ collection.title }}</h1>
+        {%- if section.settings.banner_show_count -%}
+          <p class="collection-banner__count">{{ collection.products_count }} {{ 'collections.general.items' | t }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%}
+    Collection Title Area. Skipped when the banner is showing, since the banner
+    already carries the H1 — two <h1>s on one page is both a duplicate heading
+    and an accessibility fault.
+  {%- endcomment -%}
+  {%- unless banner_on -%}
   <div class="collection-title collection-title--{{ title_style }}">
     {%- case title_style -%}
       {%- when 'style-1' -%}
@@ -70,6 +108,7 @@
         </div>
     {%- endcase -%}
   </div>
+  {%- endunless -%}
 
   {%- comment -%} Filter bar (drawer / dropdown styles) {%- endcomment -%}
   {%- if filter_style == 'drawer' or filter_style == 'dropdown' -%}
@@ -183,6 +222,27 @@
                         <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | money_without_currency | remove: ',' }}" placeholder="{{ filter.range_max | money }}">
                       </div>
                     </div>
+                  {%- comment -%}
+                    Shopify's third filter type. "Availability" is a boolean
+                    filter, and it was not handled here at all — it fell
+                    through the case and rendered a heading with an empty body.
+                  {%- endcomment -%}
+                  {%- when 'boolean' -%}
+                    <ul class="filter-list">
+                      {%- for value in filter.values -%}
+                        <li>
+                          <label class="filter-check">
+                            <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
+                              {% if value.active %}checked{% endif %}
+                              data-filter-url="{{ value.url_to_add }}"
+                              data-filter-remove="{{ value.url_to_remove }}"
+                            >
+                            <span>{{ value.label }}</span>
+                            {%- if value.count -%}<span class="filter-count-pill">{{ value.count }}</span>{%- endif -%}
+                          </label>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
                 {%- endcase -%}
               </div>
             </div>
@@ -205,7 +265,29 @@
         </div>
       {%- endif -%}
 
-      {%- comment -%} Active filter chips {%- endcomment -%}
+      {%- comment -%}
+      Best sellers. Liquid cannot sort a collection by sales, so this points at
+      a collection the merchant curates or automates in the admin. Empty
+      setting, no row — rather than an empty heading.
+    {%- endcomment -%}
+    {%- capture bestsellers_row -%}
+      {%- assign bs_col = collections[section.settings.bestsellers_collection] -%}
+      {%- if section.settings.show_bestsellers and bs_col != blank and bs_col.products.size > 0 -%}
+        <div class="collection-bestsellers collection-bestsellers--{{ section.settings.bestsellers_position }}">
+          <div class="collection-bestsellers__head">
+            <h2 class="collection-bestsellers__title">{{ section.settings.bestsellers_heading }}</h2>
+            <a class="collection-bestsellers__link" href="{{ bs_col.url }}">View all</a>
+          </div>
+          <div class="product-grid product-grid--{{ section.settings.bestsellers_count }}">
+            {%- for product in bs_col.products limit: section.settings.bestsellers_count -%}
+              {%- render 'product-card', product: product -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endcapture -%}
+
+    {%- comment -%} Active filter chips {%- endcomment -%}
       {%- assign has_active_filters = false -%}
       {%- for f in collection.filters -%}
         {%- if f.active_values.size > 0 or f.min_value.value or f.max_value.value -%}
@@ -229,6 +311,8 @@
           <a href="{{ collection.url }}" class="filter-chip filter-chip--clear">{{ 'collections.filtering.clear_all' | t }}</a>
         </div>
       {%- endif -%}
+
+      {%- if section.settings.bestsellers_position == 'above' -%}{{ bestsellers_row }}{%- endif -%}
 
       {%- if use_demo and has_active_filters == false -%}
         {%- liquid
@@ -321,6 +405,8 @@
           {%- endif -%}
         {%- endif -%}
       {%- endif -%}
+
+      {%- if section.settings.bestsellers_position == 'below' -%}{{ bestsellers_row }}{%- endif -%}
     </div>
   </div>
 
@@ -361,6 +447,22 @@
                     <span>–</span>
                     <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | money_without_currency | remove: ',' }}" placeholder="{{ filter.range_max | money }}">
                   </div>
+                {%- when 'boolean' -%}
+                  <ul class="filter-list">
+                    {%- for value in filter.values -%}
+                      <li>
+                        <label class="filter-check">
+                          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
+                            {% if value.active %}checked{% endif %}
+                            data-filter-url="{{ value.url_to_add }}"
+                            data-filter-remove="{{ value.url_to_remove }}"
+                          >
+                          <span>{{ value.label }}</span>
+                          {%- if value.count -%}<span class="filter-count-pill">{{ value.count }}</span>{%- endif -%}
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
               {%- endcase -%}
             </div>
           </div>
@@ -575,6 +677,36 @@
       "type": "range", "id": "products_per_page", "label": "Products Per Page",
       "min": 12, "max": 48, "step": 4, "default": 24
     },
+    { "type": "header", "content": "Image banner" },
+    { "type": "checkbox", "id": "show_banner", "label": "Show image banner", "info": "Sits above the page and carries the collection title. Falls back to the collection's own image when no banner image is set.", "default": false },
+    { "type": "image_picker", "id": "banner_image", "label": "Banner image" },
+    { "type": "range", "id": "banner_height", "label": "Banner height", "min": 20, "max": 70, "step": 5, "unit": "vh", "default": 40 },
+    {
+      "type": "select", "id": "banner_text_position", "label": "Banner text position",
+      "options": [
+        { "value": "left",   "label": "Left" },
+        { "value": "center", "label": "Centre" },
+        { "value": "bottom", "label": "Bottom left" }
+      ],
+      "default": "center"
+    },
+    { "type": "text", "id": "banner_eyebrow", "label": "Banner eyebrow", "default": "Collection" },
+    { "type": "checkbox", "id": "banner_show_count", "label": "Show product count in banner", "default": true },
+
+    { "type": "header", "content": "Best sellers" },
+    { "type": "checkbox", "id": "show_bestsellers", "label": "Show a best sellers row", "default": false },
+    { "type": "collection", "id": "bestsellers_collection", "label": "Best sellers collection", "info": "Leave empty to hide the row. Shopify has no Liquid sort by sales, so this points at a collection you curate or automate." },
+    { "type": "text", "id": "bestsellers_heading", "label": "Best sellers heading", "default": "Best sellers" },
+    { "type": "range", "id": "bestsellers_count", "label": "Products to show", "min": 2, "max": 8, "step": 1, "default": 4 },
+    {
+      "type": "select", "id": "bestsellers_position", "label": "Position",
+      "options": [
+        { "value": "above", "label": "Above the grid" },
+        { "value": "below", "label": "Below the grid" }
+      ],
+      "default": "above"
+    },
+
     { "type": "header", "content": "Demo" },
     {
       "type": "checkbox", "id": "show_demo_when_empty",

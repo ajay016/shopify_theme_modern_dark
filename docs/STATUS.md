@@ -8,9 +8,9 @@
 
 ## Current position
 
-**Phase:** B — product card styles and features · **complete**
+**Phase:** A (completion pass) · **complete** — B was reported done earlier and was; A was reported done and was **not**
 **Last completed:** Phase B (before it, A — collection layouts; A0 — Layout Explorer; G — homepage #6)
-**Next up:** Phase C — product detail layouts and thumbnails
+**Next up:** finish the last Phase A gap — the **collections list** layout — then Phase C
 **Blocked on:** nothing
 
 **Working state:** clean. Nothing half-finished. Everything committed and pushed to `main` and `claude/maison-noir-shopify-theme-2cxtip`. Published homepage is Aureline.
@@ -133,6 +133,25 @@ Everything below is static analysis. **Nothing in Phase A0 or Phase A has been o
 **A** — list view row proportions; load-more and infinite scroll against a real paginated collection (both need more products than one page); the filter panel, which needs Shopify's Search & Discovery app installed before `collection.filters` is populated at all; sidebar-right ordering; the 6-column grid on a narrow screen.
 
 **B** — the size strip against the slide-up button; swatch hover image swapping; the plaque style at narrow widths; all of it across the five schemes. Every feature in this phase reads variant data, so none of it appears on the demo fallback cards — real products with options are needed to see any of it.
+
+---
+
+## Phase A completion pass — what was missing
+
+Phase A was reported complete after the layouts were built and the broken wiring fixed. Checking it against the recorded plan afterwards showed the **Features** list was largely untouched: 2 of 6 built. The layouts were 11½ of 12. Reporting it as done was wrong.
+
+| Plan item | Was | Now |
+|---|---|---|
+| full filter set | `list` and `price_range` only. **Availability is a `boolean` filter and fell through the case**, rendering a heading with an empty body | boolean handled in both the sidebar and the drawer |
+| image banner | not built | real banner above the header, own height / position / eyebrow settings, falls back to the collection's own image. The title block is skipped when it shows, so the page does not carry two `<h1>`s |
+| best sellers | not built | opt-in row above or below the grid. Liquid cannot sort a collection by sales, so it points at a collection curated in the admin; empty setting means no row rather than an empty heading |
+| recently viewed | section existed, never used | added to all 23 collection templates |
+| collections list | not built | **still not built** — the one remaining gap |
+| filter *hidden* | — | folded into `toggle` rather than shipped as a separate option |
+
+### Lesson
+
+The phase was checked against *what I built* rather than against *the plan as recorded*. The plan is in `ROADMAP.md`; a phase is not done until every line of its scope is ticked or explicitly deferred in writing.
 
 ---
 

@@ -3275,3 +3275,127 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 
 /* Collections list head — the text column beside the controls */
 .clist-head__text { min-width: 0; flex: 1 1 320px; }
+
+/* ==================================================================
+   FILTER CONTROL CORRECTIONS
+
+   Found by rendering the page rather than reading the file.
+
+   The global `input` rule sets padding: 14px 20px and width: 100%.
+   A 15px checkbox never reset that padding, so with border-box every
+   tickbox inflated to roughly 40px — a column of grey slabs beside
+   the labels. Everything here resets the inherited form styling on
+   controls that are not text fields.
+   ================================================================== */
+
+.filter-check input[type="checkbox"],
+.cfilter-swatch input[type="checkbox"],
+.cfilter-pill input[type="checkbox"] {
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  letter-spacing: normal;
+  box-sizing: border-box;
+}
+.filter-check input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  border-radius: 2px;
+  border: 1px solid var(--cp-bdr, rgba(200,169,110,.28));
+  background: transparent;
+  position: relative;
+  cursor: pointer;
+  transition: background .16s ease, border-color .16s ease;
+}
+.filter-check input[type="checkbox"]:checked {
+  background: var(--cp-acc, #C8A96E);
+  border-color: var(--cp-acc, #C8A96E);
+}
+.filter-check input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px; top: 1px;
+  width: 4px; height: 8px;
+  border: solid var(--on-gold, #0A0A0A);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.filter-check { gap: 11px; align-items: center; }
+.filter-check span:first-of-type { line-height: 1.35; }
+
+/* A swatch should read as a solid colour. The inset ring belonged only on
+   the selected state; in the base rule it turned every colour into a donut. */
+.cfilter-swatch__dot {
+  box-shadow: none;
+}
+.cfilter-swatch input:checked + .cfilter-swatch__dot {
+  box-shadow: 0 0 0 2px var(--cp-bg, #0A0A0A), 0 0 0 3px var(--cp-acc, #C8A96E);
+}
+
+/* Price presets read better on one line than wrapping after two */
+.cfilter-pills--price { gap: 5px; }
+.cfilter-pills--price .cfilter-pill span { padding: 0 9px; letter-spacing: .02em; }
+
+/* Give each group a little more air between rule and heading */
+.cfilter-group .filter-group__toggle { padding: 17px 0 13px; }
+.cfilter-group .filter-group__body { padding-bottom: 22px; }
+
+/* ------------------------------------------------------------------
+   Two defects visible only once the page was rendered
+   ------------------------------------------------------------------ */
+
+/* The sale badge resolved to a pale pink block with white text on top —
+   low contrast, and it reads like a supermarket sticker rather than a
+   fashion label. A discount chip sits on photography, so it takes the
+   on-photo pair: legible over any image, in any scheme. */
+.pcard__badge--sale {
+  background: var(--onphoto-dark, rgba(20,17,13,.94));
+  color: var(--onphoto-dark-fg, #F4EFE6);
+}
+.pcard__badge--low {
+  background: var(--onphoto-light, rgba(252,251,249,.96));
+  color: var(--onphoto-light-fg, #16130F);
+}
+.pcard__badge { font-size: calc(10px * var(--fs-scale, 1)); padding: 6px 10px; }
+
+/* Previous / Next wrapped onto two lines and collided with the numbers,
+   because they inherit a 40px min-width grid cell built for a digit. */
+.pagination__item--prev,
+.pagination__item--next {
+  white-space: nowrap;
+  min-width: 0;
+  padding: 0 16px;
+  gap: 8px;
+  display: inline-flex;
+  align-items: center;
+}
+.pagination { gap: 4px; }
+.pagination__item { border: 1px solid transparent; }
+
+/* An earlier .pagination__item rule hard-sets width: 40px, so Previous/Next
+   overflowed their box and collided with the page numbers — and page 10 would
+   have done the same. Width becomes content-driven with 40px as a floor. */
+.pagination__item {
+  width: auto;
+  min-width: 40px;
+  flex: 0 0 auto;
+}
+.pagination__item--prev,
+.pagination__item--next { min-width: 0; }
+
+/* The banner sat flush against the grid with no separation, so the first row
+   of cards read as tucked underneath it. It also needs an explicit stacking
+   context floor so it can never paint over what follows. */
+.collection-banner {
+  position: relative;
+  z-index: 0;
+  margin-bottom: clamp(28px, 4vh, 52px);
+}
+.collection-title--style-2 { margin-bottom: clamp(24px, 3.5vh, 44px); }
+.collection-title--style-2 .collection-title__banner { position: relative; z-index: 0; }
+/* With a banner above it the toolbar needs its own air, or the filter button
+   and sort control sit on the banner's edge. */
+.collection-banner + .collection-toolbar,
+.collection-title--style-2 + .collection-toolbar { margin-top: 0; }
+.collection-layout { position: relative; z-index: 1; }

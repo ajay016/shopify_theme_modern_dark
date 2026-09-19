@@ -298,7 +298,7 @@
                 <p class="product-visitors" {{ block.shopify_attributes }}>
                   <span class="visitors-dot"></span>
                   <span data-visitor-count>{{ block.settings.min_visitors | plus: product.id | modulo: block.settings.max_visitors | plus: block.settings.min_visitors }}</span>
-                  {{ 'products.product.visitors' | t }}
+                  {{ 'products.product.visitors' | t: count: visitor_count }}
                 </p>
               {%- endif -%}
 

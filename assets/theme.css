@@ -1300,6 +1300,88 @@ body.has-announcement .site-header { top: 44px; }
 .pcard--overlay .pcard__price { color: var(--on-image-mut, rgba(255,255,255,.78)); }
 .pcard--overlay .pcard-atc { left:auto; right:12px; bottom:auto; top:12px; width:auto; }
 
+/* Plaque — info sits on a raised panel that lifts over the image edge */
+.pcard--plaque .pcard__info {
+  position: relative;
+  z-index: 2;
+  margin: -34px 12px 0;
+  padding: 16px 16px 18px;
+  background: var(--pc-bg, var(--s1-bg, #0A0A0A));
+  border: 1px solid var(--pc-bdr, rgba(200,169,110,.18));
+  transition: transform .28s ease, border-color .28s ease;
+}
+.pcard--plaque:hover .pcard__info { transform: translateY(-6px); border-color: var(--pc-acc, #C8A96E); }
+
+/* — Card features — */
+
+/* Sizes on hover. Hidden until hover on pointer devices; always visible on
+   touch, where there is no hover to reveal them with. */
+.pcard__sizes {
+  position: absolute; left: 8px; right: 8px; bottom: 8px; z-index: 3;
+  display: flex; flex-wrap: wrap; gap: 4px;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .22s ease, transform .22s ease;
+  pointer-events: none;
+}
+.pcard:hover .pcard__sizes,
+.pcard:focus-within .pcard__sizes { opacity: 1; transform: none; pointer-events: auto; }
+.pcard__size {
+  min-width: 34px; padding: 6px 8px;
+  text-align: center; text-decoration: none;
+  font-size: calc(11px * var(--fs-scale, 1));
+  font-weight: 500; letter-spacing: .06em;
+  background: var(--onphoto-light, rgba(252,251,249,.96));
+  color: var(--onphoto-light-fg, #16130F);
+  transition: background .2s, color .2s;
+}
+.pcard__size:hover { background: var(--onphoto-dark, rgba(20,17,13,.94)); color: var(--onphoto-dark-fg, #F4EFE6); }
+.pcard__size.is-out { text-decoration: line-through; opacity: .55; }
+/* A slide-up add-to-bag and a size strip want the same corner, so when both
+   are present the sizes sit above the button rather than under it. */
+.pcard[data-quickadd="slide_up"]:hover .pcard__sizes { bottom: 58px; }
+
+/* Colour swatches */
+.pcard__swatches { display: flex; align-items: center; gap: 5px; margin-top: 8px; }
+.pcard__swatch {
+  width: 13px; height: 13px; padding: 0;
+  border: 1px solid var(--pc-bdr, rgba(200,169,110,.28));
+  border-radius: 50%;
+  background: var(--sw, #999);
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.pcard__swatch:hover,
+.pcard__swatch.is-active { transform: scale(1.18); box-shadow: 0 0 0 2px var(--pc-acc, #C8A96E); }
+.pcard__swatch:focus-visible { outline: 2px solid var(--pc-acc, #C8A96E); outline-offset: 2px; }
+.pcard__swatch-more {
+  font-size: calc(10px * var(--fs-scale, 1));
+  color: var(--pc-mut, var(--muted, rgba(245,240,232,.62)));
+}
+
+/* Star rating */
+.pcard__rating { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
+.pcard__stars { display: inline-flex; gap: 1px; font-size: calc(12px * var(--fs-scale, 1)); line-height: 1; }
+.pcard__star { color: var(--pc-bdr, rgba(200,169,110,.3)); }
+.pcard__star.is-on { color: var(--pc-acc, #C8A96E); }
+.pcard__rating-count {
+  font-size: calc(11px * var(--fs-scale, 1));
+  color: var(--pc-mut, var(--muted, rgba(245,240,232,.62)));
+}
+
+/* Material subtitle */
+.pcard__material {
+  display: block; margin-top: 4px;
+  font-size: calc(11px * var(--fs-scale, 1));
+  letter-spacing: .04em;
+  color: var(--pc-mut, var(--muted, rgba(245,240,232,.62)));
+}
+
+/* Low-stock badge — same slot as sale, distinct enough to read differently */
+.pcard__badge--low {
+  background: var(--sale-bg, #7A2020);
+  color: var(--sale-text, #FFBABA);
+}
+
 /* — Rail sizing — when a card is dropped into a horizontal scroll rail — */
 .pcard--rail { flex:0 0 auto; width: clamp(240px, 24vw, 320px); scroll-snap-align:start; }
 

@@ -190,6 +190,8 @@ layouts are **specified but not built** — the alternate template files
 (`collection.list.json`, `product.wide.json`, …) exist as identical stubs and do not yet
 differ from each other.
 
+**`docs/HANDOVER.md`** is the short read after each phase: what changed, what to check and where.
+
 **`docs/STATUS.md`** says what is being worked on right now and what is next.
 
 **`docs/ROADMAP.md`** is the source of truth for the remaining scope: every layout and

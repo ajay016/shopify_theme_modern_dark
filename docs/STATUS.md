@@ -8,9 +8,9 @@
 
 ## Current position
 
-**Phase:** A — collection layouts and filters · **complete**
-**Last completed:** Phase A (before it, A0 — Layout Explorer; G — homepage #6 and Ivory / Wine)
-**Next up:** Phase B — product card styles
+**Phase:** B — product card styles and features · **complete**
+**Last completed:** Phase B (before it, A — collection layouts; A0 — Layout Explorer; G — homepage #6)
+**Next up:** Phase C — product detail layouts and thumbnails
 **Blocked on:** nothing
 
 **Working state:** clean. Nothing half-finished. Everything committed and pushed to `main` and `claude/maison-noir-shopify-theme-2cxtip`. Published homepage is Aureline.
@@ -25,9 +25,9 @@
 |---|---|
 | Files touched so far | — |
 | Done within the phase | — |
-| Next concrete step | Begin Phase B: product card styles (4–5 variants) driven by a global setting with a per-section override |
+| Next concrete step | Begin Phase C: make `main-product` settings-driven — layouts, thumbnail positions — then the thin `?view=` templates |
 | Known-incomplete | — |
-| Not yet verified | Phases A0 and A have not been opened in a browser — see "Not verified" |
+| Not yet verified | Phases A0, A and B have not been opened in a browser — see "Not verified" |
 
 ---
 
@@ -38,14 +38,14 @@
 | 1–14 | Colour system, tokens, header, cart modes, font scaling, on-photo controls, component polish | done |
 | G | Homepage #6 (Aureline) + Ivory / Wine scheme | done, out of order |
 | A0 | Layout Explorer panel + Demo theme setting | done |
-| **A** | **Collection layouts, filters, list view, pagination** | **done** |
+| A | Collection layouts, filters, list view, pagination | done |
+| **B** | **Product card styles and features** | **done** |
 
 ## What is left
 
 | Phase | Scope |
 |---|---|
-| **B** | Product card styles + card features — **next** |
-| C | Product detail layouts + thumbnails |
+| **C** | Product detail layouts + thumbnails — **next** |
 | D | Product features + boost-sale |
 | E | Blog + post layouts |
 | F | Pages, navbar styles, mega-menu rebuild (3 layouts × with/without images, 3 levels, per-child images) |
@@ -107,6 +107,23 @@ I previously recorded the collection templates as "identical stubs". That was wr
 
 ---
 
+## Phase B — what was built
+
+**Two settings had existed in the theme editor since the card was written and nothing read them** — `product_card_show_sizes` and `product_card_show_material`. Switching either on did nothing. Same class of defect as Phase A: a control that renders and has no effect.
+
+| Added | Source | When absent |
+|---|---|---|
+| Sizes on hover | the Size option; each links to that variant | out-of-stock sizes are struck through, not hidden — a shopper wants to know their size exists before learning it is gone |
+| Colour swatches | the Color / Colour option; each carries its variant image for hover preview | no option, no swatches. The CSS named colour is a deliberate fallback so an option called "Sand" gets a neutral chip rather than a broken one |
+| Star rating | standard `reviews.rating` metafields | nothing rendered — an empty grey star row reads worse than none |
+| "Only N left" | real inventory, guarded on `inventory_management` | an untracked variant reports null, which would otherwise read as zero and mark everything low stock |
+| Material subtitle | `custom.material` metafield | nothing rendered |
+| Plaque card style | fifth style — info on a raised panel lifting over the image edge | — |
+
+Swatch hover is bound by delegation, so cards appended by load-more or infinite scroll behave the same with no re-binding. Where a slide-up Add to Bag is also present, the size strip is raised above it rather than sitting behind it.
+
+---
+
 ## Not verified
 
 Everything below is static analysis. **Nothing in Phase A0 or Phase A has been opened in a browser.** Specifically unverified:
@@ -114,6 +131,8 @@ Everything below is static analysis. **Nothing in Phase A0 or Phase A has been o
 **A0** — the edge tab's position and vertical text; the slide transition; whether `blogs` is iterable on this store (there is a `blogs.news` fallback); the panel alongside the cart drawer and quick view; appearance in all five schemes.
 
 **A** — list view row proportions; load-more and infinite scroll against a real paginated collection (both need more products than one page); the filter panel, which needs Shopify's Search & Discovery app installed before `collection.filters` is populated at all; sidebar-right ordering; the 6-column grid on a narrow screen.
+
+**B** — the size strip against the slide-up button; swatch hover image swapping; the plaque style at narrow widths; all of it across the five schemes. Every feature in this phase reads variant data, so none of it appears on the demo fallback cards — real products with options are needed to see any of it.
 
 ---
 

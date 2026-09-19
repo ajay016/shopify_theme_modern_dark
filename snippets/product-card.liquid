@@ -41,6 +41,12 @@
   assign show_wishlist = show_wishlist | default: settings.product_card_show_wishlist
   assign show_quickview = show_quickview | default: settings.product_card_show_quickview
   assign show_price_compare = show_price_compare | default: settings.product_card_show_price_compare
+  assign show_sizes    = show_sizes    | default: settings.product_card_show_sizes
+  assign show_material = show_material | default: settings.product_card_show_material
+  assign show_swatches = show_swatches | default: settings.product_card_show_swatches
+  assign show_rating   = show_rating   | default: settings.product_card_show_rating
+  assign show_low_stock = show_low_stock | default: settings.product_card_show_low_stock
+  assign low_stock_threshold = settings.product_card_low_stock_threshold | default: 5
 
   assign img_loading = 'lazy'
   if lazy == false
@@ -200,13 +206,73 @@
         <span class="pcard__num">{{ number | prepend: '0' | slice: -2, 2 }}</span>
       {%- endif -%}
 
+      {%- liquid
+        comment
+          Low stock reads real inventory, so it only speaks when Shopify is
+          actually tracking it. An untracked variant reports null, which would
+          otherwise read as zero and mark every product "last few".
+        endcomment
+        assign stock_total = 0
+        assign stock_tracked = false
+        for v in product.variants
+          if v.inventory_management != blank
+            assign stock_tracked = true
+            if v.inventory_quantity > 0
+              assign stock_total = stock_total | plus: v.inventory_quantity
+            endif
+          endif
+        endfor
+      -%}
+
       {%- if product.available == false -%}
         <span class="pcard__badge">{{ 'products.product.sold_out_badge' | t }}</span>
       {%- elsif product.compare_at_price > product.price -%}
         {%- assign discount_pct = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
         <span class="pcard__badge pcard__badge--sale">−{{ discount_pct }}%</span>
+      {%- elsif show_low_stock and stock_tracked and stock_total > 0 and stock_total <= low_stock_threshold -%}
+        <span class="pcard__badge pcard__badge--low">Only {{ stock_total }} left</span>
       {%- elsif product.tags contains 'new' or product.tags contains 'New' -%}
         <span class="pcard__badge">{{ 'products.product.new_badge' | t }}</span>
+      {%- endif -%}
+
+      {%- comment -%}
+        Sizes on hover. The setting has existed in the theme editor since the
+        card was written but nothing read it, so switching it on did nothing.
+        Each size links straight to that variant, and sizes with no stock are
+        struck through rather than hidden — a shopper wants to know their size
+        exists before they learn it is gone.
+      {%- endcomment -%}
+      {%- if show_sizes -%}
+        {%- for opt in product.options_with_values -%}
+          {%- assign opt_key = opt.name | downcase | strip -%}
+          {%- if opt_key == 'size' -%}
+            <div class="pcard__sizes" aria-label="Available sizes">
+              {%- for val in opt.values limit: 8 -%}
+                {%- liquid
+                  assign val_available = false
+                  assign val_variant = nil
+                  for v in product.variants
+                    if v.options contains val
+                      unless val_variant
+                        assign val_variant = v
+                      endunless
+                      if v.available
+                        assign val_available = true
+                        assign val_variant = v
+                        break
+                      endif
+                    endif
+                  endfor
+                -%}
+                <a
+                  class="pcard__size{% unless val_available %} is-out{% endunless %}"
+                  href="{{ product.url }}{% if val_variant %}?variant={{ val_variant.id }}{% endif %}"
+                  {% unless val_available %}aria-disabled="true"{% endunless %}
+                >{{ val }}</a>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
       {%- endif -%}
 
       <div class="pcard__icons">
@@ -251,6 +317,28 @@
         <span class="pcard__cat">{{ product.vendor }}</span>
       {%- endif -%}
       <span class="pcard__name"><a href="{{ product.url }}">{{ product.title }}</a></span>
+
+      {%- comment -%}
+        Rating reads Shopify's standard reviews metafields, which the Product
+        Reviews app and most third-party review apps write to. No metafield,
+        no slot — an empty row of grey stars looks worse than none.
+      {%- endcomment -%}
+      {%- if show_rating and product.metafields.reviews.rating.value != blank -%}
+        {%- liquid
+          assign rating_val = product.metafields.reviews.rating.value.rating | default: product.metafields.reviews.rating.value | times: 1.0
+          assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+          assign rating_rounded = rating_val | round
+        -%}
+        <span class="pcard__rating" aria-label="Rated {{ rating_val }} out of 5">
+          <span class="pcard__stars" aria-hidden="true">
+            {%- for i in (1..5) -%}
+              <span class="pcard__star{% if i <= rating_rounded %} is-on{% endif %}">★</span>
+            {%- endfor -%}
+          </span>
+          {%- if rating_count > 0 -%}<span class="pcard__rating-count">({{ rating_count }})</span>{%- endif -%}
+        </span>
+      {%- endif -%}
+
       <span class="pcard__price">
         {%- if show_price_compare and product.compare_at_price > product.price -%}
           <span class="pcard__price-now">{{ product.price | money }}</span>
@@ -259,6 +347,49 @@
           {{ product.price | money }}
         {%- endif -%}
       </span>
+
+      {%- if show_material and product.metafields.custom.material.value != blank -%}
+        <span class="pcard__material">{{ product.metafields.custom.material.value }}</span>
+      {%- endif -%}
+
+      {%- comment -%}
+        Colour swatches. Each swatch carries the image of the first variant in
+        that colour, so hovering previews it without a request. The CSS named
+        colour is a deliberate fallback: a merchant who names an option
+        "Sand" gets a neutral chip rather than a broken one.
+      {%- endcomment -%}
+      {%- if show_swatches -%}
+        {%- for opt in product.options_with_values -%}
+          {%- assign opt_key = opt.name | downcase | strip -%}
+          {%- if opt_key == 'color' or opt_key == 'colour' -%}
+            <span class="pcard__swatches" aria-label="{{ opt.values.size }} colours">
+              {%- for val in opt.values limit: 6 -%}
+                {%- liquid
+                  assign sw_variant = nil
+                  for v in product.variants
+                    if v.options contains val
+                      assign sw_variant = v
+                      break
+                    endif
+                  endfor
+                  assign sw_css = val | downcase | strip | replace: ' ', ''
+                -%}
+                <button
+                  type="button"
+                  class="pcard__swatch"
+                  style="--sw: {{ sw_css }};"
+                  title="{{ val | escape }}"
+                  aria-label="{{ val | escape }}"
+                  {% if sw_variant and sw_variant.image %}data-swatch-image="{{ sw_variant.image | image_url: width: 700 }}"{% endif %}
+                ></button>
+              {%- endfor -%}
+              {%- if opt.values.size > 6 -%}
+                <span class="pcard__swatch-more">+{{ opt.values.size | minus: 6 }}</span>
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
     </div>
   </div>
 {%- endif -%}

@@ -195,7 +195,8 @@
           { "value": "atelier",  "label": "Atelier — eyebrow, name & price" },
           { "value": "minimal",  "label": "Minimal — name & price only" },
           { "value": "overlay",  "label": "Editorial — info over image" },
-          { "value": "bordered", "label": "Bordered — framed card" }
+          { "value": "bordered", "label": "Bordered — framed card" },
+          { "value": "plaque",   "label": "Plaque — info on a raised panel" }
         ],
         "default": "atelier"
       },
@@ -249,6 +250,10 @@
       { "type": "checkbox", "id": "product_card_show_price_compare", "label": "Show compare-at (sale) price", "default": true },
       { "type": "checkbox", "id": "product_card_show_material",  "label": "Show material/subtitle",          "default": true },
       { "type": "checkbox", "id": "product_card_show_sizes",     "label": "Show sizes on hover",             "default": true },
+      { "type": "checkbox", "id": "product_card_show_swatches",  "label": "Show colour swatches",            "info": "Reads the product's Color / Colour option. Hovering a swatch previews that colour's image.", "default": true },
+      { "type": "checkbox", "id": "product_card_show_rating",    "label": "Show star rating",                "info": "Reads the standard reviews metafields. Products without a rating simply show nothing.", "default": true },
+      { "type": "checkbox", "id": "product_card_show_low_stock", "label": "Show \"only N left\" badge",       "info": "Only for variants where Shopify is tracking inventory.", "default": true },
+      { "type": "range",    "id": "product_card_low_stock_threshold", "label": "Low stock threshold", "min": 1, "max": 20, "step": 1, "unit": "pcs", "default": 5 },
       { "type": "checkbox", "id": "product_card_show_wishlist",  "label": "Show wishlist button",            "default": true },
       { "type": "checkbox", "id": "product_card_show_quickview", "label": "Show quick view button",          "default": true },
       {

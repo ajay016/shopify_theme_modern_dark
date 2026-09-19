@@ -876,6 +876,48 @@
 
 
   /* ============================================================
+     Product card colour swatches
+
+     Hovering a swatch previews that colour's variant image on the card.
+     Bound by delegation so cards appended by load-more or infinite
+     scroll behave the same without re-binding.
+     ============================================================ */
+  function initCardSwatches() {
+    function mainImage(card) {
+      return card.querySelector('.pcard__img--a');
+    }
+
+    document.addEventListener('mouseover', e => {
+      const sw = e.target.closest('.pcard__swatch[data-swatch-image]');
+      if (!sw) return;
+      const card = sw.closest('.pcard');
+      const img = card && mainImage(card);
+      if (!img) return;
+      if (!card.dataset.swatchOriginal) card.dataset.swatchOriginal = img.currentSrc || img.src;
+      img.src = sw.dataset.swatchImage;
+      img.removeAttribute('srcset');
+      card.querySelectorAll('.pcard__swatch').forEach(s => s.classList.toggle('is-active', s === sw));
+    });
+
+    document.addEventListener('mouseleave', e => {
+      const card = e.target.closest && e.target.closest('.pcard');
+      if (!card || !card.dataset.swatchOriginal) return;
+      const img = mainImage(card);
+      if (img) img.src = card.dataset.swatchOriginal;
+      card.querySelectorAll('.pcard__swatch').forEach(s => s.classList.remove('is-active'));
+    }, true);
+
+    // Clicking a swatch goes to the product rather than only previewing it.
+    document.addEventListener('click', e => {
+      const sw = e.target.closest('.pcard__swatch');
+      if (!sw) return;
+      const link = sw.closest('.pcard')?.querySelector('.pcard__name a');
+      if (link) window.location.href = link.getAttribute('href');
+    });
+  }
+
+
+  /* ============================================================
      Collection view toggle — grid / list
 
      The previous implementation targeted `.view-btn[data-grid]` and
@@ -1191,6 +1233,7 @@
     initCartDrawer();
     initCardAddToCart();
     initCardCarousel();
+    initCardSwatches();
     initQuickView();
     initWishlist();
     initFilters();

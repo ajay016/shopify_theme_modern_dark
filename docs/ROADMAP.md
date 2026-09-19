@@ -1,6 +1,6 @@
 # Theme Roadmap — full scope
 
-**Status: part built.** The homepages, the colour system, the Layout Explorer and the collection page are done. Product, blog and page layouts are still specified rather than implemented.
+**Status: part built.** The homepages, the colour system, the Layout Explorer, the collection page and the product card are done. Product-detail, blog and page layouts are still specified rather than implemented.
 
 This file exists because the original brief was never recorded anywhere. It is now the source of truth for scope.
 
@@ -14,7 +14,7 @@ This file exists because the original brief was never recorded anywhere. It is n
 |---|---|
 | Homepages | **6 built** (Classic, Blanc, Atelier, Noir, Lumière, Aureline) |
 | Colour system | **Done** — five schemes, one global setting drives every section (`COLOR-SYSTEM.md`) |
-| Product card | **Done** — one shared card with quick view, wishlist, add-to-bag, demo fallbacks |
+| Product card | **Done (Phase B).** Five styles; quick view, wishlist, add-to-bag, sizes on hover, colour swatches, star rating, low stock, demo fallbacks |
 | Collection layouts | **Built (Phase A).** 23 `?view=` templates — sidebar position, container width, list view, grid 2–6, four filter presentations, five headers, three pagination modes |
 | Product layouts | **Not built.** `product.wide/gradient/digital.json` are identical stubs |
 | Blog / post layouts | **Not built.** `blog.sidebar-left/right.json` are identical stubs |
@@ -195,7 +195,7 @@ Each phase ends shippable, so the theme is never half-broken.
 |---|---|---|
 | ~~**A0**~~ | ~~Layout Explorer panel + theme setting~~ | **Done.** Built first so every later layout registers itself in it. Stub entries carry a *Not yet styled* badge, which each phase flips as it makes a layout real |
 | ~~**A**~~ | ~~Collection layouts + filters~~ | **Done.** Four controls turned out to be wired to markup that did not exist — view toggle, list view, filter accordion and sidebar position — plus load-more and infinite scroll with no JS at all |
-| **B** | Product card styles + card features | Feeds both collection and homepage |
+| ~~**B**~~ | ~~Product card styles + card features~~ | **Done.** Two settings existed in the editor that nothing read; five styles now, plus swatches, rating, low stock and working sizes-on-hover |
 | **C** | Product detail layouts + thumbnails | Second most-judged page |
 | **D** | Product features + boost-sale | Long tail; each is independent |
 | **E** | Blog + post layouts | Smaller, self-contained |
@@ -261,6 +261,6 @@ You supplied a reference design instead of waiting for #1–#5 review, so Phase 
 
 Built: the six homepages, the five colour schemes, the shared product card and quick view.
 
-Not built: every phase in the build order except **A0**, **A** and **G**. Phase B is next.
+Not built: every phase in the build order except **A0**, **A**, **B** and **G**. Phase C is next.
 
 Fine-grained position, including anything half-finished, lives in [STATUS.md](STATUS.md).

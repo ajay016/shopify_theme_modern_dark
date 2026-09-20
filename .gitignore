@@ -3,3 +3,7 @@ node_modules/
 *.log
 .env
 .shopifyignore
+
+# Python bytecode from the verification scripts
+__pycache__/
+*.pyc

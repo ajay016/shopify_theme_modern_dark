@@ -2484,6 +2484,14 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .collection-page--tone-warm  { --cp-bg:var(--s3-bg,#1A1714); --cp-fg:var(--s3-fg,#F5F0E8); --cp-mut:var(--s3-mut,rgba(245,240,232,.62)); --cp-bdr:var(--s3-bdr,rgba(245,240,232,.16)); --cp-acc:var(--gold,#C8A96E); }
 .collection-page--tone-theme { --cp-bg:var(--s1-bg,#0A0A0A); --cp-fg:var(--s1-fg,#F5F0E8); --cp-mut:var(--s1-mut,rgba(245,240,232,.62)); --cp-bdr:var(--s1-bdr,rgba(245,240,232,.16)); --cp-acc:var(--gold,#C8A96E); }
 
+/* The filter panel sits one step off the page tone. Without this it took
+   --cp-bg, which IS the page background, so on a light scheme the panel was
+   white on white and read as loose text rather than a section. */
+.collection-page--tone-theme,
+.collection-page--tone-dark  { --cp-panel: var(--s2-bg, #131313); --cp-panel-bdr: var(--s2-bdr, rgba(245,240,232,.16)); }
+.collection-page--tone-light { --cp-panel: var(--s3-bg, #1A1714); --cp-panel-bdr: var(--s3-bdr, rgba(245,240,232,.16)); }
+.collection-page--tone-warm  { --cp-panel: var(--s2-bg, #131313); --cp-panel-bdr: var(--s2-bdr, rgba(245,240,232,.16)); }
+
 .collection-page { background: var(--cp-bg); color: var(--cp-fg); padding-bottom: clamp(56px,8vh,96px); }
 .collection-main { min-width: 0; }
 
@@ -3046,25 +3054,36 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 }
 
 .collection-sidebar {
-  width: 268px; flex-shrink: 0;
+  width: 286px; flex-shrink: 0;
   align-self: flex-start;
-  position: sticky; top: var(--header-h, 72px);
-  max-height: calc(100vh - var(--header-h, 72px));
+  position: sticky; top: calc(var(--header-h, 72px) + 18px);
+  max-height: calc(100vh - var(--header-h, 72px) - 36px);
   overflow-y: auto;
-  padding: 22px 18px 28px 0;
+  padding: 20px 18px 22px;
+  background: var(--cp-panel, var(--cp-bg, #0A0A0A));
+  border: 1px solid var(--cp-panel-bdr, var(--f-bdr));
+  border-radius: 14px;
 }
 
 /* --- panel head ------------------------------------------------------ */
 .sidebar-header {
-  display: flex; align-items: baseline; justify-content: space-between;
-  gap: 12px; padding-bottom: 14px; margin-bottom: 4px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+  padding: 2px 0 13px; margin-bottom: 2px;
   border-bottom: 1px solid var(--f-bdr);
 }
 .sidebar-header__title {
-  margin: 0;
+  margin: 0; min-width: 0;
+  display: inline-flex; align-items: center; gap: 9px;
+  overflow-wrap: anywhere;
   font-size: calc(12px * var(--fs-scale, 1));
-  letter-spacing: .16em; text-transform: uppercase; font-weight: 600;
+  letter-spacing: .18em; text-transform: uppercase; font-weight: 700;
   color: var(--f-fg);
+}
+/* A short accent rule reads as a section marker without adding chrome. */
+.sidebar-header__title::before {
+  content: ''; width: 16px; height: 2px; flex-shrink: 0;
+  background: var(--f-acc); border-radius: 2px;
 }
 
 /* --- one filter group ------------------------------------------------ */

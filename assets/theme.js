@@ -865,6 +865,53 @@
       window.location.href = url;
     });
 
+    // The native price slider. The two range inputs overlap, so each drag
+    // is clamped against the other and the fill is redrawn between them.
+    // Releasing a thumb writes into the number input and fires its change
+    // event, reusing the navigation below rather than duplicating it.
+    document.querySelectorAll('.price-range-filter').forEach(row => {
+      const track = row.querySelector('[data-price-track]');
+      const fill  = row.querySelector('[data-price-fill]');
+      const lo    = row.querySelector('[data-price-range="min"]');
+      const hi    = row.querySelector('[data-price-range="max"]');
+      const nums  = row.querySelectorAll('.price-range-inputs input');
+      if (!track || !lo || !hi) return;
+      const numMin = nums[0], numMax = nums[1];
+      const floor = parseFloat(lo.min), ceil = parseFloat(lo.max);
+      if (!(ceil > floor)) return;
+
+      const paint = () => {
+        const a = parseFloat(lo.value), b = parseFloat(hi.value);
+        const l = ((a - floor) / (ceil - floor)) * 100;
+        const r = ((b - floor) / (ceil - floor)) * 100;
+        if (fill) { fill.style.left = l + '%'; fill.style.right = (100 - r) + '%'; }
+      };
+
+      const clamp = which => {
+        let a = parseFloat(lo.value), b = parseFloat(hi.value);
+        if (a > b) { if (which === 'min') lo.value = b; else hi.value = a; }
+        paint();
+      };
+
+      lo.addEventListener('input', () => { clamp('min'); if (numMin) numMin.value = lo.value; });
+      hi.addEventListener('input', () => { clamp('max'); if (numMax) numMax.value = hi.value; });
+
+      // Commit on release. A value back at the rail end means "no bound".
+      const commit = () => {
+        if (numMin) numMin.value = parseFloat(lo.value) <= floor ? '' : lo.value;
+        if (numMax) numMax.value = parseFloat(hi.value) >= ceil ? '' : hi.value;
+        (numMin || numMax).dispatchEvent(new Event('change', { bubbles: true }));
+      };
+      lo.addEventListener('change', commit);
+      hi.addEventListener('change', commit);
+
+      // Typing in a number input moves the matching thumb.
+      if (numMin) numMin.addEventListener('input', () => { lo.value = numMin.value || floor; paint(); });
+      if (numMax) numMax.addEventListener('input', () => { hi.value = numMax.value || ceil; paint(); });
+
+      paint();
+    });
+
     // The native price range submits on change rather than per keystroke.
     document.querySelectorAll('.price-range-inputs input').forEach(inp => {
       inp.addEventListener('change', () => {

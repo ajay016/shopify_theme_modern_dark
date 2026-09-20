@@ -236,23 +236,27 @@
                       rendered as a column of empty boxes. When a swatch exists
                       the value becomes a swatch; otherwise it stays a checkbox.
                     {%- endcomment -%}
+                    {%- comment -%}
+                      A colour filter is detected from the filter itself, not
+                      from Shopify swatch data: that metadata only exists once
+                      swatches are configured in Search & Discovery, so keying
+                      off it showed checkboxes where swatches belong.
+
+                      Swatch presence is probed by rendering the values to a
+                      string. `value.swatch != blank` is not reliable for an
+                      unset swatch, and treating unset as present turned
+                      Availability and Brand into columns of grey dots.
+                    {%- endcomment -%}
+                    {%- capture sw_probe -%}
+                      {%- for value in filter.values -%}{{ value.swatch }}{%- endfor -%}
+                    {%- endcapture -%}
                     {%- liquid
-                      # A colour filter is detected from the filter itself, not
-                      # from Shopify swatch data. Swatch metadata only exists
-                      # once a merchant configures it in Search & Discovery, so
-                      # keying off it meant a freshly installed theme showed a
-                      # column of checkboxes where swatches belong.
                       assign filter_key = filter.label | downcase | strip
                       assign is_swatch_group = false
                       if filter_key contains 'color' or filter_key contains 'colour'
                         assign is_swatch_group = true
-                      else
-                        for value in filter.values
-                          if value.swatch != blank
-                            assign is_swatch_group = true
-                            break
-                          endif
-                        endfor
+                      elsif sw_probe != ''
+                        assign is_swatch_group = true
                       endif
                     -%}
 
@@ -303,12 +307,28 @@
                     {%- endif -%}
                   {%- when 'price_range' -%}
                     <div class="price-range-filter">
-                      <div class="price-range-slider" data-price-range
-                        data-min="{{ filter.range_min | money_without_currency }}"
-                        data-max="{{ filter.range_max | money_without_currency }}"
-                        data-current-min="{{ filter.min_value.value | default: filter.range_min | money_without_currency }}"
-                        data-current-max="{{ filter.max_value.value | default: filter.range_max | money_without_currency }}"
-                      ></div>
+                      {%- comment -%}
+                        This was an empty div carrying data attributes that no
+                        script ever read, so the slider rendered as a dead line
+                        above the number inputs. It now emits two real range
+                        inputs using the same classes as the built-in filter
+                        set, so one stylesheet and one initialiser cover both.
+                      {%- endcomment -%}
+                      {%- liquid
+                        assign p_floor = filter.range_min | money_without_currency | remove: ','
+                        assign p_ceil  = filter.range_max | money_without_currency | remove: ','
+                        assign p_min   = filter.min_value.value | default: filter.range_min | money_without_currency | remove: ','
+                        assign p_max   = filter.max_value.value | default: filter.range_max | money_without_currency | remove: ','
+                      -%}
+                      <div class="cfilter-price__track" data-price-track>
+                        <span class="cfilter-price__fill" data-price-fill></span>
+                        <input class="cfilter-price__range" type="range" data-price-range="min"
+                               min="{{ p_floor }}" max="{{ p_ceil }}" value="{{ p_min }}"
+                               aria-label="{{ 'collections.filtering.price_min' | t | default: 'Minimum price' }}">
+                        <input class="cfilter-price__range" type="range" data-price-range="max"
+                               min="{{ p_floor }}" max="{{ p_ceil }}" value="{{ p_max }}"
+                               aria-label="{{ 'collections.filtering.price_max' | t | default: 'Maximum price' }}">
+                      </div>
                       <div class="price-range-inputs">
                         <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value | money_without_currency | remove: ',' }}" placeholder="{{ filter.range_min | money }}">
                         <span>–</span>

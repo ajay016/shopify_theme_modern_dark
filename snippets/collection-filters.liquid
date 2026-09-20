@@ -170,6 +170,14 @@
   {%- endif -%}
 
   {%- comment -%}
+    Swatch presentation is chosen in the theme editor and shared with
+    Shopify's own filter branch in main-collection, so both filter systems
+    look identical. Defaults to the labelled list: an unnamed circle makes a
+    shopper guess what "the beige one" is called.
+  {%- endcomment -%}
+  {%- assign sw_style = swatch_style | default: 'list' -%}
+
+  {%- comment -%}
     One group per variant option, rendered by what the option IS rather than as
     a uniform checkbox list: colours become swatches, sizes become pills,
     anything else stays a labelled list. A fashion filter that renders "Black"
@@ -181,12 +189,16 @@
         Colour {%- render 'icon-chevron-down' -%}
       </button>
       <div class="filter-group__body">
-        <div class="cfilter-swatches">
+        <div class="filter-swatches filter-swatches--{{ sw_style }}">
           {%- for v in demo_colours -%}
-            <label class="cfilter-swatch" title="{{ v }}">
+            <label class="filter-swatch" title="{{ v }}">
               <input type="checkbox" data-facet="options" value="{{ v }}">
-              <span class="cfilter-swatch__dot" style="--sw: {{ v | downcase }};" aria-hidden="true"></span>
-              <span class="visually-hidden">{{ v }}</span>
+              <span class="filter-swatch__dot" style="{%- render 'swatch-style', label: v -%}" aria-hidden="true"></span>
+              {%- if sw_style == 'dots' -%}
+                <span class="visually-hidden">{{ v }}</span>
+              {%- else -%}
+                <span class="filter-swatch__name">{{ v }}</span>
+              {%- endif -%}
             </label>
           {%- endfor -%}
         </div>
@@ -243,13 +255,16 @@
 
             {%- case render_as -%}
               {%- when 'swatch' -%}
-                <div class="cfilter-swatches">
+                <div class="filter-swatches filter-swatches--{{ sw_style }}">
                   {%- for v in val_list -%}
-                    {%- assign css_col = v | downcase | strip | replace: ' ', '' -%}
-                    <label class="cfilter-swatch" title="{{ v | escape }}">
+                    <label class="filter-swatch" title="{{ v | escape }}">
                       <input type="checkbox" data-facet="options" value="{{ v | escape }}">
-                      <span class="cfilter-swatch__dot" style="--sw: {{ css_col }};" aria-hidden="true"></span>
-                      <span class="visually-hidden">{{ v }}</span>
+                      <span class="filter-swatch__dot" style="{%- render 'swatch-style', label: v -%}" aria-hidden="true"></span>
+                      {%- if sw_style == 'dots' -%}
+                        <span class="visually-hidden">{{ v }}</span>
+                      {%- else -%}
+                        <span class="filter-swatch__name">{{ v }}</span>
+                      {%- endif -%}
                     </label>
                   {%- endfor -%}
                 </div>

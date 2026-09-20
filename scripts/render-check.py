@@ -13,6 +13,7 @@ from liquid import Environment, DictLoader
 
 SNIPPETS = {
     'collection-filters': 'snippets/collection-filters.liquid',
+    'swatch-style': 'snippets/swatch-style.liquid',
     'product-card': None, 'collection-sort': None,
     'collection-view-toggle': None, 'icon-chevron-down': None,
 }

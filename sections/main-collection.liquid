@@ -203,7 +203,7 @@
           </div>
 
           {%- if use_builtin_filters -%}
-            {%- render 'collection-filters', products: collection.products, style: filter_style, demo: filters_are_demo -%}
+            {%- render 'collection-filters', products: collection.products, style: filter_style, demo: filters_are_demo, swatch_style: section.settings.swatch_style -%}
           {%- endif -%}
 
           {%- comment -%}
@@ -257,7 +257,14 @@
                     -%}
 
                     {%- if is_swatch_group -%}
-                      <div class="filter-swatches">
+                      {%- comment -%}
+                        Three presentations, chosen in the theme editor. Only
+                        "dots" hides the colour name, and it is not the default:
+                        a grid of unlabelled circles forces a shopper to guess
+                        what "the beige one" is called.
+                      {%- endcomment -%}
+                      {%- assign sw_style = section.settings.swatch_style | default: 'list' -%}
+                      <div class="filter-swatches filter-swatches--{{ sw_style }}">
                         {%- for value in filter.values -%}
                           <label class="filter-swatch{% if value.active %} is-active{% endif %}" title="{{ value.label }} ({{ value.count }})">
                             <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
@@ -268,7 +275,12 @@
                             <span class="filter-swatch__dot"
                               style="{%- render 'swatch-style', label: value.label, swatch: value.swatch -%}"
                               aria-hidden="true"></span>
-                            <span class="visually-hidden">{{ value.label }}</span>
+                            {%- if sw_style == 'dots' -%}
+                              <span class="visually-hidden">{{ value.label }}</span>
+                            {%- else -%}
+                              <span class="filter-swatch__name">{{ value.label }}</span>
+                              <span class="filter-swatch__count">{{ value.count }}</span>
+                            {%- endif -%}
                           </label>
                         {%- endfor -%}
                       </div>
@@ -500,7 +512,7 @@
       </div>
       <div class="filter-drawer__body">
         {%- if use_builtin_filters -%}
-          {%- render 'collection-filters', products: collection.products, style: 'drawer', demo: filters_are_demo -%}
+          {%- render 'collection-filters', products: collection.products, style: 'drawer', demo: filters_are_demo, swatch_style: section.settings.swatch_style -%}
         {%- endif -%}
         {%- for filter in collection.filters -%}
           <div class="filter-group" data-filter-group>
@@ -719,6 +731,16 @@
         { "value": "toggle",   "label": "Toggle Groups" }
       ],
       "default": "sidebar"
+    },
+    {
+      "type": "select", "id": "swatch_style", "label": "Colour swatch style",
+      "info": "How colour filters are presented. \"Swatch grid\" hides the colour name, so use it only when your colour names are obvious.",
+      "options": [
+        { "value": "list",  "label": "List — swatch, name and count" },
+        { "value": "chips", "label": "Chips — pill with swatch and name" },
+        { "value": "dots",  "label": "Swatch grid — colour only" }
+      ],
+      "default": "list"
     },
     {
       "type": "select", "id": "scheme", "label": "Surface tone",

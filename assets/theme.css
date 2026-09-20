@@ -3727,22 +3727,93 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 }
 
 /* Native Shopify colour filters ship swatch data; rendered as swatches now. */
-.filter-swatches { display: flex; flex-wrap: wrap; gap: 10px; padding-top: 4px; }
-.filter-swatch { position: relative; cursor: pointer; line-height: 0; }
+/* ---------------------------------------------------------------------
+   Colour filter swatches — three presentations, set per section in the
+   theme editor via `swatch_style`.
+
+     .filter-swatches--list   swatch + name + count, one per row (default)
+     .filter-swatches--chips  pill carrying swatch + name, wrapping inline
+     .filter-swatches--dots   swatch only, name for screen readers only
+
+   Colours arrive as an inline background from snippets/swatch-style.liquid,
+   so nothing here sets one. Every colour below is a scheme token, so the
+   swatch list follows the active colour scheme like the rest of the page.
+   --------------------------------------------------------------------- */
+.filter-swatches { padding-top: 6px; }
+.filter-swatch { position: relative; cursor: pointer; }
 .filter-swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
+
 .filter-swatch__dot {
-  display: block; width: 24px; height: 24px; border-radius: 50%;
+  display: block; flex-shrink: 0;
+  width: 22px; height: 22px; border-radius: 50%;
   background-size: cover; background-position: center;
-  border: 1px solid rgba(128,128,128,.35);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.16);
+  border: 1px solid var(--cp-bdr, rgba(128,128,128,.28));
   transition: box-shadow .18s ease, transform .18s ease;
 }
+.filter-swatch__name {
+  font-size: calc(13px * var(--fs-scale, 1));
+  color: var(--cp-fg, var(--cream, #F5F0E8));
+  line-height: 1.3;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.filter-swatch__count {
+  font-size: calc(11px * var(--fs-scale, 1));
+  color: var(--cp-mut, rgba(245,240,232,.55));
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- list ------------------------------------------------------------ */
+.filter-swatches--list { display: flex; flex-direction: column; gap: 2px; }
+.filter-swatches--list .filter-swatch {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center; gap: 10px;
+  padding: 7px 8px; margin: 0 -8px;
+  border-radius: 8px;
+  transition: background-color .18s ease;
+}
+.filter-swatches--list .filter-swatch:hover { background: var(--cp-hover, rgba(128,128,128,.10)); }
+.filter-swatches--list .filter-swatch input:checked ~ .filter-swatch__name { font-weight: 600; }
+.filter-swatches--list .filter-swatch:has(input:checked),
+.filter-swatches--list .filter-swatch.is-active { background: var(--cp-hover, rgba(200,169,110,.10)); }
+
+/* --- chips ----------------------------------------------------------- */
+.filter-swatches--chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.filter-swatches--chips .filter-swatch {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px 6px 7px;
+  border: 1px solid var(--cp-bdr, rgba(128,128,128,.28));
+  border-radius: 999px;
+  transition: border-color .18s ease, background-color .18s ease;
+}
+.filter-swatches--chips .filter-swatch__dot { width: 18px; height: 18px; }
+.filter-swatches--chips .filter-swatch:hover { border-color: var(--cp-acc, #C8A96E); }
+.filter-swatches--chips .filter-swatch__count { opacity: .75; }
+.filter-swatches--chips .filter-swatch input:checked ~ .filter-swatch__name { font-weight: 600; }
+.filter-swatches--chips .filter-swatch:has(input:checked),
+.filter-swatches--chips .filter-swatch.is-active {
+  border-color: var(--cp-acc, #C8A96E);
+  background: var(--cp-hover, rgba(200,169,110,.10));
+}
+
+/* --- dots ------------------------------------------------------------ */
+.filter-swatches--dots { display: flex; flex-wrap: wrap; gap: 10px; }
+.filter-swatches--dots .filter-swatch { line-height: 0; }
+.filter-swatches--dots .filter-swatch__dot { width: 24px; height: 24px; }
+
+/* --- shared states --------------------------------------------------- */
 .filter-swatch:hover .filter-swatch__dot { transform: scale(1.08); }
 .filter-swatch input:checked + .filter-swatch__dot,
 .filter-swatch.is-active .filter-swatch__dot {
-  box-shadow: 0 0 0 1px var(--cp-bg, #0A0A0A), 0 0 0 2px var(--cp-fg, #F5F0E8);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.16),
+              0 0 0 2px var(--cp-bg, #0A0A0A),
+              0 0 0 4px var(--cp-acc, #C8A96E);
   border-color: transparent;
 }
-.filter-swatch input:focus-visible + .filter-swatch__dot { outline: 2px solid var(--cp-acc, #C8A96E); outline-offset: 3px; }
+.filter-swatch input:focus-visible + .filter-swatch__dot {
+  outline: 2px solid var(--cp-acc, #C8A96E); outline-offset: 3px;
+}
 
 /* A chosen card swatch stays marked; hover preview is a lighter state. */
 .pcard__swatch.is-selected {

@@ -12,9 +12,10 @@
     "main": {
       "type": "main-collection",
       "settings": {
-        "title_style": "style-2",
+        "title_style": "style-1",
         "sidebar_position": "left",
         "filter_style": "sidebar",
+        "swatch_style": "list",
         "scheme": "theme",
         "container_style": "boxed",
         "grid_columns": "4",

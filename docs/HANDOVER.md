@@ -130,3 +130,40 @@ Sorting re-orders in place and drops the wide first tile, since a feature tile o
 ## Next
 
 Those five, then **Phase C — product detail**.
+
+---
+
+## Colour swatches — `29d3626`
+
+**Symptom reported:** "the color swatches are not showing in the filter. Its
+just white rectangle", and "when I change the color swatches, it doesn't change
+the product image".
+
+**Cause, filter side.** The section decided a filter was a colour filter by
+looking for Shopify swatch metadata on its values. That metadata only exists
+once swatches are configured in the Search & Discovery app. Without it the
+Colour group fell through to the checkbox branch — the white rectangles.
+
+**Cause, both sides.** Where a swatch *was* drawn, its colour came from the
+option name written straight into CSS: `background-color:midnightblack`.
+Invalid, so the browser dropped it and the chip rendered empty. Only a literal
+"Black" or "Red" ever worked.
+
+**Cause, card image.** `data-swatch-image` was emitted only when a variant had
+its own image assigned. Most catalogues do not assign one per colour, so the
+attribute was absent and clicking a swatch had nothing to swap to.
+
+**Fix.** New `snippets/swatch-style.liquid` resolves an option name to a CSS
+background: Shopify swatch image → Shopify swatch colour → built-in fashion
+colour vocabulary → neutral chip. Two-tone names split as a gradient, pattern
+names render as a conic chip. Colour filters are detected from the filter
+label. Card swatches fall back to matching a product image by alt text.
+
+**Why it took several passes to find.** Static reading could not see it: the
+Liquid is valid and the CSS is valid. It only shows up when the option name is
+something other than a CSS keyword, which needs either a render with realistic
+data or a screenshot. Both harnesses now cover it.
+
+**Verify:** open a collection with a Colour filter. Swatches should be coloured
+circles, not checkboxes or empty outlines — including for names like "Ecru" or
+"Midnight Black" and with the Search & Discovery app not installed.

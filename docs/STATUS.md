@@ -15,7 +15,18 @@
 **The plan was rewritten** — see [ROADMAP.md](ROADMAP.md). It now has a definition of done with six requirements, five of which run as a script (`./scripts/check-page.sh`), so "styled" and "follows the colour scheme" are measured rather than claimed. Current score: **2 of 15 pages pass**.
 **Blocked on:** nothing
 
-**Working state:** clean. Nothing half-finished. Everything committed and pushed to `main` and `claude/maison-noir-shopify-theme-2cxtip`. Published homepage is Aureline.
+**Working state:** clean. Nothing half-finished.
+
+> **Delivery note — read this before testing.** The Shopify GitHub integration
+> syncs from **`main`**. Work is committed to
+> `claude/maison-noir-shopify-theme-2cxtip` first, so a fix is not on the store
+> until that branch reaches `main`. If a fix appears to have had no effect,
+> check `git log --oneline origin/main..origin/claude/maison-noir-shopify-theme-2cxtip`
+> before assuming it is broken.
+>
+> **Currently unmerged: `29d3626` (colour swatch fix).**
+
+Published homepage is Aureline.
 
 ---
 
@@ -29,6 +40,7 @@
 | Done within the phase | — |
 | Next concrete step | Begin Phase C: make `main-product` settings-driven — layouts, thumbnail positions — then the thin `?view=` templates |
 | Known-incomplete | — |
+| Swatches | Fixed in `29d3626` — resolver snippet added, filter + card wired. **Not yet on `main`.** |
 | Not yet verified | Phases A0, A and B have not been opened in a browser — see "Not verified" |
 
 ---

@@ -12,7 +12,7 @@
     "main": {
       "type": "main-collection",
       "settings": {
-        "title_style": "style-1",
+        "title_style": "style-2",
         "sidebar_position": "left",
         "filter_style": "sidebar",
         "swatch_style": "list",

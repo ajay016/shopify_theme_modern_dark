@@ -3059,7 +3059,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   position: sticky; top: calc(var(--header-h, 72px) + 20px);
   max-height: calc(100vh - var(--header-h, 72px) - 40px);
   overflow-y: auto;
-  padding: 26px 22px 24px;
+  padding: 20px 18px 18px;
   background: var(--cp-panel, transparent);
   border: 0;
   border-radius: 16px;
@@ -3069,12 +3069,12 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .sidebar-header {
   display: flex; align-items: baseline; justify-content: space-between;
   gap: 12px;
-  padding: 0 0 18px;
+  padding: 0 0 12px;
 }
 .sidebar-header__title {
   margin: 0; min-width: 0;
   font-family: var(--ff-display);
-  font-size: calc(21px * var(--fs-scale, 1));
+  font-size: calc(19px * var(--fs-scale, 1));
   font-weight: 400; letter-spacing: .01em; line-height: 1.15;
   text-transform: none;
   color: var(--f-fg);
@@ -3089,7 +3089,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .filter-group__toggle {
   width: 100%; display: flex; align-items: center; justify-content: space-between;
   gap: 10px;
-  padding: 18px 0 14px;
+  padding: 13px 0 9px;
   background: none; border: 0; cursor: pointer; text-align: left;
   font-family: var(--ff-body);
   font-size: calc(12px * var(--fs-scale, 1));
@@ -3105,21 +3105,28 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .filter-group__toggle:hover svg { opacity: 1; }
 .filter-group__toggle[aria-expanded="false"] svg { transform: rotate(-90deg); }
 
-.filter-group__body { padding-bottom: 20px; }
+.filter-group__body { padding-bottom: 13px; }
 .filter-group__body.is-collapsed { display: none; }
 
 /* --- checkbox rows --------------------------------------------------- */
-.filter-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+.filter-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
 
+/* Flex, not grid. A 1fr label column stretches to fill the row and shoves
+   the count against the panel edge, where the scrollbar half hides it. In
+   flex the label takes only the width it needs and the count sits directly
+   beside it, with the free space trailing after both. */
 .filter-check {
-  display: grid; grid-template-columns: 18px minmax(0,1fr) auto;
-  align-items: center; gap: 12px;
-  padding: 9px 10px; margin: 0 -10px;
-  border-radius: 9px; cursor: pointer;
+  display: flex; align-items: center; gap: 9px;
+  padding: 5px 8px; margin: 0 -8px;
+  border-radius: 7px; cursor: pointer;
   font-size: calc(14px * var(--fs-scale, 1));
-  font-weight: 400; line-height: 1.35;
+  font-weight: 400; line-height: 1.3;
   color: var(--f-fg);
   transition: background-color .16s ease;
+}
+.filter-check > span:not(.filter-count-pill) {
+  flex: 0 1 auto; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .filter-check:hover { background: var(--f-hover); }
 
@@ -3184,7 +3191,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   font-size: calc(20px * var(--fs-scale, 1));
   font-weight: 400; font-variant-numeric: tabular-nums;
   color: var(--f-fg);
-  padding: 12px 0 0;
+  padding: 9px 0 0;
 }
 .cfilter-price__dash { color: var(--f-mut); font-size: .8em; }
 
@@ -3231,7 +3238,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .price-range-inputs,
 .cfilter-price__vals {
   display: grid; grid-template-columns: 1fr 1fr;
-  align-items: end; gap: 10px; margin-top: 16px;
+  align-items: end; gap: 8px; margin-top: 12px;
 }
 /* The separator belongs to the readout, not between two labelled fields. */
 .price-range-inputs > .cfilter-price__dash { display: none; }
@@ -3245,8 +3252,8 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .price-range-inputs input[type="number"],
 .cfilter-price__vals input {
   width: 100%; min-width: 0;
-  padding: 11px 12px; margin: 0;
-  border: 1px solid transparent; border-radius: 10px;
+  padding: 9px 10px; margin: 0;
+  border: 1px solid transparent; border-radius: 8px;
   background: var(--f-sunk); color: var(--f-fg);
   font-family: var(--ff-body);
   font-size: calc(14px * var(--fs-scale, 1));
@@ -3260,7 +3267,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .price-range-inputs input[type="number"] { -moz-appearance: textfield; }
 
 /* --- colour swatches ------------------------------------------------- */
-.filter-swatches { padding-top: 2px; }
+.filter-swatches { padding-top: 0; }
 .filter-swatch { position: relative; cursor: pointer; }
 .filter-swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
 
@@ -3281,14 +3288,14 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   color: var(--f-mut); font-variant-numeric: tabular-nums;
 }
 
-.filter-swatches--list { display: flex; flex-direction: column; gap: 1px; }
+.filter-swatches--list { display: flex; flex-direction: column; gap: 0; }
 .filter-swatches--list .filter-swatch {
-  display: grid; grid-template-columns: 24px minmax(0,1fr) auto;
-  align-items: center; gap: 12px;
-  padding: 8px 10px; margin: 0 -10px;
-  border-radius: 9px;
+  display: flex; align-items: center; gap: 9px;
+  padding: 4px 8px; margin: 0 -8px;
+  border-radius: 7px;
   transition: background-color .16s ease;
 }
+.filter-swatches--list .filter-swatch__name { flex: 0 1 auto; }
 .filter-swatches--list .filter-swatch:hover { background: var(--f-hover); }
 .filter-swatches--list .filter-swatch:has(input:checked) .filter-swatch__name { font-weight: 600; }
 

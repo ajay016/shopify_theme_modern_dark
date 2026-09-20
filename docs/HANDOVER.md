@@ -167,3 +167,24 @@ data or a screenshot. Both harnesses now cover it.
 **Verify:** open a collection with a Colour filter. Swatches should be coloured
 circles, not checkboxes or empty outlines — including for names like "Ecru" or
 "Midnight Black" and with the Search & Discovery app not installed.
+
+---
+
+## Regression to not repeat: filter counts pushed to the panel edge
+
+This has now been reported twice and reintroduced twice. Recording it so it
+stops happening.
+
+**Symptom:** the count beside each filter option drifts to the far right of
+the panel, where the scrollbar partly covers it.
+
+**Cause both times:** laying the row out as a grid with a flexible label
+column — `grid-template-columns: 18px minmax(0,1fr) auto`. The 1fr column
+absorbs all free space, so the count in the trailing `auto` column is pinned
+to the panel edge regardless of how short the label is.
+
+**Correct shape:** flex, with the label at `flex: 0 1 auto; min-width: 0`
+and ellipsis. The label takes only the width it needs, the count sits
+directly after it, and the free space trails both.
+
+Applies to `.filter-check` and `.filter-swatches--list .filter-swatch`.

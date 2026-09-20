@@ -465,16 +465,36 @@
                       break
                     endif
                   endfor
-                  assign sw_css = val | downcase | strip | replace: ' ', ''
+
+                  # Finding the image to preview. Relying on the variant having
+                  # its own image only works in stores that assign one per
+                  # colour, which most do not -- clicking a swatch then had
+                  # nothing to swap to and appeared dead. Fall back to matching
+                  # a product image by alt text, which is how merchants
+                  # normally label colourways.
+                  assign sw_image = nil
+                  if sw_variant != nil and sw_variant.featured_image != blank
+                    assign sw_image = sw_variant.featured_image
+                  endif
+                  assign val_key = val | downcase | strip
+                  if sw_image == nil
+                    for im in product.images
+                      assign im_alt = im.alt | downcase
+                      if im_alt contains val_key
+                        assign sw_image = im
+                        break
+                      endif
+                    endfor
+                  endif
                 -%}
                 <button
                   type="button"
                   class="pcard__swatch"
-                  style="--sw: {{ sw_css }};"
+                  style="{%- render 'swatch-style', label: val -%}"
                   title="{{ val | escape }}"
                   aria-label="{{ val | escape }}"
-                  {% if sw_variant and sw_variant.image %}data-swatch-image="{{ sw_variant.image | image_url: width: 700 }}"{% endif %}
-                  {% if sw_variant %}data-swatch-variant="{{ sw_variant.id }}"{% endif %}
+                  {% if sw_image != nil %}data-swatch-image="{{ sw_image | image_url: width: 700 }}"{% endif %}
+                  {% if sw_variant != nil %}data-swatch-variant="{{ sw_variant.id }}"{% endif %}
                   aria-pressed="false"
                 ></button>
               {%- endfor -%}

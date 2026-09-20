@@ -1346,7 +1346,10 @@ body.has-announcement .site-header { top: 44px; }
   width: 13px; height: 13px; padding: 0;
   border: 1px solid var(--pc-bdr, rgba(200,169,110,.28));
   border-radius: 50%;
-  background: var(--sw, #999);
+  /* Colour comes from an inline style resolved by snippets/swatch-style.liquid.
+     This is the neutral chip shown when a colour name is unrecognised. */
+  background-color: #cfc7ba;
+  background-size: cover; background-position: center;
   cursor: pointer;
   transition: transform .18s ease, box-shadow .18s ease;
 }
@@ -1767,16 +1770,9 @@ body.has-announcement .site-header { top: 44px; }
 .filter-option__count { font-size: calc(11px * var(--fs-scale, 1)); color: var(--cream, #F5F0E8); opacity: 0.6; }
 
 /* Color swatches */
-.filter-swatches { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.filter-swatch {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: transform 0.2s, border-color var(--transition);
-}
-.filter-swatch:hover { transform: scale(1.15); }
-.filter-swatch.is-selected { border-color: var(--gold, #C8A96E); }
+/* Filter swatches are defined once, further down, as a label wrapping a
+   hidden input plus a .filter-swatch__dot. The earlier block here sized the
+   label itself to 28px, which fought with that dot; it is intentionally gone. */
 
 /* Price range */
 .price-range input[type="range"] {
@@ -3179,7 +3175,10 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .cfilter-swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
 .cfilter-swatch__dot {
   display: block; width: 26px; height: 26px; border-radius: 50%;
-  background: var(--sw, #999);
+  /* Colour comes from an inline style resolved by snippets/swatch-style.liquid.
+     This is the neutral chip shown when a colour name is unrecognised. */
+  background-color: #cfc7ba;
+  background-size: cover; background-position: center;
   border: 1px solid var(--cp-bdr, rgba(200,169,110,.28));
   box-shadow: inset 0 0 0 2px var(--cp-bg, transparent);
   transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease;

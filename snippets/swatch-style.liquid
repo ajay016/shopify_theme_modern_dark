@@ -1,0 +1,151 @@
+{%- comment -%}
+  Resolves an option value name into a usable CSS background.
+
+  Why this exists: the theme previously wrote the option name straight into
+  CSS -- `background-color:{{ value | downcase | replace: ' ', '' }}`. That
+  only works when a merchant literally names a colour "Black" or "Red".
+  Real stores use "Midnight Black", "Ecru", "Sand", "Oxblood", which produce
+  `background-color:midnightblack` -- invalid CSS, silently dropped by the
+  browser, leaving a white rectangle.
+
+  Resolution order:
+    1. Shopify's native swatch image (Search & Discovery / metafield)
+    2. Shopify's native swatch colour
+    3. Built-in fashion colour vocabulary below (no app setup required)
+    4. Neutral chip -- never a broken white box
+
+  Two-tone names ("Black/White", "Navy & Cream") render as a split gradient.
+
+  Usage:
+    <span style="{%- render 'swatch-style', label: val -%}"></span>
+    <span style="{%- render 'swatch-style', label: value.label, swatch: value.swatch -%}"></span>
+{%- endcomment -%}
+
+{%- comment -%}
+  Presence is tested by rendering the value to a string rather than with
+  `!= blank`. An undefined `swatch` does not compare against `blank`
+  consistently across Liquid implementations, and a swatch object can also
+  exist while carrying neither a colour nor an image. Rendering to a string
+  answers the only question that matters: is there anything to use?
+{%- endcomment -%}
+{%- capture sw_has_img %}{{ swatch.image }}{% endcapture -%}
+{%- capture sw_has_col %}{{ swatch.color }}{% endcapture -%}
+
+{%- liquid
+  assign sw_out = ''
+
+  # 1 + 2: Shopify's own swatch data always wins when it is actually set.
+  if sw_has_img != ''
+    assign sw_img = swatch.image | image_url: width: 120
+    assign sw_out = 'background-image:url(' | append: sw_img | append: ');background-size:cover;background-position:center;'
+  elsif sw_has_col != ''
+    assign sw_out = 'background-color:' | append: sw_has_col | append: ';'
+  endif
+-%}
+
+{%- if sw_out == '' -%}
+  {%- liquid
+    # Normalise: lowercase, strip, and flatten separators to spaces so that
+    # "Navy/Cream", "Navy - Cream" and "Navy and Cream" all tokenise alike.
+    assign norm = label | downcase | strip | replace: '-', ' ' | replace: '_', ' '
+    assign has_split = false
+    if norm contains '/' or norm contains '&' or norm contains ' and '
+      assign has_split = true
+    endif
+    assign norm = norm | replace: '/', '|' | replace: '&', '|' | replace: ' and ', '|'
+
+    assign segments = norm | split: '|'
+
+    assign found = ''
+  -%}
+
+  {%- for seg in segments limit: 2 -%}
+    {%- liquid
+      # Colour words sit last in fashion naming ("Light Grey", "Midnight
+      # Black"), so search right-to-left and stop at the first hit.
+      assign words = seg | strip | split: ' ' | reverse
+      assign hit = ''
+    -%}
+    {%- for w in words -%}
+      {%- if hit != '' -%}{%- break -%}{%- endif -%}
+      {%- case w -%}
+        {%- when 'black', 'noir', 'jet', 'onyx', 'ink', 'raven', 'obsidian' -%}{%- assign hit = '#111111' -%}
+        {%- when 'white', 'blanc', 'snow', 'chalk', 'optic' -%}{%- assign hit = '#ffffff' -%}
+        {%- when 'ivory', 'cream', 'vanilla', 'bone', 'eggshell' -%}{%- assign hit = '#f4efe4' -%}
+        {%- when 'ecru', 'oat', 'oatmeal', 'natural', 'raw', 'undyed' -%}{%- assign hit = '#ded5c4' -%}
+        {%- when 'beige', 'sand', 'biscuit', 'wheat', 'buff' -%}{%- assign hit = '#e0d2b8' -%}
+        {%- when 'taupe', 'mushroom', 'greige', 'putty' -%}{%- assign hit = '#b8a894' -%}
+        {%- when 'camel', 'tan', 'biscotti', 'toffee' -%}{%- assign hit = '#c19a6b' -%}
+        {%- when 'khaki', 'stone', 'desert', 'safari' -%}{%- assign hit = '#c3b091' -%}
+        {%- when 'nude', 'almond', 'buttermilk' -%}{%- assign hit = '#e8cfbc' -%}
+        {%- when 'olive', 'army', 'military', 'fatigue' -%}{%- assign hit = '#6b6a3a' -%}
+        {%- when 'sage', 'eucalyptus', 'pistachio' -%}{%- assign hit = '#9caf88' -%}
+        {%- when 'forest', 'pine', 'hunter', 'bottle' -%}{%- assign hit = '#22503a' -%}
+        {%- when 'emerald', 'jade', 'kelly' -%}{%- assign hit = '#2e8b57' -%}
+        {%- when 'mint', 'seafoam' -%}{%- assign hit = '#b6e3d0' -%}
+        {%- when 'green', 'verde' -%}{%- assign hit = '#3f7d4f' -%}
+        {%- when 'lime', 'chartreuse' -%}{%- assign hit = '#b5cc20' -%}
+        {%- when 'teal', 'petrol' -%}{%- assign hit = '#0f6a6a' -%}
+        {%- when 'turquoise', 'aqua', 'cyan', 'lagoon' -%}{%- assign hit = '#40c9c9' -%}
+        {%- when 'navy', 'midnight', 'marine', 'ink_blue' -%}{%- assign hit = '#1b2a44' -%}
+        {%- when 'indigo' -%}{%- assign hit = '#3b3b6d' -%}
+        {%- when 'cobalt', 'royal', 'sapphire' -%}{%- assign hit = '#2a4bd7' -%}
+        {%- when 'denim', 'chambray' -%}{%- assign hit = '#5b7da3' -%}
+        {%- when 'sky', 'powder', 'baby', 'ice' -%}{%- assign hit = '#bcd7e8' -%}
+        {%- when 'blue', 'bleu', 'azure' -%}{%- assign hit = '#2f5fa8' -%}
+        {%- when 'slate', 'steel', 'smoke' -%}{%- assign hit = '#6e7c87' -%}
+        {%- when 'charcoal', 'graphite', 'anthracite', 'gunmetal' -%}{%- assign hit = '#3a3d41' -%}
+        {%- when 'grey', 'gray', 'heather', 'marl', 'ash' -%}{%- assign hit = '#9a9a9a' -%}
+        {%- when 'silver', 'pewter', 'platinum' -%}{%- assign hit = '#c4c6c8' -%}
+        {%- when 'blush', 'rose', 'dusty', 'petal' -%}{%- assign hit = '#e5b7b0' -%}
+        {%- when 'pink', 'bubblegum' -%}{%- assign hit = '#f2a7c3' -%}
+        {%- when 'fuchsia', 'magenta', 'hot' -%}{%- assign hit = '#d81b7a' -%}
+        {%- when 'coral', 'salmon', 'watermelon' -%}{%- assign hit = '#f08070' -%}
+        {%- when 'peach', 'apricot', 'melon' -%}{%- assign hit = '#f6c1a0' -%}
+        {%- when 'orange', 'tangerine', 'amber' -%}{%- assign hit = '#e87f2b' -%}
+        {%- when 'rust', 'terracotta', 'paprika', 'ginger' -%}{%- assign hit = '#b5502f' -%}
+        {%- when 'brick', 'sienna' -%}{%- assign hit = '#9c4a36' -%}
+        {%- when 'burgundy', 'wine', 'bordeaux', 'merlot', 'claret' -%}{%- assign hit = '#6d1f35' -%}
+        {%- when 'maroon', 'oxblood', 'garnet' -%}{%- assign hit = '#5a1420' -%}
+        {%- when 'cherry', 'scarlet', 'crimson', 'ruby', 'red', 'rouge' -%}{%- assign hit = '#c0202e' -%}
+        {%- when 'plum', 'aubergine', 'eggplant', 'damson' -%}{%- assign hit = '#5b2a45' -%}
+        {%- when 'purple', 'violet', 'grape' -%}{%- assign hit = '#6b3fa0' -%}
+        {%- when 'lilac', 'lavender', 'wisteria' -%}{%- assign hit = '#c9b6e4' -%}
+        {%- when 'mauve', 'orchid', 'heliotrope' -%}{%- assign hit = '#b08cb0' -%}
+        {%- when 'yellow', 'lemon', 'canary', 'daffodil' -%}{%- assign hit = '#f2d43c' -%}
+        {%- when 'mustard', 'ochre', 'turmeric' -%}{%- assign hit = '#d4a017' -%}
+        {%- when 'gold', 'golden' -%}{%- assign hit = '#c9a227' -%}
+        {%- when 'champagne', 'prosecco' -%}{%- assign hit = '#e8dcc0' -%}
+        {%- when 'brass', 'bronze', 'antique' -%}{%- assign hit = '#b08d57' -%}
+        {%- when 'copper', 'penny' -%}{%- assign hit = '#b87333' -%}
+        {%- when 'chocolate', 'espresso', 'coffee', 'mocha', 'cocoa' -%}{%- assign hit = '#4a332a' -%}
+        {%- when 'brown', 'chestnut', 'walnut', 'mahogany' -%}{%- assign hit = '#6b4429' -%}
+        {%- when 'cognac', 'caramel', 'honey', 'whisky', 'amber_brown' -%}{%- assign hit = '#a6642d' -%}
+        {%- when 'multi', 'multicolour', 'multicolor', 'print', 'printed', 'floral', 'stripe', 'striped', 'check', 'checked', 'plaid', 'leopard', 'camo' -%}{%- assign hit = 'MULTI' -%}
+        {%- when 'clear', 'transparent' -%}{%- assign hit = 'CLEAR' -%}
+      {%- endcase -%}
+    {%- endfor -%}
+    {%- if hit != '' -%}
+      {%- assign found = found | append: hit | append: ',' -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- liquid
+    assign hits = found | split: ','
+
+    if hits.size == 0
+      # Unknown colour name -- a neutral chip, never a broken white box.
+      assign sw_out = 'background-color:#cfc7ba;'
+    elsif hits[0] == 'MULTI'
+      assign sw_out = 'background-image:conic-gradient(#c0202e,#e8a33d,#3f7d4f,#2f5fa8,#6b3fa0,#c0202e);'
+    elsif hits[0] == 'CLEAR'
+      assign sw_out = 'background-image:linear-gradient(135deg,#ffffff 0 45%,#d8d8d8 45% 55%,#ffffff 55% 100%);'
+    elsif has_split and hits.size > 1 and hits[0] != hits[1]
+      assign sw_out = 'background-image:linear-gradient(135deg,' | append: hits[0] | append: ' 0 50%,' | append: hits[1] | append: ' 50% 100%);'
+    else
+      assign sw_out = 'background-color:' | append: hits[0] | append: ';'
+    endif
+  -%}
+{%- endif -%}
+
+{{- sw_out -}}

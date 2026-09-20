@@ -236,10 +236,25 @@
                       rendered as a column of empty boxes. When a swatch exists
                       the value becomes a swatch; otherwise it stays a checkbox.
                     {%- endcomment -%}
-                    {%- assign is_swatch_group = false -%}
-                    {%- for value in filter.values -%}
-                      {%- if value.swatch != blank -%}{%- assign is_swatch_group = true -%}{%- break -%}{%- endif -%}
-                    {%- endfor -%}
+                    {%- liquid
+                      # A colour filter is detected from the filter itself, not
+                      # from Shopify swatch data. Swatch metadata only exists
+                      # once a merchant configures it in Search & Discovery, so
+                      # keying off it meant a freshly installed theme showed a
+                      # column of checkboxes where swatches belong.
+                      assign filter_key = filter.label | downcase | strip
+                      assign is_swatch_group = false
+                      if filter_key contains 'color' or filter_key contains 'colour'
+                        assign is_swatch_group = true
+                      else
+                        for value in filter.values
+                          if value.swatch != blank
+                            assign is_swatch_group = true
+                            break
+                          endif
+                        endfor
+                      endif
+                    -%}
 
                     {%- if is_swatch_group -%}
                       <div class="filter-swatches">
@@ -251,8 +266,7 @@
                               data-filter-remove="{{ value.url_to_remove }}"
                             >
                             <span class="filter-swatch__dot"
-                              {% if value.swatch.image %}style="background-image:url({{ value.swatch.image | image_url: width: 80 }});"
-                              {% else %}style="background-color:{{ value.swatch.color | default: value.label | downcase | replace: ' ', '' }};"{% endif %}
+                              style="{%- render 'swatch-style', label: value.label, swatch: value.swatch -%}"
                               aria-hidden="true"></span>
                             <span class="visually-hidden">{{ value.label }}</span>
                           </label>

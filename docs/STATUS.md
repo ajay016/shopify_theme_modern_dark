@@ -17,14 +17,10 @@
 
 **Working state:** clean. Nothing half-finished.
 
-> **Delivery note — read this before testing.** The Shopify GitHub integration
-> syncs from **`main`**. Work is committed to
-> `claude/maison-noir-shopify-theme-2cxtip` first, so a fix is not on the store
-> until that branch reaches `main`. If a fix appears to have had no effect,
-> check `git log --oneline origin/main..origin/claude/maison-noir-shopify-theme-2cxtip`
-> before assuming it is broken.
->
-> **Currently unmerged: `29d3626` (colour swatch fix).**
+> **Delivery.** Shopify syncs from **`main`**, and work is pushed straight to
+> `main` (standing instruction from the owner, given 2026-09-20). The feature
+> branch is kept pointed at the same commit. No merge step, nothing to wait on
+> — if a fix is committed, it is on the store.
 
 Published homepage is Aureline.
 

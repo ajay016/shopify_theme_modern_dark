@@ -3177,83 +3177,101 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 /* --- price -----------------------------------------------------------
    Markup shape matters here: .cfilter-price__track is the CONTAINER and
    holds the fill plus BOTH range inputs, and .cfilter-price__range is the
-   input itself, not a wrapper. An earlier pass styled the track as a 3px
-   bar, which left the two inputs overflowing a 3px box and rendering as
-   default blue thumbs further down the panel.
+   input itself, not a wrapper.
    --------------------------------------------------------------------- */
-.cfilter-price { padding-top: 6px; }
+.cfilter-price,
+.price-range-filter { padding-top: 2px; }
+
+/* Current range, stated plainly above the slider. */
+.cfilter-price__readout {
+  display: flex; align-items: baseline; gap: 7px;
+  font-size: calc(14px * var(--fs-scale, 1));
+  font-variant-numeric: tabular-nums;
+  color: var(--f-fg); font-weight: 600;
+  padding: 2px 0 2px;
+}
+.cfilter-price__dash { color: var(--f-mut); font-weight: 400; }
 
 .cfilter-price__track {
   position: relative;
-  height: 26px; margin: 10px 2px 4px;
+  height: 24px; margin: 4px 9px 2px;
 }
-/* the unfilled rail */
+/* The unfilled rail is neutral; only the selected span carries the accent,
+   so the fill actually reads as a selection. */
 .cfilter-price__track::before {
-  content: ''; position: absolute; top: 50%; left: 0; right: 0;
-  height: 3px; transform: translateY(-50%);
-  background: var(--f-bdr); border-radius: 2px;
+  content: ''; position: absolute; top: 50%; left: -9px; right: -9px;
+  height: 4px; transform: translateY(-50%);
+  background: var(--f-bdr); border-radius: 3px;
 }
 .cfilter-price__fill {
-  position: absolute; top: 50%; height: 3px;
+  position: absolute; top: 50%; height: 4px;
   transform: translateY(-50%);
-  background: var(--f-acc); border-radius: 2px;
+  background: var(--f-acc); border-radius: 3px;
   left: 0; right: 0;
 }
 
 .cfilter-price__range {
   position: absolute; top: 0; left: 0;
-  width: 100%; height: 26px;
+  width: 100%; height: 24px;
   margin: 0; padding: 0;
   background: none; border: 0; border-radius: 0;
   appearance: none; -webkit-appearance: none;
   pointer-events: none;
 }
 .cfilter-price__range:focus { outline: none; }
-.cfilter-price__range::-webkit-slider-runnable-track {
-  background: transparent; border: 0; height: 26px;
-}
-.cfilter-price__range::-moz-range-track { background: transparent; border: 0; height: 26px; }
+.cfilter-price__range::-webkit-slider-runnable-track { background: transparent; border: 0; height: 24px; }
+.cfilter-price__range::-moz-range-track { background: transparent; border: 0; height: 24px; }
 .cfilter-price__range::-webkit-slider-thumb {
   appearance: none; -webkit-appearance: none; pointer-events: auto;
-  width: 15px; height: 15px; margin-top: 0; border-radius: 50%;
-  background: var(--f-acc);
-  border: 2px solid var(--cp-bg, #0A0A0A);
-  box-shadow: 0 0 0 1px var(--f-acc);
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--cp-panel, var(--cp-bg, #0A0A0A));
+  border: 4px solid var(--f-acc);
+  box-shadow: 0 1px 3px rgba(0,0,0,.22);
   cursor: grab;
 }
+.cfilter-price__range::-webkit-slider-thumb:active { cursor: grabbing; }
 .cfilter-price__range::-moz-range-thumb {
   pointer-events: auto;
-  width: 15px; height: 15px; border-radius: 50%;
-  background: var(--f-acc);
-  border: 2px solid var(--cp-bg, #0A0A0A);
-  box-shadow: 0 0 0 1px var(--f-acc);
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--cp-panel, var(--cp-bg, #0A0A0A));
+  border: 4px solid var(--f-acc);
+  box-shadow: 0 1px 3px rgba(0,0,0,.22);
   cursor: grab;
 }
-.cfilter-price__range:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--f-acc); outline-offset: 2px; }
 
-.cfilter-price__vals,
-.price-range-inputs {
+/* Two labelled fields rather than two unlabelled boxes. */
+.price-range-inputs,
+.cfilter-price__vals {
   display: grid; grid-template-columns: 1fr auto 1fr;
-  align-items: center; gap: 8px; margin-top: 10px;
+  align-items: end; gap: 9px; margin-top: 12px;
 }
-.cfilter-price__vals input,
-.price-range-inputs input {
-  width: 100%; min-width: 0; padding: 8px 10px; margin: 0;
-  border: 1px solid var(--f-bdr); border-radius: 7px;
-  background: transparent; color: var(--f-fg);
-  font-size: calc(12px * var(--fs-scale, 1));
+.cfilter-price__field { display: grid; gap: 4px; min-width: 0; }
+.cfilter-price__field > span {
+  font-size: calc(10px * var(--fs-scale, 1));
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--f-mut);
+  /* A long label must not widen the grid column and burst the panel. */
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.price-range-inputs input[type="number"],
+.cfilter-price__vals input {
+  width: 100%; min-width: 0;
+  padding: 9px 10px; margin: 0;
+  border: 1px solid var(--f-bdr); border-radius: 8px;
+  background: var(--cp-bg, transparent); color: var(--f-fg);
+  font-size: calc(13px * var(--fs-scale, 1));
   text-align: center; font-variant-numeric: tabular-nums;
+  transition: border-color .18s ease;
 }
-.cfilter-price__vals input:focus,
-.price-range-inputs input:focus { outline: none; border-color: var(--f-acc); }
-.cfilter-price__vals > span,
-.price-range-inputs > span { color: var(--f-mut); font-size: 12px; text-align: center; }
-
-.price-range-filter { padding-top: 6px; }
-.price-range-slider {
-  position: relative; height: 3px; border-radius: 2px;
-  background: var(--f-bdr); margin: 14px 2px 4px;
+.price-range-inputs input[type="number"]:focus,
+.cfilter-price__vals input:focus { outline: none; border-color: var(--f-acc); }
+/* Spinners crowd a narrow field. */
+.price-range-inputs input[type="number"]::-webkit-outer-spin-button,
+.price-range-inputs input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none; margin: 0;
 }
+.price-range-inputs input[type="number"] { -moz-appearance: textfield; }
+.price-range-inputs > .cfilter-price__dash { padding-bottom: 10px; }
 
 /* --- colour swatches ------------------------------------------------- */
 .filter-swatches { padding-top: 4px; }

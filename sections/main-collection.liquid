@@ -329,10 +329,30 @@
                                min="{{ p_floor }}" max="{{ p_ceil }}" value="{{ p_max }}"
                                aria-label="{{ 'collections.filtering.price_max' | t | default: 'Maximum price' }}">
                       </div>
+                      {%- comment -%}
+                        The two inputs used to render with no value, only a
+                        faint placeholder, so an untouched price filter looked
+                        like two empty boxes. They are seeded with the current
+                        bounds instead, and a readout above the slider states
+                        the range in the shop's currency.
+                      {%- endcomment -%}
+                      <div class="cfilter-price__readout" aria-hidden="true">
+                        <span data-price-out="min">{{ filter.min_value.value | default: filter.range_min | money }}</span>
+                        <span class="cfilter-price__dash">&ndash;</span>
+                        <span data-price-out="max">{{ filter.max_value.value | default: filter.range_max | money }}</span>
+                      </div>
                       <div class="price-range-inputs">
-                        <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value | money_without_currency | remove: ',' }}" placeholder="{{ filter.range_min | money }}">
-                        <span>–</span>
-                        <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | money_without_currency | remove: ',' }}" placeholder="{{ filter.range_max | money }}">
+                        <label class="cfilter-price__field">
+                          <span>{{ 'collections.filtering.price_min' | t | default: 'Min' }}</span>
+                          <input type="number" name="{{ filter.min_value.param_name }}"
+                                 value="{{ p_min }}" min="{{ p_floor }}" max="{{ p_ceil }}">
+                        </label>
+                        <span class="cfilter-price__dash">&ndash;</span>
+                        <label class="cfilter-price__field">
+                          <span>{{ 'collections.filtering.price_max' | t | default: 'Max' }}</span>
+                          <input type="number" name="{{ filter.max_value.param_name }}"
+                                 value="{{ p_max }}" min="{{ p_floor }}" max="{{ p_ceil }}">
+                        </label>
                       </div>
                     </div>
                   {%- comment -%}

@@ -8,7 +8,7 @@ found to be overwritten by their own defaults four lines later.
     pip install python-liquid
     python3 scripts/render-check.py
 """
-import re, sys
+import re, sys, json
 from liquid import Environment, DictLoader
 
 SNIPPETS = {
@@ -24,10 +24,44 @@ def build_env():
         loader[name] = open(path, encoding='utf-8').read() if path else '<span></span>'
     env = Environment(loader=DictLoader(loader))
     # Shopify-only filters the engine does not know
-    for f in ('t', 'money', 'money_without_currency', 'handleize', 'json',
+    for f in ('money', 'money_without_currency', 'handleize', 'json',
               'image_url', 'image_tag', 'default_errors', 'payment_button'):
         env.filters[f] = lambda v, *a, **k: str(v) if v is not None else ''
+    env.filters['t'] = _translate
     return env
+
+
+def _locale():
+    """Shopify writes a /* ... */ banner into locale files; strip it to parse."""
+    raw = open('locales/en.default.json', encoding='utf-8').read()
+    return json.loads(re.sub(r'^\s*/\*.*?\*/\s*', '', raw, flags=re.S))
+
+
+_LOCALE = None
+
+
+def _translate(key, *a, **kw):
+    """Resolve a translation the way Shopify does.
+
+    Stubbing this to echo the key hid real faults: a missing key renders as
+    'Translation missing: ...' on the store, and `| t | default: 'Min'` does
+    NOT rescue it, because that string is not blank.
+    """
+    global _LOCALE
+    if _LOCALE is None:
+        _LOCALE = _locale()
+    node = _LOCALE
+    for part in str(key).split('.'):
+        if not isinstance(node, dict) or part not in node:
+            return f'Translation missing: en.{key}'
+        node = node[part]
+    if isinstance(node, dict):            # pluralised key
+        count = kw.get('count')
+        if count is None:
+            return f'Translation missing: en.{key}'
+        form = 'one' if count == 1 else 'other'
+        node = node.get(form, node.get('other', ''))
+    return str(node).replace('{{ count }}', str(kw.get('count', ''))).strip()
 
 def strip(src):
     src = re.sub(r'\{%\s*schema\s*%\}.*?\{%\s*endschema\s*%\}', '', src, flags=re.S)

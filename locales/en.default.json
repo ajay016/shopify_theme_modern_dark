@@ -213,7 +213,11 @@
       "filters": "Filters",
       "filter_button": "Filter",
       "clear_all": "Clear all",
-      "apply": "Apply"
+      "apply": "Apply",
+      "price_min": "Min",
+      "price_max": "Max",
+      "clear": "Clear",
+      "sort_by": "Sort by"
     }
   },
   "quick_view": {

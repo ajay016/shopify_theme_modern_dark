@@ -874,17 +874,29 @@
       const fill  = row.querySelector('[data-price-fill]');
       const lo    = row.querySelector('[data-price-range="min"]');
       const hi    = row.querySelector('[data-price-range="max"]');
-      const nums  = row.querySelectorAll('.price-range-inputs input');
+      const nums  = row.querySelectorAll('.price-range-inputs input[type="number"]');
       if (!track || !lo || !hi) return;
       const numMin = nums[0], numMax = nums[1];
       const floor = parseFloat(lo.min), ceil = parseFloat(lo.max);
       if (!(ceil > floor)) return;
+
+      // The readout is rendered by Liquid in the shop's currency; the prefix
+      // is taken from that first render rather than guessed, so it stays
+      // correct for any currency or placement.
+      const outMin = row.querySelector('[data-price-out="min"]');
+      const outMax = row.querySelector('[data-price-out="max"]');
+      const sample = (outMin && outMin.textContent.trim()) || '';
+      const prefix = sample.replace(/[\d.,\s]+$/, '');
+      const suffix = sample.replace(/^[^\d]*/, '').replace(/^[\d.,\s]+/, '');
+      const fmt = n => prefix + Math.round(n).toLocaleString() + suffix;
 
       const paint = () => {
         const a = parseFloat(lo.value), b = parseFloat(hi.value);
         const l = ((a - floor) / (ceil - floor)) * 100;
         const r = ((b - floor) / (ceil - floor)) * 100;
         if (fill) { fill.style.left = l + '%'; fill.style.right = (100 - r) + '%'; }
+        if (outMin) outMin.textContent = fmt(a);
+        if (outMax) outMax.textContent = fmt(b);
       };
 
       const clamp = which => {
@@ -917,7 +929,7 @@
       inp.addEventListener('change', () => {
         const row = inp.closest('.price-range-filter');
         if (!row) return;
-        const [min, max] = row.querySelectorAll('input');
+        const [min, max] = row.querySelectorAll('.price-range-inputs input[type="number"]');
         const url = new URL(window.location.href);
         if (min && min.name) {
           min.value ? url.searchParams.set(min.name, min.value) : url.searchParams.delete(min.name);

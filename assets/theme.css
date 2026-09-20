@@ -1690,138 +1690,12 @@ body.has-announcement .site-header { top: 44px; }
    collection on the default left-hand grid regardless of the setting. */
 .collection-layout--sidebar-left  { grid-template-columns: 264px 1fr; }
 .collection-layout--sidebar-right { grid-template-columns: 1fr 264px; }
-.collection-layout--sidebar-right .collection-sidebar { order: 2; }
 .collection-layout:not(.collection-layout--has-sidebar) { grid-template-columns: 1fr; }
 @media (max-width: 1000px) {
   .collection-layout--sidebar-left,
   .collection-layout--sidebar-right { grid-template-columns: 1fr; }
-  .collection-layout--sidebar-right .collection-sidebar { order: 0; }
 }
 
-/* Sidebar */
-.filter-sidebar {
-  border-right: 1px solid var(--border, rgba(200,169,110,.18));
-  padding: 40px 32px;
-  position: sticky;
-  top: 80px;
-  height: calc(100vh - 80px);
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border, rgba(200,169,110,.18)) transparent;
-}
-
-.filter-sidebar--right {
-  border-right: none;
-  border-left: 1px solid var(--border, rgba(200,169,110,.18));
-  order: 2;
-}
-
-.filter-group { margin-bottom: 32px; }
-.filter-group__title {
-  font-size: calc(11px * var(--fs-scale, 1));
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--gold, #C8A96E);
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  user-select: none;
-}
-.filter-group__title svg { width: 12px; height: 12px; fill: none; stroke: var(--gold, #C8A96E); stroke-width: 1.5; transition: transform 0.3s; }
-.filter-group__title.is-open svg { transform: rotate(180deg); }
-.filter-group__divider { height: 1px; background: var(--border, rgba(200,169,110,.18)); margin-bottom: 32px; }
-
-.filter-group__body { }
-.filter-group__body.is-collapsed { display: none; }
-
-.filter-option {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 9px 0;
-  cursor: pointer;
-  gap: 10px;
-}
-.filter-option:hover .filter-option__label { color: var(--gold, #C8A96E); opacity: 1; }
-
-.filter-option__check {
-  width: 14px; height: 14px;
-  border: 1px solid var(--border, rgba(200,169,110,.18));
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background var(--transition), border-color var(--transition);
-}
-.filter-option.is-selected .filter-option__check { background: var(--gold, #C8A96E); border-color: var(--gold, #C8A96E); }
-.filter-option__check svg { width: 8px; height: 6px; opacity: 0; transition: opacity 0.2s; }
-.filter-option.is-selected .filter-option__check svg { opacity: 1; }
-
-.filter-option__label {
-  font-size: calc(12px * var(--fs-scale, 1));
-  color: var(--cream, #F5F0E8);
-  opacity: 0.65;
-  transition: color var(--transition), opacity var(--transition);
-  flex: 1;
-}
-.filter-option.is-selected .filter-option__label { opacity: 1; color: var(--gold, #C8A96E); }
-.filter-option__count { font-size: calc(11px * var(--fs-scale, 1)); color: var(--cream, #F5F0E8); opacity: 0.6; }
-
-/* Color swatches */
-/* Filter swatches are defined once, further down, as a label wrapping a
-   hidden input plus a .filter-swatch__dot. The earlier block here sized the
-   label itself to 28px, which fought with that dot; it is intentionally gone. */
-
-/* Price range */
-.price-range input[type="range"] {
-  width: 100%;
-  height: 2px;
-  background: var(--border, rgba(200,169,110,.18));
-  margin: 16px 0 8px;
-  accent-color: var(--gold, #C8A96E);
-}
-.price-range__labels { display: flex; justify-content: space-between; font-size: calc(11px * var(--fs-scale, 1)); color: var(--cream, #F5F0E8); opacity: 0.6; }
-
-/* Chips (size filter) */
-.filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.filter-chip {
-  padding: 6px 14px;
-  border: 1px solid var(--border, rgba(200,169,110,.18));
-  font-size: calc(11px * var(--fs-scale, 1));
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--cream, #F5F0E8);
-  opacity: 0.65;
-  cursor: pointer;
-  transition: all 0.25s;
-  background: transparent;
-  font-family: var(--ff-body);
-}
-.filter-chip:hover,
-.filter-chip.is-active { border-color: var(--gold, #C8A96E); color: var(--gold, #C8A96E); }
-.filter-chip.is-active { background: var(--gold, #C8A96E); color: var(--black, #0A0A0A); font-weight: 500; }
-
-/* Drawer/Dropdown filter toggle */
-.filter-drawer-toggle,
-.filter-dropdown-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: calc(11px * var(--fs-scale, 1));
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--cream, #F5F0E8);
-  background: none;
-  border: 1px solid var(--border, rgba(200,169,110,.18));
-  padding: 10px 20px;
-  cursor: pointer;
-  font-family: var(--ff-body);
-  transition: border-color var(--transition), color var(--transition);
-}
-.filter-drawer-toggle:hover,
-.filter-dropdown-toggle:hover { border-color: var(--gold, #C8A96E); color: var(--gold, #C8A96E); }
 
 /* Toolbar */
 .collection-toolbar {
@@ -2456,8 +2330,6 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   :root { --side-padding: 24px; --section-spacing: 64px; }
   .site-nav { display: none; }
   .collection-layout { grid-template-columns: 1fr; }
-  .filter-sidebar { display: none; }
-  .filter-sidebar.is-open { display: block; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: var(--z-drawer); height: 100vh; }
   .grid-cols-4, .grid-cols-5, .grid-cols-6 { grid-template-columns: repeat(2, 1fr); }
   .grid-cols-3 { grid-template-columns: repeat(2, 1fr); }
   .mega-menu { display: none; }
@@ -2698,76 +2570,14 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   transition: border-color .2s, color .2s;
 }
 .toolbar-btn:hover { border-color: var(--cp-acc); color: var(--cp-acc); }
-.filter-count {
-  display: inline-grid; place-items: center;
-  min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px;
-  background: var(--cp-acc); color: var(--on-gold,#0A0A0A);
-  font-size: calc(11px * var(--fs-scale,1)); font-weight: 600;
-}
 
 /* ---------- Sidebar ---------- */
-.collection-sidebar { min-width: 0; padding-right: clamp(16px,2vw,28px); }
-.collection-layout--sidebar-right .collection-sidebar { padding-right: 0; padding-left: clamp(16px,2vw,28px); }
-.sidebar-header {
-  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
-  padding-bottom: 12px; margin-bottom: 8px;
-  border-bottom: 1px solid var(--cp-bdr);
-}
-.sidebar-header__title {
-  margin: 0;
-  font-size: calc(12px * var(--fs-scale,1));
-  font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--cp-fg);
-}
 .sidebar-clear {
   font-size: calc(11px * var(--fs-scale,1)); letter-spacing: .1em; text-transform: uppercase;
   color: var(--cp-mut); text-decoration: underline; text-underline-offset: 3px;
 }
 .sidebar-clear:hover { color: var(--cp-acc); }
 .sidebar-sort { display: flex; flex-direction: column; gap: 12px; }
-
-.filter-group { border-bottom: 1px solid var(--cp-bdr); }
-.filter-group__toggle {
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  width: 100%; padding: 15px 0; cursor: pointer;
-  border: 0; background: transparent; color: var(--cp-fg); text-align: left;
-  font-family: var(--ff-body,'Outfit',sans-serif);
-  font-size: calc(12px * var(--fs-scale,1));
-  font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
-}
-.filter-group__toggle svg { width: 14px; height: 14px; transition: transform .22s ease; flex: 0 0 auto; }
-.filter-group__toggle[aria-expanded="false"] svg { transform: rotate(-90deg); }
-.filter-group__toggle:hover { color: var(--cp-acc); }
-.filter-group__body { padding-bottom: 16px; }
-
-.filter-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; max-height: 260px; overflow-y: auto; }
-.filter-check {
-  display: flex; align-items: center; gap: 10px;
-  padding: 7px 0; cursor: pointer;
-  font-size: calc(13px * var(--fs-scale,1)); color: var(--cp-fg);
-}
-.filter-check input {
-  appearance: none; -webkit-appearance: none;
-  width: 15px; height: 15px; flex: 0 0 auto; margin: 0; cursor: pointer;
-  border: 1px solid var(--cp-bdr); background: transparent;
-  transition: background .18s, border-color .18s;
-}
-.filter-check input:checked { background: var(--cp-acc); border-color: var(--cp-acc); }
-.filter-check input:focus-visible { outline: 2px solid var(--cp-acc); outline-offset: 2px; }
-.filter-check:hover { color: var(--cp-acc); }
-.filter-check span:first-of-type { flex: 1; }
-.filter-count-pill { font-size: calc(11px * var(--fs-scale,1)); color: var(--cp-mut); }
-
-.price-range-filter { padding-top: 6px; }
-.price-range-slider { height: 2px; background: var(--cp-bdr); margin: 10px 0 16px; }
-.price-range-inputs { display: flex; align-items: center; gap: 10px; }
-.price-range-inputs input {
-  width: 100%; min-width: 0; padding: 9px 10px;
-  border: 1px solid var(--cp-bdr); background: transparent; color: var(--cp-fg);
-  font-family: var(--ff-body,'Outfit',sans-serif);
-  font-size: calc(13px * var(--fs-scale,1));
-}
-.price-range-inputs input:focus-visible { outline: 2px solid var(--cp-acc); outline-offset: 1px; }
-.price-range-inputs span { color: var(--cp-mut); }
 
 /* ---------- Dropdown filter bar ---------- */
 .dropdown-filters { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -2792,59 +2602,6 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   box-shadow: 0 18px 40px -20px rgba(0,0,0,.6);
 }
 
-/* ---------- Active filter chips ---------- */
-.active-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
-.filter-chip--active,
-.filter-chip--clear {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 7px 12px; text-decoration: none;
-  border: 1px solid var(--cp-bdr);
-  font-size: calc(12px * var(--fs-scale,1)); letter-spacing: .04em;
-  transition: border-color .2s, color .2s;
-}
-.filter-chip--active { color: var(--cp-fg); }
-.filter-chip--active:hover { border-color: var(--cp-acc); color: var(--cp-acc); }
-.filter-chip--clear { color: var(--cp-mut); border-style: dashed; }
-.filter-chip--clear:hover { color: var(--cp-acc); border-color: var(--cp-acc); }
-
-/* ---------- Filter drawer ---------- */
-.filter-drawer {
-  position: fixed; z-index: var(--z-drawer,400); top: 0; bottom: 0; left: 0;
-  width: min(380px,90%);
-  display: flex; flex-direction: column;
-  background: var(--drawer-bg,#0F0F0F); color: var(--drawer-fg,#F5F0E8);
-  border-right: 1px solid var(--drawer-bdr,rgba(245,240,232,.16));
-  transform: translateX(-100%); transition: transform .28s ease;
-}
-.filter-drawer.is-open { transform: none; }
-.filter-drawer__overlay {
-  position: fixed; z-index: calc(var(--z-drawer,400) - 1); inset: 0;
-  background: var(--modal-scrim, rgba(10,10,11,.74));
-  opacity: 0; visibility: hidden; transition: opacity .25s, visibility .25s;
-}
-.filter-drawer.is-open ~ .filter-drawer__overlay,
-.filter-drawer__overlay.is-open { opacity: 1; visibility: visible; }
-.filter-drawer__header {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 18px 20px; border-bottom: 1px solid var(--drawer-bdr,rgba(245,240,232,.16));
-}
-.filter-drawer__header h2 {
-  margin: 0;
-  font-size: calc(13px * var(--fs-scale,1));
-  font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
-}
-.filter-drawer__close {
-  display: grid; place-items: center; width: 34px; height: 34px;
-  border: 1px solid var(--drawer-bdr,rgba(245,240,232,.16));
-  background: transparent; color: inherit; cursor: pointer;
-}
-.filter-drawer__close:hover { border-color: var(--cp-acc); }
-.filter-drawer__body { flex: 1; overflow-y: auto; padding: 4px 20px 20px; }
-.filter-drawer__footer {
-  display: flex; gap: 10px; padding: 16px 20px;
-  border-top: 1px solid var(--drawer-bdr,rgba(245,240,232,.16));
-}
-.filter-drawer__footer > * { flex: 1; text-align: center; }
 
 /* ---------- Empty state ---------- */
 .collection-empty {
@@ -2898,8 +2655,6 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .collection-title .rte a { color: var(--cp-acc); }
 
 @media (max-width: 1000px) {
-  .collection-sidebar { padding: 0 0 24px; }
-  .collection-layout--sidebar-right .collection-sidebar { padding-left: 0; }
   .collection-title__split > .container { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
 
@@ -3129,216 +2884,16 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .star { color: var(--gold, #C8A96E); font-size: calc(13px * var(--fs-scale,1)); line-height: 1; }
 .star.is-off { color: var(--border, rgba(200,169,110,.3)); }
 
-/* ---------- Built-in collection filters ---------- */
-.cfilter { display: block; }
-.cfilter-group { border-bottom: 1px solid var(--cp-bdr, var(--border, rgba(200,169,110,.18))); }
-.cfilter-foot {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; padding-top: 14px;
-}
-.cfilter-count {
-  font-size: calc(11px * var(--fs-scale,1));
-  letter-spacing: .14em; text-transform: uppercase;
-  color: var(--cp-mut, var(--muted, rgba(245,240,232,.62)));
-}
-.cfilter-clear {
-  border: 0; background: transparent; cursor: pointer; padding: 0;
-  font-family: var(--ff-body,'Outfit',sans-serif);
-  font-size: calc(11px * var(--fs-scale,1));
-  font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--cp-acc, var(--gold, #C8A96E));
-  text-decoration: underline; text-underline-offset: 3px;
-}
-.cfilter-clear[hidden] { display: none; }
-.cfilter-empty {
-  padding: clamp(40px,7vh,72px) 0; text-align: center;
-  font-size: calc(15px * var(--fs-scale,1));
-  color: var(--cp-mut, var(--muted, rgba(245,240,232,.62)));
-}
+
 /* A hidden card must leave the grid flow, not just go invisible. */
 .product-grid [data-pcard][hidden] { display: none !important; }
 
-/* ==================================================================
-   FILTER UI — swatches, pills, dual-range price
-
-   The first pass rendered every facet as the same tickbox list, which
-   is functional and reads as a spreadsheet. A fashion filter should
-   show a colour as a colour and a size as something you press.
-   ================================================================== */
-
-.cfilter-group { padding-bottom: 2px; }
-.cfilter-group .filter-group__body { padding-bottom: 20px; }
-
-/* --- Colour swatches --- */
-.cfilter-swatches { display: flex; flex-wrap: wrap; gap: 10px; padding-top: 4px; }
-.cfilter-swatch { position: relative; cursor: pointer; line-height: 0; }
-.cfilter-swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
-.cfilter-swatch__dot {
-  display: block; width: 26px; height: 26px; border-radius: 50%;
-  /* Colour comes from an inline style resolved by snippets/swatch-style.liquid.
-     This is the neutral chip shown when a colour name is unrecognised. */
-  background-color: #cfc7ba;
-  background-size: cover; background-position: center;
-  border: 1px solid var(--cp-bdr, rgba(200,169,110,.28));
-  box-shadow: inset 0 0 0 2px var(--cp-bg, transparent);
-  transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease;
-}
-.cfilter-swatch:hover .cfilter-swatch__dot { transform: scale(1.08); }
-.cfilter-swatch input:checked + .cfilter-swatch__dot {
-  border-color: var(--cp-acc, #C8A96E);
-  box-shadow: inset 0 0 0 2px var(--cp-bg, #0A0A0A), 0 0 0 2px var(--cp-acc, #C8A96E);
-}
-.cfilter-swatch input:focus-visible + .cfilter-swatch__dot {
-  outline: 2px solid var(--cp-acc, #C8A96E); outline-offset: 3px;
-}
-
-/* --- Size pills --- */
-.cfilter-pills { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 4px; }
-.cfilter-pill { position: relative; cursor: pointer; }
-.cfilter-pill input { position: absolute; opacity: 0; width: 0; height: 0; }
-.cfilter-pill span {
-  display: grid; place-items: center;
-  min-width: 42px; height: 36px; padding: 0 12px;
-  border: 1px solid var(--cp-bdr, rgba(200,169,110,.28));
-  color: var(--cp-fg, #F5F0E8);
-  font-size: calc(12px * var(--fs-scale,1));
-  font-weight: 500; letter-spacing: .06em;
-  transition: background .18s ease, color .18s ease, border-color .18s ease;
-}
-.cfilter-pill:hover span { border-color: var(--cp-acc, #C8A96E); color: var(--cp-acc, #C8A96E); }
-.cfilter-pill input:checked + span {
-  background: var(--cp-acc, #C8A96E);
-  border-color: var(--cp-acc, #C8A96E);
-  color: var(--on-gold, #0A0A0A);
-  font-weight: 600;
-}
-.cfilter-pill input:focus-visible + span { outline: 2px solid var(--cp-acc, #C8A96E); outline-offset: 2px; }
-
-/* --- Dual-range price --- */
-.cfilter-price { padding-top: 10px; }
-.cfilter-price__track { position: relative; height: 26px; }
-.cfilter-price__track::before {
-  content: ""; position: absolute; left: 0; right: 0; top: 12px; height: 2px;
-  background: var(--cp-bdr, rgba(200,169,110,.28));
-}
-.cfilter-price__fill {
-  position: absolute; top: 12px; height: 2px;
-  left: 0; right: 0;
-  background: var(--cp-acc, #C8A96E);
-}
-.cfilter-price__range {
-  position: absolute; left: 0; right: 0; top: 0;
-  width: 100%; height: 26px; margin: 0;
-  background: transparent; appearance: none; -webkit-appearance: none;
-  pointer-events: none;
-}
-.cfilter-price__range::-webkit-slider-thumb {
-  -webkit-appearance: none; pointer-events: auto;
-  width: 15px; height: 15px; border-radius: 50%;
-  background: var(--cp-acc, #C8A96E);
-  border: 2px solid var(--cp-bg, #0A0A0A);
-  cursor: grab;
-}
-.cfilter-price__range::-moz-range-thumb {
-  pointer-events: auto;
-  width: 15px; height: 15px; border-radius: 50%;
-  background: var(--cp-acc, #C8A96E);
-  border: 2px solid var(--cp-bg, #0A0A0A);
-  cursor: grab;
-}
-.cfilter-price__range:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--cp-acc, #C8A96E); outline-offset: 2px; }
-.cfilter-price__vals { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
-.cfilter-price__vals input {
-  width: 100%; min-width: 0; padding: 9px 10px;
-  background: transparent; color: var(--cp-fg, #F5F0E8);
-  border: 1px solid var(--cp-bdr, rgba(200,169,110,.28));
-  font-family: var(--ff-body,'Outfit',sans-serif);
-  font-size: calc(13px * var(--fs-scale,1));
-}
-.cfilter-price__vals input:focus-visible { outline: 2px solid var(--cp-acc, #C8A96E); outline-offset: 1px; }
-.cfilter-price__vals span { color: var(--cp-mut, rgba(245,240,232,.62)); }
-
-/* --- Checkbox list, tightened up --- */
-.cfilter .filter-check input { border-radius: 2px; position: relative; }
-.cfilter .filter-check input:checked::after {
-  content: ""; position: absolute; left: 4px; top: 1px;
-  width: 4px; height: 8px;
-  border: solid var(--on-gold, #0A0A0A);
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-
-/* Price presets sit above the slider, slightly tighter than size pills */
-.cfilter-pills--price { margin-bottom: 14px; }
-.cfilter-pills--price .cfilter-pill span { min-width: 0; height: 32px; padding: 0 11px; font-size: calc(11px * var(--fs-scale,1)); }
 
 /* Collections list head — the text column beside the controls */
 .clist-head__text { min-width: 0; flex: 1 1 320px; }
 
-/* ==================================================================
-   FILTER CONTROL CORRECTIONS
-
-   Found by rendering the page rather than reading the file.
-
-   The global `input` rule sets padding: 14px 20px and width: 100%.
-   A 15px checkbox never reset that padding, so with border-box every
-   tickbox inflated to roughly 40px — a column of grey slabs beside
-   the labels. Everything here resets the inherited form styling on
-   controls that are not text fields.
-   ================================================================== */
-
-.filter-check input[type="checkbox"],
-.cfilter-swatch input[type="checkbox"],
-.cfilter-pill input[type="checkbox"] {
-  padding: 0;
-  margin: 0;
-  min-width: 0;
-  letter-spacing: normal;
-  box-sizing: border-box;
-}
-.filter-check input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
-  border-radius: 2px;
-  border: 1px solid var(--cp-bdr, rgba(200,169,110,.28));
-  background: transparent;
-  position: relative;
-  cursor: pointer;
-  transition: background .16s ease, border-color .16s ease;
-}
-.filter-check input[type="checkbox"]:checked {
-  background: var(--cp-acc, #C8A96E);
-  border-color: var(--cp-acc, #C8A96E);
-}
-.filter-check input[type="checkbox"]:checked::after {
-  content: "";
-  position: absolute;
-  left: 5px; top: 1px;
-  width: 4px; height: 8px;
-  border: solid var(--on-gold, #0A0A0A);
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-.filter-check { gap: 11px; align-items: center; }
-.filter-check span:first-of-type { line-height: 1.35; }
-
-/* A swatch should read as a solid colour. The inset ring belonged only on
-   the selected state; in the base rule it turned every colour into a donut. */
-.cfilter-swatch__dot {
-  box-shadow: none;
-}
-.cfilter-swatch input:checked + .cfilter-swatch__dot {
-  box-shadow: 0 0 0 2px var(--cp-bg, #0A0A0A), 0 0 0 3px var(--cp-acc, #C8A96E);
-}
-
-/* Price presets read better on one line than wrapping after two */
-.cfilter-pills--price { gap: 5px; }
-.cfilter-pills--price .cfilter-pill span { padding: 0 9px; letter-spacing: .02em; }
 
 /* Give each group a little more air between rule and heading */
-.cfilter-group .filter-group__toggle { padding: 17px 0 13px; }
-.cfilter-group .filter-group__body { padding-bottom: 22px; }
 
 /* ------------------------------------------------------------------
    Two defects visible only once the page was rendered
@@ -3399,121 +2954,12 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .collection-title--style-2 + .collection-toolbar { margin-top: 0; }
 .collection-layout { position: relative; z-index: 1; }
 
-/* ==================================================================
-   COLLECTION — DESIGN PASS
-
-   The first pass was functional and generic: everything boxed in 1px
-   borders, uniform grey, no hierarchy. This strips the boxes back to
-   hairlines, widens the tracking on the micro-type, and lets space do
-   the work — which is what makes a fashion filter read as considered
-   rather than as a form.
-   ================================================================== */
 
 /* --- Sidebar: follows the scroll, breathes --- */
-.collection-sidebar {
-  position: sticky;
-  top: 96px;
-  align-self: start;
-  max-height: calc(100vh - 120px);
-  overflow-y: auto;
-  padding-right: clamp(20px, 2.4vw, 40px);
-  scrollbar-width: thin;
-}
-.collection-sidebar::-webkit-scrollbar { width: 2px; }
-.collection-sidebar::-webkit-scrollbar-thumb { background: var(--cp-bdr); }
-.collection-layout--sidebar-right .collection-sidebar { padding-right: 0; padding-left: clamp(20px, 2.4vw, 40px); }
-
-.sidebar-header {
-  padding-bottom: 14px;
-  margin-bottom: 4px;
-  border-bottom: 1px solid var(--cp-fg);
-}
-.sidebar-header__title {
-  font-size: calc(11px * var(--fs-scale, 1));
-  letter-spacing: .28em;
-}
 .sidebar-clear { font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: .16em; text-decoration: none; border-bottom: 1px solid currentColor; }
 
 /* --- Groups: hairline rules, quieter headings --- */
-.cfilter-group { border-bottom: 1px solid var(--cp-bdr); }
-.cfilter-group:last-of-type { border-bottom: 0; }
-.cfilter-group .filter-group__toggle {
-  padding: 20px 0 15px;
-  font-size: calc(10px * var(--fs-scale, 1));
-  font-weight: 600;
-  letter-spacing: .26em;
-  color: var(--cp-fg);
-  opacity: .92;
-}
-.cfilter-group .filter-group__toggle:hover { opacity: 1; color: var(--cp-acc); }
-.cfilter-group .filter-group__toggle svg { width: 11px; height: 11px; opacity: .55; }
-.cfilter-group .filter-group__body { padding-bottom: 24px; }
 
-/* --- Checkbox rows: no box, a rule that fills --- */
-.cfilter .filter-list { gap: 0; }
-.cfilter .filter-check {
-  padding: 9px 0;
-  font-size: calc(13px * var(--fs-scale, 1));
-  letter-spacing: .01em;
-  color: var(--cp-mut);
-  transition: color .18s ease;
-}
-.cfilter .filter-check:hover { color: var(--cp-fg); }
-.cfilter .filter-check input[type="checkbox"] {
-  width: 14px; height: 14px; flex: 0 0 14px;
-  border-radius: 0;
-  border: 1px solid var(--cp-bdr);
-}
-.cfilter .filter-check input[type="checkbox"]:checked { background: var(--cp-fg); border-color: var(--cp-fg); }
-.cfilter .filter-check input[type="checkbox"]:checked::after {
-  left: 4px; top: 1px; width: 3px; height: 7px;
-  border-color: var(--cp-bg);
-}
-.cfilter .filter-check input:checked ~ span:first-of-type { color: var(--cp-fg); }
-.filter-count-pill { font-size: calc(10px * var(--fs-scale, 1)); opacity: .5; letter-spacing: .06em; }
-
-/* --- Swatches: bigger, cleaner selected ring --- */
-.cfilter-swatches { gap: 12px; padding-top: 2px; }
-.cfilter-swatch__dot {
-  width: 24px; height: 24px;
-  border: 1px solid rgba(128,128,128,.35);
-}
-.cfilter-swatch input:checked + .cfilter-swatch__dot {
-  box-shadow: 0 0 0 1px var(--cp-bg), 0 0 0 2px var(--cp-fg);
-  border-color: transparent;
-}
-
-/* --- Size pills: square, hairline, fill on select --- */
-.cfilter-pills { gap: 6px; }
-.cfilter-pill span {
-  min-width: 40px; height: 34px; padding: 0 10px;
-  border: 1px solid var(--cp-bdr);
-  border-radius: 0;
-  font-size: calc(11px * var(--fs-scale, 1));
-  font-weight: 500; letter-spacing: .1em;
-  color: var(--cp-mut);
-}
-.cfilter-pill:hover span { border-color: var(--cp-fg); color: var(--cp-fg); }
-.cfilter-pill input:checked + span {
-  background: var(--cp-fg); border-color: var(--cp-fg); color: var(--cp-bg); font-weight: 600;
-}
-
-/* --- Price: underline fields, not boxes --- */
-.cfilter-price__vals input {
-  border: 0;
-  border-bottom: 1px solid var(--cp-bdr);
-  padding: 8px 0;
-  text-align: center;
-  font-size: calc(12px * var(--fs-scale, 1));
-  letter-spacing: .06em;
-}
-.cfilter-price__vals input:focus-visible { outline: 0; border-bottom-color: var(--cp-acc); }
-.cfilter-price__range::-webkit-slider-thumb { width: 12px; height: 12px; border-width: 3px; }
-.cfilter-price__range::-moz-range-thumb { width: 12px; height: 12px; border-width: 3px; }
-
-.cfilter-foot { padding-top: 20px; border-top: 1px solid var(--cp-bdr); margin-top: 4px; }
-.cfilter-count { font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: .2em; }
-.cfilter-clear { font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: .16em; }
 
 /* --- Toolbar: one hairline row --- */
 .collection-toolbar {
@@ -3524,15 +2970,6 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 }
 .toolbar-btn { border-color: var(--cp-bdr); font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: .18em; padding: 11px 18px; }
 
-/* --- Active chips: pill, hairline --- */
-.filter-chip--active, .filter-chip--clear {
-  border-radius: 999px;
-  padding: 7px 14px;
-  font-size: calc(11px * var(--fs-scale, 1));
-  letter-spacing: .06em;
-  border-color: var(--cp-bdr);
-}
-.filter-chip--clear { border-style: solid; opacity: .7; }
 
 /* --- Pagination: numerals, not buttons --- */
 .pagination { gap: 2px; border-top: 1px solid var(--cp-bdr); }
@@ -3558,265 +2995,399 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .collection-title__text { letter-spacing: -.01em; }
 .collection-title__desc { max-width: 54ch; font-size: calc(14px * var(--fs-scale,1)); opacity: .85; }
 
-/* Price presets wrapped raggedly in a 264px sidebar. A two-column grid keeps
-   them aligned whether there are two, three or four of them. */
-.cfilter-pills--price {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-  margin-bottom: 18px;
-}
-.cfilter-pills--price .cfilter-pill span {
-  width: 100%;
-  min-width: 0;
-  height: 32px;
-  padding: 0 6px;
-  font-size: calc(10px * var(--fs-scale, 1));
-  letter-spacing: .06em;
-}
-/* The price slider needs air above it once the presets sit in a grid */
-.cfilter-price { padding-top: 4px; }
-
-/* ==================================================================
-   FILTER DESIGN — APPLIED TO SHOPIFY'S NATIVE FILTERS TOO
-
-   The design pass was scoped under .cfilter, which only wraps the
-   theme's own built-in filters. With Search & Discovery installed the
-   section renders Shopify's filters through a different branch with no
-   such wrapper — so on the store that actually matters, none of the
-   styling applied and the panel fell back to the plain first pass.
-
-   Everything below re-scopes to the sidebar and the drawer, which
-   contain both branches.
-   ================================================================== */
-
-.collection-sidebar .filter-group,
-.filter-drawer .filter-group { border-bottom: 1px solid var(--cp-bdr, rgba(200,169,110,.18)); }
-
-.collection-sidebar .filter-group__toggle,
-.filter-drawer .filter-group__toggle {
-  padding: 20px 0 15px;
-  font-size: calc(10px * var(--fs-scale, 1));
-  font-weight: 600;
-  letter-spacing: .26em;
-  opacity: .92;
-}
-.collection-sidebar .filter-group__toggle:hover,
-.filter-drawer .filter-group__toggle:hover { opacity: 1; color: var(--cp-acc, #C8A96E); }
-.collection-sidebar .filter-group__toggle svg,
-.filter-drawer .filter-group__toggle svg { width: 11px; height: 11px; opacity: .55; }
-.collection-sidebar .filter-group__body,
-.filter-drawer .filter-group__body { padding-bottom: 22px; }
-
-.collection-sidebar .filter-list,
-.filter-drawer .filter-list { gap: 0; }
-
-.collection-sidebar .filter-check,
-.filter-drawer .filter-check {
-  padding: 9px 0;
-  gap: 11px;
-  align-items: center;
-  font-size: calc(13px * var(--fs-scale, 1));
-  color: var(--cp-mut, var(--muted, rgba(245,240,232,.62)));
-  transition: color .18s ease;
-}
-.collection-sidebar .filter-check:hover,
-.filter-drawer .filter-check:hover { color: var(--cp-fg, var(--cream, #F5F0E8)); }
-
-.collection-sidebar .filter-check input[type="checkbox"],
-.filter-drawer .filter-check input[type="checkbox"] {
-  appearance: none; -webkit-appearance: none;
-  width: 14px; height: 14px; flex: 0 0 14px;
-  padding: 0; margin: 0; min-width: 0;
-  border-radius: 0;
-  border: 1px solid var(--cp-bdr, rgba(200,169,110,.28));
-  background: transparent;
-  position: relative;
-  cursor: pointer;
-  box-sizing: border-box;
-  transition: background .16s ease, border-color .16s ease;
-}
-.collection-sidebar .filter-check input[type="checkbox"]:checked,
-.filter-drawer .filter-check input[type="checkbox"]:checked {
-  background: var(--cp-fg, var(--cream, #F5F0E8));
-  border-color: var(--cp-fg, var(--cream, #F5F0E8));
-}
-.collection-sidebar .filter-check input[type="checkbox"]:checked::after,
-.filter-drawer .filter-check input[type="checkbox"]:checked::after {
-  content: "";
-  position: absolute;
-  left: 4px; top: 1px;
-  width: 3px; height: 7px;
-  border: solid var(--cp-bg, #0A0A0A);
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-.collection-sidebar .filter-check span:first-of-type { flex: 1; line-height: 1.35; }
-.collection-sidebar .filter-count-pill,
-.filter-drawer .filter-count-pill {
-  font-size: calc(10px * var(--fs-scale, 1));
-  opacity: .45;
-  letter-spacing: .06em;
-}
-
-/* One scrollbar, not two. The sticky sidebar scrolled AND each long value
-   list scrolled inside it, so a colour filter sat between two rails. The
-   sidebar now grows with the page; only the long lists scroll, on a hairline. */
-.collection-sidebar {
-  max-height: none;
-  overflow: visible;
-  padding-top: clamp(20px, 3vh, 34px);
-}
-.collection-sidebar .filter-list {
-  max-height: 232px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--cp-bdr, rgba(200,169,110,.3)) transparent;
-  padding-right: 6px;
-}
-.collection-sidebar .filter-list::-webkit-scrollbar { width: 2px; }
-.collection-sidebar .filter-list::-webkit-scrollbar-track { background: transparent; }
-.collection-sidebar .filter-list::-webkit-scrollbar-thumb { background: var(--cp-bdr, rgba(200,169,110,.3)); }
-
-/* Native price range: the inputs overflowed their column and one rendered
-   empty. Underlines, equal widths, room for a four-figure price. */
-.price-range-filter { padding-top: 6px; }
-.price-range-inputs { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; }
-.price-range-inputs input {
-  width: 100%;
-  min-width: 0;
-  padding: 8px 0;
-  border: 0;
-  border-bottom: 1px solid var(--cp-bdr, rgba(200,169,110,.28));
-  background: transparent;
-  text-align: center;
-  font-size: calc(12px * var(--fs-scale, 1));
-  letter-spacing: .04em;
-}
-.price-range-inputs input:focus-visible { outline: 0; border-bottom-color: var(--cp-acc, #C8A96E); }
-.price-range-slider { margin: 6px 0 14px; }
-
-.collection-sidebar .sidebar-header { padding-bottom: 14px; border-bottom: 1px solid var(--cp-fg, var(--cream, #F5F0E8)); }
-.collection-sidebar .sidebar-header__title { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: .28em; }
 
 /* The count was pushed to the far right of the row by a flex:1 on the label,
    which put it directly under the scroll rail — so on a long list it sat
    half-hidden behind the scrollbar. It now sits beside the label it counts,
    and the list reserves room for the rail rather than letting it overlap. */
-.collection-sidebar .filter-check,
-.filter-drawer .filter-check {
-  justify-content: flex-start;
-  gap: 10px;
-}
-.collection-sidebar .filter-check span:first-of-type,
-.filter-drawer .filter-check span:first-of-type {
-  flex: 0 1 auto;
-  margin-right: 2px;
-}
-.collection-sidebar .filter-count-pill,
-.filter-drawer .filter-count-pill {
-  flex: 0 0 auto;
-  margin-left: 0;
-  opacity: .4;
-  font-size: calc(10px * var(--fs-scale, 1));
-}
-.collection-sidebar .filter-list,
-.filter-drawer .filter-list {
-  padding-right: 14px;
-  scrollbar-gutter: stable;
-}
 
-/* Native Shopify colour filters ship swatch data; rendered as swatches now. */
-/* ---------------------------------------------------------------------
-   Colour filter swatches — three presentations, set per section in the
-   theme editor via `swatch_style`.
-
-     .filter-swatches--list   swatch + name + count, one per row (default)
-     .filter-swatches--chips  pill carrying swatch + name, wrapping inline
-     .filter-swatches--dots   swatch only, name for screen readers only
-
-   Colours arrive as an inline background from snippets/swatch-style.liquid,
-   so nothing here sets one. Every colour below is a scheme token, so the
-   swatch list follows the active colour scheme like the rest of the page.
-   --------------------------------------------------------------------- */
-.filter-swatches { padding-top: 6px; }
-.filter-swatch { position: relative; cursor: pointer; }
-.filter-swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
-
-.filter-swatch__dot {
-  display: block; flex-shrink: 0;
-  width: 22px; height: 22px; border-radius: 50%;
-  background-size: cover; background-position: center;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.16);
-  border: 1px solid var(--cp-bdr, rgba(128,128,128,.28));
-  transition: box-shadow .18s ease, transform .18s ease;
-}
-.filter-swatch__name {
-  font-size: calc(13px * var(--fs-scale, 1));
-  color: var(--cp-fg, var(--cream, #F5F0E8));
-  line-height: 1.3;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.filter-swatch__count {
-  font-size: calc(11px * var(--fs-scale, 1));
-  color: var(--cp-mut, rgba(245,240,232,.55));
-  font-variant-numeric: tabular-nums;
-}
 
 /* --- list ------------------------------------------------------------ */
-.filter-swatches--list { display: flex; flex-direction: column; gap: 2px; }
-.filter-swatches--list .filter-swatch {
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr) auto;
-  align-items: center; gap: 10px;
-  padding: 7px 8px; margin: 0 -8px;
-  border-radius: 8px;
-  transition: background-color .18s ease;
-}
-.filter-swatches--list .filter-swatch:hover { background: var(--cp-hover, rgba(128,128,128,.10)); }
-.filter-swatches--list .filter-swatch input:checked ~ .filter-swatch__name { font-weight: 600; }
-.filter-swatches--list .filter-swatch:has(input:checked),
-.filter-swatches--list .filter-swatch.is-active { background: var(--cp-hover, rgba(200,169,110,.10)); }
 
 /* --- chips ----------------------------------------------------------- */
-.filter-swatches--chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.filter-swatches--chips .filter-swatch {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 6px 12px 6px 7px;
-  border: 1px solid var(--cp-bdr, rgba(128,128,128,.28));
-  border-radius: 999px;
-  transition: border-color .18s ease, background-color .18s ease;
-}
-.filter-swatches--chips .filter-swatch__dot { width: 18px; height: 18px; }
-.filter-swatches--chips .filter-swatch:hover { border-color: var(--cp-acc, #C8A96E); }
-.filter-swatches--chips .filter-swatch__count { opacity: .75; }
-.filter-swatches--chips .filter-swatch input:checked ~ .filter-swatch__name { font-weight: 600; }
-.filter-swatches--chips .filter-swatch:has(input:checked),
-.filter-swatches--chips .filter-swatch.is-active {
-  border-color: var(--cp-acc, #C8A96E);
-  background: var(--cp-hover, rgba(200,169,110,.10));
-}
 
 /* --- dots ------------------------------------------------------------ */
-.filter-swatches--dots { display: flex; flex-wrap: wrap; gap: 10px; }
-.filter-swatches--dots .filter-swatch { line-height: 0; }
-.filter-swatches--dots .filter-swatch__dot { width: 24px; height: 24px; }
 
 /* --- shared states --------------------------------------------------- */
-.filter-swatch:hover .filter-swatch__dot { transform: scale(1.08); }
-.filter-swatch input:checked + .filter-swatch__dot,
-.filter-swatch.is-active .filter-swatch__dot {
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.16),
-              0 0 0 2px var(--cp-bg, #0A0A0A),
-              0 0 0 4px var(--cp-acc, #C8A96E);
-  border-color: transparent;
-}
-.filter-swatch input:focus-visible + .filter-swatch__dot {
-  outline: 2px solid var(--cp-acc, #C8A96E); outline-offset: 3px;
-}
 
 /* A chosen card swatch stays marked; hover preview is a lighter state. */
 .pcard__swatch.is-selected {
   transform: scale(1.18);
   box-shadow: 0 0 0 1px var(--pc-bg, transparent), 0 0 0 2px var(--pc-acc, #C8A96E);
+}
+
+
+/* ======================================================================
+   COLLECTION FILTER PANEL
+
+   One stylesheet for the whole filter UI. It replaces four earlier
+   blocks -- roughly 880 lines and 217 rules -- that had accumulated as
+   successive design passes, each overriding part of the last. The
+   panel read as a patchwork because it literally was one.
+
+   Rules here cover only classes the markup emits. Ghost selectors from
+   the old blocks (.filter-option, .filter-sidebar, .filter-group__title,
+   .cfilter-swatch, .price-range__labels) were never rendered and are gone.
+
+   Every colour is a scheme token, so the panel follows the active colour
+   scheme exactly like the rest of the page. Local tokens are declared on
+   the panel root so the sidebar and the mobile drawer stay identical.
+   ====================================================================== */
+
+.collection-sidebar,
+.filter-drawer__body {
+  --f-fg:     var(--cp-fg,  var(--cream, #F5F0E8));
+  --f-mut:    var(--cp-mut, rgba(245,240,232,.55));
+  --f-acc:    var(--cp-acc, var(--gold, #C8A96E));
+  --f-bdr:    var(--cp-bdr, rgba(200,169,110,.20));
+  --f-hover:  var(--cp-hover, rgba(200,169,110,.09));
+  --f-radius: 10px;
+  color: var(--f-fg);
+}
+
+.collection-sidebar {
+  width: 268px; flex-shrink: 0;
+  align-self: flex-start;
+  position: sticky; top: var(--header-h, 72px);
+  max-height: calc(100vh - var(--header-h, 72px));
+  overflow-y: auto;
+  padding: 22px 18px 28px 0;
+}
+
+/* --- panel head ------------------------------------------------------ */
+.sidebar-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px; padding-bottom: 14px; margin-bottom: 4px;
+  border-bottom: 1px solid var(--f-bdr);
+}
+.sidebar-header__title {
+  margin: 0;
+  font-size: calc(12px * var(--fs-scale, 1));
+  letter-spacing: .16em; text-transform: uppercase; font-weight: 600;
+  color: var(--f-fg);
+}
+
+/* --- one filter group ------------------------------------------------ */
+.filter-group,
+.cfilter-group { border-bottom: 1px solid var(--f-bdr); }
+.filter-group:last-child,
+.cfilter-group:last-child { border-bottom: 0; }
+
+.filter-group__toggle {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  gap: 10px;
+  padding: 15px 0 13px;
+  background: none; border: 0; cursor: pointer; text-align: left;
+  font-size: calc(11px * var(--fs-scale, 1));
+  letter-spacing: .14em; text-transform: uppercase; font-weight: 600;
+  color: var(--f-fg);
+  transition: color .18s ease;
+}
+.filter-group__toggle:hover { color: var(--f-acc); }
+.filter-group__toggle svg { width: 13px; height: 13px; flex-shrink: 0; opacity: .6; transition: transform .22s ease; }
+.filter-group__toggle[aria-expanded="false"] svg { transform: rotate(-90deg); }
+
+.filter-group__body { padding-bottom: 16px; }
+.filter-group__body.is-collapsed { display: none; }
+
+/* --- checkbox rows --------------------------------------------------- */
+.filter-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+
+.filter-check {
+  display: grid; grid-template-columns: 17px minmax(0,1fr) auto;
+  align-items: center; gap: 11px;
+  padding: 7px 8px; margin: 0 -8px;
+  border-radius: 8px; cursor: pointer;
+  font-size: calc(13px * var(--fs-scale, 1));
+  color: var(--f-fg);
+  transition: background-color .18s ease;
+}
+.filter-check:hover { background: var(--f-hover); }
+
+/* The global `input` rule sets padding and width:100%; these controls are
+   not text fields, so everything inherited is reset here. */
+.filter-check input[type="checkbox"] {
+  appearance: none; -webkit-appearance: none;
+  width: 17px; height: 17px; min-width: 17px; padding: 0; margin: 0;
+  border: 1.5px solid var(--f-bdr); border-radius: 5px;
+  background: transparent; cursor: pointer;
+  display: grid; place-content: center;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+.filter-check input[type="checkbox"]::after {
+  content: ''; width: 9px; height: 9px; transform: scale(0);
+  transition: transform .16s ease;
+  background: var(--cp-bg, #0A0A0A);
+  clip-path: polygon(14% 48%, 0 62%, 38% 100%, 100% 22%, 86% 8%, 38% 71%);
+}
+.filter-check input[type="checkbox"]:checked {
+  background: var(--f-acc); border-color: var(--f-acc);
+}
+.filter-check input[type="checkbox"]:checked::after { transform: scale(1); }
+.filter-check input[type="checkbox"]:focus-visible { outline: 2px solid var(--f-acc); outline-offset: 2px; }
+.filter-check:has(input:checked) { background: var(--f-hover); }
+.filter-check:has(input:checked) > span:not(.filter-count-pill) { font-weight: 600; }
+
+.filter-count-pill {
+  font-size: calc(11px * var(--fs-scale, 1));
+  color: var(--f-mut);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- pills (size, discount, new in, rating, price presets) ----------- */
+.cfilter-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+.cfilter-pills--price { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+
+.cfilter-pill {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 42px; min-height: 36px; padding: 0 13px;
+  border: 1px solid var(--f-bdr); border-radius: 8px;
+  font-size: calc(12px * var(--fs-scale, 1));
+  color: var(--f-fg); cursor: pointer; white-space: nowrap;
+  transition: border-color .18s ease, background-color .18s ease, color .18s ease;
+}
+.cfilter-pill input { position: absolute; opacity: 0; width: 0; height: 0; }
+.cfilter-pill:hover { border-color: var(--f-acc); }
+.cfilter-pill:has(input:checked) {
+  background: var(--f-acc); border-color: var(--f-acc);
+  color: var(--cp-bg, #0A0A0A); font-weight: 600;
+}
+.cfilter-pill:focus-within { outline: 2px solid var(--f-acc); outline-offset: 2px; }
+
+/* --- price -----------------------------------------------------------
+   Markup shape matters here: .cfilter-price__track is the CONTAINER and
+   holds the fill plus BOTH range inputs, and .cfilter-price__range is the
+   input itself, not a wrapper. An earlier pass styled the track as a 3px
+   bar, which left the two inputs overflowing a 3px box and rendering as
+   default blue thumbs further down the panel.
+   --------------------------------------------------------------------- */
+.cfilter-price { padding-top: 6px; }
+
+.cfilter-price__track {
+  position: relative;
+  height: 26px; margin: 10px 2px 4px;
+}
+/* the unfilled rail */
+.cfilter-price__track::before {
+  content: ''; position: absolute; top: 50%; left: 0; right: 0;
+  height: 3px; transform: translateY(-50%);
+  background: var(--f-bdr); border-radius: 2px;
+}
+.cfilter-price__fill {
+  position: absolute; top: 50%; height: 3px;
+  transform: translateY(-50%);
+  background: var(--f-acc); border-radius: 2px;
+  left: 0; right: 0;
+}
+
+.cfilter-price__range {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 26px;
+  margin: 0; padding: 0;
+  background: none; border: 0; border-radius: 0;
+  appearance: none; -webkit-appearance: none;
+  pointer-events: none;
+}
+.cfilter-price__range:focus { outline: none; }
+.cfilter-price__range::-webkit-slider-runnable-track {
+  background: transparent; border: 0; height: 26px;
+}
+.cfilter-price__range::-moz-range-track { background: transparent; border: 0; height: 26px; }
+.cfilter-price__range::-webkit-slider-thumb {
+  appearance: none; -webkit-appearance: none; pointer-events: auto;
+  width: 15px; height: 15px; margin-top: 0; border-radius: 50%;
+  background: var(--f-acc);
+  border: 2px solid var(--cp-bg, #0A0A0A);
+  box-shadow: 0 0 0 1px var(--f-acc);
+  cursor: grab;
+}
+.cfilter-price__range::-moz-range-thumb {
+  pointer-events: auto;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--f-acc);
+  border: 2px solid var(--cp-bg, #0A0A0A);
+  box-shadow: 0 0 0 1px var(--f-acc);
+  cursor: grab;
+}
+.cfilter-price__range:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--f-acc); outline-offset: 2px; }
+
+.cfilter-price__vals,
+.price-range-inputs {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: center; gap: 8px; margin-top: 10px;
+}
+.cfilter-price__vals input,
+.price-range-inputs input {
+  width: 100%; min-width: 0; padding: 8px 10px; margin: 0;
+  border: 1px solid var(--f-bdr); border-radius: 7px;
+  background: transparent; color: var(--f-fg);
+  font-size: calc(12px * var(--fs-scale, 1));
+  text-align: center; font-variant-numeric: tabular-nums;
+}
+.cfilter-price__vals input:focus,
+.price-range-inputs input:focus { outline: none; border-color: var(--f-acc); }
+.cfilter-price__vals > span,
+.price-range-inputs > span { color: var(--f-mut); font-size: 12px; text-align: center; }
+
+.price-range-filter { padding-top: 6px; }
+.price-range-slider {
+  position: relative; height: 3px; border-radius: 2px;
+  background: var(--f-bdr); margin: 14px 2px 4px;
+}
+
+/* --- colour swatches ------------------------------------------------- */
+.filter-swatches { padding-top: 4px; }
+.filter-swatch { position: relative; cursor: pointer; }
+.filter-swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
+
+.filter-swatch__dot {
+  display: block; flex-shrink: 0;
+  width: 21px; height: 21px; border-radius: 50%;
+  background-size: cover; background-position: center;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.18);
+  border: 1px solid var(--f-bdr);
+  transition: box-shadow .18s ease, transform .18s ease;
+}
+.filter-swatch__name {
+  font-size: calc(13px * var(--fs-scale, 1));
+  color: var(--f-fg); line-height: 1.3;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.filter-swatch__count {
+  font-size: calc(11px * var(--fs-scale, 1));
+  color: var(--f-mut); font-variant-numeric: tabular-nums;
+}
+
+.filter-swatches--list { display: flex; flex-direction: column; gap: 1px; }
+.filter-swatches--list .filter-swatch {
+  display: grid; grid-template-columns: 21px minmax(0,1fr) auto;
+  align-items: center; gap: 11px;
+  padding: 7px 8px; margin: 0 -8px;
+  border-radius: 8px;
+  transition: background-color .18s ease;
+}
+.filter-swatches--list .filter-swatch:hover { background: var(--f-hover); }
+.filter-swatches--list .filter-swatch:has(input:checked) { background: var(--f-hover); }
+.filter-swatches--list .filter-swatch:has(input:checked) .filter-swatch__name { font-weight: 600; }
+
+.filter-swatches--chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.filter-swatches--chips .filter-swatch {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px 5px 6px;
+  border: 1px solid var(--f-bdr); border-radius: 999px;
+  transition: border-color .18s ease, background-color .18s ease;
+}
+.filter-swatches--chips .filter-swatch__dot { width: 17px; height: 17px; }
+.filter-swatches--chips .filter-swatch:hover { border-color: var(--f-acc); }
+.filter-swatches--chips .filter-swatch:has(input:checked) {
+  border-color: var(--f-acc); background: var(--f-hover);
+}
+.filter-swatches--chips .filter-swatch:has(input:checked) .filter-swatch__name { font-weight: 600; }
+
+.filter-swatches--dots { display: flex; flex-wrap: wrap; gap: 9px; }
+.filter-swatches--dots .filter-swatch { line-height: 0; }
+.filter-swatches--dots .filter-swatch__dot { width: 24px; height: 24px; }
+
+.filter-swatch:hover .filter-swatch__dot { transform: scale(1.07); }
+.filter-swatch input:checked + .filter-swatch__dot {
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.18),
+              0 0 0 2px var(--cp-bg, #0A0A0A),
+              0 0 0 4px var(--f-acc);
+  border-color: transparent;
+}
+.filter-swatch input:focus-visible + .filter-swatch__dot { outline: 2px solid var(--f-acc); outline-offset: 3px; }
+
+/* --- active filter chips --------------------------------------------- */
+.active-filters { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 0 14px; }
+.filter-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 11px;
+  border: 1px solid var(--f-bdr); border-radius: 999px;
+  background: var(--f-hover);
+  font-size: calc(12px * var(--fs-scale, 1));
+  color: var(--f-fg); cursor: pointer;
+  transition: border-color .18s ease;
+}
+.filter-chip:hover { border-color: var(--f-acc); }
+.filter-chip--active { border-color: var(--f-acc); }
+.filter-chip--clear { background: none; color: var(--f-mut); }
+.filter-chip--clear:hover { color: var(--f-acc); }
+
+/* --- panel footer ---------------------------------------------------- */
+.cfilter-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding-top: 16px; margin-top: 4px;
+  border-top: 1px solid var(--f-bdr);
+}
+.cfilter-count { font-size: calc(12px * var(--fs-scale, 1)); color: var(--f-mut); }
+.cfilter-clear {
+  background: none; border: 0; cursor: pointer; padding: 4px 0;
+  font-size: calc(12px * var(--fs-scale, 1));
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--f-acc); text-decoration: underline; text-underline-offset: 3px;
+}
+.cfilter-empty { padding: 40px 0; text-align: center; color: var(--f-mut); grid-column: 1 / -1; }
+
+/* --- mobile drawer --------------------------------------------------- */
+.filter-drawer__overlay {
+  position: fixed; inset: 0; z-index: 90;
+  background: rgba(0,0,0,.55); backdrop-filter: blur(3px);
+  opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s ease;
+}
+.filter-drawer__overlay.is-open { opacity: 1; visibility: visible; }
+.filter-drawer {
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 91;
+  width: min(380px, 88vw);
+  display: flex; flex-direction: column;
+  background: var(--cp-bg, #0A0A0A);
+  border-right: 1px solid var(--f-bdr);
+  transform: translateX(-100%); transition: transform .3s cubic-bezier(.4,0,.2,1);
+}
+.filter-drawer.is-open { transform: translateX(0); }
+.filter-drawer__header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 18px 20px; flex-shrink: 0;
+  border-bottom: 1px solid var(--f-bdr);
+}
+.filter-drawer__header h2 {
+  margin: 0; font-size: calc(12px * var(--fs-scale, 1));
+  letter-spacing: .16em; text-transform: uppercase; font-weight: 600;
+}
+.filter-drawer__close {
+  background: none; border: 0; cursor: pointer; padding: 4px;
+  color: var(--f-fg); line-height: 0;
+}
+.filter-drawer__body { flex: 1; overflow-y: auto; padding: 4px 20px 20px; }
+.filter-drawer__footer {
+  flex-shrink: 0; padding: 16px 20px;
+  border-top: 1px solid var(--f-bdr);
+  display: flex; gap: 10px;
+}
+.filter-drawer__footer > * { flex: 1; }
+
+/* --- filter count badge on the toolbar button ------------------------ */
+.filter-count {
+  display: inline-grid; place-content: center;
+  min-width: 19px; height: 19px; padding: 0 5px; margin-left: 2px;
+  border-radius: 999px;
+  background: var(--f-acc); color: var(--cp-bg, #0A0A0A);
+  font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums;
+}
+
+/* --- a quiet scrollbar for the panel --------------------------------- */
+.collection-sidebar::-webkit-scrollbar,
+.filter-drawer__body::-webkit-scrollbar { width: 5px; }
+.collection-sidebar::-webkit-scrollbar-track,
+.filter-drawer__body::-webkit-scrollbar-track { background: transparent; }
+.collection-sidebar::-webkit-scrollbar-thumb,
+.filter-drawer__body::-webkit-scrollbar-thumb {
+  background: var(--f-bdr); border-radius: 3px;
+}
+.collection-sidebar::-webkit-scrollbar-thumb:hover,
+.filter-drawer__body::-webkit-scrollbar-thumb:hover { background: var(--f-acc); }
+.collection-sidebar, .filter-drawer__body { scrollbar-width: thin; scrollbar-color: var(--f-bdr) transparent; }
+
+@media (max-width: 989px) {
+  .collection-sidebar { display: none; }
 }

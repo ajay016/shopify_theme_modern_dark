@@ -3028,183 +3028,175 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 /* ======================================================================
    COLLECTION FILTER PANEL
 
-   One stylesheet for the whole filter UI. It replaces four earlier
-   blocks -- roughly 880 lines and 217 rules -- that had accumulated as
-   successive design passes, each overriding part of the last. The
-   panel read as a patchwork because it literally was one.
+   One stylesheet for the whole filter UI, sidebar and mobile drawer alike.
 
-   Rules here cover only classes the markup emits. Ghost selectors from
-   the old blocks (.filter-option, .filter-sidebar, .filter-group__title,
-   .cfilter-swatch, .price-range__labels) were never rendered and are gone.
-
-   Every colour is a scheme token, so the panel follows the active colour
-   scheme exactly like the rest of the page. Local tokens are declared on
-   the panel root so the sidebar and the mobile drawer stay identical.
+   Design notes, because they were asked for and then re-asked for:
+   - The panel is a tinted surface with NO outline. A border made it read
+     as a boxed widget; the tone step alone is enough to separate it.
+   - Headings use the theme's display serif, as the homepage sections do,
+     instead of the tiny tracked-out uppercase this panel used to have.
+   - Body text is 14px at weight 400. The global body weight is 300, which
+     is far too light for small UI labels and was the thin look.
+   - Every colour is a scheme token, so the panel follows the active scheme.
    ====================================================================== */
 
 .collection-sidebar,
 .filter-drawer__body {
   --f-fg:     var(--cp-fg,  var(--cream, #F5F0E8));
-  --f-mut:    var(--cp-mut, rgba(245,240,232,.55));
+  --f-mut:    var(--cp-mut, rgba(245,240,232,.58));
   --f-acc:    var(--cp-acc, var(--gold, #C8A96E));
-  --f-bdr:    var(--cp-bdr, rgba(200,169,110,.20));
-  --f-hover:  var(--cp-hover, rgba(200,169,110,.09));
-  --f-radius: 10px;
+  --f-bdr:    var(--cp-bdr, rgba(200,169,110,.18));
+  --f-rule:   color-mix(in srgb, var(--f-fg) 12%, transparent);
+  --f-hover:  color-mix(in srgb, var(--f-fg) 5%, transparent);
+  --f-sunk:   color-mix(in srgb, var(--f-fg) 7%, transparent);
   color: var(--f-fg);
+  font-family: var(--ff-body);
 }
 
 .collection-sidebar {
-  width: 286px; flex-shrink: 0;
+  width: 290px; flex-shrink: 0;
   align-self: flex-start;
-  position: sticky; top: calc(var(--header-h, 72px) + 18px);
-  max-height: calc(100vh - var(--header-h, 72px) - 36px);
+  position: sticky; top: calc(var(--header-h, 72px) + 20px);
+  max-height: calc(100vh - var(--header-h, 72px) - 40px);
   overflow-y: auto;
-  padding: 20px 18px 22px;
-  background: var(--cp-panel, var(--cp-bg, #0A0A0A));
-  border: 1px solid var(--cp-panel-bdr, var(--f-bdr));
-  border-radius: 14px;
+  padding: 26px 22px 24px;
+  background: var(--cp-panel, transparent);
+  border: 0;
+  border-radius: 16px;
 }
 
 /* --- panel head ------------------------------------------------------ */
 .sidebar-header {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: baseline; justify-content: space-between;
   gap: 12px;
-  padding: 2px 0 13px; margin-bottom: 2px;
-  border-bottom: 1px solid var(--f-bdr);
+  padding: 0 0 18px;
 }
 .sidebar-header__title {
   margin: 0; min-width: 0;
-  display: inline-flex; align-items: center; gap: 9px;
-  overflow-wrap: anywhere;
-  font-size: calc(12px * var(--fs-scale, 1));
-  letter-spacing: .18em; text-transform: uppercase; font-weight: 700;
+  font-family: var(--ff-display);
+  font-size: calc(21px * var(--fs-scale, 1));
+  font-weight: 400; letter-spacing: .01em; line-height: 1.15;
+  text-transform: none;
   color: var(--f-fg);
-}
-/* A short accent rule reads as a section marker without adding chrome. */
-.sidebar-header__title::before {
-  content: ''; width: 16px; height: 2px; flex-shrink: 0;
-  background: var(--f-acc); border-radius: 2px;
 }
 
 /* --- one filter group ------------------------------------------------ */
 .filter-group,
-.cfilter-group { border-bottom: 1px solid var(--f-bdr); }
-.filter-group:last-child,
-.cfilter-group:last-child { border-bottom: 0; }
+.cfilter-group { border-top: 1px solid var(--f-rule); }
+.filter-group:first-of-type,
+.cfilter-group:first-of-type { border-top: 0; }
 
 .filter-group__toggle {
   width: 100%; display: flex; align-items: center; justify-content: space-between;
   gap: 10px;
-  padding: 15px 0 13px;
+  padding: 18px 0 14px;
   background: none; border: 0; cursor: pointer; text-align: left;
-  font-size: calc(11px * var(--fs-scale, 1));
-  letter-spacing: .14em; text-transform: uppercase; font-weight: 600;
+  font-family: var(--ff-body);
+  font-size: calc(12px * var(--fs-scale, 1));
+  font-weight: 600; letter-spacing: .13em; text-transform: uppercase;
   color: var(--f-fg);
   transition: color .18s ease;
 }
 .filter-group__toggle:hover { color: var(--f-acc); }
-.filter-group__toggle svg { width: 13px; height: 13px; flex-shrink: 0; opacity: .6; transition: transform .22s ease; }
+.filter-group__toggle svg {
+  width: 14px; height: 14px; flex-shrink: 0;
+  opacity: .5; transition: transform .22s ease, opacity .18s ease;
+}
+.filter-group__toggle:hover svg { opacity: 1; }
 .filter-group__toggle[aria-expanded="false"] svg { transform: rotate(-90deg); }
 
-.filter-group__body { padding-bottom: 16px; }
+.filter-group__body { padding-bottom: 20px; }
 .filter-group__body.is-collapsed { display: none; }
 
 /* --- checkbox rows --------------------------------------------------- */
 .filter-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
 
 .filter-check {
-  display: grid; grid-template-columns: 17px minmax(0,1fr) auto;
-  align-items: center; gap: 11px;
-  padding: 7px 8px; margin: 0 -8px;
-  border-radius: 8px; cursor: pointer;
-  font-size: calc(13px * var(--fs-scale, 1));
+  display: grid; grid-template-columns: 18px minmax(0,1fr) auto;
+  align-items: center; gap: 12px;
+  padding: 9px 10px; margin: 0 -10px;
+  border-radius: 9px; cursor: pointer;
+  font-size: calc(14px * var(--fs-scale, 1));
+  font-weight: 400; line-height: 1.35;
   color: var(--f-fg);
-  transition: background-color .18s ease;
+  transition: background-color .16s ease;
 }
 .filter-check:hover { background: var(--f-hover); }
 
-/* The global `input` rule sets padding and width:100%; these controls are
-   not text fields, so everything inherited is reset here. */
+/* The global `input` rule sets padding and width:100%; these are not text
+   fields, so the inherited form styling is reset here. */
 .filter-check input[type="checkbox"] {
   appearance: none; -webkit-appearance: none;
-  width: 17px; height: 17px; min-width: 17px; padding: 0; margin: 0;
-  border: 1.5px solid var(--f-bdr); border-radius: 5px;
+  width: 18px; height: 18px; min-width: 18px; padding: 0; margin: 0;
+  border: 1.5px solid var(--f-bdr); border-radius: 6px;
   background: transparent; cursor: pointer;
   display: grid; place-content: center;
   transition: background-color .16s ease, border-color .16s ease;
 }
 .filter-check input[type="checkbox"]::after {
-  content: ''; width: 9px; height: 9px; transform: scale(0);
-  transition: transform .16s ease;
-  background: var(--cp-bg, #0A0A0A);
+  content: ''; width: 10px; height: 10px; transform: scale(0);
+  transition: transform .16s cubic-bezier(.3,1.4,.6,1);
+  background: var(--cp-panel, var(--cp-bg, #0A0A0A));
   clip-path: polygon(14% 48%, 0 62%, 38% 100%, 100% 22%, 86% 8%, 38% 71%);
 }
-.filter-check input[type="checkbox"]:checked {
-  background: var(--f-acc); border-color: var(--f-acc);
-}
+.filter-check input[type="checkbox"]:checked { background: var(--f-acc); border-color: var(--f-acc); }
 .filter-check input[type="checkbox"]:checked::after { transform: scale(1); }
-.filter-check input[type="checkbox"]:focus-visible { outline: 2px solid var(--f-acc); outline-offset: 2px; }
-.filter-check:has(input:checked) { background: var(--f-hover); }
+.filter-check input[type="checkbox"]:focus-visible { outline: 2px solid var(--f-acc); outline-offset: 3px; }
 .filter-check:has(input:checked) > span:not(.filter-count-pill) { font-weight: 600; }
 
 .filter-count-pill {
-  font-size: calc(11px * var(--fs-scale, 1));
+  font-size: calc(12px * var(--fs-scale, 1));
   color: var(--f-mut);
   font-variant-numeric: tabular-nums;
 }
 
-/* --- pills (size, discount, new in, rating, price presets) ----------- */
-.cfilter-pills { display: flex; flex-wrap: wrap; gap: 7px; }
-.cfilter-pills--price { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+/* --- pills ----------------------------------------------------------- */
+.cfilter-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.cfilter-pills--price { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
 .cfilter-pill {
   position: relative;
   display: inline-flex; align-items: center; justify-content: center;
-  min-width: 42px; min-height: 36px; padding: 0 13px;
-  border: 1px solid var(--f-bdr); border-radius: 8px;
-  font-size: calc(12px * var(--fs-scale, 1));
+  min-width: 46px; min-height: 40px; padding: 0 15px;
+  border: 1px solid var(--f-bdr); border-radius: 10px;
+  font-size: calc(13px * var(--fs-scale, 1)); font-weight: 400;
   color: var(--f-fg); cursor: pointer; white-space: nowrap;
   transition: border-color .18s ease, background-color .18s ease, color .18s ease;
 }
 .cfilter-pill input { position: absolute; opacity: 0; width: 0; height: 0; }
-.cfilter-pill:hover { border-color: var(--f-acc); }
+.cfilter-pill:hover { border-color: var(--f-acc); background: var(--f-hover); }
 .cfilter-pill:has(input:checked) {
   background: var(--f-acc); border-color: var(--f-acc);
-  color: var(--cp-bg, #0A0A0A); font-weight: 600;
+  color: var(--cp-panel, var(--cp-bg, #0A0A0A)); font-weight: 600;
 }
 .cfilter-pill:focus-within { outline: 2px solid var(--f-acc); outline-offset: 2px; }
 
-/* --- price -----------------------------------------------------------
-   Markup shape matters here: .cfilter-price__track is the CONTAINER and
-   holds the fill plus BOTH range inputs, and .cfilter-price__range is the
-   input itself, not a wrapper.
+/* --- price ------------------------------------------------------------
+   .cfilter-price__track is the CONTAINER, holding the fill and BOTH range
+   inputs; .cfilter-price__range is the input itself.
    --------------------------------------------------------------------- */
 .cfilter-price,
 .price-range-filter { padding-top: 2px; }
 
-/* Current range, stated plainly above the slider. */
 .cfilter-price__readout {
-  display: flex; align-items: baseline; gap: 7px;
-  font-size: calc(14px * var(--fs-scale, 1));
-  font-variant-numeric: tabular-nums;
-  color: var(--f-fg); font-weight: 600;
-  padding: 2px 0 2px;
+  display: flex; align-items: baseline; gap: 9px;
+  font-family: var(--ff-display);
+  font-size: calc(20px * var(--fs-scale, 1));
+  font-weight: 400; font-variant-numeric: tabular-nums;
+  color: var(--f-fg);
+  padding: 12px 0 0;
 }
-.cfilter-price__dash { color: var(--f-mut); font-weight: 400; }
+.cfilter-price__dash { color: var(--f-mut); font-size: .8em; }
 
-.cfilter-price__track {
-  position: relative;
-  height: 24px; margin: 4px 9px 2px;
-}
-/* The unfilled rail is neutral; only the selected span carries the accent,
-   so the fill actually reads as a selection. */
+.cfilter-price__track { position: relative; height: 22px; margin: 0 11px 0; }
+/* Neutral rail, accent reserved for the selected span. */
 .cfilter-price__track::before {
-  content: ''; position: absolute; top: 50%; left: -9px; right: -9px;
-  height: 4px; transform: translateY(-50%);
-  background: var(--f-bdr); border-radius: 3px;
+  content: ''; position: absolute; top: 50%; left: -11px; right: -11px;
+  height: 5px; transform: translateY(-50%);
+  background: var(--f-sunk); border-radius: 3px;
 }
 .cfilter-price__fill {
-  position: absolute; top: 50%; height: 4px;
+  position: absolute; top: 50%; height: 5px;
   transform: translateY(-50%);
   background: var(--f-acc); border-radius: 3px;
   left: 0; right: 0;
@@ -3212,159 +3204,148 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 
 .cfilter-price__range {
   position: absolute; top: 0; left: 0;
-  width: 100%; height: 24px;
-  margin: 0; padding: 0;
+  width: 100%; height: 22px; margin: 0; padding: 0;
   background: none; border: 0; border-radius: 0;
-  appearance: none; -webkit-appearance: none;
-  pointer-events: none;
+  appearance: none; -webkit-appearance: none; pointer-events: none;
 }
 .cfilter-price__range:focus { outline: none; }
-.cfilter-price__range::-webkit-slider-runnable-track { background: transparent; border: 0; height: 24px; }
-.cfilter-price__range::-moz-range-track { background: transparent; border: 0; height: 24px; }
+.cfilter-price__range::-webkit-slider-runnable-track { background: transparent; border: 0; height: 22px; }
+.cfilter-price__range::-moz-range-track { background: transparent; border: 0; height: 22px; }
 .cfilter-price__range::-webkit-slider-thumb {
   appearance: none; -webkit-appearance: none; pointer-events: auto;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--cp-panel, var(--cp-bg, #0A0A0A));
-  border: 4px solid var(--f-acc);
-  box-shadow: 0 1px 3px rgba(0,0,0,.22);
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--f-acc);
+  border: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,.28), inset 0 0 0 2px var(--cp-panel, #0A0A0A);
   cursor: grab;
 }
 .cfilter-price__range::-webkit-slider-thumb:active { cursor: grabbing; }
 .cfilter-price__range::-moz-range-thumb {
   pointer-events: auto;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--cp-panel, var(--cp-bg, #0A0A0A));
-  border: 4px solid var(--f-acc);
-  box-shadow: 0 1px 3px rgba(0,0,0,.22);
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--f-acc); border: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,.28), inset 0 0 0 2px var(--cp-panel, #0A0A0A);
   cursor: grab;
 }
 
-/* Two labelled fields rather than two unlabelled boxes. */
 .price-range-inputs,
 .cfilter-price__vals {
-  display: grid; grid-template-columns: 1fr auto 1fr;
-  align-items: end; gap: 9px; margin-top: 12px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: end; gap: 10px; margin-top: 16px;
 }
-.cfilter-price__field { display: grid; gap: 4px; min-width: 0; }
+/* The separator belongs to the readout, not between two labelled fields. */
+.price-range-inputs > .cfilter-price__dash { display: none; }
+.cfilter-price__field { display: grid; gap: 6px; min-width: 0; }
 .cfilter-price__field > span {
   font-size: calc(10px * var(--fs-scale, 1));
-  letter-spacing: .1em; text-transform: uppercase;
+  letter-spacing: .14em; text-transform: uppercase;
   color: var(--f-mut);
-  /* A long label must not widen the grid column and burst the panel. */
   min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .price-range-inputs input[type="number"],
 .cfilter-price__vals input {
   width: 100%; min-width: 0;
-  padding: 9px 10px; margin: 0;
-  border: 1px solid var(--f-bdr); border-radius: 8px;
-  background: var(--cp-bg, transparent); color: var(--f-fg);
-  font-size: calc(13px * var(--fs-scale, 1));
+  padding: 11px 12px; margin: 0;
+  border: 1px solid transparent; border-radius: 10px;
+  background: var(--f-sunk); color: var(--f-fg);
+  font-family: var(--ff-body);
+  font-size: calc(14px * var(--fs-scale, 1));
   text-align: center; font-variant-numeric: tabular-nums;
-  transition: border-color .18s ease;
+  transition: border-color .18s ease, background-color .18s ease;
 }
 .price-range-inputs input[type="number"]:focus,
 .cfilter-price__vals input:focus { outline: none; border-color: var(--f-acc); }
-/* Spinners crowd a narrow field. */
 .price-range-inputs input[type="number"]::-webkit-outer-spin-button,
-.price-range-inputs input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none; margin: 0;
-}
+.price-range-inputs input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .price-range-inputs input[type="number"] { -moz-appearance: textfield; }
-.price-range-inputs > .cfilter-price__dash { padding-bottom: 10px; }
 
 /* --- colour swatches ------------------------------------------------- */
-.filter-swatches { padding-top: 4px; }
+.filter-swatches { padding-top: 2px; }
 .filter-swatch { position: relative; cursor: pointer; }
 .filter-swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
 
 .filter-swatch__dot {
   display: block; flex-shrink: 0;
-  width: 21px; height: 21px; border-radius: 50%;
+  width: 24px; height: 24px; border-radius: 50%;
   background-size: cover; background-position: center;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.18);
-  border: 1px solid var(--f-bdr);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.14);
   transition: box-shadow .18s ease, transform .18s ease;
 }
 .filter-swatch__name {
-  font-size: calc(13px * var(--fs-scale, 1));
-  color: var(--f-fg); line-height: 1.3;
+  font-size: calc(14px * var(--fs-scale, 1));
+  font-weight: 400; color: var(--f-fg); line-height: 1.35;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .filter-swatch__count {
-  font-size: calc(11px * var(--fs-scale, 1));
+  font-size: calc(12px * var(--fs-scale, 1));
   color: var(--f-mut); font-variant-numeric: tabular-nums;
 }
 
 .filter-swatches--list { display: flex; flex-direction: column; gap: 1px; }
 .filter-swatches--list .filter-swatch {
-  display: grid; grid-template-columns: 21px minmax(0,1fr) auto;
-  align-items: center; gap: 11px;
-  padding: 7px 8px; margin: 0 -8px;
-  border-radius: 8px;
-  transition: background-color .18s ease;
+  display: grid; grid-template-columns: 24px minmax(0,1fr) auto;
+  align-items: center; gap: 12px;
+  padding: 8px 10px; margin: 0 -10px;
+  border-radius: 9px;
+  transition: background-color .16s ease;
 }
 .filter-swatches--list .filter-swatch:hover { background: var(--f-hover); }
-.filter-swatches--list .filter-swatch:has(input:checked) { background: var(--f-hover); }
 .filter-swatches--list .filter-swatch:has(input:checked) .filter-swatch__name { font-weight: 600; }
 
-.filter-swatches--chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.filter-swatches--chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .filter-swatches--chips .filter-swatch {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 5px 12px 5px 6px;
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 6px 14px 6px 7px;
   border: 1px solid var(--f-bdr); border-radius: 999px;
   transition: border-color .18s ease, background-color .18s ease;
 }
-.filter-swatches--chips .filter-swatch__dot { width: 17px; height: 17px; }
+.filter-swatches--chips .filter-swatch__dot { width: 18px; height: 18px; }
 .filter-swatches--chips .filter-swatch:hover { border-color: var(--f-acc); }
-.filter-swatches--chips .filter-swatch:has(input:checked) {
-  border-color: var(--f-acc); background: var(--f-hover);
-}
+.filter-swatches--chips .filter-swatch:has(input:checked) { border-color: var(--f-acc); background: var(--f-hover); }
 .filter-swatches--chips .filter-swatch:has(input:checked) .filter-swatch__name { font-weight: 600; }
 
-.filter-swatches--dots { display: flex; flex-wrap: wrap; gap: 9px; }
+.filter-swatches--dots { display: flex; flex-wrap: wrap; gap: 10px; }
 .filter-swatches--dots .filter-swatch { line-height: 0; }
-.filter-swatches--dots .filter-swatch__dot { width: 24px; height: 24px; }
+.filter-swatches--dots .filter-swatch__dot { width: 26px; height: 26px; }
 
-.filter-swatch:hover .filter-swatch__dot { transform: scale(1.07); }
+.filter-swatch:hover .filter-swatch__dot { transform: scale(1.06); }
 .filter-swatch input:checked + .filter-swatch__dot {
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.18),
-              0 0 0 2px var(--cp-bg, #0A0A0A),
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.14),
+              0 0 0 2px var(--cp-panel, #0A0A0A),
               0 0 0 4px var(--f-acc);
-  border-color: transparent;
 }
-.filter-swatch input:focus-visible + .filter-swatch__dot { outline: 2px solid var(--f-acc); outline-offset: 3px; }
+.filter-swatch input:focus-visible + .filter-swatch__dot { outline: 2px solid var(--f-acc); outline-offset: 4px; }
 
 /* --- active filter chips --------------------------------------------- */
-.active-filters { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 0 14px; }
+.active-filters { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 0 16px; }
 .filter-chip {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 6px 11px;
-  border: 1px solid var(--f-bdr); border-radius: 999px;
-  background: var(--f-hover);
-  font-size: calc(12px * var(--fs-scale, 1));
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 13px;
+  border: 0; border-radius: 999px;
+  background: var(--f-sunk);
+  font-size: calc(13px * var(--fs-scale, 1));
   color: var(--f-fg); cursor: pointer;
-  transition: border-color .18s ease;
+  transition: background-color .18s ease;
 }
-.filter-chip:hover { border-color: var(--f-acc); }
-.filter-chip--active { border-color: var(--f-acc); }
-.filter-chip--clear { background: none; color: var(--f-mut); }
-.filter-chip--clear:hover { color: var(--f-acc); }
+.filter-chip:hover { background: var(--f-hover); }
+.filter-chip--active { background: var(--f-acc); color: var(--cp-panel, #0A0A0A); }
+.filter-chip--clear { background: none; color: var(--f-mut); text-decoration: underline; text-underline-offset: 3px; }
+.filter-chip--clear:hover { color: var(--f-acc); background: none; }
 
 /* --- panel footer ---------------------------------------------------- */
 .cfilter-foot {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 10px; padding-top: 16px; margin-top: 4px;
-  border-top: 1px solid var(--f-bdr);
+  gap: 10px; padding-top: 18px; margin-top: 4px;
+  border-top: 1px solid var(--f-rule);
 }
-.cfilter-count { font-size: calc(12px * var(--fs-scale, 1)); color: var(--f-mut); }
+.cfilter-count { font-size: calc(13px * var(--fs-scale, 1)); color: var(--f-mut); }
 .cfilter-clear {
   background: none; border: 0; cursor: pointer; padding: 4px 0;
   font-size: calc(12px * var(--fs-scale, 1));
-  letter-spacing: .08em; text-transform: uppercase;
-  color: var(--f-acc); text-decoration: underline; text-underline-offset: 3px;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--f-acc); text-decoration: underline; text-underline-offset: 4px;
 }
-.cfilter-empty { padding: 40px 0; text-align: center; color: var(--f-mut); grid-column: 1 / -1; }
+.cfilter-empty { padding: 44px 0; text-align: center; color: var(--f-mut); grid-column: 1 / -1; }
 
 /* --- mobile drawer --------------------------------------------------- */
 .filter-drawer__overlay {
@@ -3375,30 +3356,26 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .filter-drawer__overlay.is-open { opacity: 1; visibility: visible; }
 .filter-drawer {
   position: fixed; top: 0; left: 0; bottom: 0; z-index: 91;
-  width: min(380px, 88vw);
+  width: min(390px, 90vw);
   display: flex; flex-direction: column;
-  background: var(--cp-bg, #0A0A0A);
-  border-right: 1px solid var(--f-bdr);
+  background: var(--cp-panel, var(--cp-bg, #0A0A0A));
   transform: translateX(-100%); transition: transform .3s cubic-bezier(.4,0,.2,1);
 }
 .filter-drawer.is-open { transform: translateX(0); }
 .filter-drawer__header {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; padding: 18px 20px; flex-shrink: 0;
-  border-bottom: 1px solid var(--f-bdr);
+  gap: 12px; padding: 20px 22px 16px; flex-shrink: 0;
 }
 .filter-drawer__header h2 {
-  margin: 0; font-size: calc(12px * var(--fs-scale, 1));
-  letter-spacing: .16em; text-transform: uppercase; font-weight: 600;
+  margin: 0; font-family: var(--ff-display);
+  font-size: calc(21px * var(--fs-scale, 1)); font-weight: 400;
+  text-transform: none; letter-spacing: .01em;
 }
-.filter-drawer__close {
-  background: none; border: 0; cursor: pointer; padding: 4px;
-  color: var(--f-fg); line-height: 0;
-}
-.filter-drawer__body { flex: 1; overflow-y: auto; padding: 4px 20px 20px; }
+.filter-drawer__close { background: none; border: 0; cursor: pointer; padding: 4px; color: var(--f-fg); line-height: 0; }
+.filter-drawer__body { flex: 1; overflow-y: auto; padding: 0 22px 22px; }
 .filter-drawer__footer {
-  flex-shrink: 0; padding: 16px 20px;
-  border-top: 1px solid var(--f-bdr);
+  flex-shrink: 0; padding: 16px 22px;
+  border-top: 1px solid var(--f-rule);
   display: flex; gap: 10px;
 }
 .filter-drawer__footer > * { flex: 1; }
@@ -3406,24 +3383,22 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 /* --- filter count badge on the toolbar button ------------------------ */
 .filter-count {
   display: inline-grid; place-content: center;
-  min-width: 19px; height: 19px; padding: 0 5px; margin-left: 2px;
+  min-width: 20px; height: 20px; padding: 0 6px; margin-left: 3px;
   border-radius: 999px;
   background: var(--f-acc); color: var(--cp-bg, #0A0A0A);
   font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums;
 }
 
-/* --- a quiet scrollbar for the panel --------------------------------- */
+/* --- a quiet scrollbar ------------------------------------------------ */
 .collection-sidebar::-webkit-scrollbar,
-.filter-drawer__body::-webkit-scrollbar { width: 5px; }
+.filter-drawer__body::-webkit-scrollbar { width: 4px; }
 .collection-sidebar::-webkit-scrollbar-track,
 .filter-drawer__body::-webkit-scrollbar-track { background: transparent; }
 .collection-sidebar::-webkit-scrollbar-thumb,
-.filter-drawer__body::-webkit-scrollbar-thumb {
-  background: var(--f-bdr); border-radius: 3px;
-}
+.filter-drawer__body::-webkit-scrollbar-thumb { background: var(--f-rule); border-radius: 2px; }
 .collection-sidebar::-webkit-scrollbar-thumb:hover,
 .filter-drawer__body::-webkit-scrollbar-thumb:hover { background: var(--f-acc); }
-.collection-sidebar, .filter-drawer__body { scrollbar-width: thin; scrollbar-color: var(--f-bdr) transparent; }
+.collection-sidebar, .filter-drawer__body { scrollbar-width: thin; scrollbar-color: var(--f-rule) transparent; }
 
 @media (max-width: 989px) {
   .collection-sidebar { display: none; }

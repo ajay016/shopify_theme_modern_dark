@@ -24,7 +24,10 @@ body {
   font-family: var(--ff-body);
   font-size: var(--fs-base, 14px);
   font-weight: 300;
-  overflow-x: hidden;
+  /* `clip`, not `hidden`. overflow-x:hidden makes the body a scroll
+     container, which silently disables position:sticky everywhere inside
+     it -- that is why the filter sidebar scrolled away with the page. */
+  overflow-x: clip;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -1679,21 +1682,25 @@ body.has-announcement .site-header { top: 44px; }
    ============================================================ */
 .collection-layout {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 288px 1fr;
+  gap: 40px;
+  align-items: start;
 }
+/* The sidebar is always first in the DOM so it reaches screen readers and
+   mobile before the grid. A right-hand sidebar is a visual reorder only. */
+.collection-layout--sidebar-right .collection-sidebar { order: 2; }
 
 .collection-layout--no-sidebar { grid-template-columns: 1fr; }
-.collection-layout--right-sidebar { grid-template-columns: 1fr 240px; }
 
 /* The section emits `--sidebar-left` / `--sidebar-right`; the rules above
    were written for a different naming and so never matched, leaving every
    collection on the default left-hand grid regardless of the setting. */
-.collection-layout--sidebar-left  { grid-template-columns: 264px 1fr; }
-.collection-layout--sidebar-right { grid-template-columns: 1fr 264px; }
+.collection-layout--sidebar-left  { grid-template-columns: 288px 1fr; }
+.collection-layout--sidebar-right { grid-template-columns: 1fr 288px; }
 .collection-layout:not(.collection-layout--has-sidebar) { grid-template-columns: 1fr; }
 @media (max-width: 1000px) {
   .collection-layout--sidebar-left,
-  .collection-layout--sidebar-right { grid-template-columns: 1fr; }
+  .collection-layout--sidebar-right { grid-template-columns: 1fr; gap: 0; }
 }
 
 
@@ -2172,28 +2179,10 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 /* ============================================================
    Pagination
    ============================================================ */
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 60px 0;
-}
-.pagination__item {
-  width: 40px; height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border, rgba(200,169,110,.18));
-  font-size: calc(12px * var(--fs-scale, 1));
-  color: var(--cream, #F5F0E8);
-  opacity: 0.65;
-  transition: all 0.25s;
-}
-.pagination__item:hover,
-.pagination__item.is-current { border-color: var(--gold, #C8A96E); color: var(--gold, #C8A96E); }
-.pagination__item.is-current { background: var(--gold, #C8A96E); color: var(--black, #0A0A0A); }
-.pagination__dots { color: var(--muted, rgba(245,240,232,.62)); }
+/* The older .pagination block lived here. It stacked 60px of padding on
+   top of the block below, and styled a .is-current modifier no template
+   emits. Removed -- see the single definition further down. */
+.pagination__dots { color: var(--cp-mut, rgba(245,240,232,.62)); }
 
 
 /* ============================================================
@@ -2622,9 +2611,8 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .pagination {
   display: flex; align-items: center; justify-content: center;
   flex-wrap: wrap; gap: 6px;
-  margin-top: clamp(36px,6vh,64px);
-  padding-top: clamp(22px,3vh,32px);
-  border-top: 1px solid var(--cp-bdr);
+  margin: clamp(24px,3vh,34px) 0 clamp(28px,4vh,44px);
+  padding: 0;
 }
 .pagination__item {
   display: inline-grid; place-items: center;
@@ -3054,8 +3042,8 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 }
 
 .collection-sidebar {
-  width: 290px; flex-shrink: 0;
-  align-self: flex-start;
+  width: 100%; flex-shrink: 0;
+  align-self: start;
   position: sticky; top: calc(var(--header-h, 72px) + 20px);
   max-height: calc(100vh - var(--header-h, 72px) - 40px);
   overflow-y: auto;
@@ -3074,8 +3062,8 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .sidebar-header__title {
   margin: 0; min-width: 0;
   font-family: var(--ff-display);
-  font-size: calc(19px * var(--fs-scale, 1));
-  font-weight: 400; letter-spacing: .01em; line-height: 1.15;
+  font-size: calc(16px * var(--fs-scale, 1));
+  font-weight: 500; letter-spacing: .02em; line-height: 1.15;
   text-transform: none;
   color: var(--f-fg);
 }
@@ -3092,8 +3080,8 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   padding: 13px 0 9px;
   background: none; border: 0; cursor: pointer; text-align: left;
   font-family: var(--ff-body);
-  font-size: calc(12px * var(--fs-scale, 1));
-  font-weight: 600; letter-spacing: .13em; text-transform: uppercase;
+  font-size: calc(10.5px * var(--fs-scale, 1));
+  font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
   color: var(--f-fg);
   transition: color .18s ease;
 }
@@ -3109,7 +3097,26 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .filter-group__body.is-collapsed { display: none; }
 
 /* --- checkbox rows --------------------------------------------------- */
-.filter-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+/* A group with thirty colours must not push every group below it off the
+   panel. Long lists scroll inside themselves; short ones are unaffected
+   because max-height only bites once the content exceeds it. */
+.filter-list,
+.filter-swatches--list {
+  max-height: 232px; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: var(--f-rule) transparent;
+  /* room for the scrollbar so it never sits on top of the counts */
+  padding-right: 4px; margin-right: -4px;
+}
+.filter-list::-webkit-scrollbar,
+.filter-swatches--list::-webkit-scrollbar { width: 4px; }
+.filter-list::-webkit-scrollbar-track,
+.filter-swatches--list::-webkit-scrollbar-track { background: transparent; }
+.filter-list::-webkit-scrollbar-thumb,
+.filter-swatches--list::-webkit-scrollbar-thumb { background: var(--f-rule); border-radius: 2px; }
+.filter-list::-webkit-scrollbar-thumb:hover,
+.filter-swatches--list::-webkit-scrollbar-thumb:hover { background: var(--f-acc); }
+
+.filter-list { list-style: none; margin: 0; padding: 0 4px 0 0; display: grid; gap: 0; }
 
 /* Flex, not grid. A 1fr label column stretches to fill the row and shoves
    the count against the panel edge, where the scrollbar half hides it. In
@@ -3119,7 +3126,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   display: flex; align-items: center; gap: 9px;
   padding: 5px 8px; margin: 0 -8px;
   border-radius: 7px; cursor: pointer;
-  font-size: calc(14px * var(--fs-scale, 1));
+  font-size: calc(12.5px * var(--fs-scale, 1));
   font-weight: 400; line-height: 1.3;
   color: var(--f-fg);
   transition: background-color .16s ease;
@@ -3134,14 +3141,14 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
    fields, so the inherited form styling is reset here. */
 .filter-check input[type="checkbox"] {
   appearance: none; -webkit-appearance: none;
-  width: 18px; height: 18px; min-width: 18px; padding: 0; margin: 0;
-  border: 1.5px solid var(--f-bdr); border-radius: 6px;
+  width: 15px; height: 15px; min-width: 15px; padding: 0; margin: 0;
+  border: 1.5px solid var(--f-bdr); border-radius: 4px;
   background: transparent; cursor: pointer;
   display: grid; place-content: center;
   transition: background-color .16s ease, border-color .16s ease;
 }
 .filter-check input[type="checkbox"]::after {
-  content: ''; width: 10px; height: 10px; transform: scale(0);
+  content: ''; width: 8px; height: 8px; transform: scale(0);
   transition: transform .16s cubic-bezier(.3,1.4,.6,1);
   background: var(--cp-panel, var(--cp-bg, #0A0A0A));
   clip-path: polygon(14% 48%, 0 62%, 38% 100%, 100% 22%, 86% 8%, 38% 71%);
@@ -3152,7 +3159,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .filter-check:has(input:checked) > span:not(.filter-count-pill) { font-weight: 600; }
 
 .filter-count-pill {
-  font-size: calc(12px * var(--fs-scale, 1));
+  font-size: calc(11px * var(--fs-scale, 1));
   color: var(--f-mut);
   font-variant-numeric: tabular-nums;
 }
@@ -3164,9 +3171,9 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .cfilter-pill {
   position: relative;
   display: inline-flex; align-items: center; justify-content: center;
-  min-width: 46px; min-height: 40px; padding: 0 15px;
+  min-width: 40px; min-height: 34px; padding: 0 12px;
   border: 1px solid var(--f-bdr); border-radius: 10px;
-  font-size: calc(13px * var(--fs-scale, 1)); font-weight: 400;
+  font-size: calc(12px * var(--fs-scale, 1)); font-weight: 400;
   color: var(--f-fg); cursor: pointer; white-space: nowrap;
   transition: border-color .18s ease, background-color .18s ease, color .18s ease;
 }
@@ -3188,14 +3195,14 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .cfilter-price__readout {
   display: flex; align-items: baseline; gap: 9px;
   font-family: var(--ff-display);
-  font-size: calc(20px * var(--fs-scale, 1));
-  font-weight: 400; font-variant-numeric: tabular-nums;
+  font-size: calc(16px * var(--fs-scale, 1));
+  font-weight: 500; font-variant-numeric: tabular-nums;
   color: var(--f-fg);
   padding: 9px 0 0;
 }
 .cfilter-price__dash { color: var(--f-mut); font-size: .8em; }
 
-.cfilter-price__track { position: relative; height: 22px; margin: 0 11px 0; }
+.cfilter-price__track { position: relative; height: 18px; margin: 0 9px 0; }
 /* Neutral rail, accent reserved for the selected span. */
 .cfilter-price__track::before {
   content: ''; position: absolute; top: 50%; left: -11px; right: -11px;
@@ -3220,7 +3227,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .cfilter-price__range::-moz-range-track { background: transparent; border: 0; height: 22px; }
 .cfilter-price__range::-webkit-slider-thumb {
   appearance: none; -webkit-appearance: none; pointer-events: auto;
-  width: 22px; height: 22px; border-radius: 50%;
+  width: 18px; height: 18px; border-radius: 50%;
   background: var(--f-acc);
   border: 0;
   box-shadow: 0 2px 6px rgba(0,0,0,.28), inset 0 0 0 2px var(--cp-panel, #0A0A0A);
@@ -3229,7 +3236,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .cfilter-price__range::-webkit-slider-thumb:active { cursor: grabbing; }
 .cfilter-price__range::-moz-range-thumb {
   pointer-events: auto;
-  width: 22px; height: 22px; border-radius: 50%;
+  width: 18px; height: 18px; border-radius: 50%;
   background: var(--f-acc); border: 0;
   box-shadow: 0 2px 6px rgba(0,0,0,.28), inset 0 0 0 2px var(--cp-panel, #0A0A0A);
   cursor: grab;
@@ -3252,11 +3259,11 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .price-range-inputs input[type="number"],
 .cfilter-price__vals input {
   width: 100%; min-width: 0;
-  padding: 9px 10px; margin: 0;
+  padding: 7px 9px; margin: 0;
   border: 1px solid transparent; border-radius: 8px;
   background: var(--f-sunk); color: var(--f-fg);
   font-family: var(--ff-body);
-  font-size: calc(14px * var(--fs-scale, 1));
+  font-size: calc(12.5px * var(--fs-scale, 1));
   text-align: center; font-variant-numeric: tabular-nums;
   transition: border-color .18s ease, background-color .18s ease;
 }
@@ -3273,18 +3280,18 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 
 .filter-swatch__dot {
   display: block; flex-shrink: 0;
-  width: 24px; height: 24px; border-radius: 50%;
+  width: 19px; height: 19px; border-radius: 50%;
   background-size: cover; background-position: center;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.14);
   transition: box-shadow .18s ease, transform .18s ease;
 }
 .filter-swatch__name {
-  font-size: calc(14px * var(--fs-scale, 1));
+  font-size: calc(12.5px * var(--fs-scale, 1));
   font-weight: 400; color: var(--f-fg); line-height: 1.35;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .filter-swatch__count {
-  font-size: calc(12px * var(--fs-scale, 1));
+  font-size: calc(11px * var(--fs-scale, 1));
   color: var(--f-mut); font-variant-numeric: tabular-nums;
 }
 
@@ -3410,3 +3417,24 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 @media (max-width: 989px) {
   .collection-sidebar { display: none; }
 }
+
+
+/* ----------------------------------------------------------------------
+   Collection title styles carried over from the section's inline <style>.
+
+   That block redefined the entire filter UI -- sidebar, header, groups,
+   checkboxes, chips, drawer -- and a section's styles land in the page
+   AFTER theme.css, so it silently overrode every rule written here.
+
+   `.filter-count-pill { margin-left: auto }` in that block is why the
+   counts kept returning to the panel edge after being fixed twice, and its
+   `.collection-sidebar` carried no background, which is why the panel had
+   no surface on the live page while rendering correctly in isolation.
+
+   65 of its 69 selectors duplicated rules already in this file. These did
+   not, so they live here now and the block is gone.
+   ---------------------------------------------------------------------- */
+.collection-title--style-1 { padding-top: 56px; }
+.collection-title--style-4 .collection-title__centered { text-align: center; padding-top: 56px; }
+.collection-title--style-5 .collection-title__split { padding-top: 32px; }
+.collection-title--style-5 .container { display: flex; align-items: baseline; justify-content: space-between; }

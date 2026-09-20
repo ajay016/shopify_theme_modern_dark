@@ -188,3 +188,40 @@ and ellipsis. The label takes only the width it needs, the count sits
 directly after it, and the free space trails both.
 
 Applies to `.filter-check` and `.filter-swatches--list .filter-swatch`.
+
+---
+
+## Root cause of "your changes did nothing": a section-level `<style>` block
+
+`sections/main-collection.liquid` carried a 120-line inline `<style>` block
+that redefined the entire filter UI: `.collection-sidebar`, `.sidebar-header`,
+`.filter-group`, `.filter-check`, `.filter-count-pill`, `.filter-chip`,
+`.filter-drawer`, `.collection-layout`.
+
+A section's styles are emitted into the page **after** `theme.css`, so that
+block won every conflict. Editing `theme.css` genuinely changed nothing on
+the live page for any of those selectors.
+
+It accounts for several bugs reported as "you didn't fix it":
+
+| Reported | Line in the block |
+|---|---|
+| Counts pinned to the panel edge | `.filter-count-pill { margin-left: auto }` |
+| Panel had no surface | `.collection-sidebar` with no `background` |
+| Heading stayed tiny uppercase | `.sidebar-header__title { font-size: 11px; text-transform: uppercase }` |
+| Borders between groups returned | `.filter-group { border-bottom: ... }` |
+
+**Why screenshots did not catch it:** the harness extracted only the
+`<aside>` from the rendered section, so the `<style>` block was never in the
+page under test. The panel rendered correctly in isolation and wrongly on
+the store. `scripts/render-check.py` and the preview harness now render the
+**whole** section output, which is the only way an override like this is
+visible.
+
+65 of the block's 69 selectors duplicated rules already in `theme.css`. The
+four that did not (collection title styles) were moved there, and the block
+is gone.
+
+**Rule going forward:** collection styling lives in `theme.css` only. If a
+rule must be section-scoped, it needs a comment saying why, because anything
+there silently outranks the stylesheet.

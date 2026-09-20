@@ -603,9 +603,15 @@
 
     function renderQV(p, productUrl, closeQV) {
       // Image URLs — Shopify CDN format
-      const allImages = p.images.map(src =>
-        'https:' + src.replace(/^https?:/, '').replace(/(\.\w+)(\?.*)?$/, '_800x$1')
-      );
+      // The card embeds URLs already sized by Liquid's image_url filter, which
+      // returns the modern CDN form: .../file.jpg?v=123&width=800. The previous
+      // code rewrote them to the legacy _800x.jpg filename convention and threw
+      // the query string away, producing a path that does not exist on any
+      // recent upload — so every quick-view image 404'd. Only the protocol needs
+      // normalising; the URL is already correct.
+      const allImages = p.images
+        .filter(Boolean)
+        .map(src => (src.startsWith('//') ? 'https:' + src : src));
       const mainSrc = allImages[0] || '';
 
       // Thumbnails
@@ -845,6 +851,37 @@
       });
     });
 
+    // Shopify's own filters are plain links expressed as data-filter-url /
+    // data-filter-remove on each input. Nothing was listening to them, so every
+    // native filter checkbox and swatch was inert — ticking one did nothing at
+    // all. Navigating to the URL Shopify supplies is the whole mechanism.
+    document.addEventListener('change', e => {
+      const input = e.target.closest('input[data-filter-url], input[data-filter-remove]');
+      if (!input) return;
+      const url = input.checked ? input.dataset.filterUrl : input.dataset.filterRemove;
+      if (!url) return;
+      const panel = input.closest('.collection-sidebar, .filter-drawer, .dropdown-filter__panel');
+      if (panel) panel.style.pointerEvents = 'none';
+      window.location.href = url;
+    });
+
+    // The native price range submits on change rather than per keystroke.
+    document.querySelectorAll('.price-range-inputs input').forEach(inp => {
+      inp.addEventListener('change', () => {
+        const row = inp.closest('.price-range-filter');
+        if (!row) return;
+        const [min, max] = row.querySelectorAll('input');
+        const url = new URL(window.location.href);
+        if (min && min.name) {
+          min.value ? url.searchParams.set(min.name, min.value) : url.searchParams.delete(min.name);
+        }
+        if (max && max.name) {
+          max.value ? url.searchParams.set(max.name, max.value) : url.searchParams.delete(max.name);
+        }
+        window.location.href = url.toString();
+      });
+    });
+
     // Chip toggle
     document.querySelectorAll('.filter-chip[data-filter]').forEach(chip => {
       chip.addEventListener('click', () => {
@@ -907,12 +944,34 @@
       card.querySelectorAll('.pcard__swatch').forEach(s => s.classList.remove('is-active'));
     }, true);
 
-    // Clicking a swatch goes to the product rather than only previewing it.
+    // Clicking a swatch selects that colour on the card — it swaps the image
+    // and keeps it swapped, rather than navigating away. Leaving the card no
+    // longer reverts a colour the shopper chose deliberately.
     document.addEventListener('click', e => {
       const sw = e.target.closest('.pcard__swatch');
       if (!sw) return;
-      const link = sw.closest('.pcard')?.querySelector('.pcard__name a');
-      if (link) window.location.href = link.getAttribute('href');
+      e.preventDefault();
+      const card = sw.closest('.pcard');
+      const img = card && mainImage(card);
+      if (!img) return;
+
+      if (sw.dataset.swatchImage) {
+        img.src = sw.dataset.swatchImage;
+        img.removeAttribute('srcset');
+        // This is now the card's resting image, not a hover preview.
+        card.dataset.swatchOriginal = sw.dataset.swatchImage;
+      }
+      card.querySelectorAll('.pcard__swatch').forEach(s => s.classList.toggle('is-selected', s === sw));
+      card.querySelectorAll('.pcard__swatch').forEach(s => s.setAttribute('aria-pressed', s === sw ? 'true' : 'false'));
+
+      // Point the card's links at that variant so the choice survives the click.
+      if (sw.dataset.swatchVariant) {
+        card.querySelectorAll('a[href*="/products/"]').forEach(a => {
+          const u = new URL(a.getAttribute('href'), window.location.origin);
+          u.searchParams.set('variant', sw.dataset.swatchVariant);
+          a.setAttribute('href', u.pathname + u.search);
+        });
+      }
     });
   }
 

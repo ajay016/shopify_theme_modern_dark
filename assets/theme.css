@@ -3726,3 +3726,27 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   padding-right: 14px;
   scrollbar-gutter: stable;
 }
+
+/* Native Shopify colour filters ship swatch data; rendered as swatches now. */
+.filter-swatches { display: flex; flex-wrap: wrap; gap: 10px; padding-top: 4px; }
+.filter-swatch { position: relative; cursor: pointer; line-height: 0; }
+.filter-swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.filter-swatch__dot {
+  display: block; width: 24px; height: 24px; border-radius: 50%;
+  background-size: cover; background-position: center;
+  border: 1px solid rgba(128,128,128,.35);
+  transition: box-shadow .18s ease, transform .18s ease;
+}
+.filter-swatch:hover .filter-swatch__dot { transform: scale(1.08); }
+.filter-swatch input:checked + .filter-swatch__dot,
+.filter-swatch.is-active .filter-swatch__dot {
+  box-shadow: 0 0 0 1px var(--cp-bg, #0A0A0A), 0 0 0 2px var(--cp-fg, #F5F0E8);
+  border-color: transparent;
+}
+.filter-swatch input:focus-visible + .filter-swatch__dot { outline: 2px solid var(--cp-acc, #C8A96E); outline-offset: 3px; }
+
+/* A chosen card swatch stays marked; hover preview is a lighter state. */
+.pcard__swatch.is-selected {
+  transform: scale(1.18);
+  box-shadow: 0 0 0 1px var(--pc-bg, transparent), 0 0 0 2px var(--pc-acc, #C8A96E);
+}

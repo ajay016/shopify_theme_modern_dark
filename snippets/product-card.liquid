@@ -474,6 +474,8 @@
                   title="{{ val | escape }}"
                   aria-label="{{ val | escape }}"
                   {% if sw_variant and sw_variant.image %}data-swatch-image="{{ sw_variant.image | image_url: width: 700 }}"{% endif %}
+                  {% if sw_variant %}data-swatch-variant="{{ sw_variant.id }}"{% endif %}
+                  aria-pressed="false"
                 ></button>
               {%- endfor -%}
               {%- if opt.values.size > 6 -%}

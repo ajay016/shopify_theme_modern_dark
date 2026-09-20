@@ -229,21 +229,52 @@
               <div class="filter-group__body{% unless group_open %} is-collapsed{% endunless %}">
                 {%- case filter.type -%}
                   {%- when 'list' -%}
-                    <ul class="filter-list">
-                      {%- for value in filter.values -%}
-                        <li>
-                          <label class="filter-check">
+                    {%- comment -%}
+                      Shopify ships swatch data on colour filters — value.swatch
+                      carries either a colour or an uploaded image. The previous
+                      markup ignored it and drew a checkbox, so a Colour filter
+                      rendered as a column of empty boxes. When a swatch exists
+                      the value becomes a swatch; otherwise it stays a checkbox.
+                    {%- endcomment -%}
+                    {%- assign is_swatch_group = false -%}
+                    {%- for value in filter.values -%}
+                      {%- if value.swatch != blank -%}{%- assign is_swatch_group = true -%}{%- break -%}{%- endif -%}
+                    {%- endfor -%}
+
+                    {%- if is_swatch_group -%}
+                      <div class="filter-swatches">
+                        {%- for value in filter.values -%}
+                          <label class="filter-swatch{% if value.active %} is-active{% endif %}" title="{{ value.label }} ({{ value.count }})">
                             <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
                               {% if value.active %}checked{% endif %}
                               data-filter-url="{{ value.url_to_add }}"
                               data-filter-remove="{{ value.url_to_remove }}"
                             >
-                            <span>{{ value.label }}</span>
-                            <span class="filter-count-pill">{{ value.count }}</span>
+                            <span class="filter-swatch__dot"
+                              {% if value.swatch.image %}style="background-image:url({{ value.swatch.image | image_url: width: 80 }});"
+                              {% else %}style="background-color:{{ value.swatch.color | default: value.label | downcase | replace: ' ', '' }};"{% endif %}
+                              aria-hidden="true"></span>
+                            <span class="visually-hidden">{{ value.label }}</span>
                           </label>
-                        </li>
-                      {%- endfor -%}
-                    </ul>
+                        {%- endfor -%}
+                      </div>
+                    {%- else -%}
+                      <ul class="filter-list">
+                        {%- for value in filter.values -%}
+                          <li>
+                            <label class="filter-check">
+                              <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
+                                {% if value.active %}checked{% endif %}
+                                data-filter-url="{{ value.url_to_add }}"
+                                data-filter-remove="{{ value.url_to_remove }}"
+                              >
+                              <span>{{ value.label }}</span>
+                              <span class="filter-count-pill">{{ value.count }}</span>
+                            </label>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    {%- endif -%}
                   {%- when 'price_range' -%}
                     <div class="price-range-filter">
                       <div class="price-range-slider" data-price-range

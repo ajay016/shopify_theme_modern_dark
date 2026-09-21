@@ -107,7 +107,7 @@
 
   <div class="cfilter-group" data-cfilter-group>
     <button class="filter-group__toggle" type="button" aria-expanded="true">
-      Availability {%- render 'icon-chevron-down' -%}
+      Availability <span class="fgrp-pm" aria-hidden="true"></span>
     </button>
     <div class="filter-group__body">
       <ul class="filter-list">
@@ -134,7 +134,7 @@
   {%- if price_max > 0 -%}
     <div class="cfilter-group" data-cfilter-group>
       <button class="filter-group__toggle" type="button" aria-expanded="true">
-        Price {%- render 'icon-chevron-down' -%}
+        Price <span class="fgrp-pm" aria-hidden="true"></span>
       </button>
       <div class="filter-group__body">
         <div class="cfilter-pills cfilter-pills--price">
@@ -186,7 +186,7 @@
   {%- if demo -%}
     <div class="cfilter-group" data-cfilter-group>
       <button class="filter-group__toggle" type="button" aria-expanded="true">
-        Colour {%- render 'icon-chevron-down' -%}
+        Colour <span class="fgrp-pm" aria-hidden="true"></span>
       </button>
       <div class="filter-group__body">
         <div class="filter-swatches filter-swatches--{{ sw_style }}">
@@ -207,7 +207,7 @@
 
     <div class="cfilter-group" data-cfilter-group>
       <button class="filter-group__toggle" type="button" aria-expanded="true">
-        Size {%- render 'icon-chevron-down' -%}
+        Size <span class="fgrp-pm" aria-hidden="true"></span>
       </button>
       <div class="filter-group__body">
         <div class="cfilter-pills">
@@ -249,7 +249,7 @@
       {%- if val_list.size > 0 -%}
         <div class="cfilter-group" data-cfilter-group>
           <button class="filter-group__toggle" type="button" aria-expanded="true">
-            {{ opt_name }} {%- render 'icon-chevron-down' -%}
+            {{ opt_name }} <span class="fgrp-pm" aria-hidden="true"></span>
           </button>
           <div class="filter-group__body">
 
@@ -304,7 +304,7 @@
   {%- endcomment -%}
   <div class="cfilter-group" data-cfilter-group>
     <button class="filter-group__toggle" type="button" aria-expanded="true">
-      Stock {%- render 'icon-chevron-down' -%}
+      Stock <span class="fgrp-pm" aria-hidden="true"></span>
     </button>
     <div class="filter-group__body">
       <ul class="filter-list">
@@ -319,7 +319,7 @@
   {%- if any_sale -%}
     <div class="cfilter-group" data-cfilter-group>
       <button class="filter-group__toggle" type="button" aria-expanded="true">
-        Discount {%- render 'icon-chevron-down' -%}
+        Discount <span class="fgrp-pm" aria-hidden="true"></span>
       </button>
       <div class="filter-group__body">
         <div class="cfilter-pills">
@@ -335,7 +335,7 @@
   {%- if any_new -%}
     <div class="cfilter-group" data-cfilter-group>
       <button class="filter-group__toggle" type="button" aria-expanded="true">
-        New in {%- render 'icon-chevron-down' -%}
+        New in <span class="fgrp-pm" aria-hidden="true"></span>
       </button>
       <div class="filter-group__body">
         <div class="cfilter-pills">
@@ -350,7 +350,7 @@
   {%- if any_rated -%}
     <div class="cfilter-group" data-cfilter-group>
       <button class="filter-group__toggle" type="button" aria-expanded="true">
-        Rating {%- render 'icon-chevron-down' -%}
+        Rating <span class="fgrp-pm" aria-hidden="true"></span>
       </button>
       <div class="filter-group__body">
         <div class="cfilter-pills">
@@ -364,7 +364,7 @@
   {%- if vendor_list.size > 1 or demo -%}
     <div class="cfilter-group" data-cfilter-group>
       <button class="filter-group__toggle" type="button" aria-expanded="true">
-        Brand {%- render 'icon-chevron-down' -%}
+        Brand <span class="fgrp-pm" aria-hidden="true"></span>
       </button>
       <div class="filter-group__body">
         <ul class="filter-list">
@@ -384,7 +384,7 @@
   {%- if type_list.size > 1 or demo -%}
     <div class="cfilter-group" data-cfilter-group>
       <button class="filter-group__toggle" type="button" aria-expanded="true">
-        Product type {%- render 'icon-chevron-down' -%}
+        Product type <span class="fgrp-pm" aria-hidden="true"></span>
       </button>
       <div class="filter-group__body">
         <ul class="filter-list">
@@ -404,7 +404,7 @@
   {%- if tag_list.size > 0 or demo -%}
     <div class="cfilter-group" data-cfilter-group>
       <button class="filter-group__toggle" type="button" aria-expanded="false">
-        Tags {%- render 'icon-chevron-down' -%}
+        Tags <span class="fgrp-pm" aria-hidden="true"></span>
       </button>
       <div class="filter-group__body is-collapsed">
         <ul class="filter-list">

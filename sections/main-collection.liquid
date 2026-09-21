@@ -224,7 +224,7 @@
             <div class="filter-group" data-filter-group>
               <button class="filter-group__toggle" aria-expanded="{% if group_open %}true{% else %}false{% endif %}">
                 {{ filter.label }}
-                {%- render 'icon-chevron-down' -%}
+                <span class="fgrp-pm" aria-hidden="true"></span>
               </button>
               <div class="filter-group__body{% unless group_open %} is-collapsed{% endunless %}">
                 {%- case filter.type -%}
@@ -341,17 +341,20 @@
                         <span class="cfilter-price__dash">&ndash;</span>
                         <span data-price-out="max">{{ filter.max_value.value | default: filter.range_max | money }}</span>
                       </div>
+                      {%- assign cur_sym = cart.currency.symbol | default: shop.currency -%}
                       <div class="price-range-inputs">
                         <label class="cfilter-price__field">
-                          <span>{{ 'collections.filtering.price_min' | t | default: 'Min' }}</span>
+                          <span aria-hidden="true">{{ cur_sym }}</span>
                           <input type="number" name="{{ filter.min_value.param_name }}"
-                                 value="{{ p_min }}" min="{{ p_floor }}" max="{{ p_ceil }}">
+                                 value="{{ p_min }}" min="{{ p_floor }}" max="{{ p_ceil }}"
+                                 aria-label="{{ 'collections.filtering.price_min' | t }}">
                         </label>
-                        <span class="cfilter-price__dash">&ndash;</span>
+                        <span class="cfilter-price__dash">&mdash;</span>
                         <label class="cfilter-price__field">
-                          <span>{{ 'collections.filtering.price_max' | t | default: 'Max' }}</span>
+                          <span aria-hidden="true">{{ cur_sym }}</span>
                           <input type="number" name="{{ filter.max_value.param_name }}"
-                                 value="{{ p_max }}" min="{{ p_floor }}" max="{{ p_ceil }}">
+                                 value="{{ p_max }}" min="{{ p_floor }}" max="{{ p_ceil }}"
+                                 aria-label="{{ 'collections.filtering.price_max' | t }}">
                         </label>
                       </div>
                     </div>
@@ -557,7 +560,7 @@
         {%- for filter in collection.filters -%}
           <div class="filter-group" data-filter-group>
             <button class="filter-group__toggle" aria-expanded="true">
-              {{ filter.label }} {%- render 'icon-chevron-down' -%}
+              {{ filter.label }} <span class="fgrp-pm" aria-hidden="true"></span>
             </button>
             <div class="filter-group__body">
               {%- case filter.type -%}

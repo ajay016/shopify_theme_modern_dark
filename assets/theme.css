@@ -3016,405 +3016,407 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 /* ======================================================================
    COLLECTION FILTER PANEL
 
-   One stylesheet for the whole filter UI, sidebar and mobile drawer alike.
+   Ported from docs/design/collection-reference.html.
 
-   Design notes, because they were asked for and then re-asked for:
-   - The panel is a tinted surface with NO outline. A border made it read
-     as a boxed widget; the tone step alone is enough to separate it.
-   - Headings use the theme's display serif, as the homepage sections do,
-     instead of the tiny tracked-out uppercase this panel used to have.
-   - Body text is 14px at weight 400. The global body weight is 300, which
-     is far too light for small UI labels and was the thin look.
-   - Every colour is a scheme token, so the panel follows the active scheme.
+   The panel carries NO surface of its own -- no background, no border, no
+   radius. Separation comes from type, spacing and hairlines; controls get
+   their definition from --lift, a barely-there raised fill. Putting a
+   tinted card behind it was the wrong instinct and is deliberately absent.
+
+   Reference token -> theme token:
+     --s0 base surface   -> --cp-bg      --tx text     -> --f-fg
+     --hl hairline       -> --f-bdr      --mt muted    -> --f-mut
+     --ac accent         -> --f-acc      --on on-accent-> --f-on
    ====================================================================== */
 
 .collection-sidebar,
 .filter-drawer__body {
-  --f-fg:     var(--cp-fg,  var(--cream, #F5F0E8));
-  --f-mut:    var(--cp-mut, rgba(245,240,232,.58));
-  --f-acc:    var(--cp-acc, var(--gold, #C8A96E));
-  --f-bdr:    var(--cp-bdr, rgba(200,169,110,.18));
-  --f-rule:   color-mix(in srgb, var(--f-fg) 12%, transparent);
-  --f-hover:  color-mix(in srgb, var(--f-fg) 5%, transparent);
-  --f-sunk:   color-mix(in srgb, var(--f-fg) 7%, transparent);
+  --f-fg:   var(--cp-fg,  var(--cream, #F5F0E8));
+  --f-mut:  var(--cp-mut, rgba(245,240,232,.62));
+  --f-acc:  var(--cp-acc, var(--gold, #C8A96E));
+  --f-bdr:  var(--cp-bdr, rgba(200,169,110,.18));
+  --f-on:   var(--on-gold, #0A0A0A);
   color: var(--f-fg);
   font-family: var(--ff-body);
 }
 
 .collection-sidebar {
-  width: 100%; flex-shrink: 0;
+  width: 100%;
   align-self: start;
-  position: sticky; top: calc(var(--header-h, 72px) + 20px);
-  max-height: calc(100vh - var(--header-h, 72px) - 40px);
-  overflow-y: auto;
-  padding: 20px 18px 18px;
-  background: var(--cp-panel, transparent);
-  border: 0;
-  border-radius: 16px;
+  position: sticky; top: calc(var(--header-h, 72px) + 16px);
+  max-height: calc(100vh - var(--header-h, 72px) - 38px);
+  overflow: auto;
+  padding: 0 8px 20px 0;
+  background: none; border: 0; border-radius: 0;
 }
 
 /* --- panel head ------------------------------------------------------ */
 .sidebar-header {
   display: flex; align-items: baseline; justify-content: space-between;
   gap: 12px;
-  padding: 0 0 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--f-bdr);
 }
 .sidebar-header__title {
   margin: 0; min-width: 0;
   font-family: var(--ff-display);
-  font-size: calc(16px * var(--fs-scale, 1));
-  font-weight: 500; letter-spacing: .02em; line-height: 1.15;
-  text-transform: none;
+  font-size: calc(17px * var(--fs-scale, 1));
+  font-weight: 400; letter-spacing: -.01em; text-transform: none;
   color: var(--f-fg);
 }
+.sidebar-header .filter-count,
+.sidebar-header__count {
+  font-size: calc(11px * var(--fs-scale, 1));
+  letter-spacing: .16em; color: var(--f-acc);
+  background: none; padding: 0; min-width: 0; height: auto;
+}
 
-/* --- one filter group ------------------------------------------------ */
+/* --- one group -------------------------------------------------------- */
 .filter-group,
-.cfilter-group { border-top: 1px solid var(--f-rule); }
-.filter-group:first-of-type,
-.cfilter-group:first-of-type { border-top: 0; }
+.cfilter-group { border-bottom: 1px solid var(--f-bdr); }
 
 .filter-group__toggle {
   width: 100%; display: flex; align-items: center; justify-content: space-between;
   gap: 10px;
-  padding: 13px 0 9px;
+  padding: 15px 0;
   background: none; border: 0; cursor: pointer; text-align: left;
   font-family: var(--ff-body);
-  font-size: calc(10.5px * var(--fs-scale, 1));
-  font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+  font-size: calc(12px * var(--fs-scale, 1));
+  font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
   color: var(--f-fg);
-  transition: color .18s ease;
+  transition: color .2s ease;
 }
-.filter-group__toggle:hover { color: var(--f-acc); }
-.filter-group__toggle svg {
-  width: 14px; height: 14px; flex-shrink: 0;
-  opacity: .5; transition: transform .22s ease, opacity .18s ease;
-}
-.filter-group__toggle:hover svg { opacity: 1; }
-.filter-group__toggle[aria-expanded="false"] svg { transform: rotate(-90deg); }
+/* An open group is marked by the heading taking the accent -- no chevron. */
+.filter-group__toggle[aria-expanded="true"] { color: var(--f-acc); }
 
-.filter-group__body { padding-bottom: 13px; }
+/* Plus that becomes a minus. Replaces the chevron icon. */
+.fgrp-pm { position: relative; width: 9px; height: 9px; opacity: .7; flex: none; }
+.fgrp-pm::before,
+.fgrp-pm::after { content: ''; position: absolute; background: currentColor; transition: transform .25s ease; }
+.fgrp-pm::before { inset: 4px 0 4px 0; height: 1px; }
+.fgrp-pm::after  { inset: 0 4px 0 4px; width: 1px; }
+.filter-group__toggle[aria-expanded="true"] .fgrp-pm::after { transform: scaleY(0); }
+
+.filter-group__body { padding: 0 0 18px; }
 .filter-group__body.is-collapsed { display: none; }
 
-/* --- checkbox rows --------------------------------------------------- */
-/* A group with thirty colours must not push every group below it off the
-   panel. Long lists scroll inside themselves; short ones are unaffected
-   because max-height only bites once the content exceeds it. */
-.filter-list,
-.filter-swatches--list {
-  max-height: 232px; overflow-y: auto;
-  scrollbar-width: thin; scrollbar-color: var(--f-rule) transparent;
-  /* room for the scrollbar so it never sits on top of the counts */
-  padding-right: 4px; margin-right: -4px;
-}
-.filter-list::-webkit-scrollbar,
-.filter-swatches--list::-webkit-scrollbar { width: 4px; }
-.filter-list::-webkit-scrollbar-track,
-.filter-swatches--list::-webkit-scrollbar-track { background: transparent; }
-.filter-list::-webkit-scrollbar-thumb,
-.filter-swatches--list::-webkit-scrollbar-thumb { background: var(--f-rule); border-radius: 2px; }
-.filter-list::-webkit-scrollbar-thumb:hover,
-.filter-swatches--list::-webkit-scrollbar-thumb:hover { background: var(--f-acc); }
+/* --- option rows ------------------------------------------------------ */
+.filter-list { list-style: none; margin: 0; padding: 0; }
 
-.filter-list { list-style: none; margin: 0; padding: 0 4px 0 0; display: grid; gap: 0; }
-
-/* Flex, not grid. A 1fr label column stretches to fill the row and shoves
-   the count against the panel edge, where the scrollbar half hides it. In
-   flex the label takes only the width it needs and the count sits directly
-   beside it, with the free space trailing after both. */
 .filter-check {
-  display: flex; align-items: center; gap: 9px;
-  padding: 5px 8px; margin: 0 -8px;
-  border-radius: 7px; cursor: pointer;
-  font-size: calc(12.5px * var(--fs-scale, 1));
-  font-weight: 400; line-height: 1.3;
-  color: var(--f-fg);
-  transition: background-color .16s ease;
+  display: flex; align-items: center; gap: 10px;
+  padding: 5.5px 0; cursor: pointer;
+  color: var(--f-mut);
+  font-size: calc(13.5px * var(--fs-scale, 1));
+  font-weight: 400; line-height: 1.4;
+  transition: color .16s ease;
 }
+.filter-check:hover { color: var(--f-fg); }
+.filter-check:has(input:checked) { color: var(--f-fg); }
 .filter-check > span:not(.filter-count-pill) {
-  flex: 0 1 auto; min-width: 0;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.filter-check:hover { background: var(--f-hover); }
 
-/* The global `input` rule sets padding and width:100%; these are not text
-   fields, so the inherited form styling is reset here. */
-.filter-check input[type="checkbox"] {
+/* The global `input` rule sets padding and width:100%; reset it here. */
+.filter-check input[type="checkbox"],
+.filter-check input[type="radio"] {
   appearance: none; -webkit-appearance: none;
-  width: 15px; height: 15px; min-width: 15px; padding: 0; margin: 0;
-  border: 1.5px solid var(--f-bdr); border-radius: 4px;
-  background: transparent; cursor: pointer;
-  display: grid; place-content: center;
+  width: 14px; height: 14px; min-width: 14px; padding: 0; margin: 0;
+  border: 1px solid var(--f-bdr); border-radius: 2px;
+  background: var(--lift, rgba(255,255,255,.04));
+  position: relative; flex: none; cursor: pointer;
   transition: background-color .16s ease, border-color .16s ease;
 }
-.filter-check input[type="checkbox"]::after {
-  content: ''; width: 8px; height: 8px; transform: scale(0);
-  transition: transform .16s cubic-bezier(.3,1.4,.6,1);
-  background: var(--cp-panel, var(--cp-bg, #0A0A0A));
-  clip-path: polygon(14% 48%, 0 62%, 38% 100%, 100% 22%, 86% 8%, 38% 71%);
+.filter-check input[type="radio"] { border-radius: 50%; }
+.filter-check input:checked { background: var(--f-acc); border-color: var(--f-acc); }
+.filter-check input[type="checkbox"]:checked::after {
+  content: ''; position: absolute; left: 4px; top: 1px;
+  width: 4px; height: 8px;
+  border: solid var(--f-on); border-width: 0 1.5px 1.5px 0;
+  transform: rotate(42deg);
 }
-.filter-check input[type="checkbox"]:checked { background: var(--f-acc); border-color: var(--f-acc); }
-.filter-check input[type="checkbox"]:checked::after { transform: scale(1); }
-.filter-check input[type="checkbox"]:focus-visible { outline: 2px solid var(--f-acc); outline-offset: 3px; }
-.filter-check:has(input:checked) > span:not(.filter-count-pill) { font-weight: 600; }
+.filter-check input[type="radio"]:checked::after {
+  content: ''; position: absolute; inset: 3px;
+  background: var(--f-on); border-radius: 50%;
+}
+.filter-check input:focus-visible { outline: 2px solid var(--f-acc); outline-offset: 2px; }
 
-.filter-count-pill {
+/* Counts sit right, in mono, with clearance so the scrollbar never covers
+   them -- the collision, not the alignment, was the old problem. */
+.filter-count-pill,
+.filter-swatch__count {
+  margin-left: auto; padding-left: 8px;
+  font-family: var(--ff-mono, ui-monospace, monospace);
   font-size: calc(11px * var(--fs-scale, 1));
   color: var(--f-mut);
   font-variant-numeric: tabular-nums;
 }
 
-/* --- pills ----------------------------------------------------------- */
-.cfilter-pills { display: flex; flex-wrap: wrap; gap: 8px; }
-.cfilter-pills--price { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+/* --- long groups scroll, with a fade rather than a hard cut ----------- */
+.filter-list,
+.filter-swatches--list {
+  max-height: 236px; overflow: auto;
+  padding-right: 6px;
+  mask-image: linear-gradient(180deg, #000 0, #000 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0, #000 90%, transparent 100%);
+  scrollbar-width: thin; scrollbar-color: var(--f-bdr) transparent;
+}
+.filter-list::-webkit-scrollbar,
+.filter-swatches--list::-webkit-scrollbar,
+.collection-sidebar::-webkit-scrollbar,
+.filter-drawer__body::-webkit-scrollbar { width: 4px; }
+.filter-list::-webkit-scrollbar-thumb,
+.filter-swatches--list::-webkit-scrollbar-thumb,
+.collection-sidebar::-webkit-scrollbar-thumb,
+.filter-drawer__body::-webkit-scrollbar-thumb { background: var(--f-bdr); border-radius: 4px; }
+.collection-sidebar, .filter-drawer__body { scrollbar-width: thin; scrollbar-color: var(--f-bdr) transparent; }
+
+/* --- colour swatches -------------------------------------------------- */
+.filter-swatches { padding-top: 0; }
+.filter-swatch { position: relative; cursor: pointer; }
+.filter-swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
+
+.filter-swatch__dot {
+  width: 15px; height: 15px; border-radius: 50%; flex: none;
+  background-size: cover; background-position: center;
+  box-shadow: 0 0 0 1px var(--f-bdr), inset 0 0 0 1px rgba(255,255,255,.14);
+  transition: box-shadow .2s ease;
+}
+.filter-swatch__name {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.filter-swatches--list { display: block; }
+.filter-swatches--list .filter-swatch {
+  display: flex; align-items: center; gap: 10px;
+  padding: 5.5px 0;
+  color: var(--f-mut);
+  font-size: calc(13.5px * var(--fs-scale, 1));
+  transition: color .16s ease;
+}
+.filter-swatches--list .filter-swatch:hover,
+.filter-swatches--list .filter-swatch:has(input:checked) { color: var(--f-fg); }
+.filter-swatch:has(input:checked) .filter-swatch__dot {
+  box-shadow: 0 0 0 1px var(--f-acc), 0 0 0 3px var(--cp-bg, #0A0A0A), 0 0 0 4px var(--f-acc);
+}
+.filter-swatch input:focus-visible + .filter-swatch__dot { outline: 2px solid var(--f-acc); outline-offset: 3px; }
+
+.filter-swatches--chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.filter-swatches--chips .filter-swatch {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px 6px 7px;
+  border: 1px solid var(--f-bdr); background: var(--lift, rgba(255,255,255,.04));
+  border-radius: 999px;
+  font-size: calc(12.5px * var(--fs-scale, 1)); color: var(--f-mut);
+}
+.filter-swatches--chips .filter-swatch:hover { border-color: var(--f-acc); color: var(--f-fg); }
+.filter-swatches--chips .filter-swatch__count { margin-left: 0; padding-left: 0; }
+
+.filter-swatches--dots { display: flex; flex-wrap: wrap; gap: 9px; }
+.filter-swatches--dots .filter-swatch { line-height: 0; }
+.filter-swatches--dots .filter-swatch__dot { width: 22px; height: 22px; }
+
+/* --- pills: sizes, discount, new in, rating, price bands -------------- */
+.cfilter-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+.cfilter-pills--price { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 
 .cfilter-pill {
   position: relative;
-  display: inline-flex; align-items: center; justify-content: center;
-  min-width: 40px; min-height: 34px; padding: 0 12px;
-  border: 1px solid var(--f-bdr); border-radius: 10px;
-  font-size: calc(12px * var(--fs-scale, 1)); font-weight: 400;
-  color: var(--f-fg); cursor: pointer; white-space: nowrap;
-  transition: border-color .18s ease, background-color .18s ease, color .18s ease;
+  display: inline-flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-width: 54px; padding: 8px 10px;
+  border: 1px solid var(--f-bdr); border-radius: 2px;
+  background: var(--lift, rgba(255,255,255,.04));
+  font-size: calc(12px * var(--fs-scale, 1));
+  letter-spacing: .08em; color: var(--f-mut);
+  cursor: pointer; white-space: nowrap;
+  transition: border-color .18s ease, color .18s ease, background-color .18s ease;
 }
 .cfilter-pill input { position: absolute; opacity: 0; width: 0; height: 0; }
-.cfilter-pill:hover { border-color: var(--f-acc); background: var(--f-hover); }
+.cfilter-pill:hover { border-color: var(--f-acc); color: var(--f-acc); }
 .cfilter-pill:has(input:checked) {
-  background: var(--f-acc); border-color: var(--f-acc);
-  color: var(--cp-panel, var(--cp-bg, #0A0A0A)); font-weight: 600;
+  background: var(--f-acc); border-color: var(--f-acc); color: var(--f-on);
 }
+/* A count under the label, in mono, as in the reference. */
+.cfilter-pill b,
+.cfilter-pill .cfilter-pill__n {
+  display: block; font-weight: 400;
+  font-size: calc(9.5px * var(--fs-scale, 1));
+  opacity: .65; font-family: var(--ff-mono, ui-monospace, monospace);
+}
+.cfilter-pill.is-unavailable { opacity: .34; text-decoration: line-through; }
 .cfilter-pill:focus-within { outline: 2px solid var(--f-acc); outline-offset: 2px; }
 
-/* --- price ------------------------------------------------------------
-   .cfilter-price__track is the CONTAINER, holding the fill and BOTH range
-   inputs; .cfilter-price__range is the input itself.
-   --------------------------------------------------------------------- */
+/* --- price ------------------------------------------------------------ */
 .cfilter-price,
-.price-range-filter { padding-top: 2px; }
+.price-range-filter { padding-top: 4px; }
 
-.cfilter-price__readout {
-  display: flex; align-items: baseline; gap: 9px;
-  font-family: var(--ff-display);
-  font-size: calc(16px * var(--fs-scale, 1));
-  font-weight: 500; font-variant-numeric: tabular-nums;
-  color: var(--f-fg);
-  padding: 9px 0 0;
-}
-.cfilter-price__dash { color: var(--f-mut); font-size: .8em; }
-
-.cfilter-price__track { position: relative; height: 18px; margin: 0 9px 0; }
-/* Neutral rail, accent reserved for the selected span. */
+/* Inset by half a thumb so neither handle overhangs the panel at the ends;
+   the rail is pulled back out so it still spans the full width. */
+.cfilter-price__track { position: relative; height: 30px; margin: 0 8px; }
 .cfilter-price__track::before {
-  content: ''; position: absolute; top: 50%; left: -11px; right: -11px;
-  height: 5px; transform: translateY(-50%);
-  background: var(--f-sunk); border-radius: 3px;
+  content: ''; position: absolute; top: 14px; left: -8px; right: -8px;
+  height: 2px; background: var(--f-bdr);
 }
 .cfilter-price__fill {
-  position: absolute; top: 50%; height: 5px;
-  transform: translateY(-50%);
-  background: var(--f-acc); border-radius: 3px;
-  left: 0; right: 0;
+  position: absolute; top: 14px; height: 2px;
+  background: var(--f-acc); left: 0; right: 0;
 }
-
 .cfilter-price__range {
   position: absolute; top: 0; left: 0;
-  width: 100%; height: 22px; margin: 0; padding: 0;
-  background: none; border: 0; border-radius: 0;
-  appearance: none; -webkit-appearance: none; pointer-events: none;
+  width: 100%; height: 30px; margin: 0; padding: 0;
+  appearance: none; -webkit-appearance: none;
+  background: none; border: 0; pointer-events: none;
 }
 .cfilter-price__range:focus { outline: none; }
-.cfilter-price__range::-webkit-slider-runnable-track { background: transparent; border: 0; height: 22px; }
-.cfilter-price__range::-moz-range-track { background: transparent; border: 0; height: 22px; }
+.cfilter-price__range::-webkit-slider-runnable-track { background: transparent; border: 0; height: 30px; }
+.cfilter-price__range::-moz-range-track { background: transparent; border: 0; height: 30px; }
 .cfilter-price__range::-webkit-slider-thumb {
-  appearance: none; -webkit-appearance: none; pointer-events: auto;
-  width: 18px; height: 18px; border-radius: 50%;
-  background: var(--f-acc);
-  border: 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,.28), inset 0 0 0 2px var(--cp-panel, #0A0A0A);
+  appearance: none; -webkit-appearance: none; pointer-events: all;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--cp-bg, #0A0A0A);
+  border: 1.5px solid var(--f-acc);
+  box-shadow: 0 1px 5px rgba(0,0,0,.45);
   cursor: grab;
 }
-.cfilter-price__range::-webkit-slider-thumb:active { cursor: grabbing; }
 .cfilter-price__range::-moz-range-thumb {
-  pointer-events: auto;
-  width: 18px; height: 18px; border-radius: 50%;
-  background: var(--f-acc); border: 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,.28), inset 0 0 0 2px var(--cp-panel, #0A0A0A);
+  pointer-events: all;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--cp-bg, #0A0A0A);
+  border: 1.5px solid var(--f-acc);
+  box-shadow: 0 1px 5px rgba(0,0,0,.45);
   cursor: grab;
 }
 
+/* Two currency-prefixed fields. The reference carries no separate readout. */
+.cfilter-price__readout { display: none; }
 .price-range-inputs,
 .cfilter-price__vals {
-  display: grid; grid-template-columns: 1fr 1fr;
-  align-items: end; gap: 8px; margin-top: 12px;
+  display: flex; align-items: center; gap: 8px; margin-top: 6px;
 }
-/* The separator belongs to the readout, not between two labelled fields. */
-.price-range-inputs > .cfilter-price__dash { display: none; }
-.cfilter-price__field { display: grid; gap: 6px; min-width: 0; }
+.cfilter-price__field { flex: 1; position: relative; min-width: 0; display: block; }
 .cfilter-price__field > span {
-  font-size: calc(10px * var(--fs-scale, 1));
-  letter-spacing: .14em; text-transform: uppercase;
-  color: var(--f-mut);
-  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  position: absolute; left: 9px; top: 9px;
+  font-size: calc(12px * var(--fs-scale, 1));
+  color: var(--f-mut); pointer-events: none;
+  letter-spacing: 0; text-transform: none;
 }
 .price-range-inputs input[type="number"],
 .cfilter-price__vals input {
   width: 100%; min-width: 0;
-  padding: 7px 9px; margin: 0;
-  border: 1px solid transparent; border-radius: 8px;
-  background: var(--f-sunk); color: var(--f-fg);
-  font-family: var(--ff-body);
+  background: var(--lift, rgba(255,255,255,.04));
+  border: 1px solid var(--f-bdr); border-radius: 2px;
+  padding: 8px 8px 8px 20px; margin: 0;
+  color: var(--f-fg);
+  font-family: var(--ff-mono, ui-monospace, monospace);
   font-size: calc(12.5px * var(--fs-scale, 1));
-  text-align: center; font-variant-numeric: tabular-nums;
-  transition: border-color .18s ease, background-color .18s ease;
+  text-align: left;
+  transition: border-color .18s ease;
 }
 .price-range-inputs input[type="number"]:focus,
 .cfilter-price__vals input:focus { outline: none; border-color: var(--f-acc); }
 .price-range-inputs input[type="number"]::-webkit-outer-spin-button,
 .price-range-inputs input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .price-range-inputs input[type="number"] { -moz-appearance: textfield; }
+.price-range-inputs > .cfilter-price__dash,
+.cfilter-price__dash { color: var(--f-mut); flex: none; }
 
-/* --- colour swatches ------------------------------------------------- */
-.filter-swatches { padding-top: 0; }
-.filter-swatch { position: relative; cursor: pointer; }
-.filter-swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
-
-.filter-swatch__dot {
-  display: block; flex-shrink: 0;
-  width: 19px; height: 19px; border-radius: 50%;
-  background-size: cover; background-position: center;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.14);
-  transition: box-shadow .18s ease, transform .18s ease;
-}
-.filter-swatch__name {
+/* --- a search box inside long groups ---------------------------------- */
+.filter-search {
+  width: 100%;
+  background: var(--lift, rgba(255,255,255,.04));
+  border: 1px solid var(--f-bdr); border-radius: 2px;
+  padding: 8px 10px; margin-bottom: 8px;
+  color: var(--f-fg);
   font-size: calc(12.5px * var(--fs-scale, 1));
-  font-weight: 400; color: var(--f-fg); line-height: 1.35;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.filter-swatch__count {
-  font-size: calc(11px * var(--fs-scale, 1));
-  color: var(--f-mut); font-variant-numeric: tabular-nums;
-}
+.filter-search::placeholder { color: var(--f-mut); }
+.filter-search:focus { outline: none; border-color: var(--f-acc); }
 
-.filter-swatches--list { display: flex; flex-direction: column; gap: 0; }
-.filter-swatches--list .filter-swatch {
-  display: flex; align-items: center; gap: 9px;
-  padding: 4px 8px; margin: 0 -8px;
-  border-radius: 7px;
-  transition: background-color .16s ease;
-}
-.filter-swatches--list .filter-swatch__name { flex: 0 1 auto; }
-.filter-swatches--list .filter-swatch:hover { background: var(--f-hover); }
-.filter-swatches--list .filter-swatch:has(input:checked) .filter-swatch__name { font-weight: 600; }
+/* --- stars ------------------------------------------------------------ */
+.filter-stars { color: var(--f-acc); letter-spacing: 1px; font-size: calc(12px * var(--fs-scale, 1)); }
 
-.filter-swatches--chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.filter-swatches--chips .filter-swatch {
-  display: inline-flex; align-items: center; gap: 9px;
-  padding: 6px 14px 6px 7px;
-  border: 1px solid var(--f-bdr); border-radius: 999px;
-  transition: border-color .18s ease, background-color .18s ease;
-}
-.filter-swatches--chips .filter-swatch__dot { width: 18px; height: 18px; }
-.filter-swatches--chips .filter-swatch:hover { border-color: var(--f-acc); }
-.filter-swatches--chips .filter-swatch:has(input:checked) { border-color: var(--f-acc); background: var(--f-hover); }
-.filter-swatches--chips .filter-swatch:has(input:checked) .filter-swatch__name { font-weight: 600; }
-
-.filter-swatches--dots { display: flex; flex-wrap: wrap; gap: 10px; }
-.filter-swatches--dots .filter-swatch { line-height: 0; }
-.filter-swatches--dots .filter-swatch__dot { width: 26px; height: 26px; }
-
-.filter-swatch:hover .filter-swatch__dot { transform: scale(1.06); }
-.filter-swatch input:checked + .filter-swatch__dot {
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.14),
-              0 0 0 2px var(--cp-panel, #0A0A0A),
-              0 0 0 4px var(--f-acc);
-}
-.filter-swatch input:focus-visible + .filter-swatch__dot { outline: 2px solid var(--f-acc); outline-offset: 4px; }
-
-/* --- active filter chips --------------------------------------------- */
-.active-filters { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 0 16px; }
+/* --- active filter chips ---------------------------------------------- */
+.active-filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 16px 0 4px; }
 .filter-chip {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 7px 13px;
-  border: 0; border-radius: 999px;
-  background: var(--f-sunk);
-  font-size: calc(13px * var(--fs-scale, 1));
-  color: var(--f-fg); cursor: pointer;
-  transition: background-color .18s ease;
+  display: flex; align-items: center; gap: 8px;
+  border: 1px solid var(--f-bdr); background: var(--lift, rgba(255,255,255,.04));
+  border-radius: 999px; padding: 6px 8px 6px 13px;
+  font-size: calc(12px * var(--fs-scale, 1)); color: var(--f-fg);
+  cursor: pointer;
 }
-.filter-chip:hover { background: var(--f-hover); }
-.filter-chip--active { background: var(--f-acc); color: var(--cp-panel, #0A0A0A); }
-.filter-chip--clear { background: none; color: var(--f-mut); text-decoration: underline; text-underline-offset: 3px; }
-.filter-chip--clear:hover { color: var(--f-acc); background: none; }
+.filter-chip:hover { border-color: var(--f-acc); }
+.filter-chip--active { border-color: var(--f-acc); }
+.filter-chip--clear {
+  background: none; border: 0; border-bottom: 1px solid var(--f-bdr);
+  border-radius: 0; padding: 0 0 2px;
+  font-size: calc(11.5px * var(--fs-scale, 1));
+  letter-spacing: .12em; text-transform: uppercase; color: var(--f-acc);
+}
 
-/* --- panel footer ---------------------------------------------------- */
+/* --- panel footer ------------------------------------------------------ */
 .cfilter-foot {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 10px; padding-top: 18px; margin-top: 4px;
-  border-top: 1px solid var(--f-rule);
+  gap: 10px; padding-top: 16px;
 }
-.cfilter-count { font-size: calc(13px * var(--fs-scale, 1)); color: var(--f-mut); }
+.cfilter-count {
+  font-size: calc(12px * var(--fs-scale, 1)); color: var(--f-mut);
+  font-family: var(--ff-mono, ui-monospace, monospace);
+}
 .cfilter-clear {
-  background: none; border: 0; cursor: pointer; padding: 4px 0;
-  font-size: calc(12px * var(--fs-scale, 1));
-  letter-spacing: .1em; text-transform: uppercase;
-  color: var(--f-acc); text-decoration: underline; text-underline-offset: 4px;
+  background: none; border: 0; cursor: pointer; padding: 0 0 2px;
+  font-size: calc(11.5px * var(--fs-scale, 1));
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--f-acc); border-bottom: 1px solid var(--f-bdr);
 }
-.cfilter-empty { padding: 44px 0; text-align: center; color: var(--f-mut); grid-column: 1 / -1; }
+.cfilter-empty { padding: 90px 20px; text-align: center; color: var(--f-mut); grid-column: 1 / -1; }
 
-/* --- mobile drawer --------------------------------------------------- */
+/* --- mobile drawer ----------------------------------------------------- */
 .filter-drawer__overlay {
-  position: fixed; inset: 0; z-index: 90;
-  background: rgba(0,0,0,.55); backdrop-filter: blur(3px);
-  opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s ease;
+  position: fixed; inset: 0; z-index: 80;
+  background: rgba(0,0,0,.5);
+  opacity: 0; pointer-events: none; transition: opacity .35s ease;
 }
-.filter-drawer__overlay.is-open { opacity: 1; visibility: visible; }
+.filter-drawer__overlay.is-open { opacity: 1; pointer-events: all; }
 .filter-drawer {
-  position: fixed; top: 0; left: 0; bottom: 0; z-index: 91;
-  width: min(390px, 90vw);
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 90;
+  width: min(88vw, 340px);
   display: flex; flex-direction: column;
-  background: var(--cp-panel, var(--cp-bg, #0A0A0A));
-  transform: translateX(-100%); transition: transform .3s cubic-bezier(.4,0,.2,1);
+  background: var(--s2-bg, #131313);
+  transform: translateX(-102%);
+  transition: transform .4s cubic-bezier(.2,.7,.2,1);
+  box-shadow: 0 0 40px rgba(0,0,0,.5);
 }
 .filter-drawer.is-open { transform: translateX(0); }
 .filter-drawer__header {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; padding: 20px 22px 16px; flex-shrink: 0;
+  gap: 12px; padding: 22px 20px 12px; flex-shrink: 0;
 }
 .filter-drawer__header h2 {
   margin: 0; font-family: var(--ff-display);
-  font-size: calc(21px * var(--fs-scale, 1)); font-weight: 400;
-  text-transform: none; letter-spacing: .01em;
+  font-size: calc(17px * var(--fs-scale, 1)); font-weight: 400;
+  letter-spacing: -.01em; text-transform: none;
 }
-.filter-drawer__close { background: none; border: 0; cursor: pointer; padding: 4px; color: var(--f-fg); line-height: 0; }
-.filter-drawer__body { flex: 1; overflow-y: auto; padding: 0 22px 22px; }
+.filter-drawer__close { background: none; border: 0; cursor: pointer; padding: 4px; color: var(--f-fg); font-size: 20px; line-height: 1; }
+.filter-drawer__body { flex: 1; overflow: auto; padding: 0 20px 20px; }
 .filter-drawer__footer {
-  flex-shrink: 0; padding: 16px 22px;
-  border-top: 1px solid var(--f-rule);
+  flex-shrink: 0; padding: 16px 20px;
+  border-top: 1px solid var(--f-bdr);
   display: flex; gap: 10px;
 }
 .filter-drawer__footer > * { flex: 1; }
 
-/* --- filter count badge on the toolbar button ------------------------ */
-.filter-count {
+/* --- count badge on the toolbar filter button -------------------------- */
+.collection-toolbar .filter-count {
   display: inline-grid; place-content: center;
-  min-width: 20px; height: 20px; padding: 0 6px; margin-left: 3px;
+  min-width: 18px; height: 18px; padding: 0 5px; margin-left: 3px;
   border-radius: 999px;
-  background: var(--f-acc); color: var(--cp-bg, #0A0A0A);
-  font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums;
+  background: var(--cp-acc, var(--gold, #C8A96E)); color: var(--on-gold, #0A0A0A);
+  font-family: var(--ff-mono, ui-monospace, monospace);
+  font-size: 10px; font-weight: 500;
 }
 
-/* --- a quiet scrollbar ------------------------------------------------ */
-.collection-sidebar::-webkit-scrollbar,
-.filter-drawer__body::-webkit-scrollbar { width: 4px; }
-.collection-sidebar::-webkit-scrollbar-track,
-.filter-drawer__body::-webkit-scrollbar-track { background: transparent; }
-.collection-sidebar::-webkit-scrollbar-thumb,
-.filter-drawer__body::-webkit-scrollbar-thumb { background: var(--f-rule); border-radius: 2px; }
-.collection-sidebar::-webkit-scrollbar-thumb:hover,
-.filter-drawer__body::-webkit-scrollbar-thumb:hover { background: var(--f-acc); }
-.collection-sidebar, .filter-drawer__body { scrollbar-width: thin; scrollbar-color: var(--f-rule) transparent; }
-
-@media (max-width: 989px) {
+@media (max-width: 1000px) {
   .collection-sidebar { display: none; }
 }
 

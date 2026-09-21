@@ -47,6 +47,7 @@
         "label": "Font Pairing",
         "options": [
           { "value": "cormorant_outfit",  "label": "Cormorant Garamond + Outfit (Default)" },
+          { "value": "bodoni_instrument", "label": "Bodoni Moda + Instrument Sans" },
           { "value": "playfair_inter",    "label": "Playfair Display + Inter" },
           { "value": "libre_raleway",     "label": "Libre Baskerville + Raleway" },
           { "value": "dm_serif_dm_sans",  "label": "DM Serif Display + DM Sans" }

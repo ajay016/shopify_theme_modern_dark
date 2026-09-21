@@ -33,7 +33,7 @@
 
 {%- when 'light' -%}
   :root {
-    --s1-bg: #FFFFFF; --s1-fg: #1A1A1A; --s1-mut: rgba(26,26,26,0.66); --s1-bdr: rgba(26,26,26,0.16);
+    --s1-bg: #FFFFFF; --s1-fg: #1A1A1A; --lift: rgba(0,0,0,0.03); --s1-mut: rgba(26,26,26,0.66); --s1-bdr: rgba(26,26,26,0.16);
     --s2-bg: #F7F4EE; --s2-fg: #1A1A1A; --s2-mut: rgba(26,26,26,0.66); --s2-bdr: rgba(26,26,26,0.16);
     --s3-bg: #EDE8DD; --s3-fg: #1A1A1A; --s3-mut: rgba(26,26,26,0.66); --s3-bdr: rgba(26,26,26,0.16);
     --s4-bg: #1A1A1A; --s4-fg: #F7F4EE; --s4-mut: rgba(247,244,238,0.66); --s4-bdr: rgba(247,244,238,0.16);
@@ -109,7 +109,7 @@
 {%- endcomment -%}
 {%- when 'ivory-wine' -%}
   :root {
-    --s1-bg: #FFFFFF; --s1-fg: #11110F; --s1-mut: rgba(17,17,15,0.66); --s1-bdr: rgba(17,17,15,0.17);
+    --s1-bg: #FFFFFF; --s1-fg: #11110F; --lift: rgba(0,0,0,0.03); --s1-mut: rgba(17,17,15,0.66); --s1-bdr: rgba(17,17,15,0.17);
     --s2-bg: #F6F5F1; --s2-fg: #11110F; --s2-mut: rgba(17,17,15,0.66); --s2-bdr: rgba(17,17,15,0.17);
     --s3-bg: #E6E3DB; --s3-fg: #11110F; --s3-mut: rgba(17,17,15,0.66); --s3-bdr: rgba(17,17,15,0.17);
     --s4-bg: #11110F; --s4-fg: #F6F5F1; --s4-mut: rgba(246,245,241,0.66); --s4-bdr: rgba(246,245,241,0.17);
@@ -167,7 +167,7 @@
 
 {%- when 'warm' -%}
   :root {
-    --s1-bg: #1C1410; --s1-fg: #EDE0CC; --s1-mut: rgba(237,224,204,0.62); --s1-bdr: rgba(237,224,204,0.16);
+    --s1-bg: #1C1410; --s1-fg: #EDE0CC; --lift: rgba(255,255,255,0.045); --s1-mut: rgba(237,224,204,0.62); --s1-bdr: rgba(237,224,204,0.16);
     --s2-bg: #241A14; --s2-fg: #EDE0CC; --s2-mut: rgba(237,224,204,0.62); --s2-bdr: rgba(237,224,204,0.16);
     --s3-bg: #2E2219; --s3-fg: #EDE0CC; --s3-mut: rgba(237,224,204,0.62); --s3-bdr: rgba(237,224,204,0.16);
     --s4-bg: #EDE0CC; --s4-fg: #1C1410; --s4-mut: rgba(28,20,16,0.62); --s4-bdr: rgba(28,20,16,0.16);
@@ -226,6 +226,7 @@
 {%- when 'custom' -%}
   :root {
     --s1-bg: {{ settings.color_black }};
+    --lift: color-mix(in srgb, {{ settings.color_cream }} 4%, transparent);
     --s1-fg: {{ settings.color_cream }};
     --s1-mut: color-mix(in srgb, {{ settings.color_cream }} 66%, transparent);
     --s1-bdr: color-mix(in srgb, {{ settings.color_cream }} 18%, transparent);
@@ -295,7 +296,7 @@
 
 {%- else -%}
   :root {
-    --s1-bg: #0A0A0A; --s1-fg: #F5F0E8; --s1-mut: rgba(245,240,232,0.62); --s1-bdr: rgba(245,240,232,0.16);
+    --s1-bg: #0A0A0A; --s1-fg: #F5F0E8; --lift: rgba(255,255,255,0.04); --s1-mut: rgba(245,240,232,0.62); --s1-bdr: rgba(245,240,232,0.16);
     --s2-bg: #131313; --s2-fg: #F5F0E8; --s2-mut: rgba(245,240,232,0.62); --s2-bdr: rgba(245,240,232,0.16);
     --s3-bg: #1A1714; --s3-fg: #F5F0E8; --s3-mut: rgba(245,240,232,0.62); --s3-bdr: rgba(245,240,232,0.16);
     --s4-bg: #F5F0E8; --s4-fg: #0A0A0A; --s4-mut: rgba(10,10,10,0.62); --s4-bdr: rgba(10,10,10,0.16);
@@ -384,7 +385,10 @@
       assign body_size = settings.type_body_size | default: 14
       assign hscale = settings.type_heading_size_scale | default: 'medium'
     -%}
-    {%- if pairing == 'playfair_inter' -%}
+    {%- if pairing == 'bodoni_instrument' -%}
+      --ff-display: "Bodoni Moda", "Times New Roman", serif;
+      --ff-body: "Instrument Sans", Helvetica, Arial, sans-serif;
+    {%- elsif pairing == 'playfair_inter' -%}
       --ff-display: "Playfair Display", Georgia, serif;
       --ff-body: Inter, system-ui, sans-serif;
     {%- elsif pairing == 'libre_raleway' -%}
@@ -397,6 +401,10 @@
       --ff-display: "Cormorant Garamond", Georgia, serif;
       --ff-body: Outfit, system-ui, sans-serif;
     {%- endif -%}
+
+    /* Numerals -- filter counts, size counts, pagination -- are set in mono.
+       It is a deliberate part of the look, not a fallback. */
+    --ff-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
     --fs-base: {{ body_size }}px;
     --fs-scale: {{ body_size | times: 1.0 | divided_by: 14.0 }};

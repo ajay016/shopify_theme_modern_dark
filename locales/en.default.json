@@ -145,7 +145,11 @@
         "one": "{{ count }} person is viewing this",
         "other": "{{ count }} people are viewing this"
       },
-      "zoom_hint": "Hover to zoom"
+      "zoom_hint": "Hover to zoom",
+      "only_left": {
+        "one": "Only {{ count }} left",
+        "other": "Only {{ count }} left"
+      }
     },
     "listing": {
       "load_more": "Load More",

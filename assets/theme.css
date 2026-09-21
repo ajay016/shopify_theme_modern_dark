@@ -1278,10 +1278,60 @@ body.has-announcement .site-header { top: 44px; }
   display: flex; flex-direction: column; gap: 5px; flex: 1;
 }
 .pcard__cat {
-  display:block; font-family: var(--ff-body); margin: 0;
-  font-size: 10px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+  display:block; font-family: var(--ff-body); margin: -2px 0 0;
+  font-size: 11px; font-weight: 400; letter-spacing: .03em; text-transform: none;
   color: var(--pc-mut);
 }
+/* Brand and rating share the top row, rating pushed right. */
+.pcard__brow { display: flex; align-items: center; gap: 8px; margin: 0; }
+.pcard__brand {
+  font-family: var(--ff-body);
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--pc-mut);
+}
+.pcard__brow .pcard__rating { margin-left: auto; }
+
+/* Category sits under the title, tucked close to it. */
+.pcard__cat + .pcard__desc { margin-top: 2px; }
+
+/* Discount, beside the struck-through original. */
+.pcard__off {
+  font-size: 10px; letter-spacing: .1em;
+  color: var(--pc-acc, var(--gold, #C8A96E));
+}
+
+/* Sizes as a line, sold-out values struck through. */
+.pcard__sizeline {
+  display: block; margin: 0;
+  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--pc-mut);
+}
+.pcard__sizeline s { opacity: .4; }
+
+/* Material and low stock on the last row. */
+.pcard__meta {
+  display: flex; gap: 10px; align-items: center; margin: 0;
+  font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--pc-mut);
+}
+.pcard__low {
+  display: flex; align-items: center; gap: 6px;
+  color: var(--pc-acc, var(--gold, #C8A96E));
+  letter-spacing: .12em; text-transform: uppercase;
+}
+.pcard__low::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: currentColor; flex: none;
+}
+
+/* Description is carried for the list view only. */
+.pcard__desc { display: none; }
+.product-grid[data-view="list"] .pcard__desc {
+  display: block; margin: 2px 0 0;
+  font-size: 13.5px; line-height: 1.5;
+  color: var(--pc-mut); max-width: 60ch;
+}
+
 .pcard__name {
   display:block; font-family: var(--ff-display); margin: 0;
   font-size: 16.5px; font-weight: 400; line-height: 1.25; letter-spacing: -.01em;

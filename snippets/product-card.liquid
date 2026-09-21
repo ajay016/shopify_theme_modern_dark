@@ -404,46 +404,68 @@
     </div>
 
     <div class="pcard__info">
-      {%- if show_category and product.type != blank -%}
-        <span class="pcard__cat">{{ product.type }}</span>
-      {%- elsif show_vendor and product.vendor != blank -%}
-        <span class="pcard__cat">{{ product.vendor }}</span>
+      {%- comment -%}
+        Brand and rating share the top row, rating pushed right, as in the
+        design reference. Category is its own line under the title rather
+        than competing with the brand for the same slot -- previously only
+        one of the two could ever show.
+      {%- endcomment -%}
+      {%- liquid
+        assign has_rating = false
+        if show_rating and product.metafields.reviews.rating.value != blank
+          assign has_rating = true
+        endif
+        assign has_brand = false
+        if show_vendor and product.vendor != blank
+          assign has_brand = true
+        endif
+      -%}
+      {%- if has_brand or has_rating -%}
+        <div class="pcard__brow">
+          {%- if has_brand -%}<span class="pcard__brand">{{ product.vendor }}</span>{%- endif -%}
+          {%- if has_rating -%}
+            {%- liquid
+              assign rating_val = product.metafields.reviews.rating.value.rating | default: product.metafields.reviews.rating.value | times: 1.0
+              assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+              assign rating_rounded = rating_val | round
+            -%}
+            <span class="pcard__rating" aria-label="Rated {{ rating_val }} out of 5">
+              <span class="pcard__stars" aria-hidden="true">
+                {%- for i in (1..5) -%}
+                  <span class="pcard__star{% if i <= rating_rounded %} is-on{% endif %}">★</span>
+                {%- endfor -%}
+              </span>
+              {%- if rating_count > 0 -%}<span class="pcard__rating-count">({{ rating_count }})</span>{%- endif -%}
+            </span>
+          {%- endif -%}
+        </div>
       {%- endif -%}
+
       <span class="pcard__name"><a href="{{ product.url }}">{{ product.title }}</a></span>
 
+      {%- if show_category and product.type != blank -%}
+        <span class="pcard__cat">{{ product.type }}</span>
+      {%- endif -%}
+
       {%- comment -%}
-        Rating reads Shopify's standard reviews metafields, which the Product
-        Reviews app and most third-party review apps write to. No metafield,
-        no slot — an empty row of grey stars looks worse than none.
+        Carried for the list view, where the reference shows a short
+        description. Hidden in the grid by CSS.
       {%- endcomment -%}
-      {%- if show_rating and product.metafields.reviews.rating.value != blank -%}
-        {%- liquid
-          assign rating_val = product.metafields.reviews.rating.value.rating | default: product.metafields.reviews.rating.value | times: 1.0
-          assign rating_count = product.metafields.reviews.rating_count.value | default: 0
-          assign rating_rounded = rating_val | round
-        -%}
-        <span class="pcard__rating" aria-label="Rated {{ rating_val }} out of 5">
-          <span class="pcard__stars" aria-hidden="true">
-            {%- for i in (1..5) -%}
-              <span class="pcard__star{% if i <= rating_rounded %} is-on{% endif %}">★</span>
-            {%- endfor -%}
-          </span>
-          {%- if rating_count > 0 -%}<span class="pcard__rating-count">({{ rating_count }})</span>{%- endif -%}
-        </span>
+      {%- if product.description != blank -%}
+        <p class="pcard__desc">{{ product.description | strip_html | truncatewords: 22 }}</p>
       {%- endif -%}
 
       <span class="pcard__price">
         {%- if show_price_compare and product.compare_at_price > product.price -%}
+          {%- assign off_pc = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
           <span class="pcard__price-now">{{ product.price | money }}</span>
           <s class="pcard__price-was">{{ product.compare_at_price | money }}</s>
+          <span class="pcard__off">&minus;{{ off_pc }}%</span>
         {%- else -%}
-          {{ product.price | money }}
+          <span class="pcard__price-now">{{ product.price | money }}</span>
         {%- endif -%}
       </span>
 
-      {%- if show_material and product.metafields.custom.material.value != blank -%}
-        <span class="pcard__material">{{ product.metafields.custom.material.value }}</span>
-      {%- endif -%}
 
       {%- comment -%}
         Colour swatches. Each swatch carries the image of the first variant in
@@ -504,6 +526,55 @@
             </span>
           {%- endif -%}
         {%- endfor -%}
+      {%- endif -%}
+
+      {%- comment -%}
+        Sizes as a readable line under the swatches, sold-out values struck
+        through, as the reference shows. The hover chips over the image stay
+        for quick-add; this is the at-a-glance version and survives on touch,
+        where there is no hover.
+      {%- endcomment -%}
+      {%- if show_sizes -%}
+        {%- for opt in product.options_with_values -%}
+          {%- assign size_key = opt.name | downcase | strip -%}
+          {%- if size_key contains 'size' -%}
+            <span class="pcard__sizeline">
+              {%- for val in opt.values -%}
+                {%- liquid
+                  assign val_in_stock = false
+                  for v in product.variants
+                    if v.options contains val and v.available
+                      assign val_in_stock = true
+                      break
+                    endif
+                  endfor
+                -%}
+                {%- if val_in_stock -%}{{ val }}{%- else -%}<s>{{ val }}</s>{%- endif -%}
+                {%- unless forloop.last %} &middot; {% endunless -%}
+              {%- endfor -%}
+            </span>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- comment -%}
+        Material and low stock share the last row, as in the reference.
+      {%- endcomment -%}
+      {%- liquid
+        assign show_mat = false
+        if show_material and product.metafields.custom.material.value != blank
+          assign show_mat = true
+        endif
+        assign show_low = false
+        if show_low_stock and stock_tracked and stock_total > 0 and stock_total <= low_stock_threshold
+          assign show_low = true
+        endif
+      -%}
+      {%- if show_mat or show_low -%}
+        <span class="pcard__meta">
+          {%- if show_mat -%}<span class="pcard__material">{{ product.metafields.custom.material.value }}</span>{%- endif -%}
+          {%- if show_low -%}<span class="pcard__low">{{ 'products.product.only_left' | t: count: stock_total }}</span>{%- endif -%}
+        </span>
       {%- endif -%}
     </div>
   </div>

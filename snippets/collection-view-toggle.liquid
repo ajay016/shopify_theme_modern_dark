@@ -32,17 +32,10 @@
   </button>
 </div>
 
-<style>
-  .view-toggle { display: flex; gap: 4px; }
-  .view-toggle__btn {
-    display: grid; place-items: center;
-    background: transparent;
-    border: 1px solid var(--border, rgba(200,169,110,.18));
-    color: var(--muted, rgba(245,240,232,.62));
-    padding: 8px 10px; cursor: pointer;
-    transition: border-color .2s, color .2s;
-  }
-  .view-toggle__btn.is-active,
-  .view-toggle__btn:hover { border-color: var(--gold, #C8A96E); color: var(--gold, #C8A96E); }
-  .view-toggle__btn:focus-visible { outline: 2px solid var(--gold, #C8A96E); outline-offset: 2px; }
-</style>
+{%- comment -%}
+  Styles for this snippet live in assets/theme.css, with the rest of the
+  collection toolbar. They were inline here, and a snippet's styles land
+  in the page after theme.css, so this block silently overrode the
+  stylesheet -- the sort label stayed at 10px however theme.css was
+  edited. Same fault as the section-level block removed earlier.
+{%- endcomment -%}

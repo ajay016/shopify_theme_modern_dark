@@ -10,9 +10,10 @@
   </select>
 </div>
 
-<style>
-  .sort-by { display: flex; align-items: center; gap: 10px; }
-  .sort-by__label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-  .sort-by__select { background: transparent; border: 1px solid var(--border); color: var(--cream); font-family: var(--ff-body); font-size: 12px; padding: 8px 32px 8px 12px; appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236E6A66' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
-  .sort-by__select:focus { outline: none; border-color: var(--gold); }
-</style>
+{%- comment -%}
+  Styles for this snippet live in assets/theme.css, with the rest of the
+  collection toolbar. They were inline here, and a snippet's styles land
+  in the page after theme.css, so this block silently overrode the
+  stylesheet -- the sort label stayed at 10px however theme.css was
+  edited. Same fault as the section-level block removed earlier.
+{%- endcomment -%}

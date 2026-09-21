@@ -1771,38 +1771,6 @@ body.has-announcement .site-header { top: 44px; }
 }
 
 
-/* Toolbar */
-.collection-toolbar {
-  padding: 20px var(--side-padding);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border, rgba(200,169,110,.18));
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.toolbar-filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.toolbar-right { display: flex; align-items: center; gap: 16px; }
-
-/* View toggle */
-.view-toggle { display: flex; gap: 2px; }
-.view-btn {
-  width: 36px; height: 36px;
-  border: 1px solid var(--border, rgba(200,169,110,.18));
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.25s;
-}
-.view-btn svg { width: 14px; height: 14px; fill: none; stroke: var(--muted, rgba(245,240,232,.62)); stroke-width: 1.5; transition: stroke 0.25s; }
-.view-btn:hover,
-.view-btn.is-active { border-color: var(--gold, #C8A96E); background: var(--gold-dim, rgba(200,169,110,.12)); }
-.view-btn.is-active svg,
-.view-btn:hover svg { stroke: var(--gold, #C8A96E); }
-
 /* Product grid layout classes */
 .product-grid { display: grid; gap: clamp(16px, 2vw, 30px); }
 .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
@@ -1977,23 +1945,6 @@ body.has-announcement .site-header { top: 44px; }
    whole collection layout rather than the grid, so the sidebar moves
    with it.
    ------------------------------------------------------------------ */
-.collection-page--boxed .collection-layout,
-.collection-page--boxed .collection-toolbar,
-.collection-page--boxed .collection-title > .container {
-  max-width: var(--container-width, 1440px);
-  margin-inline: auto;
-}
-.collection-page--wide .collection-layout,
-.collection-page--wide .collection-toolbar,
-.collection-page--wide .collection-title > .container {
-  max-width: 1780px;
-  margin-inline: auto;
-}
-.collection-page--full .collection-layout,
-.collection-page--full .collection-toolbar,
-.collection-page--full .collection-title > .container {
-  max-width: none;
-}
 
 /* Products area */
 .products-area { padding: 40px var(--side-padding); }
@@ -2241,15 +2192,6 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .breadcrumb a { color: var(--cream, #F5F0E8); opacity: 0.6; transition: color var(--transition); }
 .breadcrumb a:hover { color: var(--gold, #C8A96E); }
 .breadcrumb__sep { color: var(--gold, #C8A96E); opacity: 0.4; }
-
-
-/* ============================================================
-   Pagination
-   ============================================================ */
-/* The older .pagination block lived here. It stacked 60px of padding on
-   top of the block below, and styled a .is-current modifier no template
-   emits. Removed -- see the single definition further down. */
-.pagination__dots { color: var(--cp-mut, rgba(245,240,232,.62)); }
 
 
 /* ============================================================
@@ -2614,26 +2556,6 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 }
 .collection-title__split .collection-title__count { margin: 0; }
 
-/* ---------- Toolbar ---------- */
-.collection-toolbar {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 16px; flex-wrap: wrap;
-  padding-block: 14px; margin-bottom: 18px;
-  border-top: 1px solid var(--cp-bdr);
-  border-bottom: 1px solid var(--cp-bdr);
-}
-.collection-toolbar--inline { border-top: 0; margin-top: 0; }
-.toolbar-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
-.toolbar-btn {
-  display: inline-flex; align-items: center; gap: 9px;
-  padding: 10px 16px; cursor: pointer;
-  border: 1px solid var(--cp-bdr); background: transparent; color: var(--cp-fg);
-  font-family: var(--ff-body,'Outfit',sans-serif);
-  font-size: calc(12px * var(--fs-scale,1));
-  font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
-  transition: border-color .2s, color .2s;
-}
-.toolbar-btn:hover { border-color: var(--cp-acc); color: var(--cp-acc); }
 
 /* ---------- Sidebar ---------- */
 .sidebar-clear {
@@ -2675,43 +2597,8 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .collection-empty p { margin: 0; font-size: calc(15px * var(--fs-scale,1)); color: var(--cp-mut); }
 
 /* ---------- Pagination ---------- */
-.pagination {
-  display: flex; align-items: center; justify-content: center;
-  flex-wrap: wrap; gap: 6px;
-  margin: clamp(24px,3vh,34px) 0 clamp(28px,4vh,44px);
-  padding: 0;
-}
-.pagination__item {
-  display: inline-grid; place-items: center;
-  min-width: 40px; height: 40px; padding: 0 12px;
-  text-decoration: none; color: var(--cp-fg);
-  border: 1px solid transparent;
-  font-size: calc(13px * var(--fs-scale,1));
-  transition: border-color .2s, color .2s;
-}
-.pagination__item:hover { border-color: var(--cp-acc); color: var(--cp-acc); }
-.pagination__item--current {
-  border-color: var(--cp-acc); background: var(--cp-acc); color: var(--on-gold,#0A0A0A); font-weight: 600;
-}
-.pagination__item--gap { color: var(--cp-mut); pointer-events: none; }
-.pagination__item--prev,
-.pagination__item--next {
-  letter-spacing: .1em; text-transform: uppercase;
-  font-size: calc(12px * var(--fs-scale,1)); font-weight: 600;
-}
-
-.pagination-load-more { display: flex; justify-content: center; margin-top: clamp(32px,5vh,52px); }
-.pagination-load-more .btn-ghost { min-width: 240px; }
-.load-more-count { color: var(--cp-mut); margin-left: 6px; }
-
-.pagination-infinite { display: flex; justify-content: center; padding: 40px 0; }
-.pagination-spinner {
-  width: 26px; height: 26px; border-radius: 50%;
-  border: 2px solid var(--cp-bdr); border-top-color: var(--cp-acc);
-  animation: cp-spin .8s linear infinite;
-}
 @keyframes cp-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .pagination-spinner { animation-duration: 2.4s; } }
+@media (prefers-reduced-motion: reduce) { }
 
 /* ---------- Rich text inside the collection description ---------- */
 .collection-title .rte p { margin: 0 0 10px; }
@@ -2978,28 +2865,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 
 /* Previous / Next wrapped onto two lines and collided with the numbers,
    because they inherit a 40px min-width grid cell built for a digit. */
-.pagination__item--prev,
-.pagination__item--next {
-  white-space: nowrap;
-  min-width: 0;
-  padding: 0 16px;
-  gap: 8px;
-  display: inline-flex;
-  align-items: center;
-}
-.pagination { gap: 4px; }
-.pagination__item { border: 1px solid transparent; }
 
-/* An earlier .pagination__item rule hard-sets width: 40px, so Previous/Next
-   overflowed their box and collided with the page numbers — and page 10 would
-   have done the same. Width becomes content-driven with 40px as a floor. */
-.pagination__item {
-  width: auto;
-  min-width: 40px;
-  flex: 0 0 auto;
-}
-.pagination__item--prev,
-.pagination__item--next { min-width: 0; }
 
 /* The banner sat flush against the grid with no separation, so the first row
    of cards read as tucked underneath it. It also needs an explicit stacking
@@ -3013,8 +2879,6 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .collection-title--style-2 .collection-title__banner { position: relative; z-index: 0; }
 /* With a banner above it the toolbar needs its own air, or the filter button
    and sort control sit on the banner's edge. */
-.collection-banner + .collection-toolbar,
-.collection-title--style-2 + .collection-toolbar { margin-top: 0; }
 .collection-layout { position: relative; z-index: 1; }
 
 
@@ -3023,35 +2887,6 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 
 /* --- Groups: hairline rules, quieter headings --- */
 
-
-/* --- Toolbar: one hairline row --- */
-.collection-toolbar {
-  border-top: 0;
-  border-bottom: 1px solid var(--cp-bdr);
-  padding-block: 0 16px;
-  margin-bottom: 22px;
-}
-.toolbar-btn { border-color: var(--cp-bdr); font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: .18em; padding: 11px 18px; }
-
-
-/* --- Pagination: numerals, not buttons --- */
-.pagination { gap: 2px; border-top: 1px solid var(--cp-bdr); }
-.pagination__item {
-  border: 0;
-  opacity: .55;
-  font-size: calc(12px * var(--fs-scale, 1));
-  letter-spacing: .08em;
-}
-.pagination__item:hover { opacity: 1; color: var(--cp-acc); border: 0; }
-.pagination__item--current {
-  background: transparent;
-  color: var(--cp-fg);
-  opacity: 1;
-  font-weight: 600;
-  border-bottom: 1px solid var(--cp-fg);
-  border-radius: 0;
-}
-.pagination__item--prev, .pagination__item--next { opacity: .75; }
 
 /* --- Title: more editorial --- */
 .collection-title { padding: clamp(44px,7vh,86px) 0 clamp(24px,3.4vh,38px); }
@@ -3359,27 +3194,35 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 
 /* Inset by half a thumb so neither handle overhangs the panel at the ends;
    the rail is pulled back out so it still spans the full width. */
+/* Vertical alignment: the rail, the fill and the input all centre on the
+   same axis. Pinning the rail to a fixed top while the thumb centres
+   inside the input's own box let the two drift apart, which is what put
+   the handles above the line. The input is the same height as the thumb,
+   so thumb centre == input centre == rail centre by construction. */
 .cfilter-price__track { position: relative; height: 30px; margin: 0 8px; }
 .cfilter-price__track::before {
-  content: ''; position: absolute; top: 14px; left: -8px; right: -8px;
-  height: 2px; background: var(--f-bdr);
+  content: ''; position: absolute; top: 50%; left: -8px; right: -8px;
+  height: 2px; transform: translateY(-50%);
+  background: var(--f-bdr);
 }
 .cfilter-price__fill {
-  position: absolute; top: 14px; height: 2px;
+  position: absolute; top: 50%; height: 2px;
+  transform: translateY(-50%);
   background: var(--f-acc); left: 0; right: 0;
 }
 .cfilter-price__range {
-  position: absolute; top: 0; left: 0;
-  width: 100%; height: 30px; margin: 0; padding: 0;
+  position: absolute; top: 50%; left: 0;
+  transform: translateY(-50%);
+  width: 100%; height: 15px; margin: 0; padding: 0;
   appearance: none; -webkit-appearance: none;
   background: none; border: 0; pointer-events: none;
 }
 .cfilter-price__range:focus { outline: none; }
-.cfilter-price__range::-webkit-slider-runnable-track { background: transparent; border: 0; height: 30px; }
-.cfilter-price__range::-moz-range-track { background: transparent; border: 0; height: 30px; }
+.cfilter-price__range::-webkit-slider-runnable-track { background: transparent; border: 0; height: 15px; }
+.cfilter-price__range::-moz-range-track { background: transparent; border: 0; height: 15px; }
 .cfilter-price__range::-webkit-slider-thumb {
   appearance: none; -webkit-appearance: none; pointer-events: all;
-  width: 15px; height: 15px; border-radius: 50%;
+  width: 15px; height: 15px; margin-top: 0; border-radius: 50%;
   background: var(--cp-bg, #0A0A0A);
   border: 1.5px solid var(--f-acc);
   box-shadow: 0 1px 5px rgba(0,0,0,.45);
@@ -3513,14 +3356,6 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .filter-drawer__footer > * { flex: 1; }
 
 /* --- count badge on the toolbar filter button -------------------------- */
-.collection-toolbar .filter-count {
-  display: inline-grid; place-content: center;
-  min-width: 18px; height: 18px; padding: 0 5px; margin-left: 3px;
-  border-radius: 999px;
-  background: var(--cp-acc, var(--gold, #C8A96E)); color: var(--on-gold, #0A0A0A);
-  font-family: var(--ff-mono, ui-monospace, monospace);
-  font-size: 10px; font-weight: 500;
-}
 
 @media (max-width: 1000px) {
   .collection-sidebar { display: none; }
@@ -3546,3 +3381,154 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .collection-title--style-4 .collection-title__centered { text-align: center; padding-top: 56px; }
 .collection-title--style-5 .collection-title__split { padding-top: 32px; }
 .collection-title--style-5 .container { display: flex; align-items: baseline; justify-content: space-between; }
+
+
+/* ======================================================================
+   COLLECTION TOOLBAR AND PAGINATION
+
+   Ported from docs/design/collection-reference.html. Replaces two
+   competing .collection-toolbar blocks and two .toolbar-right rules that
+   had accumulated the same way the filter styles did -- 43 rules in all,
+   where the later definition silently won.
+
+   Sizes are fixed px. They are chrome, not body copy, so --fs-scale must
+   not touch them; that is what made the panel and cards read oversized at
+   the store's 18px body setting.
+   ====================================================================== */
+
+.collection-toolbar {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 14px 0 16px;
+  border-bottom: 1px solid var(--cp-bdr, rgba(200,169,110,.18));
+  position: sticky; top: var(--header-h, 66px);
+  background: color-mix(in oklab, var(--cp-bg, #0A0A0A) 92%, transparent);
+  backdrop-filter: blur(10px);
+  z-index: 40;
+}
+.collection-toolbar--inline { border-top: 0; margin-top: 0; }
+.toolbar-filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.toolbar-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+
+/* Result count */
+.toolbar-count { font-size: 12.5px; color: var(--cp-mut, rgba(245,240,232,.62)); }
+.toolbar-count b { color: var(--cp-fg, #F5F0E8); font-weight: 500; }
+
+/* The filter button on drawer / dropdown layouts */
+.toolbar-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 11px; cursor: pointer;
+  border: 1px solid var(--cp-bdr, rgba(200,169,110,.18));
+  border-radius: 2px;
+  background: transparent; color: var(--cp-fg, #F5F0E8);
+  font-family: var(--ff-body);
+  font-size: 12px; letter-spacing: .05em;
+  transition: border-color .2s ease, color .2s ease;
+}
+.toolbar-btn:hover { border-color: var(--cp-acc, #C8A96E); color: var(--cp-acc, #C8A96E); }
+
+/* Sort */
+.sort-by { display: flex; align-items: center; gap: 8px;
+  border: 1px solid var(--cp-bdr, rgba(200,169,110,.18)); border-radius: 2px;
+  padding: 7px 11px; }
+.sort-by__label {
+  font-size: 12px; letter-spacing: .05em;
+  color: var(--cp-mut, rgba(245,240,232,.62)); white-space: nowrap;
+}
+.sort-by__select {
+  background: none; border: 0; cursor: pointer;
+  color: var(--cp-fg, #F5F0E8);
+  font-family: var(--ff-body);
+  font-size: 12px; letter-spacing: .05em;
+  padding: 0 2px 0 0; width: auto; min-width: 0;
+}
+.sort-by__select:focus { outline: none; }
+.sort-by__select option { background: var(--s2-bg, #131313); color: var(--cp-fg, #F5F0E8); }
+
+/* Grid / list toggle, as one segmented control */
+.view-toggle {
+  display: flex; gap: 0;
+  border: 1px solid var(--cp-bdr, rgba(200,169,110,.18));
+  border-radius: 2px; overflow: hidden;
+}
+.view-toggle__btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 10px; cursor: pointer;
+  background: none; border: 0;
+  color: var(--cp-mut, rgba(245,240,232,.62));
+  font-family: var(--ff-body);
+  font-size: 11.5px; letter-spacing: .06em;
+  transition: background-color .2s ease, color .2s ease;
+}
+.view-toggle__btn svg { width: 14px; height: 14px; }
+.view-toggle__btn:hover { color: var(--cp-fg, #F5F0E8); }
+.view-toggle__btn.is-active {
+  background: var(--cp-acc, #C8A96E);
+  color: var(--on-gold, #0A0A0A);
+}
+.view-toggle__btn:focus-visible,
+.sort-by__select:focus-visible { outline: 2px solid var(--cp-acc, #C8A96E); outline-offset: 2px; }
+
+/* ---- pagination ------------------------------------------------------
+   One definition. The previous pair stacked 60px of padding from one on
+   top of a 64px margin, 32px padding and a border-top from the other.
+   ---------------------------------------------------------------------- */
+.pagination {
+  display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap; gap: 6px;
+  margin: 0; padding-top: 26px;
+  border-top: 1px solid var(--cp-bdr, rgba(200,169,110,.18));
+}
+.pagination__item {
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  text-decoration: none;
+  color: var(--cp-mut, rgba(245,240,232,.62));
+  font-family: var(--ff-mono, ui-monospace, monospace);
+  font-size: 12.5px;
+  border: 0;
+  transition: background-color .2s ease, color .2s ease;
+}
+.pagination__item:hover { color: var(--cp-fg, #F5F0E8); }
+.pagination__item--current {
+  background: var(--cp-acc, #C8A96E);
+  color: var(--on-gold, #0A0A0A);
+}
+.pagination__item--gap { pointer-events: none; }
+.pagination__item--prev,
+.pagination__item--next {
+  width: auto; padding: 0 14px;
+  font-family: var(--ff-body);
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+}
+.pagination__dots { color: var(--cp-mut, rgba(245,240,232,.62)); }
+
+/* Load more, with a progress rail showing how far through the set you are */
+.pagination-load-more {
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  width: 100%; padding: 56px 0 10px;
+}
+.pagination-load-more .btn-ghost { min-width: 240px; }
+.load-more-count {
+  color: var(--cp-mut, rgba(245,240,232,.62));
+  font-family: var(--ff-mono, ui-monospace, monospace);
+  font-size: 11.5px; margin-left: 6px;
+}
+.load-more-progress {
+  width: min(260px, 60%); height: 2px; position: relative;
+  background: var(--cp-bdr, rgba(200,169,110,.18));
+}
+.load-more-progress i {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: var(--cp-acc, #C8A96E);
+  transition: width .5s ease;
+}
+
+.pagination-infinite { display: flex; justify-content: center; padding: 40px 0; }
+.pagination-spinner {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid var(--cp-bdr, rgba(200,169,110,.18));
+  border-top-color: var(--cp-acc, #C8A96E);
+  animation: pag-spin 1s linear infinite;
+}
+@keyframes pag-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .pagination-spinner { animation-duration: 2.4s; } }

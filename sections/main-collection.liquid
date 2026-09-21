@@ -476,10 +476,19 @@
 
     {%- comment -%} Main Products Area {%- endcomment -%}
     <div class="collection-main" id="collection-products">
-      {%- if effective_sidebar == 'none' and filter_style != 'drawer' and filter_style != 'dropdown' -%}
+      {%- comment -%}
+        The toolbar used to require effective_sidebar == 'none', so the
+        sidebar layouts -- the default -- rendered no sort control, no view
+        toggle and no result count at all. It now shows whenever the
+        drawer/dropdown bar above is not the one carrying them.
+      {%- endcomment -%}
+      {%- if filter_style != 'drawer' and filter_style != 'dropdown' -%}
         <div class="collection-toolbar collection-toolbar--inline">
-          {%- render 'collection-sort' -%}
-          {%- render 'collection-view-toggle', columns: columns, current: view_default -%}
+          <span class="toolbar-count">{{ 'collections.general.items' | t: count: collection.products_count }}</span>
+          <div class="toolbar-right">
+            {%- render 'collection-sort' -%}
+            {%- render 'collection-view-toggle', columns: columns, current: view_default -%}
+          </div>
         </div>
       {%- endif -%}
 
@@ -608,12 +617,23 @@
                 <a href="{{ paginate.previous.url }}" class="pagination__item pagination__item--prev">← {{ 'general.pagination.previous' | t }}</a>
               {%- endif -%}
               {%- for part in paginate.parts -%}
+                {%- comment -%}
+                  A non-link part is either the current page or an ellipsis.
+                  Comparing part.title to paginate.current_page never matched,
+                  because the title is a string and current_page an integer
+                  ("1" == 1 is false in Liquid), so the current page always
+                  fell through to the gap branch and rendered as a muted,
+                  unclickable number instead of the highlighted page.
+                {%- endcomment -%}
                 {%- if part.is_link -%}
                   <a href="{{ part.url }}" class="pagination__item">{{ part.title }}</a>
-                {%- elsif part.title == paginate.current_page -%}
-                  <span class="pagination__item pagination__item--current" aria-current="page">{{ part.title }}</span>
                 {%- else -%}
-                  <span class="pagination__item pagination__item--gap">{{ part.title }}</span>
+                  {%- assign part_num = part.title | plus: 0 -%}
+                  {%- if part_num > 0 -%}
+                    <span class="pagination__item pagination__item--current" aria-current="page">{{ part.title }}</span>
+                  {%- else -%}
+                    <span class="pagination__item pagination__item--gap">{{ part.title }}</span>
+                  {%- endif -%}
                 {%- endif -%}
               {%- endfor -%}
               {%- if paginate.next -%}

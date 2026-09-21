@@ -356,10 +356,14 @@
                         maximum, so the rail covers the real range and both
                         handles can reach their ends.
 
-                        min_value.value / max_value.value are already in
-                        currency units when a filter is applied, unlike
-                        range_min / range_max which are cents. They must not be
-                        passed through money_without_currency a second time.
+                        min_value.value and max_value.value come back in
+                        cents, exactly like range_min and range_max, so all
+                        four go through money_without_currency. An earlier
+                        version of this block assumed the applied values were
+                        already in currency units and skipped the conversion;
+                        the result was that every slide multiplied the price by
+                        100, because the value submitted to the URL is in units
+                        but the value Shopify reports back is in cents.
                       {%- endcomment -%}
                       {%- comment -%}
                         Presence is tested by rendering to a string, not with
@@ -375,12 +379,12 @@
 
                         assign p_min = p_floor
                         if pmin_raw != ''
-                          assign p_min = pmin_raw | remove: ',' | floor
+                          assign p_min = filter.min_value.value | money_without_currency | remove: ',' | floor
                         endif
 
                         assign p_max = p_ceil
                         if pmax_raw != ''
-                          assign p_max = pmax_raw | remove: ',' | ceil
+                          assign p_max = filter.max_value.value | money_without_currency | remove: ',' | ceil
                         endif
                       -%}
                       <div class="cfilter-price__track" data-price-track>

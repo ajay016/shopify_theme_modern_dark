@@ -193,12 +193,16 @@
         {%- if filter_style != 'drawer' and filter_style != 'dropdown' -%}
           <div class="sidebar-header">
             <h2 class="sidebar-header__title">{{ 'collections.filtering.filters' | t }}</h2>
-            {%- assign has_active = false -%}
-            {%- for f in collection.filters -%}
-              {%- if f.active_values.size > 0 -%}{%- assign has_active = true -%}{%- endif -%}
-            {%- endfor -%}
-            {%- if has_active -%}
+            {%- liquid
+              assign applied = 0
+              for f in collection.filters
+                assign applied = applied | plus: f.active_values.size
+              endfor
+            -%}
+            {%- if applied > 0 -%}
               <a href="{{ collection.url }}" class="sidebar-clear">{{ 'collections.filtering.clear_all' | t }}</a>
+            {%- else -%}
+              <span class="sidebar-header__count">{{ 'collections.filtering.applied' | t: count: applied }}</span>
             {%- endif -%}
           </div>
 
@@ -260,7 +264,29 @@
                       endif
                     -%}
 
-                    {%- if is_swatch_group -%}
+                    {%- comment -%}
+                      Size reads as something you press, not a tickbox list.
+                      Detected from the filter label so it works for "Size",
+                      "Shoe size" and so on.
+                    {%- endcomment -%}
+                    {%- assign is_size_group = false -%}
+                    {%- if filter_key contains 'size' -%}{%- assign is_size_group = true -%}{%- endif -%}
+
+                    {%- if is_size_group -%}
+                      <div class="cfilter-pills">
+                        {%- for value in filter.values -%}
+                          <label class="cfilter-pill{% if value.count == 0 %} is-unavailable{% endif %}" title="{{ value.label }}">
+                            <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
+                              {% if value.active %}checked{% endif %}
+                              data-filter-url="{{ value.url_to_add }}"
+                              data-filter-remove="{{ value.url_to_remove }}"
+                            >
+                            <span>{{ value.label }}</span>
+                            <b class="cfilter-pill__n">{{ value.count }}</b>
+                          </label>
+                        {%- endfor -%}
+                      </div>
+                    {%- elsif is_swatch_group -%}
                       {%- comment -%}
                         Three presentations, chosen in the theme editor. Only
                         "dots" hides the colour name, and it is not the default:
@@ -268,6 +294,11 @@
                         what "the beige one" is called.
                       {%- endcomment -%}
                       {%- assign sw_style = section.settings.swatch_style | default: 'list' -%}
+                      {%- if filter.values.size > 8 -%}
+                        <input type="search" class="filter-search" data-filter-search
+                               placeholder="{{ 'collections.filtering.search_values' | t: count: filter.values.size }}"
+                               aria-label="{{ 'collections.filtering.search_values' | t: count: filter.values.size }}">
+                      {%- endif -%}
                       <div class="filter-swatches filter-swatches--{{ sw_style }}">
                         {%- for value in filter.values -%}
                           <label class="filter-swatch{% if value.active %} is-active{% endif %}" title="{{ value.label }} ({{ value.count }})">
@@ -276,6 +307,7 @@
                               data-filter-url="{{ value.url_to_add }}"
                               data-filter-remove="{{ value.url_to_remove }}"
                             >
+                            <span class="filter-swatch__box" aria-hidden="true"></span>
                             <span class="filter-swatch__dot"
                               style="{%- render 'swatch-style', label: value.label, swatch: value.swatch -%}"
                               aria-hidden="true"></span>
@@ -356,6 +388,25 @@
                                  value="{{ p_max }}" min="{{ p_floor }}" max="{{ p_ceil }}"
                                  aria-label="{{ 'collections.filtering.price_max' | t }}">
                         </label>
+                      </div>
+
+                      {%- comment -%}
+                        Preset bands, cut from the collection's own price
+                        range so they suit the catalogue rather than assuming
+                        a currency or a price bracket. They drive the number
+                        fields, which already carry the navigation.
+                      {%- endcomment -%}
+                      {%- liquid
+                        assign span = p_ceil | minus: p_floor
+                        assign q1 = span | times: 25 | divided_by: 100 | plus: p_floor | round
+                        assign q2 = span | times: 50 | divided_by: 100 | plus: p_floor | round
+                        assign q3 = span | times: 75 | divided_by: 100 | plus: p_floor | round
+                      -%}
+                      <div class="cfilter-pills cfilter-pills--price">
+                        <button type="button" data-price-band data-lo="{{ p_floor }}" data-hi="{{ q1 }}">{{ 'collections.filtering.under' | t }} {{ q1 | times: 100 | money_without_trailing_zeros }}</button>
+                        <button type="button" data-price-band data-lo="{{ q1 }}" data-hi="{{ q2 }}">{{ q1 | times: 100 | money_without_trailing_zeros }} &ndash; {{ q2 | times: 100 | money_without_trailing_zeros }}</button>
+                        <button type="button" data-price-band data-lo="{{ q2 }}" data-hi="{{ q3 }}">{{ q2 | times: 100 | money_without_trailing_zeros }} &ndash; {{ q3 | times: 100 | money_without_trailing_zeros }}</button>
+                        <button type="button" data-price-band data-lo="{{ q3 }}" data-hi="{{ p_ceil }}">{{ q3 | times: 100 | money_without_trailing_zeros }}+</button>
                       </div>
                     </div>
                   {%- comment -%}

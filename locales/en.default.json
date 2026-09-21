@@ -217,7 +217,13 @@
       "price_min": "Min",
       "price_max": "Max",
       "clear": "Clear",
-      "sort_by": "Sort by"
+      "sort_by": "Sort by",
+      "applied": {
+        "one": "{{ count }} applied",
+        "other": "{{ count }} applied"
+      },
+      "search_values": "Search {{ count }} values",
+      "under": "Under"
     }
   },
   "quick_view": {

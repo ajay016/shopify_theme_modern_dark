@@ -1682,8 +1682,8 @@ body.has-announcement .site-header { top: 44px; }
    ============================================================ */
 .collection-layout {
   display: grid;
-  grid-template-columns: 288px 1fr;
-  gap: 40px;
+  grid-template-columns: 262px minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 54px);
   align-items: start;
 }
 /* The sidebar is always first in the DOM so it reaches screen readers and
@@ -1695,8 +1695,8 @@ body.has-announcement .site-header { top: 44px; }
 /* The section emits `--sidebar-left` / `--sidebar-right`; the rules above
    were written for a different naming and so never matched, leaving every
    collection on the default left-hand grid regardless of the setting. */
-.collection-layout--sidebar-left  { grid-template-columns: 288px 1fr; }
-.collection-layout--sidebar-right { grid-template-columns: 1fr 288px; }
+.collection-layout--sidebar-left  { grid-template-columns: 262px minmax(0, 1fr); }
+.collection-layout--sidebar-right { grid-template-columns: minmax(0, 1fr) 262px; }
 .collection-layout:not(.collection-layout--has-sidebar) { grid-template-columns: 1fr; }
 @media (max-width: 1000px) {
   .collection-layout--sidebar-left,
@@ -3176,6 +3176,24 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .filter-swatch { position: relative; cursor: pointer; }
 .filter-swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
 
+/* The reference shows a tickbox beside the colour chip, not the chip alone. */
+.filter-swatch__box {
+  width: 14px; height: 14px; min-width: 14px; flex: none;
+  border: 1px solid var(--f-bdr); border-radius: 2px;
+  background: var(--lift, rgba(255,255,255,.04));
+  position: relative;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+.filter-swatch input:checked ~ .filter-swatch__box {
+  background: var(--f-acc); border-color: var(--f-acc);
+}
+.filter-swatch input:checked ~ .filter-swatch__box::after {
+  content: ''; position: absolute; left: 4px; top: 1px;
+  width: 4px; height: 8px;
+  border: solid var(--f-on); border-width: 0 1.5px 1.5px 0;
+  transform: rotate(42deg);
+}
+
 .filter-swatch__dot {
   width: 15px; height: 15px; border-radius: 50%; flex: none;
   background-size: cover; background-position: center;
@@ -3218,7 +3236,17 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 
 /* --- pills: sizes, discount, new in, rating, price bands -------------- */
 .cfilter-pills { display: flex; flex-wrap: wrap; gap: 7px; }
-.cfilter-pills--price { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.cfilter-pills--price { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+.cfilter-pills--price button {
+  border: 1px solid var(--f-bdr); background: none;
+  padding: 7px 4px; border-radius: 2px;
+  font-family: var(--ff-body);
+  font-size: calc(11.5px * var(--fs-scale, 1));
+  letter-spacing: .03em; color: var(--f-mut); cursor: pointer;
+  transition: border-color .18s ease, color .18s ease;
+}
+.cfilter-pills--price button:hover,
+.cfilter-pills--price button.is-active { border-color: var(--f-acc); color: var(--f-acc); }
 
 .cfilter-pill {
   position: relative;

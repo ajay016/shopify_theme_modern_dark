@@ -924,6 +924,38 @@
       paint();
     });
 
+    // Typing in a filter group's search box narrows that group's rows.
+    // Purely client-side over rows Shopify already rendered.
+    document.querySelectorAll('[data-filter-search]').forEach(box => {
+      const body = box.closest('.filter-group__body');
+      if (!body) return;
+      box.addEventListener('input', () => {
+        const q = box.value.trim().toLowerCase();
+        body.querySelectorAll('.filter-swatch, .filter-check').forEach(row => {
+          const name = (row.textContent || '').trim().toLowerCase();
+          row.style.display = !q || name.includes(q) ? '' : 'none';
+        });
+      });
+    });
+
+    // Preset price bands write into the number fields and fire the change
+    // the navigation below already listens for.
+    document.querySelectorAll('[data-price-band]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const row = btn.closest('.price-range-filter');
+        if (!row) return;
+        const nums = row.querySelectorAll('.price-range-inputs input[type="number"]');
+        if (nums.length < 2) return;
+        nums[0].value = btn.dataset.lo;
+        nums[1].value = btn.dataset.hi;
+        const lo = row.querySelector('[data-price-range="min"]');
+        const hi = row.querySelector('[data-price-range="max"]');
+        if (lo) lo.value = btn.dataset.lo;
+        if (hi) hi.value = btn.dataset.hi;
+        nums[0].dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    });
+
     // The native price range submits on change rather than per keystroke.
     document.querySelectorAll('.price-range-inputs input').forEach(inp => {
       inp.addEventListener('change', () => {

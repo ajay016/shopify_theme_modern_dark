@@ -346,18 +346,49 @@
                         inputs using the same classes as the built-in filter
                         set, so one stylesheet and one initialiser cover both.
                       {%- endcomment -%}
+                      {%- comment -%}
+                        Shopify gives these in cents, so money_without_currency
+                        yields values like "82.12". A range input steps by 1 by
+                        default, so 82.12 is not a valid stop and the browser
+                        clamps it to 82 -- the max handle then sits short of the
+                        end of its own rail. Bounds are taken to whole currency
+                        units, floor for the minimum and ceiling for the
+                        maximum, so the rail covers the real range and both
+                        handles can reach their ends.
+
+                        min_value.value / max_value.value are already in
+                        currency units when a filter is applied, unlike
+                        range_min / range_max which are cents. They must not be
+                        passed through money_without_currency a second time.
+                      {%- endcomment -%}
+                      {%- comment -%}
+                        Presence is tested by rendering to a string, not with
+                        `== blank`, which does not report an unset value
+                        reliably. Getting that wrong here silently set the
+                        maximum to zero and collapsed the whole rail.
+                      {%- endcomment -%}
+                      {%- capture pmin_raw %}{{ filter.min_value.value }}{% endcapture -%}
+                      {%- capture pmax_raw %}{{ filter.max_value.value }}{% endcapture -%}
                       {%- liquid
-                        assign p_floor = filter.range_min | money_without_currency | remove: ','
-                        assign p_ceil  = filter.range_max | money_without_currency | remove: ','
-                        assign p_min   = filter.min_value.value | default: filter.range_min | money_without_currency | remove: ','
-                        assign p_max   = filter.max_value.value | default: filter.range_max | money_without_currency | remove: ','
+                        assign p_floor = filter.range_min | money_without_currency | remove: ',' | floor
+                        assign p_ceil  = filter.range_max | money_without_currency | remove: ',' | ceil
+
+                        assign p_min = p_floor
+                        if pmin_raw != ''
+                          assign p_min = pmin_raw | remove: ',' | floor
+                        endif
+
+                        assign p_max = p_ceil
+                        if pmax_raw != ''
+                          assign p_max = pmax_raw | remove: ',' | ceil
+                        endif
                       -%}
                       <div class="cfilter-price__track" data-price-track>
                         <span class="cfilter-price__fill" data-price-fill></span>
-                        <input class="cfilter-price__range" type="range" data-price-range="min"
+                        <input class="cfilter-price__range" type="range" data-price-range="min" step="1"
                                min="{{ p_floor }}" max="{{ p_ceil }}" value="{{ p_min }}"
                                aria-label="{{ 'collections.filtering.price_min' | t | default: 'Minimum price' }}">
-                        <input class="cfilter-price__range" type="range" data-price-range="max"
+                        <input class="cfilter-price__range" type="range" data-price-range="max" step="1"
                                min="{{ p_floor }}" max="{{ p_ceil }}" value="{{ p_max }}"
                                aria-label="{{ 'collections.filtering.price_max' | t | default: 'Maximum price' }}">
                       </div>
@@ -369,9 +400,9 @@
                         the range in the shop's currency.
                       {%- endcomment -%}
                       <div class="cfilter-price__readout" aria-hidden="true">
-                        <span data-price-out="min">{{ filter.min_value.value | default: filter.range_min | money }}</span>
+                        <span data-price-out="min">{{ p_min | times: 100 | money }}</span>
                         <span class="cfilter-price__dash">&ndash;</span>
-                        <span data-price-out="max">{{ filter.max_value.value | default: filter.range_max | money }}</span>
+                        <span data-price-out="max">{{ p_max | times: 100 | money }}</span>
                       </div>
                       {%- assign cur_sym = cart.currency.symbol | default: shop.currency -%}
                       <div class="price-range-inputs">

@@ -1262,24 +1262,43 @@ body.has-announcement .site-header { top: 44px; }
 }
 
 /* Info */
-.pcard__info { padding: 16px 2px 0; }
+/* ------------------------------------------------------------------
+   Product card text, sized from docs/design/collection-reference.html.
+
+   These were written as calc(Npx * var(--fs-scale)). --fs-scale is
+   body-copy scale from the Body text size setting; at the store's 18px
+   it is 1.286, so the title rendered at 23-28px against the reference's
+   16.5px and the whole card read oversized. Card text is UI, not body
+   copy, so the sizes are fixed -- as they are in the reference.
+
+   The font families are untouched; only the scale changes.
+   ------------------------------------------------------------------ */
+.pcard__info {
+  padding: 13px 2px 0;
+  display: flex; flex-direction: column; gap: 5px; flex: 1;
+}
 .pcard__cat {
-  display:block; font-family: var(--ff-body);
-  font-size:calc(9px * var(--fs-scale, 1)); font-weight:500; letter-spacing:.22em; text-transform:uppercase;
-  color: var(--pc-acc); margin-bottom:6px;
+  display:block; font-family: var(--ff-body); margin: 0;
+  font-size: 10px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--pc-mut);
 }
 .pcard__name {
-  display:block; font-family: var(--ff-display);
-  font-size: calc(clamp(18px, 1.5vw, 22px) * var(--fs-scale, 1)); font-weight:400; line-height:1.2; color: var(--pc-fg);
+  display:block; font-family: var(--ff-display); margin: 0;
+  font-size: 16.5px; font-weight: 400; line-height: 1.25; letter-spacing: -.01em;
+  color: var(--pc-fg);
 }
 .pcard__name a { color: inherit; text-decoration:none; }
 .pcard__name a:hover { color: var(--pc-acc); }
 .pcard__price {
-  display:block; margin-top:6px; font-family: var(--ff-body);
-  font-size:calc(12px * var(--fs-scale, 1)); letter-spacing:.06em; color: var(--pc-mut);
+  display: flex; align-items: baseline; gap: 9px; margin: 2px 0 0;
+  font-family: var(--ff-body);
+  font-size: 14px; letter-spacing: .02em; color: var(--pc-fg);
 }
-.pcard__price-now { color: var(--pc-sale); }
-.pcard__price-was { margin-left:8px; opacity:.6; }
+.pcard__price-now { color: var(--pc-fg); }
+.pcard__price-was {
+  margin-left: 0; opacity: 1;
+  font-size: 12px; color: var(--pc-mut); text-decoration: line-through;
+}
 
 /* Text alignment */
 .pcard--align-center .pcard__info { text-align:center; }
@@ -1331,8 +1350,8 @@ body.has-announcement .site-header { top: 44px; }
 .pcard__size {
   min-width: 34px; padding: 6px 8px;
   text-align: center; text-decoration: none;
-  font-size: calc(11px * var(--fs-scale, 1));
-  font-weight: 500; letter-spacing: .06em;
+  font-size: 10.5px;
+  font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
   background: var(--onphoto-light, rgba(252,251,249,.96));
   color: var(--onphoto-light-fg, #16130F);
   transition: background .2s, color .2s;
@@ -1344,7 +1363,7 @@ body.has-announcement .site-header { top: 44px; }
 .pcard[data-quickadd="slide_up"]:hover .pcard__sizes { bottom: 58px; }
 
 /* Colour swatches */
-.pcard__swatches { display: flex; align-items: center; gap: 5px; margin-top: 8px; }
+.pcard__swatches { display: flex; align-items: center; gap: 6px; margin: 5px 0 0; }
 .pcard__swatch {
   width: 13px; height: 13px; padding: 0;
   border: 1px solid var(--pc-bdr, rgba(200,169,110,.28));
@@ -1360,25 +1379,23 @@ body.has-announcement .site-header { top: 44px; }
 .pcard__swatch.is-active { transform: scale(1.18); box-shadow: 0 0 0 2px var(--pc-acc, #C8A96E); }
 .pcard__swatch:focus-visible { outline: 2px solid var(--pc-acc, #C8A96E); outline-offset: 2px; }
 .pcard__swatch-more {
-  font-size: calc(10px * var(--fs-scale, 1));
+  font-size: 10.5px;
+  font-family: var(--ff-mono, ui-monospace, monospace);
   color: var(--pc-mut, var(--muted, rgba(245,240,232,.62)));
 }
 
 /* Star rating */
-.pcard__rating { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
-.pcard__stars { display: inline-flex; gap: 1px; font-size: calc(12px * var(--fs-scale, 1)); line-height: 1; }
+.pcard__rating { display: flex; align-items: center; gap: 5px; margin: 0; font-size: 10.5px; color: var(--pc-mut); }
+.pcard__stars { display: inline-flex; gap: 1px; font-size: 10.5px; line-height: 1; letter-spacing: 1px; }
 .pcard__star { color: var(--pc-bdr, rgba(200,169,110,.3)); }
 .pcard__star.is-on { color: var(--pc-acc, #C8A96E); }
-.pcard__rating-count {
-  font-size: calc(11px * var(--fs-scale, 1));
-  color: var(--pc-mut, var(--muted, rgba(245,240,232,.62)));
-}
+.pcard__rating-count { font-size: 10.5px; color: var(--pc-mut, var(--muted, rgba(245,240,232,.62))); }
 
 /* Material subtitle */
 .pcard__material {
-  display: block; margin-top: 4px;
-  font-size: calc(11px * var(--fs-scale, 1));
-  letter-spacing: .04em;
+  display: block; margin: 0;
+  font-size: 10.5px;
+  letter-spacing: .06em; text-transform: uppercase;
   color: var(--pc-mut, var(--muted, rgba(245,240,232,.62)));
 }
 
@@ -1812,7 +1829,7 @@ body.has-announcement .site-header { top: 44px; }
     gap: 16px;
     padding: 16px 0;
   }
-  .product-grid[data-view="list"] .pcard__name { font-size: calc(15px * var(--fs-scale, 1)); }
+  .product-grid[data-view="list"] .pcard__name { font-size: 26px; }
   .product-grid[data-view="list"] .pcard-atc { min-width: 0; width: 100%; }
 }
 
@@ -2907,7 +2924,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   background: var(--onphoto-light, rgba(252,251,249,.96));
   color: var(--onphoto-light-fg, #16130F);
 }
-.pcard__badge { font-size: calc(10px * var(--fs-scale, 1)); padding: 6px 10px; }
+.pcard__badge { font-size: 9.5px; letter-spacing: .18em; padding: 5px 9px; }
 
 /* Previous / Next wrapped onto two lines and collided with the numbers,
    because they inherit a 40px min-width grid cell built for a digit. */

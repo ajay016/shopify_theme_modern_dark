@@ -14,6 +14,9 @@ from liquid import Environment, DictLoader
 SNIPPETS = {
     'collection-filters': 'snippets/collection-filters.liquid',
     'swatch-style': 'snippets/swatch-style.liquid',
+    'collection-filter-groups': 'snippets/collection-filter-groups.liquid',
+    'collection-filter-values': 'snippets/collection-filter-values.liquid',
+    'icon-close': None,
     'product-card': None, 'collection-sort': None,
     'collection-view-toggle': None, 'icon-chevron-down': None,
 }

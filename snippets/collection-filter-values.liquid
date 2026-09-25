@@ -1,0 +1,249 @@
+{%- comment -%}
+  The options inside one Shopify filter group: colour swatches, size pills,
+  checkbox lists, the price slider with its fields and preset bands, and
+  boolean filters.
+
+  One copy, rendered by the sidebar, the filter drawer and the dropdown bar.
+  Three separate copies had drifted apart: the drawer had no swatches, pills,
+  slider or bands, and the dropdown handled list values only, so its Price
+  panel opened empty -- a price filter has no values to loop over.
+
+  Accepts:
+    - filter       {Object}  one entry from collection.filters
+    - swatch_style {String}  'list' | 'chips' | 'dots'
+{%- endcomment -%}
+{%- case filter.type -%}
+  {%- when 'list' -%}
+    {%- comment -%}
+      Shopify ships swatch data on colour filters — value.swatch
+      carries either a colour or an uploaded image. The previous
+      markup ignored it and drew a checkbox, so a Colour filter
+      rendered as a column of empty boxes. When a swatch exists
+      the value becomes a swatch; otherwise it stays a checkbox.
+    {%- endcomment -%}
+    {%- comment -%}
+      A colour filter is detected from the filter itself, not
+      from Shopify swatch data: that metadata only exists once
+      swatches are configured in Search & Discovery, so keying
+      off it showed checkboxes where swatches belong.
+
+      Swatch presence is probed by rendering the values to a
+      string. `value.swatch != blank` is not reliable for an
+      unset swatch, and treating unset as present turned
+      Availability and Brand into columns of grey dots.
+    {%- endcomment -%}
+    {%- capture sw_probe -%}
+      {%- for value in filter.values -%}{{ value.swatch }}{%- endfor -%}
+    {%- endcapture -%}
+    {%- liquid
+      assign filter_key = filter.label | downcase | strip
+      assign is_swatch_group = false
+      if filter_key contains 'color' or filter_key contains 'colour'
+        assign is_swatch_group = true
+      elsif sw_probe != ''
+        assign is_swatch_group = true
+      endif
+    -%}
+
+    {%- comment -%}
+      Size reads as something you press, not a tickbox list.
+      Detected from the filter label so it works for "Size",
+      "Shoe size" and so on.
+    {%- endcomment -%}
+    {%- assign is_size_group = false -%}
+    {%- if filter_key contains 'size' -%}{%- assign is_size_group = true -%}{%- endif -%}
+
+    {%- if is_size_group -%}
+      <div class="cfilter-pills">
+        {%- for value in filter.values -%}
+          <label class="cfilter-pill{% if value.count == 0 %} is-unavailable{% endif %}" title="{{ value.label }}">
+            <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
+              {% if value.active %}checked{% endif %}
+              data-filter-url="{{ value.url_to_add }}"
+              data-filter-remove="{{ value.url_to_remove }}"
+            >
+            <span>{{ value.label }}</span>
+            <b class="cfilter-pill__n">{{ value.count }}</b>
+          </label>
+        {%- endfor -%}
+      </div>
+    {%- elsif is_swatch_group -%}
+      {%- comment -%}
+        Three presentations, chosen in the theme editor. Only
+        "dots" hides the colour name, and it is not the default:
+        a grid of unlabelled circles forces a shopper to guess
+        what "the beige one" is called.
+      {%- endcomment -%}
+      {%- assign sw_style = swatch_style | default: 'list' -%}
+      {%- if filter.values.size > 8 -%}
+        <input type="search" class="filter-search" data-filter-search
+               placeholder="{{ 'collections.filtering.search_values' | t: count: filter.values.size }}"
+               aria-label="{{ 'collections.filtering.search_values' | t: count: filter.values.size }}">
+      {%- endif -%}
+      <div class="filter-swatches filter-swatches--{{ sw_style }}">
+        {%- for value in filter.values -%}
+          <label class="filter-swatch{% if value.active %} is-active{% endif %}" title="{{ value.label }} ({{ value.count }})">
+            <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
+              {% if value.active %}checked{% endif %}
+              data-filter-url="{{ value.url_to_add }}"
+              data-filter-remove="{{ value.url_to_remove }}"
+            >
+            <span class="filter-swatch__box" aria-hidden="true"></span>
+            <span class="filter-swatch__dot"
+              style="{%- render 'swatch-style', label: value.label, swatch: value.swatch -%}"
+              aria-hidden="true"></span>
+            {%- if sw_style == 'dots' -%}
+              <span class="visually-hidden">{{ value.label }}</span>
+            {%- else -%}
+              <span class="filter-swatch__name">{{ value.label }}</span>
+              <span class="filter-swatch__count">{{ value.count }}</span>
+            {%- endif -%}
+          </label>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <ul class="filter-list">
+        {%- for value in filter.values -%}
+          <li>
+            <label class="filter-check">
+              <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
+                {% if value.active %}checked{% endif %}
+                data-filter-url="{{ value.url_to_add }}"
+                data-filter-remove="{{ value.url_to_remove }}"
+              >
+              <span>{{ value.label }}</span>
+              <span class="filter-count-pill">{{ value.count }}</span>
+            </label>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  {%- when 'price_range' -%}
+    <div class="price-range-filter">
+      {%- comment -%}
+        This was an empty div carrying data attributes that no
+        script ever read, so the slider rendered as a dead line
+        above the number inputs. It now emits two real range
+        inputs using the same classes as the built-in filter
+        set, so one stylesheet and one initialiser cover both.
+      {%- endcomment -%}
+      {%- comment -%}
+        Shopify gives these in cents, so money_without_currency
+        yields values like "82.12". A range input steps by 1 by
+        default, so 82.12 is not a valid stop and the browser
+        clamps it to 82 -- the max handle then sits short of the
+        end of its own rail. Bounds are taken to whole currency
+        units, floor for the minimum and ceiling for the
+        maximum, so the rail covers the real range and both
+        handles can reach their ends.
+
+        min_value.value and max_value.value come back in
+        cents, exactly like range_min and range_max, so all
+        four go through money_without_currency. An earlier
+        version of this block assumed the applied values were
+        already in currency units and skipped the conversion;
+        the result was that every slide multiplied the price by
+        100, because the value submitted to the URL is in units
+        but the value Shopify reports back is in cents.
+      {%- endcomment -%}
+      {%- comment -%}
+        Presence is tested by rendering to a string, not with
+        `== blank`, which does not report an unset value
+        reliably. Getting that wrong here silently set the
+        maximum to zero and collapsed the whole rail.
+      {%- endcomment -%}
+      {%- capture pmin_raw %}{{ filter.min_value.value }}{% endcapture -%}
+      {%- capture pmax_raw %}{{ filter.max_value.value }}{% endcapture -%}
+      {%- liquid
+        assign p_floor = filter.range_min | money_without_currency | remove: ',' | floor
+        assign p_ceil  = filter.range_max | money_without_currency | remove: ',' | ceil
+
+        assign p_min = p_floor
+        if pmin_raw != ''
+          assign p_min = filter.min_value.value | money_without_currency | remove: ',' | floor
+        endif
+
+        assign p_max = p_ceil
+        if pmax_raw != ''
+          assign p_max = filter.max_value.value | money_without_currency | remove: ',' | ceil
+        endif
+      -%}
+      <div class="cfilter-price__track" data-price-track>
+        <span class="cfilter-price__fill" data-price-fill></span>
+        <input class="cfilter-price__range" type="range" data-price-range="min" step="1"
+               min="{{ p_floor }}" max="{{ p_ceil }}" value="{{ p_min }}"
+               aria-label="{{ 'collections.filtering.price_min' | t | default: 'Minimum price' }}">
+        <input class="cfilter-price__range" type="range" data-price-range="max" step="1"
+               min="{{ p_floor }}" max="{{ p_ceil }}" value="{{ p_max }}"
+               aria-label="{{ 'collections.filtering.price_max' | t | default: 'Maximum price' }}">
+      </div>
+      {%- comment -%}
+        The two inputs used to render with no value, only a
+        faint placeholder, so an untouched price filter looked
+        like two empty boxes. They are seeded with the current
+        bounds instead, and a readout above the slider states
+        the range in the shop's currency.
+      {%- endcomment -%}
+      <div class="cfilter-price__readout" aria-hidden="true">
+        <span data-price-out="min">{{ p_min | times: 100 | money }}</span>
+        <span class="cfilter-price__dash">&ndash;</span>
+        <span data-price-out="max">{{ p_max | times: 100 | money }}</span>
+      </div>
+      {%- assign cur_sym = cart.currency.symbol | default: shop.currency -%}
+      <div class="price-range-inputs">
+        <label class="cfilter-price__field">
+          <span aria-hidden="true">{{ cur_sym }}</span>
+          <input type="number" name="{{ filter.min_value.param_name }}"
+                 value="{{ p_min }}" min="{{ p_floor }}" max="{{ p_ceil }}"
+                 aria-label="{{ 'collections.filtering.price_min' | t }}">
+        </label>
+        <span class="cfilter-price__dash">&mdash;</span>
+        <label class="cfilter-price__field">
+          <span aria-hidden="true">{{ cur_sym }}</span>
+          <input type="number" name="{{ filter.max_value.param_name }}"
+                 value="{{ p_max }}" min="{{ p_floor }}" max="{{ p_ceil }}"
+                 aria-label="{{ 'collections.filtering.price_max' | t }}">
+        </label>
+      </div>
+
+      {%- comment -%}
+        Preset bands, cut from the collection's own price
+        range so they suit the catalogue rather than assuming
+        a currency or a price bracket. They drive the number
+        fields, which already carry the navigation.
+      {%- endcomment -%}
+      {%- liquid
+        assign span = p_ceil | minus: p_floor
+        assign q1 = span | times: 25 | divided_by: 100 | plus: p_floor | round
+        assign q2 = span | times: 50 | divided_by: 100 | plus: p_floor | round
+        assign q3 = span | times: 75 | divided_by: 100 | plus: p_floor | round
+      -%}
+      <div class="cfilter-pills cfilter-pills--price">
+        <button type="button" data-price-band data-lo="{{ p_floor }}" data-hi="{{ q1 }}">{{ 'collections.filtering.under' | t }} {{ q1 | times: 100 | money_without_trailing_zeros }}</button>
+        <button type="button" data-price-band data-lo="{{ q1 }}" data-hi="{{ q2 }}">{{ q1 | times: 100 | money_without_trailing_zeros }} &ndash; {{ q2 | times: 100 | money_without_trailing_zeros }}</button>
+        <button type="button" data-price-band data-lo="{{ q2 }}" data-hi="{{ q3 }}">{{ q2 | times: 100 | money_without_trailing_zeros }} &ndash; {{ q3 | times: 100 | money_without_trailing_zeros }}</button>
+        <button type="button" data-price-band data-lo="{{ q3 }}" data-hi="{{ p_ceil }}">{{ q3 | times: 100 | money_without_trailing_zeros }}+</button>
+      </div>
+    </div>
+  {%- comment -%}
+    Shopify's third filter type. "Availability" is a boolean
+    filter, and it was not handled here at all — it fell
+    through the case and rendered a heading with an empty body.
+  {%- endcomment -%}
+  {%- when 'boolean' -%}
+    <ul class="filter-list">
+      {%- for value in filter.values -%}
+        <li>
+          <label class="filter-check">
+            <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
+              {% if value.active %}checked{% endif %}
+              data-filter-url="{{ value.url_to_add }}"
+              data-filter-remove="{{ value.url_to_remove }}"
+            >
+            <span>{{ value.label }}</span>
+            {%- if value.count -%}<span class="filter-count-pill">{{ value.count }}</span>{%- endif -%}
+          </label>
+        </li>
+      {%- endfor -%}
+    </ul>
+{%- endcase -%}

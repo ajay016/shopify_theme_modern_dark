@@ -858,6 +858,47 @@
     if (filterDelegatesBound) return;
     filterDelegatesBound = true;
 
+    // ---- Filter drawer ------------------------------------------------
+    // Nothing opened this before. The Filters button in drawer mode was
+    // wired to no handler, and on small screens -- where the sidebar is
+    // hidden and this drawer is the only way in -- that meant no filters at
+    // all. Delegated, so it survives the theme editor re-rendering the page.
+    let lastOpener = null;
+    const drawerFor = el => {
+      const id = el && el.getAttribute('aria-controls');
+      return (id && document.getElementById(id)) || document.querySelector('[data-filter-drawer]');
+    };
+    const setDrawer = (drawer, open) => {
+      if (!drawer) return;
+      const overlay = drawer.nextElementSibling && drawer.nextElementSibling.matches('.filter-drawer__overlay')
+        ? drawer.nextElementSibling : null;
+      drawer.classList.toggle('is-open', open);
+      drawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+      if (overlay) overlay.classList.toggle('is-open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+      if (open) {
+        const first = drawer.querySelector('button, [href], input, select');
+        if (first) setTimeout(() => first.focus({ preventScroll: true }), 50);
+      } else if (lastOpener) {
+        lastOpener.focus({ preventScroll: true });
+      }
+    };
+
+    document.addEventListener('click', e => {
+      const opener = e.target.closest('[data-open-filter-drawer]');
+      if (opener) { lastOpener = opener; setDrawer(drawerFor(opener), true); return; }
+      const closer = e.target.closest('[data-close-filter-drawer]');
+      if (closer) {
+        setDrawer(closer.closest('[data-filter-drawer]') ||
+                  document.querySelector('[data-filter-drawer].is-open'), false);
+      }
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      const open = document.querySelector('[data-filter-drawer].is-open');
+      if (open) setDrawer(open, false);
+    });
+
     document.addEventListener('click', e => {
       // Expand / collapse a filter group.
       const toggle = e.target.closest('.filter-group__toggle');

@@ -1,0 +1,34 @@
+{%- comment -%}
+  Shopify's own filter groups (Search & Discovery), rendered once and shared
+  by the sidebar and the filter drawer.
+
+  The drawer used to carry its own separate, older copy of this markup: no
+  colour swatches, no size pills, no price slider, no price bands, no search.
+  It could never look like the sidebar, and every fix to one missed the
+  other. This is now the only copy.
+
+  Accepts:
+    - filter_style {String}  'sidebar' | 'toggle' | 'drawer' | ...
+                             'toggle' starts groups collapsed unless active
+    - swatch_style {String}  'list' | 'chips' | 'dots'
+{%- endcomment -%}
+{%- for filter in collection.filters -%}
+  {%- liquid
+    assign group_open = true
+    if filter_style == 'toggle'
+      assign group_open = false
+      if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value
+        assign group_open = true
+      endif
+    endif
+  -%}
+  <div class="filter-group" data-filter-group>
+    <button type="button" class="filter-group__toggle" aria-expanded="{% if group_open %}true{% else %}false{% endif %}">
+      {{ filter.label }}
+      <span class="fgrp-pm" aria-hidden="true"></span>
+    </button>
+    <div class="filter-group__body{% unless group_open %} is-collapsed{% endunless %}">
+      {%- render 'collection-filter-values', filter: filter, swatch_style: swatch_style -%}
+    </div>
+  </div>
+{%- endfor -%}

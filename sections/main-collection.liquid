@@ -154,7 +154,7 @@
   {%- if filter_style == 'drawer' or filter_style == 'dropdown' -%}
     <div class="collection-toolbar container">
       {%- if filter_style == 'drawer' -%}
-        <button class="toolbar-btn" data-open-filter-drawer>
+        <button type="button" class="toolbar-btn" data-open-filter-drawer aria-controls="filter-drawer-{{ section.id }}">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
           {{ 'collections.filtering.filter_button' | t }}
           {%- assign active_count = 0 -%}
@@ -164,20 +164,28 @@
       {%- elsif filter_style == 'dropdown' -%}
         <div class="dropdown-filters">
           {%- for filter in collection.filters -%}
+            {%- liquid
+              assign dd_count = filter.active_values.size
+              if filter.type == 'price_range'
+                assign dd_count = 0
+                capture dd_lo
+                  echo filter.min_value.value
+                endcapture
+                capture dd_hi
+                  echo filter.max_value.value
+                endcapture
+                if dd_lo != '' or dd_hi != ''
+                  assign dd_count = 1
+                endif
+              endif
+            -%}
             <details class="dropdown-filter" data-filter-group>
-              <summary>{{ filter.label }}</summary>
+              <summary>
+                {{ filter.label }}
+                {%- if dd_count > 0 %} <span class="dropdown-filter__count">{{ dd_count }}</span>{% endif -%}
+              </summary>
               <div class="dropdown-filter__panel">
-                {%- for value in filter.values -%}
-                  <label class="filter-check">
-                    <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
-                      {% if value.active %}checked{% endif %}
-                      data-filter-url="{{ value.url_to_add }}"
-                      data-filter-remove="{{ value.url_to_remove }}"
-                    >
-                    <span>{{ value.label }}</span>
-                    <span class="filter-count-pill">{{ value.count }}</span>
-                  </label>
-                {%- endfor -%}
+                {%- render 'collection-filter-values', filter: filter, swatch_style: section.settings.swatch_style -%}
               </div>
             </details>
           {%- endfor -%}
@@ -222,260 +230,7 @@
             long filter set reads as a short list of headings. A group holding an
             active value still opens, otherwise the applied filter is hidden.
           {%- endcomment -%}
-          {%- for filter in collection.filters -%}
-            {%- liquid
-              assign group_open = true
-              if filter_style == 'toggle'
-                assign group_open = false
-                if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value
-                  assign group_open = true
-                endif
-              endif
-            -%}
-            <div class="filter-group" data-filter-group>
-              <button type="button" class="filter-group__toggle" aria-expanded="{% if group_open %}true{% else %}false{% endif %}">
-                {{ filter.label }}
-                <span class="fgrp-pm" aria-hidden="true"></span>
-              </button>
-              <div class="filter-group__body{% unless group_open %} is-collapsed{% endunless %}">
-                {%- case filter.type -%}
-                  {%- when 'list' -%}
-                    {%- comment -%}
-                      Shopify ships swatch data on colour filters — value.swatch
-                      carries either a colour or an uploaded image. The previous
-                      markup ignored it and drew a checkbox, so a Colour filter
-                      rendered as a column of empty boxes. When a swatch exists
-                      the value becomes a swatch; otherwise it stays a checkbox.
-                    {%- endcomment -%}
-                    {%- comment -%}
-                      A colour filter is detected from the filter itself, not
-                      from Shopify swatch data: that metadata only exists once
-                      swatches are configured in Search & Discovery, so keying
-                      off it showed checkboxes where swatches belong.
-
-                      Swatch presence is probed by rendering the values to a
-                      string. `value.swatch != blank` is not reliable for an
-                      unset swatch, and treating unset as present turned
-                      Availability and Brand into columns of grey dots.
-                    {%- endcomment -%}
-                    {%- capture sw_probe -%}
-                      {%- for value in filter.values -%}{{ value.swatch }}{%- endfor -%}
-                    {%- endcapture -%}
-                    {%- liquid
-                      assign filter_key = filter.label | downcase | strip
-                      assign is_swatch_group = false
-                      if filter_key contains 'color' or filter_key contains 'colour'
-                        assign is_swatch_group = true
-                      elsif sw_probe != ''
-                        assign is_swatch_group = true
-                      endif
-                    -%}
-
-                    {%- comment -%}
-                      Size reads as something you press, not a tickbox list.
-                      Detected from the filter label so it works for "Size",
-                      "Shoe size" and so on.
-                    {%- endcomment -%}
-                    {%- assign is_size_group = false -%}
-                    {%- if filter_key contains 'size' -%}{%- assign is_size_group = true -%}{%- endif -%}
-
-                    {%- if is_size_group -%}
-                      <div class="cfilter-pills">
-                        {%- for value in filter.values -%}
-                          <label class="cfilter-pill{% if value.count == 0 %} is-unavailable{% endif %}" title="{{ value.label }}">
-                            <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
-                              {% if value.active %}checked{% endif %}
-                              data-filter-url="{{ value.url_to_add }}"
-                              data-filter-remove="{{ value.url_to_remove }}"
-                            >
-                            <span>{{ value.label }}</span>
-                            <b class="cfilter-pill__n">{{ value.count }}</b>
-                          </label>
-                        {%- endfor -%}
-                      </div>
-                    {%- elsif is_swatch_group -%}
-                      {%- comment -%}
-                        Three presentations, chosen in the theme editor. Only
-                        "dots" hides the colour name, and it is not the default:
-                        a grid of unlabelled circles forces a shopper to guess
-                        what "the beige one" is called.
-                      {%- endcomment -%}
-                      {%- assign sw_style = section.settings.swatch_style | default: 'list' -%}
-                      {%- if filter.values.size > 8 -%}
-                        <input type="search" class="filter-search" data-filter-search
-                               placeholder="{{ 'collections.filtering.search_values' | t: count: filter.values.size }}"
-                               aria-label="{{ 'collections.filtering.search_values' | t: count: filter.values.size }}">
-                      {%- endif -%}
-                      <div class="filter-swatches filter-swatches--{{ sw_style }}">
-                        {%- for value in filter.values -%}
-                          <label class="filter-swatch{% if value.active %} is-active{% endif %}" title="{{ value.label }} ({{ value.count }})">
-                            <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
-                              {% if value.active %}checked{% endif %}
-                              data-filter-url="{{ value.url_to_add }}"
-                              data-filter-remove="{{ value.url_to_remove }}"
-                            >
-                            <span class="filter-swatch__box" aria-hidden="true"></span>
-                            <span class="filter-swatch__dot"
-                              style="{%- render 'swatch-style', label: value.label, swatch: value.swatch -%}"
-                              aria-hidden="true"></span>
-                            {%- if sw_style == 'dots' -%}
-                              <span class="visually-hidden">{{ value.label }}</span>
-                            {%- else -%}
-                              <span class="filter-swatch__name">{{ value.label }}</span>
-                              <span class="filter-swatch__count">{{ value.count }}</span>
-                            {%- endif -%}
-                          </label>
-                        {%- endfor -%}
-                      </div>
-                    {%- else -%}
-                      <ul class="filter-list">
-                        {%- for value in filter.values -%}
-                          <li>
-                            <label class="filter-check">
-                              <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
-                                {% if value.active %}checked{% endif %}
-                                data-filter-url="{{ value.url_to_add }}"
-                                data-filter-remove="{{ value.url_to_remove }}"
-                              >
-                              <span>{{ value.label }}</span>
-                              <span class="filter-count-pill">{{ value.count }}</span>
-                            </label>
-                          </li>
-                        {%- endfor -%}
-                      </ul>
-                    {%- endif -%}
-                  {%- when 'price_range' -%}
-                    <div class="price-range-filter">
-                      {%- comment -%}
-                        This was an empty div carrying data attributes that no
-                        script ever read, so the slider rendered as a dead line
-                        above the number inputs. It now emits two real range
-                        inputs using the same classes as the built-in filter
-                        set, so one stylesheet and one initialiser cover both.
-                      {%- endcomment -%}
-                      {%- comment -%}
-                        Shopify gives these in cents, so money_without_currency
-                        yields values like "82.12". A range input steps by 1 by
-                        default, so 82.12 is not a valid stop and the browser
-                        clamps it to 82 -- the max handle then sits short of the
-                        end of its own rail. Bounds are taken to whole currency
-                        units, floor for the minimum and ceiling for the
-                        maximum, so the rail covers the real range and both
-                        handles can reach their ends.
-
-                        min_value.value and max_value.value come back in
-                        cents, exactly like range_min and range_max, so all
-                        four go through money_without_currency. An earlier
-                        version of this block assumed the applied values were
-                        already in currency units and skipped the conversion;
-                        the result was that every slide multiplied the price by
-                        100, because the value submitted to the URL is in units
-                        but the value Shopify reports back is in cents.
-                      {%- endcomment -%}
-                      {%- comment -%}
-                        Presence is tested by rendering to a string, not with
-                        `== blank`, which does not report an unset value
-                        reliably. Getting that wrong here silently set the
-                        maximum to zero and collapsed the whole rail.
-                      {%- endcomment -%}
-                      {%- capture pmin_raw %}{{ filter.min_value.value }}{% endcapture -%}
-                      {%- capture pmax_raw %}{{ filter.max_value.value }}{% endcapture -%}
-                      {%- liquid
-                        assign p_floor = filter.range_min | money_without_currency | remove: ',' | floor
-                        assign p_ceil  = filter.range_max | money_without_currency | remove: ',' | ceil
-
-                        assign p_min = p_floor
-                        if pmin_raw != ''
-                          assign p_min = filter.min_value.value | money_without_currency | remove: ',' | floor
-                        endif
-
-                        assign p_max = p_ceil
-                        if pmax_raw != ''
-                          assign p_max = filter.max_value.value | money_without_currency | remove: ',' | ceil
-                        endif
-                      -%}
-                      <div class="cfilter-price__track" data-price-track>
-                        <span class="cfilter-price__fill" data-price-fill></span>
-                        <input class="cfilter-price__range" type="range" data-price-range="min" step="1"
-                               min="{{ p_floor }}" max="{{ p_ceil }}" value="{{ p_min }}"
-                               aria-label="{{ 'collections.filtering.price_min' | t | default: 'Minimum price' }}">
-                        <input class="cfilter-price__range" type="range" data-price-range="max" step="1"
-                               min="{{ p_floor }}" max="{{ p_ceil }}" value="{{ p_max }}"
-                               aria-label="{{ 'collections.filtering.price_max' | t | default: 'Maximum price' }}">
-                      </div>
-                      {%- comment -%}
-                        The two inputs used to render with no value, only a
-                        faint placeholder, so an untouched price filter looked
-                        like two empty boxes. They are seeded with the current
-                        bounds instead, and a readout above the slider states
-                        the range in the shop's currency.
-                      {%- endcomment -%}
-                      <div class="cfilter-price__readout" aria-hidden="true">
-                        <span data-price-out="min">{{ p_min | times: 100 | money }}</span>
-                        <span class="cfilter-price__dash">&ndash;</span>
-                        <span data-price-out="max">{{ p_max | times: 100 | money }}</span>
-                      </div>
-                      {%- assign cur_sym = cart.currency.symbol | default: shop.currency -%}
-                      <div class="price-range-inputs">
-                        <label class="cfilter-price__field">
-                          <span aria-hidden="true">{{ cur_sym }}</span>
-                          <input type="number" name="{{ filter.min_value.param_name }}"
-                                 value="{{ p_min }}" min="{{ p_floor }}" max="{{ p_ceil }}"
-                                 aria-label="{{ 'collections.filtering.price_min' | t }}">
-                        </label>
-                        <span class="cfilter-price__dash">&mdash;</span>
-                        <label class="cfilter-price__field">
-                          <span aria-hidden="true">{{ cur_sym }}</span>
-                          <input type="number" name="{{ filter.max_value.param_name }}"
-                                 value="{{ p_max }}" min="{{ p_floor }}" max="{{ p_ceil }}"
-                                 aria-label="{{ 'collections.filtering.price_max' | t }}">
-                        </label>
-                      </div>
-
-                      {%- comment -%}
-                        Preset bands, cut from the collection's own price
-                        range so they suit the catalogue rather than assuming
-                        a currency or a price bracket. They drive the number
-                        fields, which already carry the navigation.
-                      {%- endcomment -%}
-                      {%- liquid
-                        assign span = p_ceil | minus: p_floor
-                        assign q1 = span | times: 25 | divided_by: 100 | plus: p_floor | round
-                        assign q2 = span | times: 50 | divided_by: 100 | plus: p_floor | round
-                        assign q3 = span | times: 75 | divided_by: 100 | plus: p_floor | round
-                      -%}
-                      <div class="cfilter-pills cfilter-pills--price">
-                        <button type="button" data-price-band data-lo="{{ p_floor }}" data-hi="{{ q1 }}">{{ 'collections.filtering.under' | t }} {{ q1 | times: 100 | money_without_trailing_zeros }}</button>
-                        <button type="button" data-price-band data-lo="{{ q1 }}" data-hi="{{ q2 }}">{{ q1 | times: 100 | money_without_trailing_zeros }} &ndash; {{ q2 | times: 100 | money_without_trailing_zeros }}</button>
-                        <button type="button" data-price-band data-lo="{{ q2 }}" data-hi="{{ q3 }}">{{ q2 | times: 100 | money_without_trailing_zeros }} &ndash; {{ q3 | times: 100 | money_without_trailing_zeros }}</button>
-                        <button type="button" data-price-band data-lo="{{ q3 }}" data-hi="{{ p_ceil }}">{{ q3 | times: 100 | money_without_trailing_zeros }}+</button>
-                      </div>
-                    </div>
-                  {%- comment -%}
-                    Shopify's third filter type. "Availability" is a boolean
-                    filter, and it was not handled here at all — it fell
-                    through the case and rendered a heading with an empty body.
-                  {%- endcomment -%}
-                  {%- when 'boolean' -%}
-                    <ul class="filter-list">
-                      {%- for value in filter.values -%}
-                        <li>
-                          <label class="filter-check">
-                            <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
-                              {% if value.active %}checked{% endif %}
-                              data-filter-url="{{ value.url_to_add }}"
-                              data-filter-remove="{{ value.url_to_remove }}"
-                            >
-                            <span>{{ value.label }}</span>
-                            {%- if value.count -%}<span class="filter-count-pill">{{ value.count }}</span>{%- endif -%}
-                          </label>
-                        </li>
-                      {%- endfor -%}
-                    </ul>
-                {%- endcase -%}
-              </div>
-            </div>
-          {%- endfor -%}
+          {%- render 'collection-filter-groups', filter_style: filter_style, swatch_style: section.settings.swatch_style -%}
         {%- endif -%}
       </aside>
     {%- endif -%}
@@ -490,6 +245,12 @@
       {%- endcomment -%}
       {%- if filter_style != 'drawer' and filter_style != 'dropdown' -%}
         <div class="collection-toolbar collection-toolbar--inline">
+          {%- if sidebar_column != 'none' -%}
+            <button type="button" class="toolbar-btn toolbar-btn--mobile-filters" data-open-filter-drawer aria-controls="filter-drawer-{{ section.id }}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+              {{ 'collections.filtering.filter_button' | t }}
+            </button>
+          {%- endif -%}
           <span class="toolbar-count">{{ 'collections.general.items' | t: count: collection.products_count }}</span>
           <div class="toolbar-right">
             {%- render 'collection-sort' -%}
@@ -662,70 +423,38 @@
     </div>
   </div>
 
-  {%- comment -%} Filter Drawer (for drawer mode) {%- endcomment -%}
-  {%- if filter_style == 'drawer' -%}
-    <div class="filter-drawer" id="filter-drawer" role="dialog" aria-modal="true" aria-label="{{ 'collections.filtering.filters' | t }}">
+  {%- comment -%}
+    Filter drawer.
+
+    Rendered for every filter style, not only 'drawer'. Under 1000px the
+    sidebar is hidden, and this drawer used to exist only in drawer mode --
+    so on a phone, with the default sidebar layout, there were no filters at
+    all. It opens from the side the sidebar is set to.
+
+    Its body is the same snippet the sidebar uses. It previously carried a
+    separate, degraded copy with no swatches, size pills, slider, bands or
+    search.
+  {%- endcomment -%}
+  {%- assign drawer_side = 'left' -%}
+  {%- if sidebar_position == 'right' -%}{%- assign drawer_side = 'right' -%}{%- endif -%}
+  {%- if effective_sidebar != 'none' or filter_style == 'drawer' or filter_style == 'dropdown' -%}
+    <div class="filter-drawer filter-drawer--{{ drawer_side }}{% if filter_style == 'drawer' %} filter-drawer--primary{% endif %}"
+         id="filter-drawer-{{ section.id }}" data-filter-drawer
+         role="dialog" aria-modal="true" aria-hidden="true"
+         aria-label="{{ 'collections.filtering.filters' | t }}">
       <div class="filter-drawer__header">
         <h2>{{ 'collections.filtering.filters' | t }}</h2>
-        <button class="filter-drawer__close" data-close-filter-drawer aria-label="{{ 'accessibility.close' | t }}">{%- render 'icon-close' -%}</button>
+        <button type="button" class="filter-drawer__close" data-close-filter-drawer aria-label="{{ 'accessibility.close' | t }}">{%- render 'icon-close' -%}</button>
       </div>
       <div class="filter-drawer__body">
         {%- if use_builtin_filters -%}
           {%- render 'collection-filters', products: collection.products, style: 'drawer', demo: filters_are_demo, swatch_style: section.settings.swatch_style -%}
         {%- endif -%}
-        {%- for filter in collection.filters -%}
-          <div class="filter-group" data-filter-group>
-            <button type="button" class="filter-group__toggle" aria-expanded="true">
-              {{ filter.label }} <span class="fgrp-pm" aria-hidden="true"></span>
-            </button>
-            <div class="filter-group__body">
-              {%- case filter.type -%}
-                {%- when 'list' -%}
-                  <ul class="filter-list">
-                    {%- for value in filter.values -%}
-                      <li>
-                        <label class="filter-check">
-                          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
-                            {% if value.active %}checked{% endif %}
-                            data-filter-url="{{ value.url_to_add }}"
-                            data-filter-remove="{{ value.url_to_remove }}"
-                          >
-                          <span>{{ value.label }}</span>
-                          <span class="filter-count-pill">{{ value.count }}</span>
-                        </label>
-                      </li>
-                    {%- endfor -%}
-                  </ul>
-                {%- when 'price_range' -%}
-                  <div class="price-range-inputs">
-                    <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value | money_without_currency | remove: ',' }}" placeholder="{{ filter.range_min | money }}">
-                    <span>–</span>
-                    <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | money_without_currency | remove: ',' }}" placeholder="{{ filter.range_max | money }}">
-                  </div>
-                {%- when 'boolean' -%}
-                  <ul class="filter-list">
-                    {%- for value in filter.values -%}
-                      <li>
-                        <label class="filter-check">
-                          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
-                            {% if value.active %}checked{% endif %}
-                            data-filter-url="{{ value.url_to_add }}"
-                            data-filter-remove="{{ value.url_to_remove }}"
-                          >
-                          <span>{{ value.label }}</span>
-                          {%- if value.count -%}<span class="filter-count-pill">{{ value.count }}</span>{%- endif -%}
-                        </label>
-                      </li>
-                    {%- endfor -%}
-                  </ul>
-              {%- endcase -%}
-            </div>
-          </div>
-        {%- endfor -%}
+        {%- render 'collection-filter-groups', filter_style: 'drawer', swatch_style: section.settings.swatch_style -%}
       </div>
       <div class="filter-drawer__footer">
         <a href="{{ collection.url }}" class="btn-ghost">{{ 'collections.filtering.clear_all' | t }}</a>
-        <button class="btn-primary" data-close-filter-drawer>{{ 'collections.filtering.apply' | t }}</button>
+        <button type="button" class="btn-primary" data-close-filter-drawer>{{ 'collections.filtering.apply' | t }}</button>
       </div>
     </div>
     <div class="filter-drawer__overlay" data-close-filter-drawer></div>

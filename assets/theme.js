@@ -884,6 +884,34 @@
       }
     };
 
+    // ---- Hidden sidebar and top panel ---------------------------------
+    document.addEventListener('click', e => {
+      // "Sidebar -- hidden until opened": the column collapses to nothing and
+      // the grid takes the full width; the button brings it back inline.
+      const sideBtn = e.target.closest('[data-toggle-sidebar]');
+      if (sideBtn) {
+        const layout = document.querySelector('[data-collection-layout]');
+        if (!layout) return;
+        const open = layout.classList.toggle('is-sidebar-open');
+        sideBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        const label = sideBtn.querySelector('[data-toggle-sidebar-label]');
+        if (label) label.textContent = open ? sideBtn.dataset.labelHide : sideBtn.dataset.labelShow;
+        return;
+      }
+
+      // "Top panel": a full-width panel of filter groups under the toolbar.
+      const panelBtn = e.target.closest('[data-toggle-filter-panel]');
+      if (panelBtn) {
+        const id = panelBtn.getAttribute('aria-controls');
+        const panel = (id && document.getElementById(id)) || document.querySelector('[data-filter-panel]');
+        if (!panel) return;
+        const open = panel.hidden;
+        panel.hidden = !open;
+        document.querySelectorAll(`[data-toggle-filter-panel][aria-controls="${id}"]`)
+          .forEach(b => b.setAttribute('aria-expanded', open ? 'true' : 'false'));
+      }
+    });
+
     document.addEventListener('click', e => {
       const opener = e.target.closest('[data-open-filter-drawer]');
       if (opener) { lastOpener = opener; setDrawer(drawerFor(opener), true); return; }

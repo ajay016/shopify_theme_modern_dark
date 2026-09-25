@@ -2975,7 +2975,8 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
    Clear all link without a colour, which made them all but invisible. */
 .collection-sidebar,
 .filter-drawer,
-.filter-drawer__body {
+.filter-drawer__body,
+.filter-panel {
   --f-fg:   var(--cp-fg,  var(--cream, #F5F0E8));
   --f-mut:  var(--cp-mut, rgba(245,240,232,.62));
   --f-acc:  var(--cp-acc, var(--gold, #C8A96E));
@@ -3392,9 +3393,12 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 
 /* The Filters button in the inline toolbar only exists for small screens,
    where the sidebar is hidden and the drawer is the way in. */
-.toolbar-btn--mobile-filters { display: none; }
+/* Two classes, so it outranks the base .toolbar-btn { display: inline-flex }
+   declared later in this file; at equal specificity that later rule won and
+   the phone-only button showed on desktop beside the real one. */
+.toolbar-btn.toolbar-btn--mobile-filters { display: none; }
 @media (max-width: 1000px) {
-  .toolbar-btn--mobile-filters { display: inline-flex; }
+  .toolbar-btn.toolbar-btn--mobile-filters { display: inline-flex; }
 }
 .filter-drawer__header {
   display: flex; align-items: center; justify-content: space-between;
@@ -3630,3 +3634,89 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 }
 .collection-banner + .collection-toolbar,
 .collection-title--style-2 + .collection-toolbar { margin-top: 0; }
+
+
+/* ======================================================================
+   FILTER STYLES: "Sidebar -- hidden until opened" and "Top panel"
+   ====================================================================== */
+
+/* Hidden sidebar. The column collapses to zero and the grid takes the
+   full width; the toolbar button brings it back inline and the grid
+   reflows. Two classes of specificity so it outranks the plain
+   --sidebar-left / --sidebar-right column rules regardless of order. */
+.collection-layout--sidebar-left.collection-layout--sidebar-collapsed {
+  grid-template-columns: 0 minmax(0, 1fr); column-gap: 0;
+}
+.collection-layout--sidebar-right.collection-layout--sidebar-collapsed {
+  grid-template-columns: minmax(0, 1fr) 0; column-gap: 0;
+}
+.collection-layout--sidebar-left.collection-layout--sidebar-collapsed.is-sidebar-open {
+  grid-template-columns: 262px minmax(0, 1fr); column-gap: clamp(24px, 3vw, 54px);
+}
+.collection-layout--sidebar-right.collection-layout--sidebar-collapsed.is-sidebar-open {
+  grid-template-columns: minmax(0, 1fr) 262px; column-gap: clamp(24px, 3vw, 54px);
+}
+.collection-layout--sidebar-collapsed {
+  transition: grid-template-columns .4s cubic-bezier(.2,.7,.2,1), column-gap .4s cubic-bezier(.2,.7,.2,1);
+}
+.collection-layout--sidebar-collapsed .collection-sidebar {
+  min-width: 0; overflow: hidden;
+  opacity: 0; visibility: hidden;
+  transition: opacity .25s ease, visibility 0s .4s;
+}
+.collection-layout--sidebar-collapsed.is-sidebar-open .collection-sidebar {
+  opacity: 1; visibility: visible; overflow: auto;
+  transition: opacity .3s ease .12s;
+}
+.toolbar-btn--sidebar[aria-expanded="true"] {
+  border-color: var(--cp-acc, #C8A96E); color: var(--cp-acc, #C8A96E);
+}
+@media (prefers-reduced-motion: reduce) {
+  .collection-layout--sidebar-collapsed,
+  .collection-layout--sidebar-collapsed .collection-sidebar { transition: none; }
+}
+
+/* Top panel. The whole filter set at once, in columns, under the toolbar. */
+.filter-panel {
+  color: var(--f-fg);
+  background: var(--cp-bg, #0A0A0A);
+  border-bottom: 1px solid var(--f-bdr);
+}
+.filter-panel[hidden] { display: none; }
+.filter-panel__inner { padding: 22px 0 18px; }
+.filter-panel__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 6px 40px; align-items: start;
+}
+/* Groups sit side by side here, so the stacking rules between them go. */
+.filter-panel__grid .filter-group,
+.filter-panel__grid .cfilter-group { border-bottom: 0; }
+.filter-panel__grid .filter-group__toggle { padding-top: 6px; }
+.filter-panel__foot {
+  display: flex; justify-content: flex-end; align-items: center; gap: 22px;
+  margin-top: 10px; padding-top: 14px;
+  border-top: 1px solid var(--f-bdr);
+}
+.filter-panel__clear,
+.filter-panel__close {
+  background: none; border: 0; cursor: pointer; padding: 0 0 2px;
+  font-family: var(--ff-body);
+  font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase;
+  text-decoration: none; color: var(--f-mut);
+  border-bottom: 1px solid transparent;
+  transition: color .2s ease, border-color .2s ease;
+}
+.filter-panel__clear:hover,
+.filter-panel__close:hover { color: var(--f-acc); border-bottom-color: var(--f-acc); }
+[data-toggle-filter-panel][aria-expanded="true"] {
+  border-color: var(--cp-acc, #C8A96E); color: var(--cp-acc, #C8A96E);
+}
+
+/* On small screens every style uses the drawer, so these controls go. */
+@media (max-width: 1000px) {
+  .toolbar-btn.toolbar-btn--sidebar,
+  .toolbar-btn[data-toggle-filter-panel],
+  .dropdown-filters { display: none; }
+  .filter-panel { display: none !important; }
+}

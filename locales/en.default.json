@@ -227,7 +227,9 @@
         "other": "{{ count }} applied"
       },
       "search_values": "Search {{ count }} values",
-      "under": "Under"
+      "under": "Under",
+      "show_filters": "Show filters",
+      "hide_filters": "Hide filters"
     }
   },
   "quick_view": {

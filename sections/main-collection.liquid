@@ -31,8 +31,12 @@
     # Drawer and dropdown move the filters out of the page flow, so they need
     # no column. The layout used to reserve one anyway -- an empty 262px strip
     # beside the grid holding only a second copy of the sort control.
+  assign filters_off_page = false
+  if filter_style == 'drawer' or filter_style == 'dropdown' or filter_style == 'panel'
+    assign filters_off_page = true
+  endif
   assign sidebar_column = effective_sidebar
-  if filter_style == 'drawer' or filter_style == 'dropdown'
+  if filters_off_page
     assign sidebar_column = 'none'
   endif
 
@@ -151,8 +155,19 @@
   {%- endunless -%}
 
   {%- comment -%} Filter bar (drawer / dropdown styles) {%- endcomment -%}
-  {%- if filter_style == 'drawer' or filter_style == 'dropdown' -%}
+  {%- if filters_off_page -%}
     <div class="collection-toolbar container">
+      {%- comment -%}
+        On small screens the dropdown bar and the top panel give way to the
+        drawer, and this is the button that opens it. Drawer mode already
+        has its own.
+      {%- endcomment -%}
+      {%- if filter_style == 'dropdown' or filter_style == 'panel' -%}
+        <button type="button" class="toolbar-btn toolbar-btn--mobile-filters" data-open-filter-drawer aria-controls="filter-drawer-{{ section.id }}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+          {{ 'collections.filtering.filter_button' | t }}
+        </button>
+      {%- endif -%}
       {%- if filter_style == 'drawer' -%}
         <button type="button" class="toolbar-btn" data-open-filter-drawer aria-controls="filter-drawer-{{ section.id }}">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
@@ -190,6 +205,15 @@
             </details>
           {%- endfor -%}
         </div>
+      {%- elsif filter_style == 'panel' -%}
+        {%- assign active_count = 0 -%}
+        {%- for f in collection.filters -%}{%- assign active_count = active_count | plus: f.active_values.size -%}{%- endfor -%}
+        <button type="button" class="toolbar-btn" data-toggle-filter-panel
+                aria-controls="filter-panel-{{ section.id }}" aria-expanded="false">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+          {{ 'collections.filtering.filter_button' | t }}
+          {%- if active_count > 0 -%}<span class="filter-count">{{ active_count }}</span>{%- endif -%}
+        </button>
       {%- endif -%}
 
       <div class="toolbar-right">
@@ -198,14 +222,36 @@
         {%- render 'collection-view-toggle', columns: columns, current: view_default -%}
       </div>
     </div>
+
+    {%- comment -%}
+      Top panel. Opens under the toolbar across the full width, with the
+      filter groups laid out as columns rather than stacked -- the whole
+      filter set is visible at once instead of scrolling a narrow rail.
+    {%- endcomment -%}
+    {%- if filter_style == 'panel' -%}
+      <div class="filter-panel" id="filter-panel-{{ section.id }}" data-filter-panel hidden>
+        <div class="filter-panel__inner container">
+          <div class="filter-panel__grid">
+            {%- if use_builtin_filters -%}
+              {%- render 'collection-filters', products: collection.products, style: 'panel', demo: filters_are_demo, swatch_style: section.settings.swatch_style -%}
+            {%- endif -%}
+            {%- render 'collection-filter-groups', filter_style: 'panel', swatch_style: section.settings.swatch_style -%}
+          </div>
+          <div class="filter-panel__foot">
+            <a href="{{ collection.url }}" class="filter-panel__clear">{{ 'collections.filtering.clear_all' | t }}</a>
+            <button type="button" class="filter-panel__close" data-toggle-filter-panel aria-controls="filter-panel-{{ section.id }}">{{ 'accessibility.close' | t }}</button>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
   {%- endif -%}
 
-  <div class="collection-layout container {% if sidebar_column != 'none' %}collection-layout--has-sidebar collection-layout--sidebar-{{ sidebar_column }}{% endif %}">
+  <div class="collection-layout container {% if sidebar_column != 'none' %}collection-layout--has-sidebar collection-layout--sidebar-{{ sidebar_column }}{% endif %}{% if filter_style == 'hidden' %} collection-layout--sidebar-collapsed{% endif %}" data-collection-layout>
 
     {%- comment -%} Left Sidebar {%- endcomment -%}
     {%- if sidebar_column == 'left' or sidebar_column == 'right' -%}
       <aside class="collection-sidebar" aria-label="Filters">
-        {%- if filter_style != 'drawer' and filter_style != 'dropdown' -%}
+        {%- if filters_off_page == false -%}
           <div class="sidebar-header">
             <h2 class="sidebar-header__title">{{ 'collections.filtering.filters' | t }}</h2>
             {%- liquid
@@ -243,8 +289,16 @@
         toggle and no result count at all. It now shows whenever the
         drawer/dropdown bar above is not the one carrying them.
       {%- endcomment -%}
-      {%- if filter_style != 'drawer' and filter_style != 'dropdown' -%}
+      {%- if filters_off_page == false -%}
         <div class="collection-toolbar collection-toolbar--inline">
+          {%- if filter_style == 'hidden' and sidebar_column != 'none' -%}
+            <button type="button" class="toolbar-btn toolbar-btn--sidebar" data-toggle-sidebar aria-expanded="false"
+                    data-label-show="{{ 'collections.filtering.show_filters' | t }}"
+                    data-label-hide="{{ 'collections.filtering.hide_filters' | t }}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+              <span data-toggle-sidebar-label>{{ 'collections.filtering.show_filters' | t }}</span>
+            </button>
+          {%- endif -%}
           {%- if sidebar_column != 'none' -%}
             <button type="button" class="toolbar-btn toolbar-btn--mobile-filters" data-open-filter-drawer aria-controls="filter-drawer-{{ section.id }}">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
@@ -437,7 +491,7 @@
   {%- endcomment -%}
   {%- assign drawer_side = 'left' -%}
   {%- if sidebar_position == 'right' -%}{%- assign drawer_side = 'right' -%}{%- endif -%}
-  {%- if effective_sidebar != 'none' or filter_style == 'drawer' or filter_style == 'dropdown' -%}
+  {%- if effective_sidebar != 'none' or filters_off_page -%}
     <div class="filter-drawer filter-drawer--{{ drawer_side }}{% if filter_style == 'drawer' %} filter-drawer--primary{% endif %}"
          id="filter-drawer-{{ section.id }}" data-filter-drawer
          role="dialog" aria-modal="true" aria-hidden="true"
@@ -490,11 +544,14 @@
     },
     {
       "type": "select", "id": "filter_style", "label": "Filter Style",
+      "info": "Sidebar and drawer open from the side set in Sidebar Position. On phones every style uses the drawer.",
       "options": [
-        { "value": "sidebar",  "label": "Sidebar (static)" },
-        { "value": "drawer",   "label": "Drawer (slide-in)" },
-        { "value": "dropdown", "label": "Dropdown Bar" },
-        { "value": "toggle",   "label": "Toggle Groups" }
+        { "value": "sidebar",  "label": "Sidebar — always open" },
+        { "value": "toggle",   "label": "Sidebar — groups collapsed" },
+        { "value": "hidden",   "label": "Sidebar — hidden until opened" },
+        { "value": "drawer",   "label": "Drawer — slides in" },
+        { "value": "dropdown", "label": "Dropdown bar — above the grid" },
+        { "value": "panel",    "label": "Top panel — opens full width" }
       ],
       "default": "sidebar"
     },

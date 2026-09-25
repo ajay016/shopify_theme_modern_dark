@@ -838,38 +838,108 @@
   /* ============================================================
      Filter Sidebar — collapsible groups
      ============================================================ */
-  function initFilters() {
-    // The collection section renders `.filter-group__toggle` buttons; the
-    // previous selector (`.filter-group__title[data-toggle-filter]`) matched
-    // nothing, so filter groups could not be collapsed or expanded at all.
-    document.querySelectorAll('.filter-group__toggle').forEach(toggle => {
-      toggle.addEventListener('click', () => {
+  /* ------------------------------------------------------------------
+     Filter UI.
+
+     Everything that can be handled by delegation is bound once, on the
+     document. When a setting changes in the theme editor, Shopify re-renders
+     the section and injects fresh HTML WITHOUT re-running page-load scripts,
+     so listeners bound to individual elements die with the old nodes. That
+     is why the group toggles, price bands and search went dead after any
+     change in the editor, and only came back on a full page reload.
+
+     The price slider is the one piece that needs per-element state. It is
+     initialised per root, guarded so a row is never bound twice, and re-run
+     on shopify:section:load.
+     ------------------------------------------------------------------ */
+  let filterDelegatesBound = false;
+
+  function bindFilterDelegates() {
+    if (filterDelegatesBound) return;
+    filterDelegatesBound = true;
+
+    document.addEventListener('click', e => {
+      // Expand / collapse a filter group.
+      const toggle = e.target.closest('.filter-group__toggle');
+      if (toggle) {
         const expanded = toggle.getAttribute('aria-expanded') === 'true';
         toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
         const body = toggle.nextElementSibling;
         if (body) body.classList.toggle('is-collapsed', expanded);
+        return;
+      }
+
+      // Preset price bands write into the number fields and fire the change
+      // that the price navigation below listens for.
+      const band = e.target.closest('[data-price-band]');
+      if (band) {
+        const row = band.closest('.price-range-filter');
+        if (!row) return;
+        const nums = row.querySelectorAll('.price-range-inputs input[type="number"]');
+        if (nums.length < 2) return;
+        nums[0].value = band.dataset.lo;
+        nums[1].value = band.dataset.hi;
+        const lo = row.querySelector('[data-price-range="min"]');
+        const hi = row.querySelector('[data-price-range="max"]');
+        if (lo) lo.value = band.dataset.lo;
+        if (hi) hi.value = band.dataset.hi;
+        nums[0].dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+
+    document.addEventListener('change', e => {
+      // Shopify's own filters are plain links carried as data-filter-url /
+      // data-filter-remove on each input; navigating to them is the whole
+      // mechanism.
+      const input = e.target.closest('input[data-filter-url], input[data-filter-remove]');
+      if (input) {
+        const url = input.checked ? input.dataset.filterUrl : input.dataset.filterRemove;
+        if (!url) return;
+        const panel = input.closest('.collection-sidebar, .filter-drawer, .dropdown-filter__panel');
+        if (panel) panel.style.pointerEvents = 'none';
+        window.location.href = url;
+        return;
+      }
+
+      // The price fields submit on change rather than per keystroke.
+      const num = e.target.closest('.price-range-inputs input[type="number"]');
+      if (num) {
+        const row = num.closest('.price-range-filter');
+        if (!row) return;
+        const [min, max] = row.querySelectorAll('.price-range-inputs input[type="number"]');
+        const url = new URL(window.location.href);
+        if (min && min.name) {
+          min.value ? url.searchParams.set(min.name, min.value) : url.searchParams.delete(min.name);
+        }
+        if (max && max.name) {
+          max.value ? url.searchParams.set(max.name, max.value) : url.searchParams.delete(max.name);
+        }
+        window.location.href = url.toString();
+      }
+    });
+
+    document.addEventListener('input', e => {
+      // A group's search box narrows that group's rows, client-side, over
+      // the rows Shopify already rendered.
+      const box = e.target.closest('[data-filter-search]');
+      if (!box) return;
+      const body = box.closest('.filter-group__body');
+      if (!body) return;
+      const q = box.value.trim().toLowerCase();
+      body.querySelectorAll('.filter-swatch, .filter-check').forEach(row => {
+        const name = (row.textContent || '').trim().toLowerCase();
+        row.style.display = !q || name.includes(q) ? '' : 'none';
       });
     });
+  }
 
-    // Shopify's own filters are plain links expressed as data-filter-url /
-    // data-filter-remove on each input. Nothing was listening to them, so every
-    // native filter checkbox and swatch was inert — ticking one did nothing at
-    // all. Navigating to the URL Shopify supplies is the whole mechanism.
-    document.addEventListener('change', e => {
-      const input = e.target.closest('input[data-filter-url], input[data-filter-remove]');
-      if (!input) return;
-      const url = input.checked ? input.dataset.filterUrl : input.dataset.filterRemove;
-      if (!url) return;
-      const panel = input.closest('.collection-sidebar, .filter-drawer, .dropdown-filter__panel');
-      if (panel) panel.style.pointerEvents = 'none';
-      window.location.href = url;
-    });
-
-    // The native price slider. The two range inputs overlap, so each drag
-    // is clamped against the other and the fill is redrawn between them.
-    // Releasing a thumb writes into the number input and fires its change
-    // event, reusing the navigation below rather than duplicating it.
-    document.querySelectorAll('.price-range-filter').forEach(row => {
+  // The two range inputs overlap, so each drag is clamped against the other
+  // and the fill redrawn between them. Releasing a thumb writes into the
+  // number field and fires its change event, reusing the delegated
+  // navigation rather than duplicating it.
+  function initPriceSliders(root) {
+    (root || document).querySelectorAll('.price-range-filter').forEach(row => {
+      if (row.dataset.priceBound) return;
       const track = row.querySelector('[data-price-track]');
       const fill  = row.querySelector('[data-price-fill]');
       const lo    = row.querySelector('[data-price-range="min"]');
@@ -879,10 +949,10 @@
       const numMin = nums[0], numMax = nums[1];
       const floor = parseFloat(lo.min), ceil = parseFloat(lo.max);
       if (!(ceil > floor)) return;
+      row.dataset.priceBound = '1';
 
       // The readout is rendered by Liquid in the shop's currency; the prefix
-      // is taken from that first render rather than guessed, so it stays
-      // correct for any currency or placement.
+      // is taken from that first render rather than guessed.
       const outMin = row.querySelector('[data-price-out="min"]');
       const outMax = row.querySelector('[data-price-out="max"]');
       const sample = (outMin && outMin.textContent.trim()) || '';
@@ -898,9 +968,8 @@
         if (outMin) outMin.textContent = fmt(a);
         if (outMax) outMax.textContent = fmt(b);
       };
-
       const clamp = which => {
-        let a = parseFloat(lo.value), b = parseFloat(hi.value);
+        const a = parseFloat(lo.value), b = parseFloat(hi.value);
         if (a > b) { if (which === 'min') lo.value = b; else hi.value = a; }
         paint();
       };
@@ -917,89 +986,16 @@
       lo.addEventListener('change', commit);
       hi.addEventListener('change', commit);
 
-      // Typing in a number input moves the matching thumb.
       if (numMin) numMin.addEventListener('input', () => { lo.value = numMin.value || floor; paint(); });
       if (numMax) numMax.addEventListener('input', () => { hi.value = numMax.value || ceil; paint(); });
 
       paint();
     });
+  }
 
-    // Typing in a filter group's search box narrows that group's rows.
-    // Purely client-side over rows Shopify already rendered.
-    document.querySelectorAll('[data-filter-search]').forEach(box => {
-      const body = box.closest('.filter-group__body');
-      if (!body) return;
-      box.addEventListener('input', () => {
-        const q = box.value.trim().toLowerCase();
-        body.querySelectorAll('.filter-swatch, .filter-check').forEach(row => {
-          const name = (row.textContent || '').trim().toLowerCase();
-          row.style.display = !q || name.includes(q) ? '' : 'none';
-        });
-      });
-    });
-
-    // Preset price bands write into the number fields and fire the change
-    // the navigation below already listens for.
-    document.querySelectorAll('[data-price-band]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const row = btn.closest('.price-range-filter');
-        if (!row) return;
-        const nums = row.querySelectorAll('.price-range-inputs input[type="number"]');
-        if (nums.length < 2) return;
-        nums[0].value = btn.dataset.lo;
-        nums[1].value = btn.dataset.hi;
-        const lo = row.querySelector('[data-price-range="min"]');
-        const hi = row.querySelector('[data-price-range="max"]');
-        if (lo) lo.value = btn.dataset.lo;
-        if (hi) hi.value = btn.dataset.hi;
-        nums[0].dispatchEvent(new Event('change', { bubbles: true }));
-      });
-    });
-
-    // The native price range submits on change rather than per keystroke.
-    document.querySelectorAll('.price-range-inputs input').forEach(inp => {
-      inp.addEventListener('change', () => {
-        const row = inp.closest('.price-range-filter');
-        if (!row) return;
-        const [min, max] = row.querySelectorAll('.price-range-inputs input[type="number"]');
-        const url = new URL(window.location.href);
-        if (min && min.name) {
-          min.value ? url.searchParams.set(min.name, min.value) : url.searchParams.delete(min.name);
-        }
-        if (max && max.name) {
-          max.value ? url.searchParams.set(max.name, max.value) : url.searchParams.delete(max.name);
-        }
-        window.location.href = url.toString();
-      });
-    });
-
-    // Chip toggle
-    document.querySelectorAll('.filter-chip[data-filter]').forEach(chip => {
-      chip.addEventListener('click', () => {
-        chip.classList.toggle('is-active');
-        // Dispatch event for filter logic
-        document.dispatchEvent(new CustomEvent('mn:filter-change'));
-      });
-    });
-
-    // Filter option toggle
-    document.querySelectorAll('.filter-option[data-filter-value]').forEach(opt => {
-      opt.addEventListener('click', () => {
-        opt.classList.toggle('is-selected');
-        const cb  = opt.querySelector('.filter-option__check');
-        const svg = cb?.querySelector('svg');
-        if (svg) svg.style.opacity = opt.classList.contains('is-selected') ? '1' : '0';
-        document.dispatchEvent(new CustomEvent('mn:filter-change'));
-      });
-    });
-
-    // Color swatch toggle
-    document.querySelectorAll('.filter-swatch').forEach(s => {
-      s.addEventListener('click', () => {
-        s.classList.toggle('is-selected');
-        document.dispatchEvent(new CustomEvent('mn:filter-change'));
-      });
-    });
+  function initFilters(root) {
+    bindFilterDelegates();
+    initPriceSliders(root);
   }
 
 
@@ -1080,6 +1076,9 @@
      across facets they AND (Small AND Black AND in stock), which
      is how shoppers expect faceted filtering to behave.
      ============================================================ */
+  let cfilterApply = null;
+  let cfilterAppendBound = false;
+
   function initBuiltInFilters() {
     const root = document.querySelector('[data-cfilter]');
     const grid = document.getElementById('product-grid');
@@ -1199,7 +1198,14 @@
 
     // Cards appended by load-more or infinite scroll must obey the
     // filters already applied, otherwise they arrive unfiltered.
-    document.addEventListener('collection:appended', apply);
+    // Bound once. Re-running this after the theme editor re-renders the
+    // section must retarget the listener at the new root's apply, not stack a
+    // second listener whose closure still points at the discarded DOM.
+    cfilterApply = apply;
+    if (!cfilterAppendBound) {
+      cfilterAppendBound = true;
+      document.addEventListener('collection:appended', () => { if (cfilterApply) cfilterApply(); });
+    }
 
     // Dual-range price slider. Two overlaid inputs; each is clamped so the
     // handles cannot cross, and the filled segment between them is drawn
@@ -1574,5 +1580,20 @@
 
   // Re-bind hover carousels when a section is re-rendered in the theme editor.
   document.addEventListener('shopify:section:load', e => initCardCarousel(e.target));
+
+  // The theme editor re-renders a section by swapping its HTML, and does not
+  // re-run page-load scripts. Without this, every element-bound handler on
+  // the collection page -- price slider, view toggle, load more, infinite
+  // scroll, built-in filters -- was dead after the first setting change and
+  // only came back on a full reload. Delegated handlers (filter groups,
+  // bands, search, card swatches) survive on their own and are not re-bound.
+  document.addEventListener('shopify:section:load', e => {
+    if (!e.target || !e.target.querySelector('.collection-page, [data-cfilter], #product-grid')) return;
+    initFilters(e.target);
+    initBuiltInFilters();
+    initViewToggle();
+    initLoadMore();
+    initInfiniteScroll();
+  });
 
 })();

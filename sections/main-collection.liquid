@@ -28,6 +28,14 @@
     assign effective_sidebar = 'none'
   endif
 
+    # Drawer and dropdown move the filters out of the page flow, so they need
+    # no column. The layout used to reserve one anyway -- an empty 262px strip
+    # beside the grid holding only a second copy of the sort control.
+  assign sidebar_column = effective_sidebar
+  if filter_style == 'drawer' or filter_style == 'dropdown'
+    assign sidebar_column = 'none'
+  endif
+
     # Demo products keep an empty or brand-new store from showing a blank shop
     # page while the layouts are being reviewed. It fires only when the
     # collection genuinely has no products, and the merchant can switch it off
@@ -177,18 +185,17 @@
       {%- endif -%}
 
       <div class="toolbar-right">
+        <span class="toolbar-count">{{ 'collections.general.items' | t: count: collection.products_count }}</span>
         {%- render 'collection-sort' -%}
-        {%- if effective_sidebar == 'none' -%}
-          {%- render 'collection-view-toggle', columns: columns, current: view_default -%}
-        {%- endif -%}
+        {%- render 'collection-view-toggle', columns: columns, current: view_default -%}
       </div>
     </div>
   {%- endif -%}
 
-  <div class="collection-layout container {% if effective_sidebar != 'none' %}collection-layout--has-sidebar collection-layout--sidebar-{{ effective_sidebar }}{% endif %}">
+  <div class="collection-layout container {% if sidebar_column != 'none' %}collection-layout--has-sidebar collection-layout--sidebar-{{ sidebar_column }}{% endif %}">
 
     {%- comment -%} Left Sidebar {%- endcomment -%}
-    {%- if effective_sidebar == 'left' or effective_sidebar == 'right' -%}
+    {%- if sidebar_column == 'left' or sidebar_column == 'right' -%}
       <aside class="collection-sidebar" aria-label="Filters">
         {%- if filter_style != 'drawer' and filter_style != 'dropdown' -%}
           <div class="sidebar-header">
@@ -226,7 +233,7 @@
               endif
             -%}
             <div class="filter-group" data-filter-group>
-              <button class="filter-group__toggle" aria-expanded="{% if group_open %}true{% else %}false{% endif %}">
+              <button type="button" class="filter-group__toggle" aria-expanded="{% if group_open %}true{% else %}false{% endif %}">
                 {{ filter.label }}
                 <span class="fgrp-pm" aria-hidden="true"></span>
               </button>
@@ -469,11 +476,6 @@
               </div>
             </div>
           {%- endfor -%}
-        {%- else -%}
-          <div class="sidebar-sort">
-            {%- render 'collection-sort' -%}
-            {%- render 'collection-view-toggle', columns: columns, current: view_default -%}
-          </div>
         {%- endif -%}
       </aside>
     {%- endif -%}
@@ -673,7 +675,7 @@
         {%- endif -%}
         {%- for filter in collection.filters -%}
           <div class="filter-group" data-filter-group>
-            <button class="filter-group__toggle" aria-expanded="true">
+            <button type="button" class="filter-group__toggle" aria-expanded="true">
               {{ filter.label }} <span class="fgrp-pm" aria-hidden="true"></span>
             </button>
             <div class="filter-group__body">

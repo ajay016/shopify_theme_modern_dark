@@ -3532,3 +3532,33 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 }
 @keyframes pag-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .pagination-spinner { animation-duration: 2.4s; } }
+
+
+/* ----------------------------------------------------------------------
+   Container width, restored.
+
+   These were removed as collateral when the toolbar styles were
+   consolidated: the rules are comma-grouped with .collection-toolbar,
+   and the removal matched any selector containing it, so the whole
+   rule went with it. The Container Width setting had nothing left to
+   act on and appeared to do nothing in the theme editor.
+   ---------------------------------------------------------------------- */
+.collection-page--boxed .collection-layout,
+.collection-page--boxed .collection-toolbar,
+.collection-page--boxed .collection-title > .container {
+  max-width: var(--container-width, 1440px);
+  margin-inline: auto;
+}
+.collection-page--wide .collection-layout,
+.collection-page--wide .collection-toolbar,
+.collection-page--wide .collection-title > .container {
+  max-width: 1780px;
+  margin-inline: auto;
+}
+.collection-page--full .collection-layout,
+.collection-page--full .collection-toolbar,
+.collection-page--full .collection-title > .container {
+  max-width: none;
+}
+.collection-banner + .collection-toolbar,
+.collection-title--style-2 + .collection-toolbar { margin-top: 0; }

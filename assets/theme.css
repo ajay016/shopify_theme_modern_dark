@@ -3468,9 +3468,13 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
    the store's 18px body setting.
    ====================================================================== */
 
+/* padding-block, not the padding shorthand. The top toolbar also carries
+   .container, whose side padding is what lines content up with the product
+   grid; `padding: 14px 0 16px` zeroed it, so the filters and the view toggle
+   ran to the screen edges while the products sat inset. */
 .collection-toolbar {
-  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-  padding: 14px 0 16px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding-block: 14px 16px;
   border-bottom: 1px solid var(--cp-bdr, rgba(200,169,110,.18));
   position: sticky; top: var(--header-h, 66px);
   background: color-mix(in oklab, var(--cp-bg, #0A0A0A) 92%, transparent);
@@ -3719,4 +3723,43 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   .toolbar-btn[data-toggle-filter-panel],
   .dropdown-filters { display: none; }
   .filter-panel { display: none !important; }
+}
+
+
+/* The top toolbar spans the page so its blurred backing reaches the edges,
+   but its rule is drawn inside the container padding so it lines up with
+   the grid below it. */
+.collection-toolbar.container { border-bottom: 0; }
+.collection-toolbar.container::after {
+  content: ''; position: absolute; bottom: 0; height: 1px;
+  left: var(--side-padding, 56px); right: var(--side-padding, 56px);
+  background: var(--cp-bdr, rgba(200,169,110,.18));
+}
+
+/* One control height across the toolbar, so pills, sort and the view
+   toggle sit on the same line instead of three slightly different ones. */
+.collection-toolbar .toolbar-btn,
+.collection-toolbar .sort-by,
+.collection-toolbar .view-toggle,
+.dropdown-filter > summary { min-height: 34px; box-sizing: border-box; }
+
+/* Dropdown panels size to their content within sensible bounds, so labels
+   are not cut to "Apparel & A". The price panel needs room for its slider. */
+.dropdown-filter__panel {
+  width: max-content; min-width: 250px; max-width: min(340px, 92vw);
+}
+.dropdown-filter__panel:has(.price-range-filter) { width: 300px; }
+.dropdown-filter__panel .filter-check > span:not(.filter-count-pill),
+.dropdown-filter__panel .filter-swatch__name { white-space: normal; }
+/* A pill near the right edge opens its panel leftwards. */
+.dropdown-filter.is-flip .dropdown-filter__panel { left: auto; right: 0; }
+
+/* The tickbox beside a colour chip belongs to the list style. In chips and
+   the swatch grid the chip or dot is itself the control, and a box inside
+   it read as two selectors for one value. Selection shows on the chip. */
+.filter-swatches--chips .filter-swatch__box,
+.filter-swatches--dots .filter-swatch__box { display: none; }
+.filter-swatches--chips .filter-swatch:has(input:checked) {
+  border-color: var(--f-acc); color: var(--f-fg);
+  box-shadow: inset 0 0 0 1px var(--f-acc);
 }

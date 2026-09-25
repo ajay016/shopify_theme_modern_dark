@@ -884,6 +884,38 @@
       }
     };
 
+    // ---- Dropdown bar ------------------------------------------------
+    // Each filter is a <details>, and nothing coordinated them: every one
+    // could be open at once, stacking into an unreadable pile, and clicking
+    // elsewhere closed nothing. Now opening one closes the rest; an outside
+    // click or Escape closes it; a panel that would overflow the right edge
+    // opens leftwards. `toggle` does not bubble, hence the capture listener.
+    const closeDropdowns = except => {
+      document.querySelectorAll('.dropdown-filter[open]').forEach(d => {
+        if (d !== except) d.removeAttribute('open');
+      });
+    };
+    document.addEventListener('toggle', e => {
+      const d = e.target;
+      if (!(d instanceof Element) || !d.matches('.dropdown-filter') || !d.open) return;
+      closeDropdowns(d);
+      d.classList.remove('is-flip');
+      const panel = d.querySelector('.dropdown-filter__panel');
+      if (panel) {
+        const r = panel.getBoundingClientRect();
+        const limit = document.documentElement.clientWidth - 12;
+        if (r.right > limit) d.classList.add('is-flip');
+      }
+    }, true);
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.dropdown-filter')) closeDropdowns(null);
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      const open = document.querySelector('.dropdown-filter[open]');
+      if (open) { open.removeAttribute('open'); const s = open.querySelector('summary'); if (s) s.focus(); }
+    });
+
     // ---- Hidden sidebar and top panel ---------------------------------
     document.addEventListener('click', e => {
       // "Sidebar -- hidden until opened": the column collapses to nothing and

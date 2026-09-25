@@ -503,7 +503,15 @@
     {%- endcomment -%}
     {%- capture bestsellers_row -%}
       {%- assign bs_col = collections[section.settings.bestsellers_collection] -%}
-      {%- if section.settings.show_bestsellers and bs_col != blank and bs_col.products.size > 0 -%}
+      {%- comment -%}
+        Presence is probed by rendering the collection's id to a string. With
+        `bs_col != blank`, an unset collection does not reliably short-circuit,
+        and the next term then reads .products.size off nothing -- a Liquid
+        type error that takes the whole page down rather than just hiding the
+        row. Same pattern as the swatch and price checks.
+      {%- endcomment -%}
+      {%- capture bs_probe %}{{ bs_col.id }}{% endcapture -%}
+      {%- if section.settings.show_bestsellers and bs_probe != '' and bs_col.products.size > 0 -%}
         <div class="collection-bestsellers collection-bestsellers--{{ section.settings.bestsellers_position }}">
           <div class="collection-bestsellers__head">
             <h2 class="collection-bestsellers__title">{{ section.settings.bestsellers_heading }}</h2>

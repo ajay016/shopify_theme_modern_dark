@@ -22,7 +22,7 @@
         "view_default": "grid",
         "pagination_style": "numbered",
         "products_per_page": 12,
-        "show_banner": true,
+        "show_banner": false,
         "banner_height": 40,
         "banner_text_position": "center",
         "banner_eyebrow": "Collection",
@@ -35,18 +35,9 @@
         "builtin_filters": true,
         "show_demo_when_empty": false
       }
-    },
-    "recently": {
-      "type": "recently-viewed",
-      "settings": {
-        "heading": "Recently viewed",
-        "products_to_show": 4,
-        "columns": "4"
-      }
     }
   },
   "order": [
-    "main",
-    "recently"
+    "main"
   ]
 }

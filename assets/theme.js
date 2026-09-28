@@ -852,6 +852,47 @@
      initialised per root, guarded so a row is never bound twice, and re-run
      on shopify:section:load.
      ------------------------------------------------------------------ */
+  // Choosing a filter navigates, so the page reloads with the new results.
+  // The top panel and the hidden sidebar used to come back closed after
+  // every tick, meaning three filters took three trips to reopen them. Their
+  // open state is remembered per collection for the session and restored on
+  // load, without animating, so the page does not visibly re-open itself.
+  const revealKey = kind => `mn-filter-${kind}:${location.pathname}`;
+  function rememberReveal(kind, open) {
+    try { open ? sessionStorage.setItem(revealKey(kind), '1') : sessionStorage.removeItem(revealKey(kind)); } catch (e) {}
+  }
+  function recalled(kind) {
+    try { return sessionStorage.getItem(revealKey(kind)) === '1'; } catch (e) { return false; }
+  }
+  function setSidebarButton(btn, open) {
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    const label = btn.querySelector('[data-toggle-sidebar-label]');
+    if (label) label.textContent = open ? btn.dataset.labelHide : btn.dataset.labelShow;
+  }
+  function setPanel(panel, open) {
+    panel.hidden = !open;
+    // aria-expanded belongs on the control that discloses the panel, not on
+    // the panel's own close button inside it.
+    document.querySelectorAll(`[data-toggle-filter-panel][aria-controls="${panel.id}"]:not(.filter-panel__close)`)
+      .forEach(b => b.setAttribute('aria-expanded', open ? 'true' : 'false'));
+  }
+  function restoreFilterReveal(root) {
+    const scope = root || document;
+    if (recalled('panel')) {
+      const panel = scope.querySelector('[data-filter-panel]');
+      if (panel) setPanel(panel, true);
+    }
+    if (recalled('sidebar')) {
+      const layout = scope.querySelector('[data-collection-layout].collection-layout--sidebar-collapsed');
+      const btn = scope.querySelector('[data-toggle-sidebar]');
+      if (layout && btn) {
+        layout.classList.add('no-anim', 'is-sidebar-open');
+        setSidebarButton(btn, true);
+        requestAnimationFrame(() => requestAnimationFrame(() => layout.classList.remove('no-anim')));
+      }
+    }
+  }
+
   let filterDelegatesBound = false;
 
   function bindFilterDelegates() {
@@ -925,9 +966,8 @@
         const layout = document.querySelector('[data-collection-layout]');
         if (!layout) return;
         const open = layout.classList.toggle('is-sidebar-open');
-        sideBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        const label = sideBtn.querySelector('[data-toggle-sidebar-label]');
-        if (label) label.textContent = open ? sideBtn.dataset.labelHide : sideBtn.dataset.labelShow;
+        setSidebarButton(sideBtn, open);
+        rememberReveal('sidebar', open);
         return;
       }
 
@@ -938,9 +978,8 @@
         const panel = (id && document.getElementById(id)) || document.querySelector('[data-filter-panel]');
         if (!panel) return;
         const open = panel.hidden;
-        panel.hidden = !open;
-        document.querySelectorAll(`[data-toggle-filter-panel][aria-controls="${id}"]`)
-          .forEach(b => b.setAttribute('aria-expanded', open ? 'true' : 'false'));
+        setPanel(panel, open);
+        rememberReveal('panel', open);
       }
     });
 
@@ -1097,6 +1136,7 @@
   function initFilters(root) {
     bindFilterDelegates();
     initPriceSliders(root);
+    restoreFilterReveal(root);
   }
 
 

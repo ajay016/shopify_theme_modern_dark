@@ -239,7 +239,7 @@
           </div>
           <div class="filter-panel__foot">
             <a href="{{ collection.url }}" class="filter-panel__clear">{{ 'collections.filtering.clear_all' | t }}</a>
-            <button type="button" class="filter-panel__close" data-toggle-filter-panel aria-controls="filter-panel-{{ section.id }}">{{ 'accessibility.close' | t }}</button>
+            <button type="button" class="filter-panel__close" data-toggle-filter-panel aria-controls="filter-panel-{{ section.id }}">{{ 'collections.filtering.show_results' | t: count: collection.products_count }}</button>
           </div>
         </div>
       </div>

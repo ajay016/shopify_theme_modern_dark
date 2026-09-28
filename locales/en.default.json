@@ -229,7 +229,11 @@
       "search_values": "Search {{ count }} values",
       "under": "Under",
       "show_filters": "Show filters",
-      "hide_filters": "Hide filters"
+      "hide_filters": "Hide filters",
+      "show_results": {
+        "one": "Show {{ count }} result",
+        "other": "Show {{ count }} results"
+      }
     }
   },
   "quick_view": {

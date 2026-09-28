@@ -2701,7 +2701,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .cart-row__qty button { width: 32px; height: 32px; border: 0; background: transparent; color: inherit; cursor: pointer; }
 .cart-row__qty button:hover { color: var(--gold, #C8A96E); }
 .cart-page__summary {
-  position: sticky; top: 100px;
+  position: sticky; top: calc(var(--header-h, 0px) + 20px);
   padding: 22px;
   border: 1px solid var(--border, rgba(200,169,110,.18));
   background: var(--s2-bg, #131313);
@@ -2989,8 +2989,8 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .collection-sidebar {
   width: 100%;
   align-self: start;
-  position: sticky; top: calc(var(--header-h, 72px) + 16px);
-  max-height: calc(100vh - var(--header-h, 72px) - 38px);
+  position: sticky; top: calc(var(--header-h, 0px) + 16px);
+  max-height: calc(100vh - var(--header-h, 0px) - 38px);
   overflow: auto;
   padding: 0 8px 20px 0;
   background: none; border: 0; border-radius: 0;
@@ -3354,14 +3354,17 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .cfilter-empty { padding: 90px 20px; text-align: center; color: var(--f-mut); grid-column: 1 / -1; }
 
 /* --- mobile drawer ----------------------------------------------------- */
+/* Above the header (--z-nav: 100). At 80 and 90 the overlay and drawer
+   opened underneath the navigation, which covered the drawer's title and
+   close button. */
 .filter-drawer__overlay {
-  position: fixed; inset: 0; z-index: 80;
+  position: fixed; inset: 0; z-index: var(--z-overlay, 150);
   background: rgba(0,0,0,.5);
   opacity: 0; pointer-events: none; transition: opacity .35s ease;
 }
 .filter-drawer__overlay.is-open { opacity: 1; pointer-events: all; }
 .filter-drawer {
-  position: fixed; top: 0; left: 0; bottom: 0; z-index: 90;
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: var(--z-drawer, 400);
   width: min(88vw, 340px);
   display: flex; flex-direction: column;
   background: var(--s2-bg, #131313);
@@ -3476,7 +3479,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   padding-block: 14px 16px;
   border-bottom: 1px solid var(--cp-bdr, rgba(200,169,110,.18));
-  position: sticky; top: var(--header-h, 66px);
+  position: sticky; top: var(--header-h, 0px);
   background: color-mix(in oklab, var(--cp-bg, #0A0A0A) 92%, transparent);
   backdrop-filter: blur(10px);
   z-index: 40;

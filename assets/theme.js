@@ -55,6 +55,25 @@
   function initHeader() {
     const header = document.querySelector('.site-header');
     const bar    = document.querySelector('.announcement-bar');
+    const root   = document.documentElement;
+
+    // --header-h is what every sticky element on the page offsets itself by:
+    // the collection toolbar, the filter sidebar, anything else that pins
+    // under the navigation. It was read in several places and set nowhere,
+    // so each fell back to a guessed 66-72px while the real header is taller
+    // and the toolbar slid underneath it. It is measured here, and kept
+    // current as the header's height changes (logo load, fonts, breakpoints).
+    // A header that scrolls away with the page leaves nothing to clear, so
+    // the offset is then 0 and pinned elements sit at the very top.
+    function setHeaderVar() {
+      if (!header) { root.style.setProperty('--header-h', '0px'); return; }
+      const pinned = getComputedStyle(header).position === 'fixed';
+      const h = pinned ? Math.ceil(header.getBoundingClientRect().height) : 0;
+      root.style.setProperty('--header-h', h + 'px');
+    }
+    setHeaderVar();
+    window.addEventListener('resize', setHeaderVar);
+    if (header && 'ResizeObserver' in window) new ResizeObserver(setHeaderVar).observe(header);
     if (!header) return;
 
     // Push header below announcement bar

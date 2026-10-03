@@ -230,3 +230,8 @@ not lost.
   the display face there ("one side of the letters too thin, the other too thick").
 - **The navbar and footer are in the Claude Design prompt as well** (owner,
   2026-10-03); the F5/F6 builds get re-skinned to that design when it comes back.
+- **Colour gaps are Claude Code's job** (owner, 2026-10-03). The design was briefed
+  with each scheme's main colours only. When porting it, map every colour to the
+  theme's tokens and fill in whatever it leaves out: all five schemes, all four ladder
+  steps (base, soft, deep, contrast), muted text, borders, hover, focus, sale, badge,
+  low-stock and success states. Check contrast on every scheme.

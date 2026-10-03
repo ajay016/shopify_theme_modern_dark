@@ -15,7 +15,7 @@
 **Next up:** Phase 0 (colour system on the remaining `main-*` pages), then Phase 3 product page once PRODUCT-PAGE.md is approved.
 
 **Waiting on the owner:**
-- Claude Design output for the product page, navbar and footer, from [design/PDP-PROMPT.md](design/PDP-PROMPT.md). The pairing it picks is optional; if not liked, modernise the current fonts instead (PRODUCT-PAGE.md §11).
+- Claude Design output for the product page, navbar and footer, from [design/PDP-PROMPT.md](design/PDP-PROMPT.md). The pairing it picks is optional; if not liked, modernise the current fonts instead. Any colour combination the design misses is filled in by Claude Code when porting (PRODUCT-PAGE.md §11).
 - Reports from testing the collection page.
 
 **Blocked on:** nothing

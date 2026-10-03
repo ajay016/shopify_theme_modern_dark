@@ -1,8 +1,9 @@
 # Claude Design follow-up — colour detail
 
 The first prompt went to Claude Design before the full colour system was added.
-Paste the text below into the **same** Claude Design conversation; it adds the
-colours without restarting the work.
+**Not sent (owner, 2026-10-03).** Claude Code fills in any scheme, step or colour state
+the design leaves out when porting it, using the tables below and
+`snippets/css-variables.liquid`.
 
 ---
 

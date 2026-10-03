@@ -15,8 +15,7 @@
 **Next up:** Phase 0 (colour system on the remaining `main-*` pages), then Phase 3 product page once PRODUCT-PAGE.md is approved.
 
 **Waiting on the owner:**
-- Font choice: rounds 1 and 2 (12 pairings) rejected. The owner wants the pairing to come from the Claude Design product page design instead (see PRODUCT-PAGE.md §11). Store font unchanged until then.
-- Approval of the product page requirements — [PRODUCT-PAGE.md](PRODUCT-PAGE.md). The Claude Design prompt for the product page follows approval.
+- Claude Design output for the product page, navbar and footer, from [design/PDP-PROMPT.md](design/PDP-PROMPT.md). The pairing it picks is optional; if not liked, modernise the current fonts instead (PRODUCT-PAGE.md §11).
 - Reports from testing the collection page.
 
 **Blocked on:** nothing

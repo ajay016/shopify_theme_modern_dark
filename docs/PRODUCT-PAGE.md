@@ -1,6 +1,6 @@
 # Product page — requirements
 
-**Status:** draft for the owner's approval. Nothing here is built until it is approved.
+**Status:** approved by the owner 2026-10-03 ("do not exclude any details"). Claude Design prompt: [design/PDP-PROMPT.md](design/PDP-PROMPT.md).
 **Source:** the *Product Details Pages* part of [BRIEF.md](BRIEF.md), verbatim, plus the
 site-wide additions of 2026-10-03 that apply to this page.
 **Next after approval:** a Claude Design prompt for this page, written from this file.
@@ -222,3 +222,11 @@ not lost.
   context.
 - The font choice must **not** come at the expense of the product page design. The
   page is the subject; the type serves it.
+- **The font pairing is optional.** The owner finds the current fonts acceptable,
+  especially the collection filter text. If the Claude Design pairing is not liked,
+  **keep the current fonts and make them look modern**: tighter heading tracking,
+  adjusted weights and line heights, refined size steps, cleaner uppercase labels.
+- Product card titles already moved to the text font (2026-10-03): the owner disliked
+  the display face there ("one side of the letters too thin, the other too thick").
+- **The navbar and footer are in the Claude Design prompt as well** (owner,
+  2026-10-03); the F5/F6 builds get re-skinned to that design when it comes back.

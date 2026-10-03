@@ -14,7 +14,7 @@
 **Next up:** F5 header → F6 footer. Then Phase 0, then Phase 3.
 
 **Waiting on the owner:**
-- Font choice: rounds 1 and 2 (12 pairings) all rejected. Next step is a reference from the owner: a store or brand whose type they like, matched exactly. Or the owner browses Shopify's library live via Font Pairing → Custom.
+- Font choice: rounds 1 and 2 (12 pairings) rejected. The owner wants the pairing to come from the Claude Design product page design instead (see PRODUCT-PAGE.md §11). Store font unchanged until then.
 - Approval of the product page requirements — [PRODUCT-PAGE.md](PRODUCT-PAGE.md). The Claude Design prompt for the product page follows approval.
 - Reports from testing the collection page.
 

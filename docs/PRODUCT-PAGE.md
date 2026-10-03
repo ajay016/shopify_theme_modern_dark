@@ -205,3 +205,20 @@ The same standard the collection page now meets. Each one is a test, not a judge
 The section, `main-product`, will be rebuilt rather than patched. It has 8 settings and a
 variants block with none, so most of this is new structure, and patching it would repeat
 what happened on the collection page.
+
+---
+
+## 11. Notes for the Claude Design prompt (owner, 2026-10-03)
+
+To be written into the prompt when the owner approves this file. Recorded so they are
+not lost.
+
+- **Ask Claude Design to choose a modern font pairing itself**, one that suits modern
+  fashion pages. **Do not name any font or pairing in the prompt.** Two rounds of fonts
+  chosen by Claude Code (12 pairings) were all rejected.
+- The design must show the pairing at work: **product titles, headings, normal
+  paragraph text**, and **the titles under each product card** (recommendations,
+  complementary products, recently viewed), so the owner can judge the type in
+  context.
+- The font choice must **not** come at the expense of the product page design. The
+  page is the subject; the type serves it.

@@ -225,3 +225,27 @@ is gone.
 **Rule going forward:** collection styling lives in `theme.css` only. If a
 rule must be section-scoped, it needs a comment saying why, because anything
 there silently outranks the stylesheet.
+
+## F1 — Corner radius (2026-10-03)
+
+**Where:** *Theme settings → Corners & Shape* — Corner radius (sharp / subtle / soft /
+rounded, default soft), Button shape (follow / pill), Pagination numbers (follow /
+circles). *Product Cards → Image Corner Radius* now defaults to *Follow corner radius*.
+
+**How it works:** `snippets/css-variables.liquid` emits `--r-xs/sm/md/lg`, `--r-btn`,
+`--r-pill`, `--r-page`, `--r-page-wide`. Component radii in `assets/theme.css` and the
+section `<style>` blocks read those tokens. Components that had no radius at all
+(buttons, fields, modals, toasts, drawers, pagination, close buttons, section buttons,
+tags, account and address cards) are listed in the **CORNERS** block at the end of
+`theme.css` — a new component joins there.
+
+**Rules worth keeping:**
+- Underlined fields (`.nls__input-row input`, `.nled-input`) stay square, or the
+  underline curls at its ends.
+- A field + button row that draws its own border takes the button shape and clips
+  (`overflow: hidden`); its children go square.
+- Drawers round only the page-facing edge, and go square when they fill a phone.
+- Designed pills (Lumière buttons, chips, tags) use `--r-pill`: pills unless *Sharp*.
+
+**Check:** `python3 scripts/radius-check.py OUT && node scripts/radius-test.js OUT`
+(copy `assets/theme.css` into OUT first).

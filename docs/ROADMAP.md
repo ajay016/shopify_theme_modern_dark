@@ -76,11 +76,18 @@ restyling it. So the primitives go first, and everything after is built once.
 
 Site-wide. Owner's additions of 2026-10-03, items 1–6.
 
-**F1 — Corner radius** (item 6)
-- [ ] One theme setting: sharp · subtle · soft · rounded, plus pill for buttons
-- [ ] Applied through tokens to buttons, inputs, selects, swatches, pills, chips, badges,
-      cards, images, modals, drawers, dropdown panels and pagination — not per component
-- [ ] Nothing keeps a hard-coded radius
+**F1 — Corner radius** (item 6) · *done 2026-10-03*
+- [x] One theme setting, *Corners & Shape*: sharp · subtle · soft (default) · rounded,
+      plus button shape (follow / pill) and pagination numbers (follow / circles)
+- [x] Applied through tokens (`--r-xs/sm/md/lg`, `--r-btn`, `--r-pill`, `--r-page`) to
+      buttons, inputs, selects, swatches, pills, chips, badges, cards, images, toasts,
+      modals, drawers (page-facing edge), dropdown panels, close buttons and pagination
+- [x] Nothing keeps a hard-coded radius, except circles (dots, spinners, icon buttons,
+      slider thumbs), thin progress bars, the arches in *Collection arches*, and the
+      demo explorer tab
+- [x] Product card image radius gained *Follow corner radius*, now its default
+- [x] Test: `scripts/radius-check.py` + `scripts/radius-test.js` — tokens and computed
+      radius of each component at all six values
 
 **F2 — Custom select** (item 5)
 - [ ] One component replacing every native `<select>`: sort, variant dropdown, quantity,

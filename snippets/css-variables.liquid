@@ -421,6 +421,47 @@
     --section-spacing: {{ settings.layout_section_spacing | default: 80 }}px;
     --side-padding: {{ settings.layout_side_padding | default: 40 }}px;
 
+    /* Corners — one scale for the whole store (Theme settings → Corners & Shape).
+         --r-xs  badges, checkboxes, swatch boxes, tags
+         --r-sm  buttons, fields, selects, pills, toolbar controls, pagination
+         --r-md  dropdown panels, menus, toasts, product images, bordered cards
+         --r-lg  modals, drawers (inner edge), panels, large image tiles
+       --r-btn and --r-page are the button and pagination shapes; --r-pill is
+       for elements designed as pills, which square off only on "Sharp". */
+    {%- liquid
+      assign corner = settings.corner_radius | default: 'soft'
+      case corner
+        when 'sharp'
+          assign r_xs = 0
+          assign r_sm = 0
+          assign r_md = 0
+          assign r_lg = 0
+        when 'subtle'
+          assign r_xs = 2
+          assign r_sm = 4
+          assign r_md = 6
+          assign r_lg = 8
+        when 'rounded'
+          assign r_xs = 6
+          assign r_sm = 12
+          assign r_md = 18
+          assign r_lg = 24
+        else
+          assign r_xs = 4
+          assign r_sm = 8
+          assign r_md = 12
+          assign r_lg = 16
+      endcase
+    -%}
+    --r-xs: {{ r_xs }}px;
+    --r-sm: {{ r_sm }}px;
+    --r-md: {{ r_md }}px;
+    --r-lg: {{ r_lg }}px;
+    --r-pill: {% if corner == 'sharp' %}0px{% else %}999px{% endif %};
+    --r-btn: {% if settings.button_shape == 'pill' %}999px{% else %}{{ r_sm }}px{% endif %};
+    --r-page: {% if settings.pagination_shape == 'circle' %}50%{% else %}{{ r_sm }}px{% endif %};
+    --r-page-wide: {% if settings.pagination_shape == 'circle' %}999px{% else %}{{ r_sm }}px{% endif %};
+
     /* Transitions */
     --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --ease-in: cubic-bezier(0.55, 0.055, 0.675, 0.19);

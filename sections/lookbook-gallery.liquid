@@ -80,7 +80,7 @@
     grid-auto-rows: clamp(120px, 14vw, 200px);
     gap: clamp(12px, 1.4vw, 22px);
   }
-  .lkb-tile { position: relative; overflow: hidden; border-radius: 3px; text-decoration: none; display: block; background: var(--img-placeholder, #1A1714); }
+  .lkb-tile { position: relative; overflow: hidden; border-radius: var(--r-md, 3px); text-decoration: none; display: block; background: var(--img-placeholder, #1A1714); }
   .lkb-tile--tall  { grid-column: span 4; grid-row: span 3; }
   .lkb-tile--wide  { grid-column: span 8; grid-row: span 2; }
   .lkb-tile--sq    { grid-column: span 4; grid-row: span 2; }
@@ -98,7 +98,7 @@
     opacity: .9; transition: opacity .3s;
   }
   .lkb-tile:hover .lkb-tile__overlay { opacity: 1; }
-  .lkb-tile__tag { align-self:flex-start; font-family:var(--ff-body,'Outfit',sans-serif); font-size:calc(9px * var(--fs-scale, 1)); font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#0A0A0A; background: var(--on-image, #FFFFFF); padding:6px 11px; border-radius:2px; }
+  .lkb-tile__tag { align-self:flex-start; font-family:var(--ff-body,'Outfit',sans-serif); font-size:calc(9px * var(--fs-scale, 1)); font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:#0A0A0A; background: var(--on-image, #FFFFFF); padding:6px 11px; border-radius: var(--r-xs, 2px); }
   .lkb-tile__foot { display:flex; flex-direction:column; gap:3px; transform: translateY(6px); opacity:.92; transition: transform .35s, opacity .35s; }
   .lkb-tile:hover .lkb-tile__foot { transform: none; opacity:1; }
   .lkb-tile__label { font-family:var(--ff-display,'Cormorant Garamond',serif); font-size:calc(clamp(18px,2vw,26px) * var(--fs-scale, 1)); font-weight:400; color: var(--on-image, #FFFFFF); }

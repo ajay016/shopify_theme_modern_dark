@@ -10,7 +10,8 @@
 
 **Phase:** F — Foundation · **next** (order revised 2026-10-03, see [ROADMAP.md](ROADMAP.md))
 **Last completed:** Phase 1 — Collection, to the reference design: six filter styles, toolbar, pagination, product card information, header clearance. The owner is still testing it.
-**Next up:** F1 corner radius → F2 custom select → F3 motion → F4 typography → F5 header → F6 footer. Then Phase 0, then Phase 3.
+**Done in Phase F:** F1 corner radius (2026-10-03) — *Theme settings → Corners & Shape*.
+**Next up:** F2 custom select → F3 motion → F4 typography → F5 header → F6 footer. Then Phase 0, then Phase 3.
 
 **Waiting on the owner:**
 - Approval of the product page requirements — [PRODUCT-PAGE.md](PRODUCT-PAGE.md). The Claude Design prompt for the product page follows approval.

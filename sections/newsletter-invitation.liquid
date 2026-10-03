@@ -95,7 +95,7 @@
 
   #section-{{ section.id }} .nli-row {
     display: flex; gap: 0; max-width: 440px; margin: 0 auto;
-    border: 1px solid var(--bdr); border-radius: 999px; overflow: hidden;
+    border: 1px solid var(--bdr); border-radius: var(--r-pill, 999px); overflow: hidden;
     background: color-mix(in srgb, var(--card) 60%, transparent);
     transition: border-color .25s;
   }
@@ -135,7 +135,7 @@
   #section-{{ section.id }} .reveal.is-visible { opacity: 1; transform: none; }
 
   @media (max-width: 560px) {
-    #section-{{ section.id }} .nli-row { flex-direction: column; border-radius: 14px; }
+    #section-{{ section.id }} .nli-row { flex-direction: column; border-radius: var(--r-lg, 14px); }
     #section-{{ section.id }} .nli-row input { text-align: center; padding: 15px 16px; }
     #section-{{ section.id }} .nli-row button { padding: 14px; }
   }

@@ -106,6 +106,47 @@
     ]
   },
   {
+    "name": "Corners & Shape",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "One setting rounds the whole store: buttons, fields, selects, filters, swatches, cards, dropdowns, drawers, modals and pagination."
+      },
+      {
+        "type": "select",
+        "id": "corner_radius",
+        "label": "Corner radius",
+        "options": [
+          { "value": "sharp",   "label": "Sharp — square corners" },
+          { "value": "subtle",  "label": "Subtle — slightly softened" },
+          { "value": "soft",    "label": "Soft — modern, gently rounded" },
+          { "value": "rounded", "label": "Rounded — generous curves" }
+        ],
+        "default": "soft"
+      },
+      {
+        "type": "select",
+        "id": "button_shape",
+        "label": "Button shape",
+        "options": [
+          { "value": "match", "label": "Follow corner radius" },
+          { "value": "pill",  "label": "Pill — fully rounded ends" }
+        ],
+        "default": "match"
+      },
+      {
+        "type": "select",
+        "id": "pagination_shape",
+        "label": "Pagination numbers",
+        "options": [
+          { "value": "match",  "label": "Follow corner radius" },
+          { "value": "circle", "label": "Circles" }
+        ],
+        "default": "match"
+      }
+    ]
+  },
+  {
     "name": "Header",
     "settings": [
       {
@@ -216,11 +257,12 @@
         "id": "product_card_radius",
         "label": "Image Corner Radius",
         "options": [
+          { "value": "theme",   "label": "Follow corner radius (Corners & Shape)" },
           { "value": "none",    "label": "None (square corners)" },
           { "value": "subtle",  "label": "Subtle" },
           { "value": "rounded", "label": "Rounded" }
         ],
-        "default": "subtle"
+        "default": "theme"
       },
       {
         "type": "select",

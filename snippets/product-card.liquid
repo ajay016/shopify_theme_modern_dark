@@ -17,7 +17,7 @@
     - show_wishlist / show_quickview {Boolean}
     - show_price_compare {Boolean}
     - text_align {String}         'left' | 'center'
-    - radius {String}             'none' | 'subtle' | 'rounded'
+    - radius {String}             'theme' | 'none' | 'subtle' | 'rounded'
     - number {Number}             index used for the 01–08 corner badge (optional)
     - rail {Boolean}              true when placed in a horizontal scroll rail
     - lazy {Boolean}              lazy-load images (default true)
@@ -32,7 +32,7 @@
   assign media_hover   = media_hover   | default: settings.product_card_media_hover | default: 'zoom'
   assign quickadd_style = quickadd_style | default: settings.product_card_quickadd_style | default: 'slide_up'
   assign text_align    = text_align    | default: settings.product_card_text_align | default: 'left'
-  assign radius        = radius        | default: settings.product_card_radius   | default: 'subtle'
+  assign radius        = radius        | default: settings.product_card_radius   | default: 'theme'
   assign scheme        = scheme        | default: 'theme'
 
   assign show_vendor   = show_vendor   | default: settings.product_card_show_vendor

@@ -33,6 +33,7 @@
   assign quickadd_style = quickadd_style | default: settings.product_card_quickadd_style | default: 'slide_up'
   assign text_align    = text_align    | default: settings.product_card_text_align | default: 'left'
   assign radius        = radius        | default: settings.product_card_radius   | default: 'theme'
+  assign title_font    = settings.product_card_title_font | default: 'body'
   assign scheme        = scheme        | default: 'theme'
 
   assign show_vendor   = show_vendor   | default: settings.product_card_show_vendor
@@ -101,7 +102,7 @@
     endif
   -%}
   <div
-    class="product-card pcard pcard--{{ scheme }} pcard--{{ card_style }} pcard--align-{{ text_align }} pcard--rad-{{ radius }}{% if rail %} pcard--rail{% endif %}"
+    class="product-card pcard pcard--{{ scheme }} pcard--{{ card_style }} pcard--align-{{ text_align }} pcard--rad-{{ radius }} pcard--title-{{ title_font }}{% if rail %} pcard--rail{% endif %}"
     data-pcard
     data-quickadd="{{ quickadd_style }}"
     data-price="{{ d_cents }}"
@@ -254,7 +255,7 @@
     endfor
   -%}
   <div
-    class="product-card pcard pcard--{{ scheme }} pcard--{{ card_style }} pcard--align-{{ text_align }} pcard--rad-{{ radius }}{% if rail %} pcard--rail{% endif %}"
+    class="product-card pcard pcard--{{ scheme }} pcard--{{ card_style }} pcard--align-{{ text_align }} pcard--rad-{{ radius }} pcard--title-{{ title_font }}{% if rail %} pcard--rail{% endif %}"
     data-pcard
     data-product-id="{{ product.id }}"
     data-quickadd="{{ quickadd_style }}"

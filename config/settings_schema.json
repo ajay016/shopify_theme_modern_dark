@@ -289,6 +289,17 @@
       },
       {
         "type": "select",
+        "id": "product_card_title_font",
+        "label": "Product title font",
+        "info": "The text font has even strokes and reads cleanly at small sizes. The heading font is the display face used for page titles.",
+        "options": [
+          { "value": "body",    "label": "Text font (recommended)" },
+          { "value": "heading", "label": "Heading font" }
+        ],
+        "default": "body"
+      },
+      {
+        "type": "select",
         "id": "product_card_radius",
         "label": "Image Corner Radius",
         "options": [

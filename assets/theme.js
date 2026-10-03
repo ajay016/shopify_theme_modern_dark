@@ -151,11 +151,16 @@
     // current as the header's height changes (logo load, fonts, breakpoints).
     // A header that scrolls away with the page leaves nothing to clear, so
     // the offset is then 0 and pinned elements sit at the very top.
+    // --header-space is the room the page leaves above its content for the
+    // header, whatever its style; it replaces a fixed 80px that every header
+    // taller or shorter than that got wrong.
     function setHeaderVar() {
-      if (!header) { root.style.setProperty('--header-h', '0px'); return; }
+      if (!header) { root.style.setProperty('--header-h', '0px'); root.style.setProperty('--header-space', '0px'); return; }
+      const full = Math.ceil(header.getBoundingClientRect().height + (parseFloat(getComputedStyle(header).marginTop) || 0));
       const pinned = getComputedStyle(header).position === 'fixed';
-      const h = pinned ? Math.ceil(header.getBoundingClientRect().height) : 0;
-      root.style.setProperty('--header-h', h + 'px');
+      const hidden = header.classList.contains('is-hidden');
+      root.style.setProperty('--header-space', full + 'px');
+      root.style.setProperty('--header-h', (pinned && !hidden ? full : 0) + 'px');
     }
     setHeaderVar();
     window.addEventListener('resize', setHeaderVar);
@@ -169,6 +174,23 @@
     }
     setHeaderOffset();
     window.addEventListener('resize', setHeaderOffset);
+
+    // "Hide header when scrolling down": slides away on the way down, back
+    // on the way up, never while a menu is open. Pinned toolbars follow it
+    // through --header-h.
+    const hideOnScroll = header.dataset.hideOnScroll === 'true' && header.classList.contains('is-sticky');
+    let lastY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (hideOnScroll) {
+        const goingDown = y > lastY + 4, goingUp = y < lastY - 4;
+        const menuOpen = header.querySelector('.has-megamenu.is-open');
+        if (goingDown && y > header.offsetHeight + 120 && !menuOpen) header.classList.add('is-hidden');
+        else if (goingUp || y < header.offsetHeight) header.classList.remove('is-hidden');
+        if (goingDown || goingUp) lastY = y;
+        setHeaderVar();
+      }
+    }, { passive: true });
 
     window.addEventListener('scroll', () => {
       const scrolled = window.scrollY > 60;
@@ -196,20 +218,28 @@
     const overlay   = document.getElementById('mobile-menu-overlay');
     if (!menu) return;
 
-    function open() {
+    let opener = null;
+    function open(e) {
+      opener = e && e.currentTarget;
       menu.classList.add('is-open');
       overlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
+      openBtns.forEach(b => b.setAttribute('aria-expanded', 'true'));
+      setTimeout(() => (closeBtn || menu).focus({ preventScroll: true }), 60);
     }
     function close() {
+      if (!menu.classList.contains('is-open')) return;
       menu.classList.remove('is-open');
       overlay.classList.remove('is-open');
       document.body.style.overflow = '';
+      openBtns.forEach(b => b.setAttribute('aria-expanded', 'false'));
+      if (opener) opener.focus({ preventScroll: true });
     }
 
     openBtns.forEach(btn => btn.addEventListener('click', open));
     closeBtn && closeBtn.addEventListener('click', close);
     overlay && overlay.addEventListener('click', close);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
     // Submenus
     document.querySelectorAll('[data-toggle-submenu]').forEach(btn => {
@@ -1813,16 +1843,96 @@
      Mega Menu hover — keyboard accessible
      ============================================================ */
   function initMegaMenu() {
-    document.querySelectorAll('.has-megamenu').forEach(item => {
-      const menu = item.querySelector('.mega-menu');
-      if (!menu) return;
+    const header = document.querySelector('.site-header');
+    const items = [...document.querySelectorAll('.has-megamenu')];
+    if (!header || !items.length) return;
+    let current = null, openTimer = 0, closeTimer = 0, quietFocus = false;
 
-      item.addEventListener('focusin', () => item.classList.add('is-open'));
-      item.addEventListener('focusout', e => {
-        if (!item.contains(e.relatedTarget)) item.classList.remove('is-open');
+    const triggerOf = item => item.querySelector(':scope > .site-nav__link');
+    function set(item, open) {
+      item.classList.toggle('is-open', open);
+      const t = triggerOf(item);
+      if (t) t.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open && item.classList.contains('has-megamenu--v3')) {
+        // The flyout sits under its own link, kept inside the header.
+        const panel = item.querySelector('.mega-menu');
+        if (panel) {
+          const hr = header.getBoundingClientRect(), ir = item.getBoundingClientRect();
+          const left = Math.max(8, Math.min(ir.left - hr.left - 12, hr.width - panel.offsetWidth - 8));
+          panel.style.setProperty('--fly-left', left + 'px');
+        }
+      }
+    }
+    function open(item) {
+      clearTimeout(closeTimer);
+      if (current && current !== item) set(current, false);
+      current = item;
+      set(item, true);
+      header.classList.add('has-open-menu');
+    }
+    function close(item, focusTrigger) {
+      if (!item) return;
+      set(item, false);
+      if (current === item) current = null;
+      header.classList.toggle('has-open-menu', !!current);
+      if (focusTrigger) {
+        // Returning focus must not count as focusing in, or it reopens the panel.
+        const t = triggerOf(item);
+        if (t) { quietFocus = true; t.focus(); quietFocus = false; }
+      }
+    }
+
+    items.forEach(item => {
+      // Hover intent: a short delay to open, so sweeping the pointer across
+      // the bar does not flash every panel; moving between items is instant.
+      item.addEventListener('pointerenter', e => {
+        if (e.pointerType === 'touch') return;
+        clearTimeout(closeTimer); clearTimeout(openTimer);
+        openTimer = setTimeout(() => open(item), current ? 0 : 110);
       });
+      item.addEventListener('pointerleave', e => {
+        if (e.pointerType === 'touch') return;
+        clearTimeout(openTimer);
+        closeTimer = setTimeout(() => close(item), 220);
+      });
+      const t = triggerOf(item);
+      if (t) {
+        // Touch: the first tap opens the panel, the second follows the link.
+        // The state is read at pointerdown, before the tap focuses the link
+        // (which opens the panel through focusin on Android).
+        let tapOpensMenu = false;
+        t.addEventListener('pointerdown', e => { tapOpensMenu = e.pointerType !== 'mouse' && !item.classList.contains('is-open'); });
+        t.addEventListener('click', e => {
+          if (tapOpensMenu) { e.preventDefault(); open(item); }
+          tapOpensMenu = false;
+        });
+        t.addEventListener('keydown', e => {
+          if (e.key === 'ArrowDown' || ((e.key === ' ') && !item.classList.contains('is-open'))) {
+            e.preventDefault(); open(item);
+            const first = item.querySelector('.mega-menu a');
+            if (first) setTimeout(() => first.focus(), 30);
+          }
+        });
+      }
+      item.addEventListener('focusin', () => { if (!quietFocus) open(item); });
+      item.addEventListener('focusout', e => { if (!item.contains(e.relatedTarget)) close(item); });
+
+      // Flyout: the hovered or focused submenu shows its links beside it.
+      const flyout = item.querySelector('[data-flyout]');
+      if (flyout) {
+        const show = i => {
+          flyout.querySelectorAll('[data-flyout-item]').forEach(a => a.classList.toggle('is-current', a.dataset.flyoutItem === i));
+          flyout.querySelectorAll('[data-flyout-pane]').forEach(p => p.classList.toggle('is-current', p.dataset.flyoutPane === i));
+        };
+        flyout.addEventListener('pointerover', e => { const a = e.target.closest('[data-flyout-item]'); if (a) show(a.dataset.flyoutItem); });
+        flyout.addEventListener('focusin', e => { const a = e.target.closest('[data-flyout-item]'); if (a) show(a.dataset.flyoutItem); });
+      }
     });
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && current) close(current, true); });
+    document.addEventListener('pointerdown', e => { if (current && !current.contains(e.target)) close(current); });
   }
+
 
 
   /* ============================================================
@@ -2141,6 +2251,16 @@
     initMegaMenu();
     initAddressForms();
     initCustomSelects();
+  });
+
+  // The theme editor swaps the header's HTML when a header setting changes;
+  // its menus, drawer and scroll behaviour are bound to elements, so re-bind.
+  document.addEventListener('shopify:section:load', e => {
+    if (!e.target || !e.target.querySelector('.site-header')) return;
+    initHeader();
+    initMobileMenu();
+    initSearch();
+    initMegaMenu();
   });
 
   // Re-bind hover carousels when a section is re-rendered in the theme editor.

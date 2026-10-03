@@ -1,172 +1,191 @@
 {%- comment -%}
-  Renders the mega menu dropdown.
-  Accepts:
-    - link: {Object} The nav link with .links children
-    - style: {String} 'v1' | 'v2' | 'v3'
-    - block: {Object} Optional mega_menu_item block for this link
-    - has_mega: {Boolean} Whether a block exists for this link
-{%- endcomment -%}
+  The panel under a top-level link that has children.
 
+  Three layouts (Theme settings → Header → Mega menu layout), each with
+  and without images (Show images in mega menu):
+    v1  Columns     every child is a column heading with its own links
+                    (menu → submenu → sub-submenu); a featured card on the right
+    v2  Visual      a tile per child, with the collection's image or a text tile,
+                    and the child's own links underneath
+    v3  Flyout      a compact panel under the link: children on the left, the
+                    hovered child's links on the right, a promo card beside them
+
+  Images come from the mega_menu_item block when one matches the link,
+  otherwise from the collection or product each link points to.
+
+  Accepts: link, index, style, block, has_mega, images
+{%- endcomment -%}
 {%- liquid
-  assign sub_links = link.links
-  assign featured_img = nil
-  if has_mega and block != nil
-    assign featured_img = block.settings.featured_image
+  assign panel_id = 'mega-' | append: link.handle | append: '-' | append: index
+  assign show_images = images
+  if show_images == nil
+    assign show_images = true
   endif
+
+  assign feat_img = nil
+  assign feat_url = link.url
+  assign feat_label = ''
+  assign feat_title = ''
+  if has_mega
+    assign feat_img = block.settings.featured_image
+    assign feat_url = block.settings.featured_link | default: link.url
+    assign feat_label = block.settings.featured_label
+    assign feat_title = block.settings.featured_title
+  endif
+  unless feat_img
+    if link.type == 'collection_link'
+      assign feat_img = link.object.image | default: link.object.featured_image
+    elsif link.type == 'product_link'
+      assign feat_img = link.object.featured_image
+    endif
+  endunless
+
+  assign leaves = 0
+  for child in link.links
+    if child.links.size == 0
+      assign leaves = leaves | plus: 1
+    endif
+  endfor
 -%}
 
-{%- comment -%}——— MEGA MENU V1: Full-Width Columns + Featured Image ———{%- endcomment -%}
-{%- if style == 'v1' -%}
-<div
-  class="mega-menu mega-menu--v1"
-  role="region"
-  aria-label="{{ link.title }}"
-  id="mega-{{ link.handle }}"
->
+{%- if style == 'v2' -%}
+<div class="mega-menu mega-menu--v2{% unless show_images %} mega-menu--no-images{% endunless %}" id="{{ panel_id }}" role="region" aria-label="{{ link.title | escape }}">
   <div class="mega-menu__inner">
-
-    {%- comment -%}Group sub-links into columns of ~5{%- endcomment -%}
-    {%- assign col_size = 5 -%}
-    {%- assign col_count = sub_links.size | divided_by: col_size | ceil -%}
-    {%- assign col_count = col_count | at_most: 3 -%}
-
-    {%- for col_i in (1..col_count) -%}
-      {%- assign start = forloop.index0 | times: col_size -%}
-      <div class="mega-menu__col">
-        {%- if forloop.first -%}
-          <p class="mega-menu__col-title">{{ link.title }}</p>
-        {%- endif -%}
-        <ul>
-          {%- assign col_links = sub_links | slice: start, col_size -%}
-          {%- for child in col_links -%}
-            <li>
-              <a href="{{ child.url }}" {% if child.active %}aria-current="page"{% endif %}>
-                {{ child.title }}
-              </a>
-            </li>
-          {%- endfor -%}
-        </ul>
-      </div>
-    {%- endfor -%}
-
-    {%- comment -%}Featured image card{%- endcomment -%}
-    {%- if has_mega and block != nil -%}
-      <div class="mega-menu__featured">
-        {%- if featured_img != blank -%}
-          <a href="{{ block.settings.featured_link | default: link.url }}" class="mega-menu__featured-img">
-            {{
-              featured_img
-              | image_url: width: 480
-              | image_tag: loading: 'lazy', alt: block.settings.featured_title
-            }}
-          </a>
-        {%- else -%}
-          <div class="mega-menu__featured-img" style="background:var(--charcoal);"></div>
-        {%- endif -%}
-        {%- if block.settings.featured_label != blank -%}
-          <p class="mega-menu__featured-label">{{ block.settings.featured_label }}</p>
-        {%- endif -%}
-        {%- if block.settings.featured_title != blank -%}
-          <p class="mega-menu__featured-title">{{ block.settings.featured_title }}</p>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
-
-  </div>
-</div>
-
-
-{%- comment -%}——— MEGA MENU V2: Compact Thumbnails Grid ———{%- endcomment -%}
-{%- elsif style == 'v2' -%}
-<div
-  class="mega-menu mega-menu--v2"
-  role="region"
-  aria-label="{{ link.title }}"
-  id="mega-{{ link.handle }}"
->
-  <div class="mega-menu__inner">
-    {%- for child in sub_links limit: 6 -%}
-      <a href="{{ child.url }}" class="mega-thumb">
-        {%- comment -%}Thumbnail — tries child's image first, falls back to placeholder{%- endcomment -%}
+    <div class="mega-tiles">
+      {%- for child in link.links limit: 6 -%}
         {%- liquid
-          assign child_img = nil
-          if has_mega and block != nil and forloop.first
-            assign child_img = block.settings.featured_image
+          assign tile_img = nil
+          if show_images
+            if child.type == 'collection_link'
+              assign tile_img = child.object.image | default: child.object.featured_image
+            elsif child.type == 'product_link'
+              assign tile_img = child.object.featured_image
+            endif
+            if forloop.first and has_mega and tile_img == nil
+              assign tile_img = block.settings.featured_image
+            endif
           endif
         -%}
-        {%- if child_img != blank -%}
-          {{
-            child_img
-            | image_url: width: 360
-            | image_tag: loading: 'lazy', alt: child.title
-          }}
-        {%- else -%}
-          <div style="width:100%;height:100%;background:var(--charcoal);"></div>
-        {%- endif -%}
-        <div class="mega-thumb__label">{{ child.title }}</div>
-        {%- if child.links.size > 0 -%}
-          <div class="mega-thumb__count">{{ child.links.size }} styles</div>
-        {%- endif -%}
-      </a>
-    {%- endfor -%}
+        <div class="mega-tile" style="--i: {{ forloop.index0 }}">
+          <a href="{{ child.url }}" class="mega-tile__media{% unless tile_img %} mega-tile__media--text{% endunless %}">
+            {%- if tile_img -%}
+              {{ tile_img | image_url: width: 520 | image_tag: loading: 'lazy', alt: child.title, sizes: '(min-width: 1200px) 220px, 18vw' }}
+            {%- else -%}
+              <span class="mega-tile__initial" aria-hidden="true">{{ child.title | slice: 0 }}</span>
+            {%- endif -%}
+          </a>
+          <a href="{{ child.url }}" class="mega-tile__title"{% if child.active %} aria-current="page"{% endif %}>{{ child.title }}</a>
+          {%- if child.links.size > 0 -%}
+            <ul class="mega-tile__links">
+              {%- for grandchild in child.links limit: 5 -%}
+                <li><a href="{{ grandchild.url }}"{% if grandchild.active %} aria-current="page"{% endif %}>{{ grandchild.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+    <a href="{{ link.url }}" class="mega-menu__all">{{ 'general.view_all' | t }} <span aria-hidden="true">→</span></a>
   </div>
 </div>
 
-
-{%- comment -%}——— MEGA MENU V3: Flyout Panel + Promo Banner ———{%- endcomment -%}
 {%- elsif style == 'v3' -%}
-<div
-  class="mega-menu mega-menu--v3"
-  role="region"
-  aria-label="{{ link.title }}"
-  id="mega-{{ link.handle }}"
->
+{%- liquid
+  assign promo_img = nil
+  assign promo_url = link.url
+  assign promo_title = ''
+  assign promo_label = ''
+  if has_mega
+    assign promo_img = block.settings.promo_image | default: block.settings.featured_image
+    assign promo_url = block.settings.promo_link | default: link.url
+    assign promo_title = block.settings.promo_title
+    assign promo_label = block.settings.promo_label
+  endif
+  unless promo_img
+    assign promo_img = feat_img
+  endunless
+-%}
+<div class="mega-menu mega-menu--v3{% unless show_images %} mega-menu--no-images{% endunless %}" id="{{ panel_id }}" role="region" aria-label="{{ link.title | escape }}" data-flyout>
   <div class="mega-menu__inner">
+    <ul class="flyout__list">
+      {%- for child in link.links -%}
+        <li style="--i: {{ forloop.index0 }}">
+          <a href="{{ child.url }}" class="flyout__item{% if forloop.first %} is-current{% endif %}" data-flyout-item="{{ forloop.index0 }}"{% if child.active %} aria-current="page"{% endif %}>
+            <span>{{ child.title }}</span>
+            {%- if child.links.size > 0 -%}
+              <svg width="6" height="10" viewBox="0 0 6 10" fill="none" aria-hidden="true"><path d="M1 1l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            {%- endif -%}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+    <div class="flyout__panes">
+      {%- for child in link.links -%}
+        <div class="flyout__pane{% if forloop.first %} is-current{% endif %}" data-flyout-pane="{{ forloop.index0 }}">
+          <p class="flyout__heading">{{ child.title }}</p>
+          {%- if child.links.size > 0 -%}
+            <ul>
+              {%- for grandchild in child.links -%}
+                <li style="--i: {{ forloop.index0 }}"><a href="{{ grandchild.url }}"{% if grandchild.active %} aria-current="page"{% endif %}>{{ grandchild.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+          <a href="{{ child.url }}" class="mega-menu__all">{{ 'general.view_all' | t }} <span aria-hidden="true">→</span></a>
+        </div>
+      {%- endfor -%}
+    </div>
+    {%- if show_images and promo_img -%}
+      <a href="{{ promo_url }}" class="flyout__promo">
+        {{ promo_img | image_url: width: 480 | image_tag: loading: 'lazy', alt: promo_title | default: link.title }}
+        {%- if promo_title != blank or promo_label != blank -%}
+          <span class="flyout__promo-text">
+            {%- if promo_title != blank -%}<b>{{ promo_title }}</b>{%- endif -%}
+            {%- if promo_label != blank -%}<i>{{ promo_label }}</i>{%- endif -%}
+          </span>
+        {%- endif -%}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
 
-    <div class="mega-menu__links">
-      <p class="mega-menu__col-title" style="margin-bottom:32px;">{{ link.title }}</p>
-      {%- for child in sub_links -%}
-        <a href="{{ child.url }}" {% if child.active %}aria-current="page"{% endif %}>
-          {{ child.title }}
-        </a>
-        {%- if child.links.size > 0 -%}
-          <div style="padding:0 0 8px 16px;">
-            {%- for grandchild in child.links -%}
-              <a href="{{ grandchild.url }}" style="font-family:var(--ff-body);font-size:12px;color:var(--muted);padding:4px 0;display:block;transition:color 0.3s;"
-                 onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">
-                {{ grandchild.title }}
-              </a>
+{%- else -%}
+<div class="mega-menu mega-menu--v1{% unless show_images %} mega-menu--no-images{% endunless %}" id="{{ panel_id }}" role="region" aria-label="{{ link.title | escape }}">
+  <div class="mega-menu__inner">
+    <div class="mega-cols">
+      {%- if leaves > 0 -%}
+        <div class="mega-col" style="--i: 0">
+          <a href="{{ link.url }}" class="mega-col__title">{{ link.title }}</a>
+          <ul>
+            {%- for child in link.links -%}
+              {%- if child.links.size == 0 -%}
+                <li><a href="{{ child.url }}"{% if child.active %} aria-current="page"{% endif %}>{{ child.title }}</a></li>
+              {%- endif -%}
             {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+      {%- for child in link.links -%}
+        {%- if child.links.size > 0 -%}
+          <div class="mega-col" style="--i: {{ forloop.index }}">
+            <a href="{{ child.url }}" class="mega-col__title"{% if child.active %} aria-current="page"{% endif %}>{{ child.title }}</a>
+            <ul>
+              {%- for grandchild in child.links -%}
+                <li><a href="{{ grandchild.url }}"{% if grandchild.active %} aria-current="page"{% endif %}>{{ grandchild.title }}</a></li>
+              {%- endfor -%}
+            </ul>
           </div>
         {%- endif -%}
       {%- endfor -%}
     </div>
-
-    {%- if has_mega and block != nil -%}
-      <div class="mega-menu__promo">
-        {%- if block.settings.promo_image != blank -%}
-          <a href="{{ block.settings.promo_link | default: link.url }}">
-            {{
-              block.settings.promo_image
-              | image_url: width: 400
-              | image_tag: loading: 'lazy', style: 'width:100%;margin-bottom:16px;'
-            }}
-          </a>
-        {%- else -%}
-          <div style="background:var(--black);flex:1;margin-bottom:16px;"></div>
-        {%- endif -%}
-        {%- if block.settings.promo_title != blank -%}
-          <p style="font-family:var(--ff-display);font-size:20px;font-weight:400;color:var(--cream);margin-bottom:8px;">{{ block.settings.promo_title }}</p>
-        {%- endif -%}
-        {%- if block.settings.promo_label != blank -%}
-          <a href="{{ block.settings.promo_link | default: link.url }}"
-             style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);">
-            {{ block.settings.promo_label }}
-          </a>
-        {%- endif -%}
-      </div>
+    {%- if show_images and feat_img -%}
+      <a href="{{ feat_url }}" class="mega-feature">
+        <span class="mega-feature__img">
+          {{ feat_img | image_url: width: 560 | image_tag: loading: 'lazy', alt: feat_title | default: link.title }}
+        </span>
+        {%- if feat_label != blank -%}<span class="mega-feature__label">{{ feat_label }}</span>{%- endif -%}
+        <span class="mega-feature__title">{{ feat_title | default: link.title }}</span>
+      </a>
     {%- endif -%}
-
   </div>
 </div>
 {%- endif -%}

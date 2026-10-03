@@ -171,25 +171,41 @@
       {
         "type": "select",
         "id": "header_style",
-        "label": "Header Style",
+        "label": "Header style",
         "info": "Choose the overall navigation layout.",
         "options": [
-          { "value": "v1", "label": "Style 1 — Logo Left, Nav Center" },
-          { "value": "v2", "label": "Style 2 — Centered Logo, Split Nav" },
-          { "value": "v3", "label": "Style 3 — Hamburger Sidebar" }
+          { "value": "v1", "label": "Classic — logo left, menu centred" },
+          { "value": "v2", "label": "Centred — logo above a full menu row" },
+          { "value": "v3", "label": "Minimal — menu button and drawer" },
+          { "value": "v4", "label": "Floating — rounded bar, inset from the edges" }
         ],
         "default": "v1"
       },
       {
         "type": "select",
         "id": "mega_menu_style",
-        "label": "Mega Menu Style",
+        "label": "Mega menu layout",
+        "info": "Used for menu items that have a submenu.",
         "options": [
-          { "value": "v1", "label": "Mega Menu 1 — Full-Width Columns + Featured Image" },
-          { "value": "v2", "label": "Mega Menu 2 — Compact Thumbnails Grid" },
-          { "value": "v3", "label": "Mega Menu 3 — Flyout Panel + Promo Banner" }
+          { "value": "v1", "label": "Columns — each submenu a column, with a featured card" },
+          { "value": "v2", "label": "Visual — a tile per submenu, with its links" },
+          { "value": "v3", "label": "Flyout — compact panel, submenus open beside" }
         ],
         "default": "v1"
+      },
+      {
+        "type": "checkbox",
+        "id": "mega_menu_images",
+        "label": "Show images in mega menu",
+        "info": "Images come from the Mega Menu Item blocks in the header, or from the collection each link points to.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "header_hide_on_scroll",
+        "label": "Hide header when scrolling down",
+        "info": "It slides back as soon as the shopper scrolls up. Needs the sticky header.",
+        "default": false
       },
       { "type": "checkbox", "id": "header_transparent_home",   "label": "Transparent header on homepage hero",  "default": true },
       { "type": "checkbox", "id": "header_sticky",              "label": "Sticky header on scroll",             "default": true },

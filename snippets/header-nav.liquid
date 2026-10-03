@@ -1,0 +1,52 @@
+{%- comment -%}
+  The desktop navigation, shared by the Classic, Centred and Floating
+  header styles. Every top-level link renders: the old split nav kept
+  only the first six and had no dropdowns at all.
+
+  Accepts:
+    - menu:   {Object} linklist
+    - blocks: {Array}  section.blocks (mega_menu_item blocks, matched by title)
+    - mega_style: {String} 'v1' columns | 'v2' visual tiles | 'v3' flyout
+    - images: {Boolean} show images in the mega menu
+    - align:  {String} optional modifier for the nav row
+{%- endcomment -%}
+<nav class="site-nav{% if align != blank %} site-nav--{{ align }}{% endif %}" aria-label="{{ 'accessibility.menu' | t }}">
+  {%- for link in menu.links -%}
+    {%- liquid
+      assign mega_block = nil
+      assign has_mega = false
+      assign link_key = link.title | downcase | strip
+      for block in blocks
+        assign block_key = block.settings.menu_item | downcase | strip
+        if block.type == 'mega_menu_item' and block_key == link_key
+          assign has_mega = true
+          assign mega_block = block
+        endif
+      endfor
+    -%}
+    {%- if link.links.size > 0 -%}
+      <div class="has-megamenu has-megamenu--{{ mega_style }}" data-mega>
+        <a
+          href="{{ link.url }}"
+          class="site-nav__link{% if link.active or link.child_active %} is-active{% endif %}"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="mega-{{ link.handle }}-{{ forloop.index }}"
+        >
+          <span>{{ link.title }}</span>
+          <svg class="site-nav__chev" width="9" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        {%- render 'mega-menu',
+          link: link,
+          index: forloop.index,
+          style: mega_style,
+          block: mega_block,
+          has_mega: has_mega,
+          images: images
+        -%}
+      </div>
+    {%- else -%}
+      <a href="{{ link.url }}" class="site-nav__link{% if link.active %} is-active{% endif %}"{% if link.active %} aria-current="page"{% endif %}><span>{{ link.title }}</span></a>
+    {%- endif -%}
+  {%- endfor -%}
+</nav>

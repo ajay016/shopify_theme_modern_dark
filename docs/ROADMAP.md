@@ -142,10 +142,22 @@ Site-wide. Owner's additions of 2026-10-03, items 1–6.
 - [ ] The owner's pick set as the store font and the schema default
 - [x] Type scale: chrome fixed in px (Phase 1), content scaling with the body-size setting
 
-**F5 — Header** (item 2; also the brief's "2–3 navbar styles")
-- [ ] 2–3 modern header styles
-- [ ] Mega menu in 3 layouts, with and without images
-- [ ] Menu → submenu → sub-submenu, animated
+**F5 — Header** (item 2; also the brief's "2–3 navbar styles") · *done 2026-10-03*
+- [x] Four header styles: Classic (logo left, menu centred) · Centred (logo above a full
+      menu row, search pill) · Minimal (menu button and drawer) · Floating (inset rounded
+      bar). Solid surfaces, no frosted blur; pill hover states; compact on scroll
+- [x] Mega menu in 3 layouts — Columns · Visual tiles · Flyout — each with and without
+      images (*Show images in mega menu*); images from the header's Mega Menu Item
+      blocks or from the collection each link points to
+- [x] Menu → submenu → sub-submenu in every layout and in the mobile drawer, animated
+      (panel lift, staggered items, flyout panes slide, drawer accordions)
+- [x] Hover intent, keyboard (focus, ArrowDown, Escape), touch (first tap opens), outside
+      click; *Hide header when scrolling down* option
+- [x] Fixed on the way: mobile submenus could never open (duplicate attribute); Centred
+      style dropped every item after the sixth and had no dropdowns; search button
+      label read "Translation missing"; page content offset was a fixed 80px; a solid
+      header on the homepage covered the hero
+- [x] Test: `scripts/header-check.py` + `scripts/header-test.js` — 36 checks
 
 **F6 — Footer** (item 2)
 - [ ] 2–3 modern footer styles

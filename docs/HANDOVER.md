@@ -307,3 +307,28 @@ Each pairing sets its own weight and tracking.
 **Not decided.** Round 1: the owner rejected all four new pairings. DM Serif + DM Sans was
 the best *of those*, which is not approval: the owner still wants the font changed.
 Round 2 specimen is at the same link. Set the store font only once the owner names one.
+
+## F5 — Header (2026-10-03)
+
+**Where:** *Theme settings → Header* — Header style (Classic / Centred / Minimal /
+Floating), Mega menu layout (Columns / Visual / Flyout), Show images in mega menu, Hide
+header when scrolling down. Images for a mega menu come from a *Mega Menu Item* block in
+the header section (matched by link title) or, failing that, from the collection or
+product the link points to.
+
+**Files:** `sections/header.liquid` (markup for all styles + mobile drawer),
+`snippets/header-nav.liquid` (desktop menu, shared), `snippets/mega-menu.liquid` (three
+layouts), header block in `theme.css` (replaces the old header, mega menu and mobile menu
+CSS), `initMegaMenu` / `initMobileMenu` / `initHeader` in `theme.js`.
+
+**Bugs fixed:** the mobile submenu buttons carried `data-toggle-submenu` twice and the
+browser kept the empty first one, so no submenu ever opened. `general.search` is a group
+of keys, so `'general.search' | t` rendered "Translation missing". Content offset now
+uses the measured `--header-space`; only a *transparent* header sits over the homepage
+hero.
+
+**Liquid note:** test for a missing image with `unless img`, not `img == blank`; the
+local renderer does not treat nil as blank, and the truthiness test is right on Shopify
+too.
+
+**Check:** `python3 scripts/header-check.py OUT && node scripts/header-test.js OUT`.

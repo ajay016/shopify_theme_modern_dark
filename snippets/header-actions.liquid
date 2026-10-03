@@ -1,5 +1,6 @@
 <div class="site-header__actions">
-  {%- comment -%}Search{%- endcomment -%}
+  {%- comment -%}Search (the Centred header has its own search pill){%- endcomment -%}
+  {%- unless hide_search -%}
   <button
     class="header-icon-btn"
     data-open-search
@@ -9,6 +10,7 @@
   >
     {%- render 'icon-search' -%}
   </button>
+  {%- endunless -%}
 
   {%- comment -%}Account{%- endcomment -%}
   {%- if shop.customer_accounts_enabled -%}

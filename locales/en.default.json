@@ -9,6 +9,7 @@
  */
 {
   "general": {
+    "view_all": "View all",
     "continue_shopping": "Continue Shopping",
     "close": "Close",
     "open": "Open",

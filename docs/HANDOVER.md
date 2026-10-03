@@ -304,5 +304,5 @@ plus *Custom*, which switches to the two font pickers below it (Shopify's font l
 `font-weight: var(--fw-display, 300)` (104 rules across `theme.css` and the sections).
 Each pairing sets its own weight and tracking.
 
-**Open:** the owner picks from the specimen; then set `font_pairing` in
-`config/settings_data.json` and make it the schema default.
+**Decided:** the owner kept DM Serif Display + DM Sans (already the store's setting) and
+it is now the schema default. Do not switch the store's font without being asked.

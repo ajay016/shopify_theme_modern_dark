@@ -12,7 +12,7 @@
 **Last completed:** Phase 1 — Collection, to the reference design: six filter styles, toolbar, pagination, product card information, header clearance. The owner is still testing it.
 **Done in Phase F:** F1 corner radius — *Theme settings → Corners & Shape*; F2 custom select; F3 motion — *Theme settings → Animations → Motion*; F4 typography infrastructure — pairing weights, a Custom font picker, four extra pairings (all 2026-10-03).
 **Done:** F5 header — *Theme settings → Header*; F6 footer — *Theme settings → Footer* (2026-10-03).
-**Next up:** Phase 0 (colour system on the remaining `main-*` pages), then Phase 3 product page once PRODUCT-PAGE.md is approved. Then Phase 0, then Phase 3.
+**Next up:** Phase 0 (colour system on the remaining `main-*` pages), then Phase 3 product page once PRODUCT-PAGE.md is approved.
 
 **Waiting on the owner:**
 - Font choice: rounds 1 and 2 (12 pairings) rejected. The owner wants the pairing to come from the Claude Design product page design instead (see PRODUCT-PAGE.md §11). Store font unchanged until then.

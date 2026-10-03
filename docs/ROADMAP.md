@@ -106,14 +106,24 @@ Site-wide. Owner's additions of 2026-10-03, items 1–6.
       saved country. Fixed (`initAddressForms` in `theme.js`).
 - [ ] Variant dropdown and quantity on the product page use it — built with Phase 3
 
-**F3 — Motion** (item 3)
-- [ ] Shared duration and easing tokens
-- [ ] Height-animated open and close for accordions, filter groups, the top panel and the
-      hidden sidebar
-- [ ] Enter and leave for drawers, modals, dropdowns, the mega menu, the mobile menu,
-      toasts and the quick view
-- [ ] Scroll-reveal for sections, opt-out per section
-- [ ] `prefers-reduced-motion` respected everywhere
+**F3 — Motion** (item 3) · *done 2026-10-03*
+- [x] Shared duration and easing tokens (`--dur-1…4`, `--ease-std`, `--ease-emph`), and a
+      *Motion* setting — expressive · subtle · off — under *Theme settings → Animations*
+- [x] Height-animated open and close for filter groups, the top panel and mobile
+      submenus (`slide()` in `theme.js`); the hidden sidebar already animated its column
+- [x] Enter and leave for drawers (contents stagger in), quick view (rises and settles),
+      size guide, dropdown filters (pop open, animated close), custom selects, the
+      search overlay, mega menu, toasts and the cart notification; blurred overlays
+- [x] Micro-interactions: checks pop, swatches lift, pills and buttons press, filter
+      plus/minus turns, grid fades on grid/list switch, cards fade back when a filter
+      brings them back
+- [x] Scroll reveal for every section after the first, items stagger; opt out with
+      `data-no-reveal`. The old failsafe showed everything 600ms after load, so nothing
+      below the fold ever animated — fixed
+- [x] `prefers-reduced-motion` respected everywhere; Motion: Off stops everything
+- [x] Test: `scripts/motion-test.js` — 14 checks
+- [ ] Product page tabs, accordions, lightbox, sticky bar and gallery — built with Phase 3
+      on these tokens
 
 **F4 — Typography** (item 1)
 - [ ] Shopify's font picker for headings and body, so merchants choose from the font

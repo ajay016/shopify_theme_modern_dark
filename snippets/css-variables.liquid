@@ -462,10 +462,45 @@
     --r-page: {% if settings.pagination_shape == 'circle' %}50%{% else %}{{ r_sm }}px{% endif %};
     --r-page-wide: {% if settings.pagination_shape == 'circle' %}999px{% else %}{{ r_sm }}px{% endif %};
 
-    /* Transitions */
+    /* Motion (Theme settings → Animations → Motion). Every open, close and
+       entrance reads these, so one setting speeds up, softens or stops the
+       whole store. JS reads --dur-* too, so scripted animations follow.
+         --dur-1  hovers, checks, chevrons       --dur-3  drawers, modals, panels
+         --dur-2  dropdowns, selects, accordions --dur-4  scroll reveals */
+    {%- liquid
+      assign motion = settings.motion_level | default: 'expressive'
+      case motion
+        when 'off'
+          assign d1 = 0
+          assign d2 = 0
+          assign d3 = 0
+          assign d4 = 0
+          assign dist = 0
+        when 'subtle'
+          assign d1 = 120
+          assign d2 = 200
+          assign d3 = 300
+          assign d4 = 520
+          assign dist = 14
+        else
+          assign d1 = 160
+          assign d2 = 280
+          assign d3 = 440
+          assign d4 = 820
+          assign dist = 30
+      endcase
+    -%}
+    --dur-1: {{ d1 }}ms;
+    --dur-2: {{ d2 }}ms;
+    --dur-3: {{ d3 }}ms;
+    --dur-4: {{ d4 }}ms;
+    --reveal-dist: {{ dist }}px;
     --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --ease-in: cubic-bezier(0.55, 0.055, 0.675, 0.19);
-    --transition: 0.3s var(--ease-out);
+    --ease-std: cubic-bezier(.2, .8, .2, 1);
+    --ease-emph: cubic-bezier(.16, 1, .3, 1);
+    --ease-io: cubic-bezier(.65, 0, .35, 1);
+    --transition: var(--dur-2) var(--ease-out);
 
     /* Z-index layers — nav must be lower than drawers/modals */
     --z-base: 1;

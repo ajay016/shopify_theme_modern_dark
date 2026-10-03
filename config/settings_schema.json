@@ -354,6 +354,18 @@
   {
     "name": "Animations",
     "settings": [
+      {
+        "type": "select",
+        "id": "motion_level",
+        "label": "Motion",
+        "info": "How the store moves when things open, close and appear: filters, menus, drawers, modals, selects and sections. Shoppers who ask their device for reduced motion always get none.",
+        "options": [
+          { "value": "expressive", "label": "Expressive" },
+          { "value": "subtle",     "label": "Subtle — shorter and smaller" },
+          { "value": "off",        "label": "Off" }
+        ],
+        "default": "expressive"
+      },
       { "type": "checkbox", "id": "animations_scroll_reveal", "label": "Scroll reveal (fade in on scroll)", "default": true },
       { "type": "checkbox", "id": "animations_hover",         "label": "Hover effects on cards/links",     "default": true },
       {

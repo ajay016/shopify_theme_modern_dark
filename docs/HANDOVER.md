@@ -273,3 +273,23 @@ countries without provinces.
 
 **Check:** `node scripts/custom-select-test.js OUT` (OUT holds copies of
 `theme.css`, `theme.js` and a rendered `rad_sidebar.html`).
+
+## F3 — Motion (2026-10-03)
+
+**Where to see it:** open and close filter groups, the top filter panel, a dropdown
+filter, the filter drawer, the sort select, the mobile menu and its submenus; scroll any
+homepage — sections after the first fade and lift in as they arrive, and cards stagger.
+**Setting:** *Theme settings → Animations → Motion* (expressive / subtle / off).
+
+**How it works:** tokens in `css-variables.liquid` (`--dur-1…4`, `--reveal-dist`,
+eases). CSS transitions and keyframes are in the **MOTION** block at the end of
+`theme.css`. `theme.js` has `motionMs()` (reads the tokens, 0 under reduced motion),
+`slide(el, open, apply)` for height animation, and `settle(el)` for an entrance.
+
+**Scroll reveal, the actual fault:** the failsafe in `initScrollReveal` called
+`revealAll()` 600ms after load, so every below-the-fold element was already visible
+before anyone scrolled to it. Now it only fires if the observer never reports. Revealed
+elements are disarmed afterwards so no transform is left behind (a transformed ancestor
+would trap `position: fixed` drawers inside it).
+
+**Check:** `node scripts/motion-test.js OUT` (same OUT as the select test).

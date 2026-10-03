@@ -6,46 +6,132 @@
   'use strict';
 
   /* ============================================================
+     Motion — shared by everything that opens, closes or enters.
+     Durations come from the --dur-* tokens (Theme settings →
+     Animations → Motion), so scripted animations follow the same
+     setting as the CSS ones, and reduced motion zeroes all of them.
+     ============================================================ */
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const EASE_STD = 'cubic-bezier(.2,.8,.2,1)';
+  const EASE_EMPH = 'cubic-bezier(.16,1,.3,1)';
+  function motionMs(step) {
+    if (reducedMotion.matches) return 0;
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--dur-' + step).trim();
+    const n = parseFloat(v);
+    if (isNaN(n)) return 0;
+    return /ms$/.test(v) ? n : n * 1000;
+  }
+
+  /* Height-animate an element open or shut. `apply(open)` makes the real
+     state change -- a class, the hidden attribute -- so each caller keeps its
+     own semantics: on open it runs first and the element grows into its new
+     height; on close the element shrinks first and `apply` runs at the end.
+     Interrupting a running slide picks up from the current height. */
+  function slide(el, open, apply, step = 2) {
+    const dur = motionMs(step);
+    const running = el._slide;
+    const from = running ? el.getBoundingClientRect().height : null;
+    if (running) { el._slide = null; running.cancel(); }
+    if (!dur || typeof el.animate !== 'function') { apply(open); return; }
+
+    if (open) apply(true);
+    const cs = getComputedStyle(el);
+    if (cs.display === 'none') { if (!open) apply(false); return; }
+    const full = el.getBoundingClientRect().height;
+    const pt = cs.paddingTop, pb = cs.paddingBottom;
+    const start = from != null ? from : (open ? 0 : full);
+    const end = open ? full : 0;
+    const frames = [
+      { height: start + 'px', paddingTop: open && from == null ? '0px' : pt, paddingBottom: open && from == null ? '0px' : pb, opacity: open ? 0 : 1 },
+      { height: end + 'px', paddingTop: open ? pt : '0px', paddingBottom: open ? pb : '0px', opacity: open ? 1 : 0 },
+    ];
+    el.style.overflow = 'hidden';
+    el.style.boxSizing = 'border-box';
+    const anim = el.animate(frames, { duration: dur, easing: open ? EASE_EMPH : EASE_STD });
+    el._slide = anim;
+    const tidy = () => { el.style.overflow = ''; el.style.boxSizing = ''; };
+    anim.onfinish = () => { if (el._slide !== anim) return; el._slide = null; tidy(); if (!open) apply(false); };
+    anim.oncancel = tidy;
+  }
+
+  /* Fade-and-lift a block into place: a grid after it changes view, a
+     panel after it is swapped. Purely an entrance; state is already set. */
+  function settle(el, step = 3) {
+    const dur = motionMs(step);
+    if (!dur || !el || typeof el.animate !== 'function') return;
+    el.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }],
+      { duration: dur, easing: EASE_EMPH });
+  }
+
+
+  /* ============================================================
      Scroll Reveal
+     Sections fade and lift in as they arrive, and items inside them
+     (cards, tiles, posts) stagger. Sections that mark their own .reveal
+     elements keep them; every other section after the first is revealed
+     as a whole, unless it carries data-no-reveal. The first section is
+     left alone so the opening view is never delayed.
+
+     The old failsafe revealed EVERYTHING 600ms after load, so nothing
+     below the fold ever animated -- by the time you scrolled to it, it
+     had already appeared. The failsafe now only fires if the observer
+     never reports at all.
      ============================================================ */
   function initScrollReveal() {
-    const els = document.querySelectorAll('.reveal');
+    if (document.body.dataset.scrollReveal === 'false' || !motionMs(4)) return;
+
+    document.querySelectorAll('main .shopify-section').forEach((section, i) => {
+      if (i === 0 || section.matches('[data-no-reveal]') || section.querySelector('.reveal, [data-no-reveal]')) return;
+      const inner = section.firstElementChild;
+      if (inner && !/^(SCRIPT|STYLE|TEMPLATE)$/.test(inner.tagName)) inner.classList.add('reveal', 'reveal--section');
+    });
+
+    const els = [...document.querySelectorAll('.reveal')];
     if (!els.length) return;
 
-    // Respect the "Scroll reveal" theme setting — when off, leave everything
-    // visible (.reveal is visible by default) and skip arming entirely.
-    if (document.body.dataset.scrollReveal === 'false') return;
-
-    // Map the "Reveal Animation Style" setting to its modifier class.
     const styleMap = { fade_in: 'fade-in', slide_in: 'slide-in' };
     const revealStyleClass = styleMap[document.body.dataset.revealStyle];
 
-    // Arm the hidden state only now that JS is confirmed running and able to
-    // reveal. Without this, .reveal stays fully visible (see theme.css).
+    // Arm the hidden state only now that JS is running and able to reveal.
+    // Anything already above the viewport is shown at once rather than
+    // animating in behind the reader.
     els.forEach(el => {
+      if (el.getBoundingClientRect().bottom < 0) return;
       if (revealStyleClass) el.classList.add(revealStyleClass);
       el.classList.add('reveal-armed');
     });
 
-    const revealAll = () => els.forEach(el => el.classList.add('is-visible'));
-
-    // Fallback: if IntersectionObserver is unavailable, just show everything.
+    const show = el => {
+      el.classList.add('is-visible');
+      // Once settled, disarm: the element gets its own transitions back, and
+      // no transform is left on it -- a transformed ancestor would become
+      // the containing block for any position:fixed drawer or modal inside.
+      const settleIt = () => { el.classList.remove('reveal-armed'); el.style.transitionDelay = ''; };
+      const onEnd = e => { if (e.target !== el) return; el.removeEventListener('transitionend', onEnd); settleIt(); };
+      el.addEventListener('transitionend', onEnd);
+      setTimeout(settleIt, motionMs(4) + 900);
+    };
+    const revealAll = () => els.forEach(show);
     if (!('IntersectionObserver' in window)) { revealAll(); return; }
 
-    const observer = new IntersectionObserver((entries) => {
+    let reported = false;
+    const observer = new IntersectionObserver(entries => {
+      reported = true;
+      let k = 0;
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        // Items arriving together stagger; explicit reveal-delay-N wins.
+        if (!/\breveal-delay-\d/.test(el.className)) el.style.transitionDelay = Math.min(k, 6) * 70 + 'ms';
+        k++;
+        show(el);
+        observer.unobserve(el);
       });
-    }, { threshold: 0.08, rootMargin: '0px 0px -5% 0px' });
+    }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
 
-    els.forEach(el => observer.observe(el));
-
-    // Failsafe: never leave content permanently invisible if the observer
-    // doesn't fire (injected DOM, edge browsers, interrupted load, etc.).
-    setTimeout(revealAll, 600);
+    els.forEach(el => (el.classList.contains('reveal-armed') ? observer.observe(el) : el.classList.add('is-visible')));
+    setTimeout(() => { if (!reported) revealAll(); }, 2000);
+    window.addEventListener('beforeprint', revealAll);
   }
 
 
@@ -129,9 +215,11 @@
     document.querySelectorAll('[data-toggle-submenu]').forEach(btn => {
       btn.addEventListener('click', () => {
         const target = document.getElementById(btn.dataset.toggleSubmenu);
-        if (target) target.classList.toggle('is-open');
+        const open = target ? !target.classList.contains('is-open') : false;
+        if (target) slide(target, open, o => target.classList.toggle('is-open', o));
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
         const arrow = btn.querySelector('.submenu-arrow');
-        if (arrow) arrow.classList.toggle('is-open');
+        if (arrow) arrow.classList.toggle('is-open', open);
       });
     });
   }
@@ -888,8 +976,9 @@
     const label = btn.querySelector('[data-toggle-sidebar-label]');
     if (label) label.textContent = open ? btn.dataset.labelHide : btn.dataset.labelShow;
   }
-  function setPanel(panel, open) {
-    panel.hidden = !open;
+  function setPanel(panel, open, animate) {
+    if (animate) slide(panel, open, o => { panel.hidden = !o; }, 3);
+    else panel.hidden = !open;
     // aria-expanded belongs on the control that discloses the panel, not on
     // the panel's own close button inside it.
     document.querySelectorAll(`[data-toggle-filter-panel][aria-controls="${panel.id}"]:not(.filter-panel__close)`)
@@ -950,11 +1039,28 @@
     // elsewhere closed nothing. Now opening one closes the rest; an outside
     // click or Escape closes it; a panel that would overflow the right edge
     // opens leftwards. `toggle` does not bubble, hence the capture listener.
+    // <details> drops its content the instant `open` goes, so the close is
+    // played on the panel first and `open` removed when it ends.
+    const closeDropdown = d => {
+      const panel = d.querySelector('.dropdown-filter__panel');
+      const dur = motionMs(2);
+      if (!panel || !dur || d.classList.contains('is-closing')) { if (!d.classList.contains('is-closing')) d.removeAttribute('open'); return; }
+      d.classList.add('is-closing');
+      const anim = panel.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-6px) scale(.98)' }],
+        { duration: dur * 0.7, easing: EASE_STD });
+      anim.onfinish = () => { d.classList.remove('is-closing'); d.removeAttribute('open'); };
+    };
     const closeDropdowns = except => {
       document.querySelectorAll('.dropdown-filter[open]').forEach(d => {
-        if (d !== except) d.removeAttribute('open');
+        if (d !== except) closeDropdown(d);
       });
     };
+    document.addEventListener('click', e => {
+      const summary = e.target.closest('.dropdown-filter > summary');
+      if (!summary) return;
+      const d = summary.parentElement;
+      if (d.open) { e.preventDefault(); closeDropdown(d); }
+    });
     document.addEventListener('toggle', e => {
       const d = e.target;
       if (!(d instanceof Element) || !d.matches('.dropdown-filter') || !d.open) return;
@@ -973,7 +1079,7 @@
     document.addEventListener('keydown', e => {
       if (e.key !== 'Escape') return;
       const open = document.querySelector('.dropdown-filter[open]');
-      if (open) { open.removeAttribute('open'); const s = open.querySelector('summary'); if (s) s.focus(); }
+      if (open) { closeDropdown(open); const s = open.querySelector('summary'); if (s) s.focus(); }
     });
 
     // ---- Hidden sidebar and top panel ---------------------------------
@@ -997,7 +1103,7 @@
         const panel = (id && document.getElementById(id)) || document.querySelector('[data-filter-panel]');
         if (!panel) return;
         const open = panel.hidden;
-        setPanel(panel, open);
+        setPanel(panel, open, true);
         rememberReveal('panel', open);
       }
     });
@@ -1024,7 +1130,7 @@
         const expanded = toggle.getAttribute('aria-expanded') === 'true';
         toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
         const body = toggle.nextElementSibling;
-        if (body) body.classList.toggle('is-collapsed', expanded);
+        if (body) slide(body, !expanded, o => body.classList.toggle('is-collapsed', !o));
         return;
       }
 
@@ -1264,6 +1370,7 @@
       const max = maxRaw && maxRaw.value !== '' ? parseFloat(maxRaw.value) * 100 : null;
 
       let shown = 0;
+      const appeared = [];
       const cards = [...grid.querySelectorAll('[data-pcard]')];
 
       cards.forEach(card => {
@@ -1321,9 +1428,12 @@
           if (max !== null && price > max) ok = false;
         }
 
+        if (card.hidden && ok) appeared.push(card);
         card.hidden = !ok;
         if (ok) shown++;
       });
+      // Cards that come back fade in, in reading order.
+      appeared.forEach((c, i) => setTimeout(() => settle(c, 2), Math.min(i, 8) * 35));
 
       const anyActive = checks.length > 0 || min !== null || max !== null;
       if (countEl) countEl.textContent = anyActive ? shown + ' of ' + cards.length : cards.length + ' products';
@@ -1443,7 +1553,9 @@
 
     document.querySelectorAll('.view-toggle__btn[data-view]').forEach(btn => {
       btn.addEventListener('click', () => {
+        const changed = (grid.getAttribute('data-view') || '') !== btn.dataset.view;
         applyView(btn.dataset.view);
+        if (changed) settle(grid);
         try { localStorage.setItem(VIEW_KEY, btn.dataset.view); } catch (e) {}
       });
     });

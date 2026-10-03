@@ -304,5 +304,6 @@ plus *Custom*, which switches to the two font pickers below it (Shopify's font l
 `font-weight: var(--fw-display, 300)` (104 rules across `theme.css` and the sections).
 Each pairing sets its own weight and tracking.
 
-**Decided:** the owner kept DM Serif Display + DM Sans (already the store's setting) and
-it is now the schema default. Do not switch the store's font without being asked.
+**Not decided.** Round 1: the owner rejected all four new pairings. DM Serif + DM Sans was
+the best *of those*, which is not approval: the owner still wants the font changed.
+Round 2 specimen is at the same link. Set the store font only once the owner names one.

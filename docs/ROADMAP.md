@@ -125,7 +125,7 @@ Site-wide. Owner's additions of 2026-10-03, items 1–6.
 - [ ] Product page tabs, accordions, lightbox, sticky bar and gallery — built with Phase 3
       on these tokens
 
-**F4 — Typography** (item 1) · *done 2026-10-03*
+**F4 — Typography** (item 1) · *in progress — round 2 of the font choice*
 - [x] Shopify's font picker for headings and body: Font Pairing → *Custom*, so merchants
       can choose from the font library rather than a fixed list
 - [x] Four modern pairings added: Instrument Serif + Inter Tight (recommended),
@@ -133,9 +133,11 @@ Site-wide. Owner's additions of 2026-10-03, items 1–6.
 - [x] Heading weight and tracking now follow the pairing (`--fw-display`,
       `--ls-display`); headings were fixed at 300, a weight only Cormorant has
 - [x] Side-by-side specimen for the owner: https://claude.ai/artifact/Vg9REFjFCD1Er4GUnZFVnN
-- [x] Owner's decision (2026-10-03): none of the four new pairings; **DM Serif Display +
-      DM Sans stays** as the store font and is now the schema default. The new pairings
-      and Custom stay available as options for buyers
+- [ ] Round 1 (2026-10-03): the owner rejected all four new pairings. The current DM Serif
+      Display + DM Sans was the best *of those offered*, but the owner still wants the font
+      changed. Round 2 specimen covers different directions: bolder serifs, modern
+      grotesques, luxury caps
+- [ ] The owner's pick set as the store font and the schema default
 - [x] Type scale: chrome fixed in px (Phase 1), content scaling with the body-size setting
 
 **F5 — Header** (item 2; also the brief's "2–3 navbar styles")

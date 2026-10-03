@@ -10,10 +10,11 @@
 
 **Phase:** F — Foundation · **next** (order revised 2026-10-03, see [ROADMAP.md](ROADMAP.md))
 **Last completed:** Phase 1 — Collection, to the reference design: six filter styles, toolbar, pagination, product card information, header clearance. The owner is still testing it.
-**Done in Phase F:** F1 corner radius — *Theme settings → Corners & Shape*; F2 custom select; F3 motion — *Theme settings → Animations → Motion*; F4 typography — owner kept DM Serif Display + DM Sans, now the default; four more pairings and a Custom font picker remain as options (all 2026-10-03).
+**Done in Phase F:** F1 corner radius — *Theme settings → Corners & Shape*; F2 custom select; F3 motion — *Theme settings → Animations → Motion*; F4 typography infrastructure — pairing weights, a Custom font picker, four extra pairings (all 2026-10-03).
 **Next up:** F5 header → F6 footer. Then Phase 0, then Phase 3.
 
 **Waiting on the owner:**
+- Font choice, round 2: https://claude.ai/artifact/Vg9REFjFCD1Er4GUnZFVnN. Round 1's four pairings were all rejected; the current DM Serif + DM Sans was the best of them but the owner still wants a change.
 - Approval of the product page requirements — [PRODUCT-PAGE.md](PRODUCT-PAGE.md). The Claude Design prompt for the product page follows approval.
 - Reports from testing the collection page.
 

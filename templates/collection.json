@@ -14,7 +14,7 @@
       "settings": {
         "title_style": "style-2",
         "sidebar_position": "left",
-        "filter_style": "panel",
+        "filter_style": "sidebar",
         "swatch_style": "chips",
         "scheme": "theme",
         "container_style": "boxed",

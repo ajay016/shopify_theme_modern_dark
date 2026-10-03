@@ -349,3 +349,17 @@ footer's icon row.
 string that was appended to the copyright line.
 
 **Check:** `python3 scripts/footer-check.py OUT && node scripts/footer-test.js OUT`.
+
+## Reduced motion — Gentle by default (2026-10-03)
+
+The owner's own device has the operating system's "reduce motion" switch on. The theme
+honoured it by turning every animation and transition off, so the owner saw none of
+F3's motion and reported "everything opens without animation". (The same rule, before
+its fix, ran the announcement ticker at a thousand loops a second.)
+
+Now *Theme settings → Animations → Shoppers who ask their device for reduced motion*:
+- **Gentle** (default): animations stay; scroll reveals fade in place (`--reveal-dist: 0`).
+- **Strict**: adds `html.motion-strict`; every `prefers-reduced-motion` rule in the theme
+  is scoped to that class, and `motionMs()` returns 0 only in this case.
+
+When writing a new reduced-motion rule, prefix its selectors with `html.motion-strict`.

@@ -6,7 +6,7 @@ const { chromium } = require('playwright');
 //   rendered rad_sidebar / rad_dropdown / rad_panel pages)
 const path = require('path');
 const dir = process.argv[2] || '.';
-const TOKENS = ':root{--dur-1:160ms;--dur-2:280ms;--dur-3:440ms;--dur-4:820ms;--reveal-dist:30px}';
+const TOKENS = ':root{--dur-1:160ms;--dur-2:280ms;--dur-3:440ms;--dur-4:820ms;--reveal-dist:30px}@media (prefers-reduced-motion: reduce){html:not(.motion-strict){--reveal-dist:0px}}';
 (async()=>{
 const b=await chromium.launch({executablePath:'/opt/pw-browsers/chromium-1194/chrome-linux/chrome'});
 let ok=0,bad=0; const errs=[];
@@ -59,13 +59,21 @@ await p.evaluate(()=>window.scrollTo(0, document.body.scrollHeight)); await p.wa
 const delays=await p.evaluate(()=>[...document.querySelectorAll('.reveal:not(.reveal--section)')].map(e=>e.style.transitionDelay));
 check('items arriving together stagger', new Set(delays).size>3, delays.join(','));
 await p.close();
-// --- reduced motion: instant
+// --- reduced motion, Gentle (default): animations stay, reveals fade in place
 p=await page('mo_sidebar.html',1440,{reducedMotion:'reduce'});
-const rm=await p.evaluate(()=>{const t=document.querySelector('.collection-sidebar .filter-group__toggle');t.click();return t.nextElementSibling.classList.contains('is-collapsed');});
-check('reduced motion: collapse is instant', rm);
+const g=await p.evaluate(()=>{const t=document.querySelector('.collection-sidebar .filter-group__toggle');t.click();const b=t.nextElementSibling;
+  return new Promise(r=>setTimeout(()=>r([b.classList.contains('is-collapsed'), Math.round(b.getBoundingClientRect().height)]),80));});
+check('reduced motion, gentle: filter group still animates', !g[0] && g[1]>0, JSON.stringify(g));
 await p.close();
 p=await page('mo_reveal.html',1440,{reducedMotion:'reduce'});
-check('reduced motion: nothing armed', await p.evaluate(()=>!document.querySelector('.reveal-armed')));
+const gr=await p.evaluate(()=>{const el=document.querySelector('.reveal-armed');return el?[getComputedStyle(el).opacity,getComputedStyle(el).transform]:null;});
+check('reduced motion, gentle: reveals fade in place (no travel)', gr && parseFloat(gr[0])<1 && /^(none|matrix\(1, 0, 0, 1, 0, 0\))$/.test(gr[1]), JSON.stringify(gr));
+await p.close();
+// --- reduced motion, Strict: instant
+p=await page('mo_sidebar.html',1440,{reducedMotion:'reduce'});
+await p.evaluate(()=>document.documentElement.classList.add('motion-strict'));
+const rm=await p.evaluate(()=>{const t=document.querySelector('.collection-sidebar .filter-group__toggle');t.click();return t.nextElementSibling.classList.contains('is-collapsed');});
+check('reduced motion, strict: collapse is instant', rm);
 await p.close();
 // --- motion off (tokens 0)
 p=await page('rad_sidebar.html');

@@ -92,7 +92,7 @@
   @keyframes rvtScroll{{ section.id }} { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   @media (prefers-reduced-motion: reduce) {
-    #section-{{ section.id }} .rvt-track { animation: none; overflow-x: auto; }
+    html.motion-strict #section-{{ section.id }} .rvt-track { animation: none; overflow-x: auto; }
   }
   @media (max-width: 700px) {
     #section-{{ section.id }} .rvt-card { width: 76vw; }

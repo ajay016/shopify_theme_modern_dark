@@ -1,6 +1,6 @@
 <!doctype html>
 <html
-  class="no-js"
+  class="no-js{% if settings.motion_reduce_mode == 'strict' %} motion-strict{% endif %}"
   lang="{{ request.locale.iso_code }}"
   dir="ltr"
 >

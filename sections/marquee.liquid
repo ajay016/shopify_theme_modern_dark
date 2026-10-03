@@ -75,7 +75,7 @@
     to   { transform: translateX(-50%); }
   }
   @media (prefers-reduced-motion: reduce) {
-    #section-{{ section.id }} .marquee__track { animation: none; }
+    html.motion-strict #section-{{ section.id }} .marquee__track { animation: none; }
   }
 </style>
 

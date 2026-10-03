@@ -2191,8 +2191,8 @@ body.has-announcement .site-header { top: 44px; }
 
 /* No animation when reduced motion preferred */
 @media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; transition: none; }
-  .cursor, .cursor-ring { display: none !important; }
+  html.motion-strict .reveal { opacity: 1; transform: none; transition: none; }
+  html.motion-strict .cursor, html.motion-strict .cursor-ring { display: none !important; }
 }
 
 /* ============================================================
@@ -3653,7 +3653,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   animation: pag-spin 1s linear infinite;
 }
 @keyframes pag-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .pagination-spinner { animation-duration: 2.4s; } }
+@media (prefers-reduced-motion: reduce) { html.motion-strict .pagination-spinner { animation-duration: 2.4s; } }
 
 
 /* ----------------------------------------------------------------------
@@ -3722,8 +3722,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
   border-color: var(--cp-acc, #C8A96E); color: var(--cp-acc, #C8A96E);
 }
 @media (prefers-reduced-motion: reduce) {
-  .collection-layout--sidebar-collapsed,
-  .collection-layout--sidebar-collapsed .collection-sidebar { transition: none; }
+  html.motion-strict .collection-layout--sidebar-collapsed, html.motion-strict .collection-layout--sidebar-collapsed .collection-sidebar { transition: none; }
 }
 
 /* Top panel. The whole filter set at once, in columns, under the toolbar.
@@ -4085,7 +4084,7 @@ input[type="radio"] { border-radius: 50%; }
 .clist-sort .cselect__trigger { min-height: 0; padding: 11px 14px; font-size: calc(13px * var(--fs-scale, 1)); }
 
 @media (prefers-reduced-motion: reduce) {
-  .cselect__list, .cselect__option, .cselect__chev { transition: none !important; }
+  html.motion-strict .cselect__list, html.motion-strict .cselect__option, html.motion-strict .cselect__chev { transition: none !important; }
 }
 
 /* ============================================================
@@ -4203,19 +4202,26 @@ input[type="radio"] { border-radius: 50%; }
   transition: opacity var(--dur-2, .28s) ease, visibility var(--dur-2, .28s) ease, transform var(--dur-3, .44s) var(--ease-emph, ease);
 }
 
-/* Reduced motion: nothing moves, everything still works.
+/* Reduced motion, Gentle (the default): animations stay; scroll reveals fade
+   in place instead of travelling. Strict adds the html.motion-strict class
+   and everything below applies. */
+@media (prefers-reduced-motion: reduce) {
+  html:not(.motion-strict) { --reveal-dist: 0px; }
+}
+
+/* Reduced motion, Strict: nothing moves, everything still works.
    The iteration count matters: shortening an endless loop (the announcement
    ticker, marquees) to 1ms without it ran the loop a thousand times a
    second. Loops now play once and stop; loading spinners keep turning,
    slowly, because they say something is happening. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  html.motion-strict *, html.motion-strict *::before, html.motion-strict *::after {
     animation-duration: 1ms !important; animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important; transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
-  .cart-spinner, .pagination-spinner, .qv-loading__dot, .is-loading .btn__spinner {
+  html.motion-strict .cart-spinner, html.motion-strict .pagination-spinner, html.motion-strict .qv-loading__dot, html.motion-strict .is-loading .btn__spinner {
     animation-duration: 1.6s !important; animation-iteration-count: infinite !important;
   }
 }

@@ -120,7 +120,8 @@ Site-wide. Owner's additions of 2026-10-03, items 1–6.
 - [x] Scroll reveal for every section after the first, items stagger; opt out with
       `data-no-reveal`. The old failsafe showed everything 600ms after load, so nothing
       below the fold ever animated — fixed
-- [x] `prefers-reduced-motion` respected everywhere; Motion: Off stops everything
+- [x] Reduced motion: *Gentle* (default) keeps animations and removes scroll-reveal
+      travel; *Strict* stops everything for those shoppers; Motion: Off stops it for all
 - [x] Test: `scripts/motion-test.js` — 14 checks
 - [ ] Product page tabs, accordions, lightbox, sticky bar and gallery — built with Phase 3
       on these tokens

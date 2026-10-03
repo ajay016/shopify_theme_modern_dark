@@ -14,8 +14,11 @@
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const EASE_STD = 'cubic-bezier(.2,.8,.2,1)';
   const EASE_EMPH = 'cubic-bezier(.16,1,.3,1)';
+  // Reduced motion only stops animation when the merchant chose Strict
+  // (Theme settings → Animations). Gentle, the default, keeps it.
+  const strictMotion = () => reducedMotion.matches && document.documentElement.classList.contains('motion-strict');
   function motionMs(step) {
-    if (reducedMotion.matches) return 0;
+    if (strictMotion()) return 0;
     const v = getComputedStyle(document.documentElement).getPropertyValue('--dur-' + step).trim();
     const n = parseFloat(v);
     if (isNaN(n)) return 0;

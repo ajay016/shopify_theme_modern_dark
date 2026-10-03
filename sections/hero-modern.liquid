@@ -331,11 +331,8 @@
     #section-{{ section.id }} .hmod__line--outline { -webkit-text-stroke: 0.6px var(--gold-light, #E8D4A8); }
   }
   @media (prefers-reduced-motion: reduce) {
-    #section-{{ section.id }} .hmod-anim,
-    #section-{{ section.id }} .hmod__bg-img { animation: none; opacity: 1; transform: none; }
-    #section-{{ section.id }} .hmod__badge-ring,
-    #section-{{ section.id }} .hmod__ticker-track,
-    #section-{{ section.id }} .hmod__scroll-line::after { animation: none; }
+    html.motion-strict #section-{{ section.id }} .hmod-anim, html.motion-strict #section-{{ section.id }} .hmod__bg-img { animation: none; opacity: 1; transform: none; }
+    html.motion-strict #section-{{ section.id }} .hmod__badge-ring, html.motion-strict #section-{{ section.id }} .hmod__ticker-track, html.motion-strict #section-{{ section.id }} .hmod__scroll-line::after { animation: none; }
   }
 </style>
 

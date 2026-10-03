@@ -276,9 +276,8 @@
     #section-{{ section.id }} .hmos__stack { grid-template-rows: 1fr 1fr; height: 60vw; }
   }
   @media (prefers-reduced-motion: reduce) {
-    #section-{{ section.id }} .hmos__scroll-line { animation: none; }
-    #section-{{ section.id }} .hmos__center-img,
-    #section-{{ section.id }} .hmos__cell-img { transition: none; }
+    html.motion-strict #section-{{ section.id }} .hmos__scroll-line { animation: none; }
+    html.motion-strict #section-{{ section.id }} .hmos__center-img, html.motion-strict #section-{{ section.id }} .hmos__cell-img { transition: none; }
   }
 </style>
 

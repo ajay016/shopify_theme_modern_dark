@@ -404,13 +404,24 @@
         "type": "select",
         "id": "motion_level",
         "label": "Motion",
-        "info": "How the store moves when things open, close and appear: filters, menus, drawers, modals, selects and sections. Shoppers who ask their device for reduced motion always get none.",
+        "info": "How the store moves when things open, close and appear: filters, menus, drawers, modals, selects and sections.",
         "options": [
           { "value": "expressive", "label": "Expressive" },
           { "value": "subtle",     "label": "Subtle — shorter and smaller" },
           { "value": "off",        "label": "Off" }
         ],
         "default": "expressive"
+      },
+      {
+        "type": "select",
+        "id": "motion_reduce_mode",
+        "label": "Shoppers who ask their device for reduced motion",
+        "info": "Many phones and computers have a 'reduce motion' accessibility switch. Gentle keeps the store's animations and only removes the travel from scroll reveals, which fade in place instead. Strict turns every animation off for those shoppers.",
+        "options": [
+          { "value": "gentle", "label": "Gentle — keep animations, soften movement" },
+          { "value": "strict", "label": "Strict — no animation" }
+        ],
+        "default": "gentle"
       },
       { "type": "checkbox", "id": "animations_scroll_reveal", "label": "Scroll reveal (fade in on scroll)", "default": true },
       { "type": "checkbox", "id": "animations_hover",         "label": "Hover effects on cards/links",     "default": true },

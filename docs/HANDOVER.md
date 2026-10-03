@@ -293,3 +293,16 @@ elements are disarmed afterwards so no transform is left behind (a transformed a
 would trap `position: fixed` drawers inside it).
 
 **Check:** `node scripts/motion-test.js OUT` (same OUT as the select test).
+
+## F4 — Typography (2026-10-03)
+
+**Where:** *Theme settings → Typography → Font Pairing*. Four new "Modern — …" options,
+plus *Custom*, which switches to the two font pickers below it (Shopify's font library;
+`font_face` output at the end of `css-variables.liquid`).
+
+**Heading weight:** every rule that sets `--ff-display` now reads
+`font-weight: var(--fw-display, 300)` (104 rules across `theme.css` and the sections).
+Each pairing sets its own weight and tracking.
+
+**Open:** the owner picks from the specimen; then set `font_pairing` in
+`config/settings_data.json` and make it the schema default.

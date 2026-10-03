@@ -10,12 +10,12 @@
 
 **Phase:** F — Foundation · **next** (order revised 2026-10-03, see [ROADMAP.md](ROADMAP.md))
 **Last completed:** Phase 1 — Collection, to the reference design: six filter styles, toolbar, pagination, product card information, header clearance. The owner is still testing it.
-**Done in Phase F:** F1 corner radius — *Theme settings → Corners & Shape*; F2 custom select; F3 motion — *Theme settings → Animations → Motion* (all 2026-10-03).
-**Next up:** F4 typography (font specimen for the owner to choose from) → F5 header → F6 footer. Then Phase 0, then Phase 3.
+**Done in Phase F:** F1 corner radius — *Theme settings → Corners & Shape*; F2 custom select; F3 motion — *Theme settings → Animations → Motion*; F4 typography built, four modern pairings plus a Custom font picker (all 2026-10-03).
+**Next up:** F5 header → F6 footer. Then Phase 0, then Phase 3.
 
 **Waiting on the owner:**
 - Approval of the product page requirements — [PRODUCT-PAGE.md](PRODUCT-PAGE.md). The Claude Design prompt for the product page follows approval.
-- A font choice for F4, from a specimen page of candidates.
+- A font choice for F4, from the specimen: https://claude.ai/artifact/Vg9REFjFCD1Er4GUnZFVnN — all five are already selectable under *Theme settings → Typography → Font Pairing*.
 - Reports from testing the collection page.
 
 **Blocked on:** nothing

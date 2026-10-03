@@ -385,21 +385,49 @@
       assign body_size = settings.type_body_size | default: 14
       assign hscale = settings.type_heading_size_scale | default: 'medium'
     -%}
-    {%- if pairing == 'bodoni_instrument' -%}
+    /* --fw-display is the heading weight each display face reads best at;
+       --ls-display its tracking. Headings used a fixed 300, which only
+       Cormorant has -- every other face fell back to 400 anyway. */
+    {%- if pairing == 'custom' -%}
+      --ff-display: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+      --ff-body: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+      --fw-display: {{ settings.type_heading_font.weight | default: 400 }}; --ls-display: -0.01em;
+    {%- elsif pairing == 'instrument_intertight' -%}
+      --ff-display: "Instrument Serif", "Times New Roman", serif;
+      --ff-body: "Inter Tight", system-ui, sans-serif;
+      --fw-display: 400; --ls-display: -0.015em;
+    {%- elsif pairing == 'intertight_solo' -%}
+      --ff-display: "Inter Tight", system-ui, sans-serif;
+      --ff-body: "Inter Tight", system-ui, sans-serif;
+      --fw-display: 400; --ls-display: -0.035em;
+    {%- elsif pairing == 'bodoni_jost' -%}
+      --ff-display: "Bodoni Moda", "Times New Roman", serif;
+      --ff-body: Jost, system-ui, sans-serif;
+      --fw-display: 400; --ls-display: -0.01em;
+    {%- elsif pairing == 'fraunces_jakarta' -%}
+      --ff-display: Fraunces, Georgia, serif;
+      --ff-body: "Plus Jakarta Sans", system-ui, sans-serif;
+      --fw-display: 300; --ls-display: -0.02em;
+    {%- elsif pairing == 'bodoni_instrument' -%}
       --ff-display: "Bodoni Moda", "Times New Roman", serif;
       --ff-body: "Instrument Sans", Helvetica, Arial, sans-serif;
+      --fw-display: 400; --ls-display: -0.01em;
     {%- elsif pairing == 'playfair_inter' -%}
       --ff-display: "Playfair Display", Georgia, serif;
       --ff-body: Inter, system-ui, sans-serif;
+      --fw-display: 400; --ls-display: -0.01em;
     {%- elsif pairing == 'libre_raleway' -%}
       --ff-display: "Libre Baskerville", Georgia, serif;
       --ff-body: Raleway, system-ui, sans-serif;
+      --fw-display: 400; --ls-display: -0.01em;
     {%- elsif pairing == 'dm_serif_dm_sans' -%}
       --ff-display: "DM Serif Display", Georgia, serif;
       --ff-body: "DM Sans", system-ui, sans-serif;
+      --fw-display: 400; --ls-display: -0.01em;
     {%- else -%}
       --ff-display: "Cormorant Garamond", Georgia, serif;
       --ff-body: Outfit, system-ui, sans-serif;
+      --fw-display: 300; --ls-display: -0.01em;
     {%- endif -%}
 
     /* Numerals -- filter counts, size counts, pagination -- are set in mono.
@@ -514,4 +542,18 @@
     --z-modal: 500;
     --z-cursor: 9999;
   }
+  {%- if settings.font_pairing == 'custom' -%}
+    {%- liquid
+      assign body_medium = settings.type_body_font | font_modify: 'weight', '500'
+      assign body_semi = settings.type_body_font | font_modify: 'weight', '600'
+      assign body_italic = settings.type_body_font | font_modify: 'style', 'italic'
+      assign head_italic = settings.type_heading_font | font_modify: 'style', 'italic'
+    -%}
+    {{ settings.type_heading_font | font_face: font_display: 'swap' }}
+    {{ head_italic | font_face: font_display: 'swap' }}
+    {{ settings.type_body_font | font_face: font_display: 'swap' }}
+    {{ body_medium | font_face: font_display: 'swap' }}
+    {{ body_semi | font_face: font_display: 'swap' }}
+    {{ body_italic | font_face: font_display: 'swap' }}
+  {%- endif -%}
 </style>

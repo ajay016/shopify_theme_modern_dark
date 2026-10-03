@@ -125,11 +125,16 @@ Site-wide. Owner's additions of 2026-10-03, items 1–6.
 - [ ] Product page tabs, accordions, lightbox, sticky bar and gallery — built with Phase 3
       on these tokens
 
-**F4 — Typography** (item 1)
-- [ ] Shopify's font picker for headings and body, so merchants choose from the font
-      library rather than a fixed list
-- [ ] A modern default, chosen by the owner from a side-by-side specimen of candidates
-- [ ] A type scale: chrome fixed in px, content scaling with the body-size setting
+**F4 — Typography** (item 1) · *built 2026-10-03, waiting on the owner's choice*
+- [x] Shopify's font picker for headings and body: Font Pairing → *Custom*, so merchants
+      can choose from the font library rather than a fixed list
+- [x] Four modern pairings added: Instrument Serif + Inter Tight (recommended),
+      Inter Tight alone, Bodoni Moda + Jost, Fraunces + Plus Jakarta Sans
+- [x] Heading weight and tracking now follow the pairing (`--fw-display`,
+      `--ls-display`); headings were fixed at 300, a weight only Cormorant has
+- [x] Side-by-side specimen for the owner: https://claude.ai/artifact/Vg9REFjFCD1Er4GUnZFVnN
+- [ ] The owner's pick set as the store's font and as the schema default
+- [x] Type scale: chrome fixed in px (Phase 1), content scaling with the body-size setting
 
 **F5 — Header** (item 2; also the brief's "2–3 navbar styles")
 - [ ] 2–3 modern header styles

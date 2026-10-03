@@ -181,7 +181,7 @@
   #section-{{ section.id }} .hmos__eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--gold, #C8A96E); flex-shrink: 0; }
 
   /* Title */
-  #section-{{ section.id }} .hmos__title { font-family: var(--ff-display); font-weight: 300; margin-bottom: 24px; }
+  #section-{{ section.id }} .hmos__title { font-family: var(--ff-display); font-weight: var(--fw-display, 300); margin-bottom: 24px; }
   #section-{{ section.id }} .hmos__tline { display: block; font-size: calc(clamp(36px, 4.8vw, 68px) * var(--fs-scale, 1)); line-height: 1.0; color: var(--cream, #F5F0E8); }
   #section-{{ section.id }} .hmos__tline--italic { font-style: italic; color: var(--gold-light, #E8D4A8); }
   #section-{{ section.id }} .hmos__tline--sub { font-size: calc(clamp(14px, 1.6vw, 20px) * var(--fs-scale, 1)); letter-spacing: 0.12em; opacity: 0.65; margin-top: 8px; font-style: normal; color: var(--cream, #F5F0E8); }
@@ -249,7 +249,7 @@
   }
   #section-{{ section.id }} .hmos__cell:hover .hmos__cell-info { opacity: 1; }
   #section-{{ section.id }} .hmos__cell-count { font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold, #C8A96E); margin-bottom: 5px; }
-  #section-{{ section.id }} .hmos__cell-name { font-family: var(--ff-display); font-size: calc(clamp(16px, 1.8vw, 22px) * var(--fs-scale, 1)); color: var(--cream, #F5F0E8); font-weight: 300; margin-bottom: 12px; line-height: 1.2; }
+  #section-{{ section.id }} .hmos__cell-name { font-family: var(--ff-display); font-size: calc(clamp(16px, 1.8vw, 22px) * var(--fs-scale, 1)); color: var(--cream, #F5F0E8); font-weight: var(--fw-display, 300); margin-bottom: 12px; line-height: 1.2; }
   #section-{{ section.id }} .hmos__cell-arrow { font-size: calc(18px * var(--fs-scale, 1)); color: var(--gold, #C8A96E); display: block; transform: translateX(-6px); transition: transform 0.3s; }
   #section-{{ section.id }} .hmos__cell:hover .hmos__cell-arrow { transform: translateX(0); }
 

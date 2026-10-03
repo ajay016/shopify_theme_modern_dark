@@ -46,13 +46,32 @@
         "id": "font_pairing",
         "label": "Font Pairing",
         "options": [
+          { "value": "instrument_intertight", "label": "Modern — Instrument Serif + Inter Tight" },
+          { "value": "intertight_solo",       "label": "Modern — Inter Tight (one family)" },
+          { "value": "bodoni_jost",           "label": "Modern — Bodoni Moda + Jost" },
+          { "value": "fraunces_jakarta",      "label": "Modern — Fraunces + Plus Jakarta Sans" },
           { "value": "cormorant_outfit",  "label": "Cormorant Garamond + Outfit (Default)" },
           { "value": "bodoni_instrument", "label": "Bodoni Moda + Instrument Sans" },
           { "value": "playfair_inter",    "label": "Playfair Display + Inter" },
           { "value": "libre_raleway",     "label": "Libre Baskerville + Raleway" },
-          { "value": "dm_serif_dm_sans",  "label": "DM Serif Display + DM Sans" }
+          { "value": "dm_serif_dm_sans",  "label": "DM Serif Display + DM Sans" },
+          { "value": "custom",            "label": "Custom — choose from Shopify's font library" }
         ],
         "default": "cormorant_outfit"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_heading_font",
+        "label": "Heading font",
+        "info": "Used when Font Pairing is set to Custom.",
+        "default": "playfair_display_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Body font",
+        "info": "Used when Font Pairing is set to Custom.",
+        "default": "assistant_n4"
       },
       {
         "type": "range",

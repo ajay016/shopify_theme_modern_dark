@@ -87,7 +87,7 @@
   #section-{{ section.id }} .hno-watermark {
     position: absolute; z-index: 0; left: -1vw; bottom: clamp(40px, 8svh, 110px);
     font-family: var(--ff-display,'Cormorant Garamond',serif);
-    font-size: calc(clamp(110px, 20vw, 320px) * var(--fs-scale, 1)); font-weight: 300; line-height: 1;
+    font-size: calc(clamp(110px, 20vw, 320px) * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); line-height: 1;
     text-transform: uppercase; letter-spacing: .02em;
     color: transparent; -webkit-text-stroke: 1px var(--wm);
     pointer-events: none; user-select: none; white-space: nowrap;
@@ -140,7 +140,7 @@
   /* Headline overlaps the image slab — magazine composition */
   #section-{{ section.id }} .hno-title {
     position: relative; z-index: 3;
-    font-family: var(--ff-display,'Cormorant Garamond',serif); font-weight: 300;
+    font-family: var(--ff-display,'Cormorant Garamond',serif); font-weight: var(--fw-display, 300);
     font-size: calc(clamp(44px, 6.8vw, 108px) * var(--heading-scale,1));
     line-height: .92; letter-spacing: .005em; text-transform: uppercase; margin: 0;
     margin-right: clamp(-140px, -8vw, -40px);
@@ -221,7 +221,7 @@
   #section-{{ section.id }} .hno-ticker__track { display: inline-flex; align-items: center; white-space: nowrap; animation: hnoMarq{{ section.id }} 28s linear infinite; }
   #section-{{ section.id }} .hno-ticker__track span {
     font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(17px, 1.8vw, 26px) * var(--fs-scale, 1));
-    font-weight: 300; text-transform: uppercase; letter-spacing: .05em; padding: 0 22px; color: var(--fg); opacity: .8;
+    font-weight: var(--fw-display, 300); text-transform: uppercase; letter-spacing: .05em; padding: 0 22px; color: var(--fg); opacity: .8;
   }
   #section-{{ section.id }} .hno-ticker__sep { color: var(--acc) !important; font-size: calc(12px !important * var(--fs-scale, 1)); opacity: 1 !important; }
 

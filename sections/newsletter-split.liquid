@@ -105,7 +105,7 @@
   }
   #section-{{ section.id }} .nls__visual-quote p {
     font-family: var(--ff-display); font-size: calc(clamp(18px, 2.2vw, 28px) * var(--fs-scale, 1)); font-style: italic;
-    color: var(--cream, #F5F0E8); font-weight: 300; line-height: 1.35; margin-bottom: 14px;
+    color: var(--cream, #F5F0E8); font-weight: var(--fw-display, 300); line-height: 1.35; margin-bottom: 14px;
   }
   #section-{{ section.id }} .nls__visual-quote cite {
     font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.3em; text-transform: uppercase;
@@ -141,7 +141,7 @@
 
   /* Heading */
   #section-{{ section.id }} .nls__heading {
-    font-family: var(--ff-display); font-size: calc(clamp(28px, 3.2vw, 46px) * var(--fs-scale, 1)); font-weight: 300;
+    font-family: var(--ff-display); font-size: calc(clamp(28px, 3.2vw, 46px) * var(--fs-scale, 1)); font-weight: var(--fw-display, 300);
     line-height: 1.1; color: var(--nls-fg, var(--cream, #F5F0E8)); margin-bottom: 16px;
   }
   #section-{{ section.id }} .nls__form-panel--gold .nls__heading,

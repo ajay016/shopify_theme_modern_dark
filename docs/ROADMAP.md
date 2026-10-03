@@ -54,6 +54,71 @@ Measured, not remembered.
 
 ---
 
+## Build order — revised 2026-10-03
+
+The owner added six site-wide requirements ([BRIEF.md](BRIEF.md), *Additions*). Four of
+them — fonts, corner radius, selects, motion — are **primitives every page is built
+from**. Doing the product page first would mean building it on the old ones and then
+restyling it. So the primitives go first, and everything after is built once.
+
+| # | Phase | Why here |
+|---|---|---|
+| 1 | **F — Foundation**: radius · custom select · motion · typography | Everything below uses them |
+| 2 | **F — Header and footer** | Frame every page, including the product page design |
+| 3 | **0 — Colour on every page** | Restyle the remaining pages once, on the final primitives |
+| 4 | **3 — Product page + quick view** | Approved requirements → Claude Design reference → build |
+| 5 | **2 — Card leftovers**: carousel autoplay · media video | Small; shares media handling with the product gallery |
+| 6 | **4 — Blog · 5 — Pages · 6 — Demo package** | Unchanged |
+
+---
+
+## Phase F — Foundation · *next*
+
+Site-wide. Owner's additions of 2026-10-03, items 1–6.
+
+**F1 — Corner radius** (item 6)
+- [ ] One theme setting: sharp · subtle · soft · rounded, plus pill for buttons
+- [ ] Applied through tokens to buttons, inputs, selects, swatches, pills, chips, badges,
+      cards, images, modals, drawers, dropdown panels and pagination — not per component
+- [ ] Nothing keeps a hard-coded radius
+
+**F2 — Custom select** (item 5)
+- [ ] One component replacing every native `<select>`: sort, variant dropdown, quantity,
+      country and language, cart, account, search, collections list
+- [ ] Animated open and close; keyboard (arrows, type-ahead, Enter, Escape); screen
+      reader; touch
+- [ ] The native select stays underneath as the value source, so forms and Shopify's own
+      scripts keep working
+- [ ] Test: zero visible browser-default selects on any page
+
+**F3 — Motion** (item 3)
+- [ ] Shared duration and easing tokens
+- [ ] Height-animated open and close for accordions, filter groups, the top panel and the
+      hidden sidebar
+- [ ] Enter and leave for drawers, modals, dropdowns, the mega menu, the mobile menu,
+      toasts and the quick view
+- [ ] Scroll-reveal for sections, opt-out per section
+- [ ] `prefers-reduced-motion` respected everywhere
+
+**F4 — Typography** (item 1)
+- [ ] Shopify's font picker for headings and body, so merchants choose from the font
+      library rather than a fixed list
+- [ ] A modern default, chosen by the owner from a side-by-side specimen of candidates
+- [ ] A type scale: chrome fixed in px, content scaling with the body-size setting
+
+**F5 — Header** (item 2; also the brief's "2–3 navbar styles")
+- [ ] 2–3 modern header styles
+- [ ] Mega menu in 3 layouts, with and without images
+- [ ] Menu → submenu → sub-submenu, animated
+
+**F6 — Footer** (item 2)
+- [ ] 2–3 modern footer styles
+
+**F7 — Quick view** (item 4) — redesigned with the product page in Phase 3, because it
+shares the variant pickers and buy buttons.
+
+---
+
 ## Phase 0 — the colour system reaches every page
 
 Before any new feature. This is the complaint that keeps recurring, and it is mechanical work rather than design work.
@@ -71,7 +136,8 @@ Before any new feature. This is the complaint that keeps recurring, and it is me
 Every line of the brief, ticked individually.
 
 **Layouts** — done: left sidebar · right sidebar · box container · wide container · list view · collections list · filter sidebar · drawer sidebar filter · dropdown sidebar filter · grid 2 · 3 · 4 · 5 · 6 · title styles 01–05.
-**Partial:** *filter hidden/toggle* — toggle is built, "hidden" was folded into it rather than shipped as its own option.
+**Filter styles — six:** sidebar always open · sidebar groups collapsed · sidebar hidden until opened · drawer · dropdown bar · top panel. "Filter hidden" shipped as its own style on 2026-09-28. Every style falls back to the drawer on phones.
+**Verified by script** (`scripts/settings-audit.py` and the browser tests in `scripts/`): every setting changes the output; controls survive the theme editor re-rendering the section; toolbar and grid share both edges; sticky elements clear the header.
 
 **Features** — done: best seller products · image banner · pagination page · infinite scrolling · product recently viewed.
 
@@ -93,7 +159,10 @@ Every line of the brief, ticked individually.
 
 ## Phase 3 — Product detail
 
-The largest phase in the brief. Itemised so none of it can be skimmed.
+The largest phase in the brief. Full requirements, with a definition for every item and
+how each will be checked: **[PRODUCT-PAGE.md](PRODUCT-PAGE.md)** — awaiting the owner's
+approval. After approval: a Claude Design reference, then the build. The quick view
+modal is redesigned in this phase. `main-product` is rebuilt rather than patched.
 
 **Layouts** — [ ] default · [ ] box container · [ ] wide container · [ ] digital products · [ ] default tab · [ ] tab accordion inner · [ ] background gradient · [ ] separate accordion styles for description / shipping / customer reviews
 

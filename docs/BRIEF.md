@@ -157,3 +157,23 @@ Comparing the above against what `ROADMAP.md` had been carrying:
 | Blog | layouts and formats merged | **four separate groups** — Blog Layout, Post Layout, Blog Style, Post Format |
 
 Everything else in the transcription held up.
+
+---
+
+## Additions from the owner — 2026-10-03
+
+Given after testing the collection page. Recorded as written. These apply to the whole
+site, not one page, and are scheduled in [ROADMAP.md](ROADMAP.md) as Phase F.
+
+```
+1. the whole website font needs to be changed. this is not modern and doesn't look at all
+2. the navbar styles need to be changed and needs to be made modern and the footer too
+3. there is no fucking animation in opening or closing any section including the filters or . i need modern animation throughout the whole website
+4. So, if the layout in the quick view product modal can be improved we will do that.
+5. the default browser select will be removed. not a single select will inherit the browser default style. you will make the custom modern style for select elements. even those select elements will have smooth animation
+6. the edges are sharp. I want the option to make buttons, modals etc with different modern border radius or a bit rounded including the pagination
+```
+
+Also from the same message: product page requirements to be written up for approval
+first ([PRODUCT-PAGE.md](PRODUCT-PAGE.md)), and the Claude Design prompt for the product
+page given only after that approval.

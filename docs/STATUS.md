@@ -8,11 +8,15 @@
 
 ## Current position
 
-**Phase:** 0 — the colour system reaching every page · **not started**
-**Last completed:** Phase B (before it, A — collection layouts; A0 — Layout Explorer; G — homepage #6)
-**Next up:** Phase 0. Then the two card gaps (carousel autoplay, media video), then Phase 3 — product detail.
+**Phase:** F — Foundation · **next** (order revised 2026-10-03, see [ROADMAP.md](ROADMAP.md))
+**Last completed:** Phase 1 — Collection, to the reference design: six filter styles, toolbar, pagination, product card information, header clearance. The owner is still testing it.
+**Next up:** F1 corner radius → F2 custom select → F3 motion → F4 typography → F5 header → F6 footer. Then Phase 0, then Phase 3.
 
-**The plan was rewritten** — see [ROADMAP.md](ROADMAP.md). It now has a definition of done with six requirements, five of which run as a script (`./scripts/check-page.sh`), so "styled" and "follows the colour scheme" are measured rather than claimed. Current score: **2 of 15 pages pass**.
+**Waiting on the owner:**
+- Approval of the product page requirements — [PRODUCT-PAGE.md](PRODUCT-PAGE.md). The Claude Design prompt for the product page follows approval.
+- A font choice for F4, from a specimen page of candidates.
+- Reports from testing the collection page.
+
 **Blocked on:** nothing
 
 **Working state:** clean. Nothing half-finished.

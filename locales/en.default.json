@@ -248,6 +248,15 @@
     "added": "Added to wishlist",
     "removed": "Removed from wishlist"
   },
+  "footer": {
+    "back_to_top": "Back to top",
+    "rights": "All rights reserved.",
+    "follow": "Follow us"
+  },
+  "localization": {
+    "country": "Country/region",
+    "language": "Language"
+  },
   "newsletter": {
     "label": "Email address",
     "placeholder": "Your email address",

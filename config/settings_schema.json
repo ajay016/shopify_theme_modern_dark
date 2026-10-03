@@ -419,6 +419,39 @@
   {
     "name": "Footer",
     "settings": [
+      {
+        "type": "select",
+        "id": "footer_style",
+        "label": "Footer style",
+        "options": [
+          { "value": "columns",   "label": "Columns — brand and newsletter left, menus right" },
+          { "value": "statement", "label": "Statement — newsletter band and an oversized wordmark" },
+          { "value": "minimal",   "label": "Minimal — centred, one row of links" }
+        ],
+        "default": "columns"
+      },
+      {
+        "type": "select",
+        "id": "footer_tone",
+        "label": "Footer surface",
+        "info": "A step of the colour scheme. Contrast inverts it: a dark footer on a light scheme, a light one on a dark scheme.",
+        "options": [
+          { "value": "base",     "label": "Base — same as the page" },
+          { "value": "soft",     "label": "Soft — one step off the page" },
+          { "value": "deep",     "label": "Deep — the scheme's richest tone" },
+          { "value": "contrast", "label": "Contrast — inverted" }
+        ],
+        "default": "soft"
+      },
+      { "type": "text", "id": "footer_wordmark", "label": "Wordmark (Statement style)", "info": "Defaults to the logo text." },
+      { "type": "header", "content": "Newsletter" },
+      { "type": "checkbox", "id": "footer_newsletter", "label": "Show newsletter signup", "default": true },
+      { "type": "text", "id": "footer_newsletter_heading", "label": "Heading", "default": "Join the list" },
+      { "type": "text", "id": "footer_newsletter_text", "label": "Text", "default": "New collections, private sales and stories from the atelier. No more than twice a month." },
+      { "type": "header", "content": "Bottom bar" },
+      { "type": "checkbox", "id": "footer_show_localization", "label": "Show country and language selectors", "info": "Appears when the store sells to more than one country or in more than one language.", "default": true },
+      { "type": "checkbox", "id": "footer_back_to_top", "label": "Show back to top", "default": true },
+      { "type": "header", "content": "Brand and menus" },
       { "type": "image_picker", "id": "footer_logo",        "label": "Footer Logo (optional)" },
       { "type": "richtext",     "id": "footer_description", "label": "Brand Description",
         "default": "<p>Luxury fashion with a considered approach to design, craft, and the world we inhabit.</p>" },

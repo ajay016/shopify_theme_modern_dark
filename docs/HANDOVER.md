@@ -332,3 +332,20 @@ local renderer does not treat nil as blank, and the truthiness test is right on 
 too.
 
 **Check:** `python3 scripts/header-check.py OUT && node scripts/header-test.js OUT`.
+
+## F6 — Footer (2026-10-03)
+
+**Where:** *Theme settings → Footer* — Footer style (Columns / Statement / Minimal),
+Footer surface (base / soft / deep / contrast), Wordmark, Newsletter (on/off, heading,
+text), country and language selectors, back to top; menus, social links and payment
+icons as before.
+
+**Files:** `sections/footer.liquid`, `snippets/icon-social.liquid`, the Footer block in
+`theme.css`, `initFooter` in `theme.js` (phone accordions, wordmark fit, back to top).
+The mobile menu's social links now use `.mobile-menu__social`; `.footer-social` is the
+footer's icon row.
+
+**Removed:** hard-coded fallback columns linking to `#`, and the "Continue shopping"
+string that was appended to the copyright line.
+
+**Check:** `python3 scripts/footer-check.py OUT && node scripts/footer-test.js OUT`.

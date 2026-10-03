@@ -1936,6 +1936,48 @@
 
 
   /* ============================================================
+     Footer — accordions on phones, back to top
+     ============================================================ */
+  function initFooter(root = document) {
+    root.querySelectorAll('[data-footer-col]').forEach(col => {
+      const btn = col.querySelector('.footer-col__title');
+      const list = col.querySelector('.footer-col__list');
+      if (!btn || !list || btn.dataset.bound) return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => {
+        // Columns only fold on phones; on wider screens the title is a label.
+        if (getComputedStyle(btn).pointerEvents === 'none') return;
+        const open = !col.classList.contains('is-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        slide(list, open, o => col.classList.toggle('is-open', o));
+      });
+    });
+    // The Statement wordmark fills the footer's width, whatever its length.
+    root.querySelectorAll('.site-footer__wordmark').forEach(mark => {
+      if (mark.dataset.bound) return;
+      mark.dataset.bound = '1';
+      const fit = () => {
+        mark.style.fontSize = '100px';
+        const natural = mark.scrollWidth, room = mark.clientWidth;
+        if (natural) mark.style.fontSize = Math.min(236, Math.floor(100 * room / natural * 0.98)) + 'px';
+      };
+      fit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+      if ('ResizeObserver' in window) new ResizeObserver(fit).observe(mark.parentElement);
+    });
+    root.querySelectorAll('[data-back-to-top]').forEach(btn => {
+      if (btn.dataset.bound) return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: motionMs(2) ? 'smooth' : 'auto' });
+        const main = document.getElementById('MainContent');
+        if (main) main.focus({ preventScroll: true });
+      });
+    });
+  }
+
+
+  /* ============================================================
      Address forms — country and province
      Nothing filled the province list or preselected a saved country,
      so every address form showed one "Select a province" option. The
@@ -2251,11 +2293,13 @@
     initMegaMenu();
     initAddressForms();
     initCustomSelects();
+    initFooter();
   });
 
   // The theme editor swaps the header's HTML when a header setting changes;
   // its menus, drawer and scroll behaviour are bound to elements, so re-bind.
   document.addEventListener('shopify:section:load', e => {
+    if (e.target && e.target.querySelector('.site-footer')) initFooter(e.target);
     if (!e.target || !e.target.querySelector('.site-header')) return;
     initHeader();
     initMobileMenu();

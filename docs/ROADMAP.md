@@ -159,8 +159,18 @@ Site-wide. Owner's additions of 2026-10-03, items 1–6.
       header on the homepage covered the hero
 - [x] Test: `scripts/header-check.py` + `scripts/header-test.js` — 36 checks
 
-**F6 — Footer** (item 2)
-- [ ] 2–3 modern footer styles
+**F6 — Footer** (item 2) · *done 2026-10-03*
+- [x] Three footer styles: Columns · Statement (newsletter band + oversized wordmark that
+      fits itself to the width) · Minimal (centred)
+- [x] *Footer surface* from the scheme ladder (base · soft · deep · contrast); the old
+      footer painted links a fixed cream, unreadable on the light schemes
+- [x] Newsletter signup (Shopify customer form), social icons, country and language
+      selectors (custom select), payment icons, back to top
+- [x] Link columns fold into animated accordions on phones
+- [x] Removed the placeholder `#` links and the stray "Continue shopping" after the
+      copyright
+- [x] Test: `scripts/footer-check.py` + `scripts/footer-test.js` — 44 checks, contrast
+      ≥ 4.5:1 on every scheme and surface
 
 **F7 — Quick view** (item 4) — redesigned with the product page in Phase 3, because it
 shares the variant pickers and buy buttons.

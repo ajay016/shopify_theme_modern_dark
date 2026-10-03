@@ -14,7 +14,7 @@
 **Next up:** F5 header → F6 footer. Then Phase 0, then Phase 3.
 
 **Waiting on the owner:**
-- Font choice, round 2: https://claude.ai/artifact/Vg9REFjFCD1Er4GUnZFVnN. Round 1's four pairings were all rejected; the current DM Serif + DM Sans was the best of them but the owner still wants a change.
+- Font choice: rounds 1 and 2 (12 pairings) all rejected. Next step is a reference from the owner: a store or brand whose type they like, matched exactly. Or the owner browses Shopify's library live via Font Pairing → Custom.
 - Approval of the product page requirements — [PRODUCT-PAGE.md](PRODUCT-PAGE.md). The Claude Design prompt for the product page follows approval.
 - Reports from testing the collection page.
 

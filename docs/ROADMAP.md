@@ -137,6 +137,8 @@ Site-wide. Owner's additions of 2026-10-03, items 1–6.
       Display + DM Sans was the best *of those offered*, but the owner still wants the font
       changed. Round 2 specimen covers different directions: bolder serifs, modern
       grotesques, luxury caps
+- [ ] Round 2 (2026-10-03): all eight rejected as well. Stop guessing: match a reference
+      site or brand the owner names, or the owner picks live through Custom
 - [ ] The owner's pick set as the store font and the schema default
 - [x] Type scale: chrome fixed in px (Phase 1), content scaling with the body-size setting
 

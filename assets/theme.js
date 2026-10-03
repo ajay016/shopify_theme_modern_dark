@@ -1714,6 +1714,297 @@
 
 
   /* ============================================================
+     Address forms — country and province
+     Nothing filled the province list or preselected a saved country,
+     so every address form showed one "Select a province" option. The
+     country options carry their provinces in data-provinces.
+     ============================================================ */
+  function initAddressForms(root = document) {
+    root.querySelectorAll('select[name="address[country]"]').forEach(country => {
+      if (country.dataset.addressBound) return;
+      country.dataset.addressBound = '1';
+      const form = country.form || country.closest('form');
+      const province = form && form.querySelector('select[name="address[province]"]');
+      const pick = (sel, wanted) => {
+        if (!wanted) return;
+        const opt = [...sel.options].find(o => o.value === wanted || o.text.trim() === wanted);
+        if (opt) sel.value = opt.value;
+      };
+      pick(country, country.dataset.default);
+      if (!province) return;
+      const field = province.closest('.form-field');
+      const fill = keep => {
+        const opt = country.options[country.selectedIndex];
+        let list = [];
+        try { list = JSON.parse((opt && opt.dataset.provinces) || '[]'); } catch (e) { list = []; }
+        const first = province.options[0] && province.options[0].value === '' ? province.options[0].outerHTML : '';
+        province.innerHTML = first + list.map(([value, label]) => {
+          const o = document.createElement('option');
+          o.value = value; o.textContent = label || value;
+          return o.outerHTML;
+        }).join('');
+        if (field) field.hidden = list.length === 0;
+        if (keep) pick(province, province.dataset.default);
+      };
+      fill(true);
+      country.addEventListener('change', () => fill(false));
+    });
+  }
+
+
+  /* ============================================================
+     Custom select — no browser-default select anywhere.
+     Each native <select> is wrapped, hidden and kept as the value
+     source: forms submit it, inline onchange handlers still fire,
+     and scripts that set .value or rewrite its options are mirrored
+     (property hooks + a MutationObserver). The visible control is a
+     combobox button and a listbox, with keyboard, type-ahead and an
+     animated open/close. Skipped: multiple, listbox-sized, .sr-only
+     and [data-native] selects.
+     ============================================================ */
+  const CSELECT_SKIP = 'select[multiple], select[size]:not([size="1"]), select.sr-only, select[data-native]';
+  const CSELECT_CHEVRON = '<svg class="cselect__chev" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  let cselectSeq = 0;
+  let cselectOpen = null;
+
+  function enhanceSelects(root = document) {
+    const scope = root.matches && root.matches('select') ? [root] : root.querySelectorAll('select');
+    scope.forEach(sel => {
+      if (sel.dataset.cselect || sel.matches(CSELECT_SKIP)) return;
+      buildCustomSelect(sel);
+    });
+  }
+
+  function buildCustomSelect(sel) {
+    const id = 'cselect-' + (++cselectSeq);
+    sel.dataset.cselect = id;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'cselect';
+    sel.parentNode.insertBefore(wrap, sel);
+    wrap.appendChild(sel);
+    sel.classList.add('cselect__native');
+    sel.tabIndex = -1;
+    sel.setAttribute('aria-hidden', 'true');
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'cselect__trigger';
+    btn.id = id + '-trigger';
+    btn.setAttribute('role', 'combobox');
+    btn.setAttribute('aria-haspopup', 'listbox');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-controls', id + '-list');
+    btn.innerHTML = '<span class="cselect__value"></span>' + CSELECT_CHEVRON;
+    const valueEl = btn.firstChild;
+
+    const list = document.createElement('ul');
+    list.className = 'cselect__list';
+    list.id = id + '-list';
+    list.setAttribute('role', 'listbox');
+    list.tabIndex = -1;
+    wrap.append(btn, list);
+
+    // Name the control after its label; a click on the label focuses it.
+    const label = (sel.id && document.querySelector(`label[for="${CSS.escape(sel.id)}"]`)) || sel.closest('label');
+    if (label) {
+      if (!label.id) label.id = id + '-label';
+      btn.setAttribute('aria-labelledby', label.id + ' ' + btn.id);
+      list.setAttribute('aria-labelledby', label.id);
+      if (label.htmlFor) label.addEventListener('click', e => { e.preventDefault(); btn.focus(); });
+    } else if (sel.getAttribute('aria-label')) {
+      btn.setAttribute('aria-label', sel.getAttribute('aria-label'));
+      list.setAttribute('aria-label', sel.getAttribute('aria-label'));
+    }
+
+    let items = [];
+    let active = -1;
+
+    function render() {
+      list.innerHTML = '';
+      items = [];
+      let n = 0;
+      [...sel.children].forEach(node => {
+        const opts = node.tagName === 'OPTGROUP' ? [...node.children] : [node];
+        if (node.tagName === 'OPTGROUP') {
+          const g = document.createElement('li');
+          g.className = 'cselect__group';
+          g.setAttribute('role', 'presentation');
+          g.textContent = node.label;
+          list.appendChild(g);
+        }
+        opts.forEach(o => {
+          if (o.tagName !== 'OPTION' || o.hidden) return;
+          const li = document.createElement('li');
+          li.className = 'cselect__option';
+          li.id = `${id}-o${o.index}`;
+          li.setAttribute('role', 'option');
+          li.dataset.index = o.index;
+          li.style.setProperty('--i', Math.min(n++, 12));
+          li.textContent = o.text.trim();
+          if (o.disabled || (node.tagName === 'OPTGROUP' && node.disabled)) li.setAttribute('aria-disabled', 'true');
+          list.appendChild(li);
+          items.push(li);
+        });
+      });
+      sync();
+    }
+
+    function sync() {
+      const opt = sel.options[sel.selectedIndex];
+      valueEl.textContent = opt ? opt.text.trim() : '';
+      wrap.classList.toggle('is-placeholder', !!opt && opt.value === '');
+      items.forEach(li => li.setAttribute('aria-selected', String(+li.dataset.index === sel.selectedIndex)));
+      btn.disabled = sel.disabled;
+      wrap.classList.toggle('is-disabled', sel.disabled);
+    }
+
+    function setActive(i, scroll) {
+      items.forEach(li => li.classList.remove('is-active'));
+      active = i;
+      const li = items[i];
+      if (!li) { btn.removeAttribute('aria-activedescendant'); return; }
+      li.classList.add('is-active');
+      btn.setAttribute('aria-activedescendant', li.id);
+      if (scroll) {
+        const top = li.offsetTop, bottom = top + li.offsetHeight;
+        if (top < list.scrollTop) list.scrollTop = top - 6;
+        else if (bottom > list.scrollTop + list.clientHeight) list.scrollTop = bottom - list.clientHeight + 6;
+      }
+    }
+
+    const enabled = i => items[i] && items[i].getAttribute('aria-disabled') !== 'true';
+    function move(from, step) {
+      let i = from;
+      for (let k = 0; k < items.length; k++) {
+        i += step;
+        if (i < 0 || i >= items.length) return from;
+        if (enabled(i)) return i;
+      }
+      return from;
+    }
+
+    function open() {
+      if (wrap.classList.contains('is-open') || sel.disabled) return;
+      if (cselectOpen && cselectOpen !== api) cselectOpen.close(false);
+      sync();
+      const r = wrap.getBoundingClientRect();
+      const want = Math.min(list.scrollHeight, 300) + 12;
+      wrap.classList.toggle('is-up', window.innerHeight - r.bottom < want && r.top > window.innerHeight - r.bottom);
+      wrap.classList.toggle('is-end', r.left + Math.max(list.offsetWidth, r.width) > document.documentElement.clientWidth - 8);
+      wrap.classList.add('is-open');
+      btn.setAttribute('aria-expanded', 'true');
+      cselectOpen = api;
+      const cur = items.findIndex(li => +li.dataset.index === sel.selectedIndex);
+      setActive(cur >= 0 ? cur : move(-1, 1), true);
+    }
+
+    function close(focus) {
+      if (!wrap.classList.contains('is-open')) return;
+      wrap.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      setActive(-1);
+      if (cselectOpen === api) cselectOpen = null;
+      if (focus) btn.focus();
+    }
+
+    function choose(i) {
+      if (!enabled(i)) return;
+      const idx = +items[i].dataset.index;
+      close(true);
+      if (sel.selectedIndex === idx) return;
+      sel.selectedIndex = idx;
+      sel.dispatchEvent(new Event('input', { bubbles: true }));
+      sel.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    let typed = '', typedAt = 0;
+    function typeahead(ch) {
+      const now = Date.now();
+      typed = (now - typedAt > 600 ? '' : typed) + ch.toLowerCase();
+      typedAt = now;
+      const start = typed.length === 1 ? active + 1 : Math.max(active, 0);
+      for (let k = 0; k < items.length; k++) {
+        const i = (start + k) % items.length;
+        if (enabled(i) && items[i].textContent.toLowerCase().startsWith(typed)) return i;
+      }
+      return -1;
+    }
+
+    btn.addEventListener('click', () => (wrap.classList.contains('is-open') ? close(false) : open()));
+    btn.addEventListener('keydown', e => {
+      const isOpen = wrap.classList.contains('is-open');
+      const k = e.key;
+      if (!isOpen) {
+        if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(k)) { e.preventDefault(); open(); }
+        else if (k.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          open(); const i = typeahead(k); if (i >= 0) setActive(i, true);
+        }
+        return;
+      }
+      if (k === 'ArrowDown') { e.preventDefault(); setActive(move(active, 1), true); }
+      else if (k === 'ArrowUp') { e.preventDefault(); setActive(move(active, -1), true); }
+      else if (k === 'Home') { e.preventDefault(); setActive(move(-1, 1), true); }
+      else if (k === 'End') { e.preventDefault(); setActive(move(items.length, -1), true); }
+      else if (k === 'PageDown') { e.preventDefault(); let i = active; for (let s = 0; s < 6; s++) i = move(i, 1); setActive(i, true); }
+      else if (k === 'PageUp') { e.preventDefault(); let i = active; for (let s = 0; s < 6; s++) i = move(i, -1); setActive(i, true); }
+      else if (k === 'Enter' || k === ' ') { e.preventDefault(); if (k === ' ' && typed && Date.now() - typedAt < 600) { const i = typeahead(' '); if (i >= 0) setActive(i, true); } else if (active >= 0) choose(active); }
+      else if (k === 'Escape') { e.preventDefault(); e.stopPropagation(); close(true); }
+      else if (k === 'Tab') close(false);
+      else if (k.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) { const i = typeahead(k); if (i >= 0) setActive(i, true); }
+    });
+
+    // Keep focus on the trigger while the pointer works the list.
+    list.addEventListener('pointerdown', e => e.preventDefault());
+    list.addEventListener('click', e => {
+      const li = e.target.closest('.cselect__option');
+      if (li) choose(items.indexOf(li));
+    });
+    list.addEventListener('pointermove', e => {
+      const li = e.target.closest('.cselect__option');
+      if (li && items.indexOf(li) !== active && enabled(items.indexOf(li))) setActive(items.indexOf(li), false);
+    });
+
+    // Mirror the native select, however it is changed.
+    sel.addEventListener('change', sync);
+    new MutationObserver(render).observe(sel, { childList: true, subtree: true, attributes: true, attributeFilter: ['disabled', 'label', 'hidden'] });
+    ['value', 'selectedIndex'].forEach(prop => {
+      const d = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, prop);
+      Object.defineProperty(sel, prop, {
+        configurable: true,
+        get() { return d.get.call(this); },
+        set(v) { d.set.call(this, v); sync(); },
+      });
+    });
+    if (sel.form) sel.form.addEventListener('reset', () => setTimeout(sync));
+
+    const api = { close, sync };
+    sel._cselect = api;
+    render();
+  }
+
+  function initCustomSelects() {
+    enhanceSelects(document);
+    document.addEventListener('pointerdown', e => {
+      if (cselectOpen && !e.target.closest('.cselect.is-open')) cselectOpen.close(false);
+    });
+    window.addEventListener('resize', () => cselectOpen && cselectOpen.close(false));
+    // Selects added later -- quick view, cart, editor re-renders -- are
+    // enhanced as they arrive.
+    new MutationObserver(records => {
+      for (const r of records) for (const node of r.addedNodes) {
+        if (node.nodeType !== 1) continue;
+        if (node.tagName === 'SELECT' || node.querySelector('select')) {
+          initAddressForms(node.tagName === 'SELECT' ? node.parentNode : node);
+          enhanceSelects(node);
+        }
+      }
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+  window.MaisonNoir = Object.assign(window.MaisonNoir || {}, { enhanceSelects });
+
+
+  /* ============================================================
      Init all
      ============================================================ */
   document.addEventListener('DOMContentLoaded', () => {
@@ -1736,6 +2027,8 @@
     initPriceRange();
     initAnnouncementRotation();
     initMegaMenu();
+    initAddressForms();
+    initCustomSelects();
   });
 
   // Re-bind hover carousels when a section is re-rendered in the theme editor.

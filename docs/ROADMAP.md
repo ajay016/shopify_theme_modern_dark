@@ -89,14 +89,22 @@ Site-wide. Owner's additions of 2026-10-03, items 1–6.
 - [x] Test: `scripts/radius-check.py` + `scripts/radius-test.js` — tokens and computed
       radius of each component at all six values
 
-**F2 — Custom select** (item 5)
-- [ ] One component replacing every native `<select>`: sort, variant dropdown, quantity,
-      country and language, cart, account, search, collections list
-- [ ] Animated open and close; keyboard (arrows, type-ahead, Enter, Escape); screen
-      reader; touch
-- [ ] The native select stays underneath as the value source, so forms and Shopify's own
-      scripts keep working
-- [ ] Test: zero visible browser-default selects on any page
+**F2 — Custom select** (item 5) · *done 2026-10-03*
+- [x] One component replacing every native `<select>` — today: collection sort,
+      collections-list sort, address country and province; any select added later
+      (quick view, cart, a re-rendered section) is enhanced as it arrives
+- [x] Animated open and close (fade, lift, staggered options, chevron turn; flips up
+      near the bottom of the screen and right-aligns near the edge); keyboard (arrows,
+      Home/End, Page Up/Down, type-ahead, Enter, Escape, Tab); combobox/listbox roles
+      for screen readers; touch
+- [x] The native select stays underneath as the value source, so forms, inline
+      `onchange` handlers and Shopify's own scripts keep working; setting `.value` or
+      rewriting the options from script updates the custom control
+- [x] Test: `scripts/custom-select-test.js` — 18 checks, zero visible browser-default
+      selects
+- [x] Found on the way: address forms never filled the province list or preselected a
+      saved country. Fixed (`initAddressForms` in `theme.js`).
+- [ ] Variant dropdown and quantity on the product page use it — built with Phase 3
 
 **F3 — Motion** (item 3)
 - [ ] Shared duration and easing tokens

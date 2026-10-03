@@ -249,3 +249,27 @@ tags, account and address cards) are listed in the **CORNERS** block at the end 
 
 **Check:** `python3 scripts/radius-check.py OUT && node scripts/radius-test.js OUT`
 (copy `assets/theme.css` into OUT first).
+
+## F2 — Custom select (2026-10-03)
+
+**Where to see it:** the *Sort by* control on any collection page, the sort on the
+collections list, and the country and province fields under *Account → Addresses*.
+
+**How it works:** `enhanceSelects()` in `assets/theme.js` wraps each `<select>` in
+`.cselect`, hides it (still in the form) and adds a combobox button plus a listbox.
+Choosing an option sets the native select and fires `input` and `change`, so
+`onchange="location.href=this.value"` on the sort still navigates. A
+MutationObserver rebuilds the list when the options change, and `.value` /
+`.selectedIndex` are hooked so a script setting them updates the label. A
+document-level observer enhances selects added later. Styles: the **CUSTOM SELECT**
+block at the end of `theme.css`; the list takes its colours from the surface it sits on.
+
+**Opting out:** add `data-native` to a select (or `class="sr-only"` for one that is
+deliberately hidden, as the product page's variant select is).
+
+**Province fix:** `initAddressForms()` reads the country option's `data-provinces`,
+fills the province list, preselects saved values and hides the province field for
+countries without provinces.
+
+**Check:** `node scripts/custom-select-test.js OUT` (OUT holds copies of
+`theme.css`, `theme.js` and a rendered `rad_sidebar.html`).

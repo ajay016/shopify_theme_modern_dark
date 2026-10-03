@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../assets/theme.css">
+<style>:root{--s1-bg:#FFF;--s1-fg:#1A1A1A;--s1-mut:rgba(26,26,26,.66);--s1-bdr:rgba(26,26,26,.16);--gold:#9B7B3F;--field-fg:#1A1A1A;--field-bdr:rgba(26,26,26,.22);--field-bg:#fff;--muted:rgba(26,26,26,.6);--r-xs:4px;--r-sm:8px;--r-md:12px;--r-lg:16px;--r-pill:999px;--r-btn:8px;--fs-scale:1;--ff-body:system-ui;--z-overlay:150}
+body{margin:0;background:#fff;color:#1A1A1A;font-family:system-ui;padding:40px;max-width:520px}</style></head><body>
+<form id="f"><div class="form-field"><label for="address-country-1">Country</label>
+<select id="address-country-1" name="address[country]" data-default="Canada">
+<option value="---" data-provinces="[]">---</option>
+<option value="United States" data-provinces="[[&quot;California&quot;,&quot;California&quot;],[&quot;New York&quot;,&quot;New York&quot;],[&quot;Texas&quot;,&quot;Texas&quot;]]">United States</option>
+<option value="Canada" data-provinces="[[&quot;Alberta&quot;,&quot;Alberta&quot;],[&quot;Ontario&quot;,&quot;Ontario&quot;],[&quot;Quebec&quot;,&quot;Quebec&quot;]]">Canada</option>
+<option value="France" data-provinces="[]">France</option>
+<option value="Germany" data-provinces="[]">Germany</option>
+</select></div>
+<div class="form-field"><label for="address-province-1">Province</label>
+<select id="address-province-1" name="address[province]" data-default="Ontario"><option value="">Select a province</option></select></div>
+<div class="form-field"><label for="x">Disabled</label><select id="x" disabled><option>Nope</option></select></div>
+</form><p id="log"></p>
+<script src="../../assets/theme.js"></script></body></html>

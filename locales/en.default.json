@@ -269,7 +269,26 @@
     "bag": "Bag",
     "country": "Country / region",
     "language": "Language",
-    "main_menu": "Main"
+    "main_menu": "Main",
+    "cart": {
+      "title": "Your bag ({{ count }})",
+      "close": "Close bag",
+      "empty": "Your bag is empty.",
+      "ship_remaining_html": "Add <b>{{ amount }}</b> for complimentary express shipping",
+      "ship_unlocked_html": "You’ve unlocked <b>complimentary express shipping</b>",
+      "quantity_for": "Quantity for {{ title }}",
+      "remove_title": "Remove {{ title }}",
+      "taxes_included": "Taxes and duties included. Shipping calculated at checkout.",
+      "taxes_excluded": "Taxes and shipping calculated at checkout.",
+      "checkout": "Checkout",
+      "view": "View bag",
+      "view_count_html": "View bag ({{ n }})",
+      "added": "Added to your bag",
+      "close_notice": "Close",
+      "only_left": "Only {{ count }} available",
+      "error": "Something went wrong. Please try again.",
+      "demo": "Demo product: connect a collection in the theme editor to enable the cart."
+    }
   },
   "footer": {
     "back_to_top": "Back to top",

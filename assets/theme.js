@@ -139,270 +139,41 @@
 
 
   /* ============================================================
-     Cart Drawer
+     Cart: the drawer, notification and Ajax calls live in assets/mn.js
+     (MN.cart). These wrappers keep the older call sites working.
      ============================================================ */
-  function initCartDrawer() {
-    const drawer  = document.getElementById('cart-drawer');
-    const overlay = document.getElementById('cart-overlay');
-    if (!drawer) return;
-
-    function openCart() {
-      drawer.classList.add('is-open');
-      overlay.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeCart() {
-      drawer.classList.remove('is-open');
-      overlay.classList.remove('is-open');
-      document.body.style.overflow = '';
-    }
-
-    document.querySelectorAll('[data-open-cart]').forEach(btn => btn.addEventListener('click', openCart));
-    document.querySelectorAll('[data-close-cart]').forEach(btn => btn.addEventListener('click', closeCart));
-    overlay && overlay.addEventListener('click', closeCart);
-
-    // Qty controls in cart
-    document.addEventListener('click', async e => {
-      const qtyBtn = e.target.closest('.qty-btn');
-      if (!qtyBtn) return;
-      const key = qtyBtn.closest('[data-line-key]')?.dataset.lineKey;
-      const val = qtyBtn.dataset.qty;
-      if (!key || !val) return;
-      await updateCartItem(key, parseInt(val));
-    });
-
-    // Remove item
-    document.addEventListener('click', async e => {
-      const removeBtn = e.target.closest('.cart-item__remove');
-      if (!removeBtn) return;
-      const key = removeBtn.closest('[data-line-key]')?.dataset.lineKey;
-      if (!key) return;
-      await updateCartItem(key, 0);
-    });
-  }
-
-  async function updateCartItem(key, quantity) {
-    // Optimistic remove: immediately hide the item, skip re-rendering it from server
-    let skipItemRender = false;
-    if (quantity === 0) {
-      const el = document.querySelector(`[data-line-key="${key}"]`);
-      if (el) {
-        el.style.transition = 'opacity 0.18s, transform 0.18s';
-        el.style.opacity = '0';
-        el.style.transform = 'translateX(28px)';
-        el.style.pointerEvents = 'none';
-        skipItemRender = true;
-        // Remove from DOM after animation, regardless of server response
-        setTimeout(() => { if (el.parentNode) el.remove(); }, 200);
-      }
-    }
-
-    try {
-      const res = await fetch('/cart/change.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: key, quantity })
-      });
-      const cart = await res.json();
-
-      if (skipItemRender) {
-        // Always update shipping bar, subtotal and count badge immediately
-        updateCartCounters(cart);
-        // If cart is now empty, show empty state after the fade animation finishes
-        const remaining = (cart.items || []).filter(i => i.quantity > 0);
-        if (remaining.length === 0) {
-          setTimeout(() => renderCartItems(cart), 210);
-        }
-      } else {
-        updateCartUI(cart);
-      }
-    } catch (err) {
-      console.error('Cart update failed', err);
-    }
-  }
-
   async function addToCart(variantId, quantity = 1, properties = {}) {
-    // Demo products (variant id 0) can't be carted — explain instead of failing.
+    // Demo products (variant id 0) can't be carted: explain instead of failing.
     if (!variantId || String(variantId) === '0') {
-      showToast('Demo product — connect a collection in the theme editor to enable the cart.');
+      showToast(window.MN_STRINGS?.cart_demo || 'Demo product: connect a collection in the theme editor to enable the cart.');
       return;
     }
-
-    // 1. Loading state on the ATC button
-    const btn = document.querySelector(`.pcard-btn--atc[data-variant-id="${variantId}"]`) ||
-                document.querySelector('button.qv-atc');
-    if (btn) {
-      btn._origHTML = btn.innerHTML;
-      btn.innerHTML = '<span class="cart-spinner"></span>';
-      btn.disabled = true;
-    }
-
-    // 2. Feedback depends on the Cart Type setting:
-    //    drawer       -> slide-in drawer with a spinner (default)
-    //    notification -> compact popover anchored under the header cart icon
-    //    page         -> add, then navigate to the full cart page
-    const cartType = window.theme_settings?.cart_type || 'drawer';
-    const useDrawer = cartType === 'drawer';
-
-    const body = useDrawer ? document.getElementById('cart-drawer-items') : null;
-    if (useDrawer) {
-      if (body) body.innerHTML = '<div class="cart-loading"><span class="cart-spinner"></span></div>';
-      document.getElementById('cart-drawer')?.classList.add('is-open');
-      document.getElementById('cart-overlay')?.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
-    }
-
-    try {
-      // 3. Add item
-      const addRes = await fetch('/cart/add.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: variantId, quantity, properties })
-      });
-      if (!addRes.ok) {
-        const errData = await addRes.json().catch(() => ({}));
-        throw new Error(errData.description || 'Could not add to bag');
-      }
-      const addedItem = await addRes.json();
-
-      // 4. Show the added item immediately from the add.js response (faster feedback)
-      if (body && addedItem) {
-        const imgHtml = addedItem.featured_image?.url
-          ? `<img src="${addedItem.featured_image.url}" loading="eager" alt="">`
-          : (addedItem.image ? `<img src="${addedItem.image}" loading="eager" alt="">` : '');
-        body.innerHTML = `
-          <div class="cart-item" data-line-key="${addedItem.key}">
-            <a href="${addedItem.url}" class="cart-item__image">${imgHtml}</a>
-            <div class="cart-item__details">
-              <p class="cart-item__brand">${addedItem.vendor || ''}</p>
-              <a href="${addedItem.url}" class="cart-item__title">${addedItem.product_title}</a>
-              ${addedItem.variant_title && addedItem.variant_title !== 'Default Title' ? `<p class="cart-item__variant">${addedItem.variant_title}</p>` : ''}
-              <div class="cart-item__bottom">
-                <span class="cart-item__price">${formatMoney(addedItem.final_price)}</span>
-              </div>
-            </div>
-          </div>
-          <div class="cart-loading" style="height:40px"><span class="cart-spinner" style="width:14px;height:14px;border-width:1.5px"></span></div>`;
-        document.querySelector('.cart-drawer__footer')?.style.setProperty('display', 'block');
-      }
-
-      // 5. Fetch full cart in background to reconcile all items and totals
-      const cart = await fetch('/cart.js').then(r => r.json());
-      updateCartUI(cart);
-
-      if (cartType === 'notification') {
-        showCartNotification(addedItem, cart);
-      } else if (cartType === 'page') {
-        window.location.href = window.routes?.cart_url || '/cart';
-        return;
-      } else {
-        showToast(window.theme_strings?.added_to_cart || 'Added to bag');
-      }
-    } catch (err) {
-      console.error('Add to cart failed:', err);
-      if (body) body.innerHTML = `<div class="cart-error">${err.message || 'Something went wrong. Please try again.'}</div>`;
-      else showToast(err.message || 'Something went wrong. Please try again.');
-    } finally {
-      if (btn && btn._origHTML !== undefined) {
-        btn.innerHTML = btn._origHTML;
-        btn.disabled = false;
-        delete btn._origHTML;
-      }
-    }
+    if (!window.MN || !window.MN.cart) { location.href = (window.routes?.cart_add_url || '/cart/add') + '?id=' + variantId + '&quantity=' + quantity; return; }
+    // MN.cart shows Shopify's reason as a toast if this fails
+    return window.MN.cart.add([{ id: +variantId, quantity, properties }]);
   }
 
-  function renderCartItems(cart) {
-    const body = document.getElementById('cart-drawer-items');
-    if (!body) return;
-
-    const footer = document.querySelector('.cart-drawer__footer');
-
-    if (!cart.items || cart.items.length === 0) {
-      body.innerHTML = `
-        <div class="cart-drawer__empty">
-          <div class="cart-drawer__empty-icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          </div>
-          <h3 class="cart-drawer__empty-title">${window.theme_strings?.cart_empty || 'Your bag is empty'}</h3>
-          <a href="/collections/all" class="btn btn-ghost btn-sm">${window.theme_strings?.continue_shopping || 'Continue Shopping'}</a>
-        </div>`;
-      if (footer) footer.style.display = 'none';
-      return;
-    }
-
-    if (footer) footer.style.display = 'block';
-
-    // Filter out any zero-qty items (Shopify occasionally returns them during transition)
-    const items = cart.items.filter(item => item.quantity > 0);
-
-    body.innerHTML = items.map(item => {
-      const variantLine = item.variant_title && item.variant_title !== 'Default Title'
-        ? `<p class="cart-item__variant">${item.variant_title}</p>` : '';
-      const imgHtml = item.featured_image?.url
-        ? `<img src="${item.featured_image.url}" loading="lazy" alt="${(item.product_title || '').replace(/"/g, '&quot;')}">`
-        : '';
-      const qtyMinus = Math.max(0, item.quantity - 1);
-      const qtyPlus = item.quantity + 1;
-      return `
-        <div class="cart-item" data-line-key="${item.key}">
-          <a href="${item.url}" class="cart-item__image">${imgHtml}</a>
-          <div class="cart-item__details">
-            <p class="cart-item__brand">${item.vendor || ''}</p>
-            <a href="${item.url}" class="cart-item__title">${item.product_title}</a>
-            ${variantLine}
-            <div class="cart-item__qty">
-              <button class="qty-btn" data-qty="${qtyMinus}" aria-label="Decrease quantity">−</button>
-              <span class="qty-value">${item.quantity}</span>
-              <button class="qty-btn" data-qty="${qtyPlus}" aria-label="Increase quantity">+</button>
-            </div>
-            <div class="cart-item__bottom">
-              <span class="cart-item__price">${formatMoney(item.final_line_price)}</span>
-              <button class="cart-item__remove" data-qty="0" aria-label="Remove" title="Remove">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="m19 6-.867 12.142A2 2 0 0 1 16.138 20H7.862a2 2 0 0 1-1.995-1.858L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>`;
-    }).join('');
-  }
-
-  function updateCartCounters(cart) {
-    document.querySelectorAll('.header-cart-count').forEach(el => {
-      el.textContent = cart.item_count || '';
-    });
-    const countEl = document.querySelector('.cart-drawer__count');
-    if (countEl) {
-      countEl.textContent = cart.item_count === 1 ? '1 item' : `${cart.item_count || 0} items`;
-    }
-    const subtotalEl = document.querySelector('.cart-drawer__subtotal-price');
-    if (subtotalEl) subtotalEl.textContent = formatMoney(cart.total_price);
-
-    const threshold = parseFloat(document.body.dataset.freeShippingThreshold || 500) * 100;
-    if (threshold > 0) {
-      const pct = Math.min((cart.total_price / threshold) * 100, 100);
-      const fill = document.querySelector('.shipping-bar__fill');
-      if (fill) fill.style.width = pct + '%';
-      const msg = document.querySelector('.cart-drawer__shipping-bar span');
-      if (msg) {
-        if (pct >= 100) {
-          msg.textContent = window.theme_strings?.free_shipping_achieved || "You've unlocked free shipping!";
-        } else {
-          const remaining = formatMoney(threshold - cart.total_price);
-          const template = window.theme_strings?.free_shipping_message || "You're %{amount} away from free shipping";
-          // Use innerHTML so HTML entities from Liquid json filter render as real characters
-          msg.innerHTML = template.replace('%{amount}', `<strong>${remaining}</strong>`);
-        }
-      }
-    }
-  }
-
-  function updateCartUI(cart) {
-    renderCartItems(cart);
-    updateCartCounters(cart);
-  }
-
-  function formatMoney(cents) {
-    return '$' + (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  // Shopify money formats: {{amount}}, {{amount_no_decimals}}, {{amount_with_comma_separator}} …
+  function formatMoney(cents, format) {
+    if (typeof cents === 'string') cents = cents.includes('.') ? Math.round(parseFloat(cents) * 100) : parseInt(cents, 10);
+    const fmt = String(format || window.theme_settings?.money_format || '${{amount}}').replace(/<[^>]*>/g, '');
+    const m = fmt.match(/\{\{\s*(\w+)\s*\}\}/);
+    const fix = (n, d, ts = ',', ds = '.') => {
+      if (n == null || isNaN(n)) return '0';
+      const [i, f] = (n / 100).toFixed(d).split('.');
+      return i.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + ts) + (f ? ds + f : '');
+    };
+    const v = {
+      amount: () => fix(cents, 2),
+      amount_no_decimals: () => fix(cents, 0),
+      amount_with_comma_separator: () => fix(cents, 2, '.', ','),
+      amount_no_decimals_with_comma_separator: () => fix(cents, 0, '.', ','),
+      amount_with_apostrophe_separator: () => fix(cents, 2, "'", '.'),
+      amount_no_decimals_with_space_separator: () => fix(cents, 0, ' '),
+      amount_with_space_separator: () => fix(cents, 2, ' ', ','),
+      amount_with_period_and_space_separator: () => fix(cents, 2, ' ', '.'),
+    }[m ? m[1] : 'amount'] || (() => fix(cents, 2));
+    return m ? fmt.replace(m[0], v()) : v();
   }
 
 
@@ -429,7 +200,7 @@
           addBtn.disabled = false;
         }, 1800);
       } catch {
-        showToast('Could not add to bag. Please try again.');
+        // addToCart has already shown the reason
         if (label) label.textContent = originalLabel;
         addBtn.disabled = false;
       }
@@ -754,10 +525,8 @@
           try {
             await addToCart(variantId, 1);
             atcBtn.textContent = '✓ Added';
-            // Outside drawer mode the confirmation renders on the page, so the
-            // modal has to step aside or it would cover it.
-            const ct = window.theme_settings?.cart_type || 'drawer';
-            if (ct === 'notification') setTimeout(closeQV, 350);
+            // The drawer or notification opens over the page: step aside.
+            setTimeout(closeQV, 350);
             setTimeout(() => { atcBtn.textContent = prev; atcBtn.disabled = false; }, 2000);
           } catch {
             atcBtn.textContent = 'Error — try again';
@@ -1577,89 +1346,9 @@
      Toast Notification
      ============================================================ */
   let toastTimer;
-  /* ------------------------------------------------------------
-     Cart notification (Cart Type = "Notification Only")
-     A compact popover anchored under the header cart icon showing
-     the item just added, the running total and the two next steps.
-     ------------------------------------------------------------ */
-  let cartNotifTimer;
-  function showCartNotification(item, cart) {
-    let el = document.getElementById('cart-notification');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'cart-notification';
-      el.className = 'cart-notification';
-      el.setAttribute('role', 'status');
-      el.setAttribute('aria-live', 'polite');
-      document.body.appendChild(el);
-      // Close button is delegated so it survives re-renders.
-      el.addEventListener('click', (e) => {
-        if (e.target.closest('[data-close-cart-notification]')) hideCartNotification();
-      });
-    }
-
-    const img = item?.featured_image?.url || item?.image || '';
-    const variant = item?.variant_title && item.variant_title !== 'Default Title'
-      ? `<p class="cart-notification__variant">${item.variant_title}</p>` : '';
-    const count = cart?.item_count ?? 0;
-    const cartUrl = window.routes?.cart_url || '/cart';
-
-    el.innerHTML = `
-      <div class="cart-notification__head">
-        <span class="cart-notification__tick" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
-        <span class="cart-notification__title">${window.theme_strings?.added_to_cart || 'Added to bag'}</span>
-        <button class="cart-notification__close" type="button" data-close-cart-notification aria-label="Close">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-      <div class="cart-notification__item">
-        ${img ? `<span class="cart-notification__media"><img src="${img}" alt="" loading="eager"></span>` : ''}
-        <div class="cart-notification__info">
-          <p class="cart-notification__name">${item?.product_title || ''}</p>
-          ${variant}
-          <p class="cart-notification__price">${formatMoney(item?.final_price ?? 0)}</p>
-        </div>
-      </div>
-      <div class="cart-notification__actions">
-        <a class="cart-notification__btn cart-notification__btn--primary" href="${cartUrl}">
-          View bag${count ? ` (${count})` : ''}
-        </a>
-        <button class="cart-notification__btn cart-notification__btn--ghost" type="button" data-close-cart-notification>
-          Continue shopping
-        </button>
-      </div>`;
-
-    requestAnimationFrame(() => el.classList.add('is-visible'));
-    clearTimeout(cartNotifTimer);
-    cartNotifTimer = setTimeout(hideCartNotification, 6000);
-  }
-
-  function hideCartNotification() {
-    clearTimeout(cartNotifTimer);
-    document.getElementById('cart-notification')?.classList.remove('is-visible');
-  }
-
-  function showToast(message) {
-    let toast = document.getElementById('mn-toast');
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.id = 'mn-toast';
-      toast.className = 'toast';
-      toast.innerHTML = `
-        <span class="toast__icon">
-          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
-        <span class="toast__message"></span>
-      `;
-      document.body.appendChild(toast);
-    }
-    toast.querySelector('.toast__message').textContent = message;
-    toast.classList.add('is-visible');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 3000);
-  }
+  function showCartNotification(item) { window.MN?.cart?.notify(item); }
+  function hideCartNotification() { document.getElementById('cartNotify')?.classList.remove('is-open'); }
+  function showToast(message) { if (window.MN?.toast) window.MN.toast(message); }
 
   // Expose globally for use in sections
   window.MaisonNoir = {
@@ -1992,7 +1681,6 @@
      ============================================================ */
   document.addEventListener('DOMContentLoaded', () => {
     initScrollReveal();
-    initCartDrawer();
     initCardAddToCart();
     initCardCarousel();
     initCardSwatches();

@@ -87,8 +87,8 @@
             <svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg><span class="count-dot header-wishlist-count" id="wishCount"></span>
           </button>
         {%- endif -%}
-        {%- if settings.cart_type == 'drawer' -%}
-          <button type="button" class="icon-btn header__icon--cart" data-open-cart aria-label="{{ 'mn.bag' | t }}">
+        {%- if settings.cart_type != 'page' and template.name != 'cart' -%}
+          <button type="button" class="icon-btn header__icon--cart" data-open="ov-cart" aria-label="{{ 'mn.bag' | t }}">
             <svg class="icon" aria-hidden="true"><use href="#i-bag"></use></svg><span class="count-dot header-cart-count" id="cartCount" data-cart-count>{% if cart.item_count > 0 %}{{ cart.item_count }}{% endif %}</span>
           </button>
         {%- else -%}

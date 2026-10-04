@@ -307,7 +307,137 @@
   addEventListener('resize', fitWordmark);
 
   /* ---- Boot ---- */
-  const boot = root => { MN.initTabs(root || document); bindHeader(); bindFooter(); };
+  /* ==================================================================
+     Cart — ported from docs/claude_design_ref/mn/extras.js (MN.cart)
+     The drawer (sections/cart-drawer.liquid) is rendered by Shopify and
+     re-rendered through the Section Rendering API on every add / change,
+     so totals, discounts and money formats are always the store's own.
+     Requests run one at a time, in order. Theme settings → Cart → cart
+     type picks what happens after adding: drawer, notification or page.
+     ================================================================== */
+  const STR = () => window.MN_STRINGS || {};
+  const routes = () => window.routes || {};
+  const C = MN.cart = {
+    section: 'cart-drawer',
+    q: Promise.resolve(),
+    queue(fn) { const run = this.q.then(fn, fn); this.q = run.catch(() => {}); return run; },
+    async post(url, body) {
+      const fd = body instanceof FormData;
+      if (fd) { body.append('sections', this.section); body.append('sections_url', location.pathname); }
+      else body = Object.assign({}, body, { sections: this.section, sections_url: location.pathname });
+      const r = await fetch(url, { method: 'POST', headers: fd ? { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' } : { 'Content-Type': 'application/json', Accept: 'application/json' }, body: fd ? body : JSON.stringify(body) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || j.status) { const e = new Error(j.description || j.message || STR().cart_error || 'Something went wrong.'); e.data = j; throw e; }
+      return j;
+    },
+    // Swap the re-rendered parts in; the overlay shell (and its open state) stays.
+    paint(html) {
+      if (!html) return;
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const src = doc.getElementById('ov-cart'); if (!src) return;
+      const had = new Set($$('#cartBody .cart-line').map(l => l.dataset.key));
+      ['cartTitle', 'cartBody', 'cartFoot'].forEach(id => {
+        const a = document.getElementById(id), b = doc.getElementById(id);
+        if (a && b) { a.innerHTML = b.innerHTML; a.hidden = b.hidden; }
+      });
+      // only lines new to the bag play the entrance
+      $$('#cartBody .cart-line').forEach(l => had.has(l.dataset.key) && l.classList.add('is-settled'));
+      this.count(+src.dataset.count || 0);
+    },
+    count(n, bump = true) {
+      const was = this.n; this.n = n;
+      const drawer = $('#ov-cart'); if (drawer) drawer.dataset.count = n;
+      $$('[data-cart-count]').forEach(x => (x.textContent = x.closest('.count-dot') && !n ? '' : n));
+      if (bump && was !== undefined && was !== n) MN.bump($('#cartCount'));
+      document.dispatchEvent(new CustomEvent('cart:updated', { detail: { count: n } }));
+    },
+    /** items: [{ id, quantity, properties, selling_plan }] or a product form's FormData.
+        opts.after: 'drawer' | 'notification' | 'page' | 'none' (default: the theme setting).
+        opts.quiet: the caller shows errors itself (no toast). */
+    add(items, opts = {}) {
+      return this.queue(async () => {
+        const body = items instanceof FormData ? items : { items: [].concat(items).map(i => Object.assign({ quantity: 1 }, i)) };
+        let j;
+        try { j = await this.post(routes().cart_add_url ? routes().cart_add_url + '.js' : '/cart/add.js', body); }
+        catch (err) { if (!opts.quiet) MN.toast(err.message); throw err; }
+        const added = j.items || [j];
+        const after = opts.after || (window.theme_settings && window.theme_settings.cart_type) || 'drawer';
+        if (after === 'page') { location.href = routes().cart_url || '/cart'; return j; }
+        this.paint(j.sections && j.sections[this.section]);
+        if (after === 'notification') this.notify(added[0]);
+        else if (after !== 'none' && $('#ov-cart')) MN.overlay.open('ov-cart', opts.opener);
+        return j;
+      });
+    },
+    change(key, quantity) {
+      return this.queue(async () => {
+        const j = await this.post(routes().cart_change_url ? routes().cart_change_url + '.js' : '/cart/change.js', { id: key, quantity });
+        this.paint(j.sections && j.sections[this.section]);
+        const line = (j.items || []).find(i => i.key === key);
+        if (quantity > 0 && line && line.quantity < quantity) MN.toast((STR().cart_only_left || 'Only __N__ available').replace('__N__', line.quantity));
+        return j;
+      });
+    },
+    // Re-read the cart (another tab, back/forward cache, an app changed it)
+    refresh() {
+      return this.queue(async () => {
+        const r = await fetch(`${location.pathname}?sections=${this.section}`, { headers: { Accept: 'application/json' } });
+        if (r.ok) this.paint((await r.json())[this.section]);
+      });
+    },
+    notify(item) {
+      const el = $('#cartNotify'); if (!el || !item) return;
+      const line = item.key && $(`#cartBody .cart-line[data-key="${CSS.escape(item.key)}"]`);
+      const img = line && line.querySelector('.cart-line__img img');
+      const vars = line ? $$('.cart-line__variant', line).map(v => v.textContent.trim()).filter(Boolean).join(' · ') : (item.variant_title || '');
+      const price = line ? line.dataset.unit : '';
+      $('#cartNotifyItem').innerHTML = `<span class="cart-line__img">${img ? `<img class="mn-fill" src="${esc(img.currentSrc || img.src)}" alt="">` : ''}</span><div><span class="cart-line__title">${esc(item.product_title || item.title)}</span>${vars ? `<span class="cart-line__variant">${esc(vars)}</span>` : ''}${price ? `<span class="cart-notify__price">${esc(price)}</span>` : ''}</div>`;
+      el.classList.add('is-open');
+      const arm = () => { clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('is-open'), 5000); };
+      arm();
+      if (!el._bound) {
+        el._bound = 1;
+        el.addEventListener('mouseenter', () => clearTimeout(el._t));
+        el.addEventListener('focusin', () => clearTimeout(el._t));
+        el.addEventListener('mouseleave', () => el.classList.contains('is-open') && arm());
+        el.addEventListener('click', e => { if (e.target.closest('[data-notify-close],[data-open]')) { clearTimeout(el._t); el.classList.remove('is-open'); } });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && el.classList.contains('is-open')) el.classList.remove('is-open'); });
+      }
+    },
+  };
+
+  // Steppers and remove, delegated so they survive every re-render
+  document.addEventListener('click', e => {
+    const line = e.target.closest('#cartBody .cart-line'); if (!line) return;
+    const st = e.target.closest('[data-step-q]'), rm = e.target.closest('[data-remove]');
+    if (!st && !rm) return;
+    e.preventDefault();
+    const key = line.dataset.key, max = line.dataset.max ? +line.dataset.max : Infinity;
+    const fail = err => { line.classList.remove('is-busy', 'is-leaving'); line.style.height = ''; MN.toast(err.message); C.refresh(); };
+    if (rm) {
+      // collapse the line, then remove it
+      line.style.height = line.offsetHeight + 'px'; void line.offsetHeight;
+      line.classList.add('is-leaving'); line.style.height = '0px';
+      C.change(key, 0).catch(fail);
+      return;
+    }
+    const cur = +line.dataset.qty, next = Math.max(1, Math.min(max, cur + +st.dataset.stepQ));
+    if (next === cur) { line.classList.remove('is-shake'); void line.offsetWidth; line.classList.add('is-shake'); return; }
+    line.dataset.qty = next;
+    const out = line.querySelector('.stepper span'); if (out) out.textContent = next;
+    line.classList.add('is-busy');
+    clearTimeout(line._t);
+    // a burst of clicks becomes one request
+    line._t = setTimeout(() => C.change(key, +line.dataset.qty).catch(fail), 280);
+  });
+
+  const bindCart = () => {
+    const d = $('#ov-cart'); if (!d || d._bound) return; d._bound = 1;
+    C.count(+d.dataset.count || 0, false);
+  };
+  window.addEventListener('pageshow', e => { if (e.persisted && $('#ov-cart')) C.refresh(); });
+
+  const boot = root => { MN.initTabs(root || document); bindHeader(); bindFooter(); bindCart(); };
   document.addEventListener('DOMContentLoaded', () => boot());
   document.addEventListener('shopify:section:load', e => { if (e.target.querySelector('#siteHeader')) { H.cur = null; } boot(e.target); });
 })();

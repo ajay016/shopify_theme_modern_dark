@@ -24,3 +24,23 @@
 
 /* The header is in the page flow; the old fixed-header offset is gone */
 .site-header[data-sticky="false"] { position: relative; }
+
+/* ---- Cart drawer (sections/cart-drawer.liquid) ---- */
+.overlay__foot[hidden]{display:none}
+.cart-line__img{position:relative;display:block;overflow:hidden;background:var(--bg-soft)}
+.cart-line__title{color:inherit}
+.cart-line__title:hover{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.cart-line__disc{display:flex;align-items:center;gap:5px}
+.cart-line__price{display:grid;justify-items:end;gap:2px;font-variant-numeric:tabular-nums;transition:opacity var(--dur-fast)}
+.cart-line__was{color:var(--muted);font-size:12px}
+.cart-line.is-settled{animation:none}
+.cart-line.is-busy .cart-line__price{opacity:.45}
+.cart-line.is-shake .stepper{animation:shake .4s var(--ease-out)}
+.cart-line.is-leaving{overflow:hidden;opacity:0;padding-block:0;border-bottom-color:transparent;pointer-events:none;transition:height var(--dur) var(--ease-out),opacity var(--dur-fast),padding var(--dur) var(--ease-out)}
+.stepper button:disabled{opacity:.35;cursor:default}
+.cart-sub--disc{font-size:var(--fs-sm);font-weight:var(--fw-regular);color:var(--muted)}
+.cart-sub--disc span:first-child{display:flex;align-items:center;gap:6px}
+.mn-cart-empty{display:grid;justify-items:start;gap:16px}
+.mn-cart-empty p{margin:0}
+.mn-cart-form{display:contents}
+.cart-notify__item .cart-line__img{aspect-ratio:3/4;border-radius:max(0px,calc(var(--r-card) - 4px))}

@@ -164,10 +164,10 @@
   {%- comment -%}Header{%- endcomment -%}
   {%- section 'header' -%}
 
-  {%- comment -%}Cart Drawer (when drawer mode enabled){%- endcomment -%}
-  {%- if settings.cart_type == 'drawer' -%}
+  {%- comment -%}Cart drawer + notification (drawer and notification modes){%- endcomment -%}
+  {%- unless settings.cart_type == 'page' -%}
     {%- section 'cart-drawer' -%}
-  {%- endif -%}
+  {%- endunless -%}
 
   {%- comment -%}Quick View Modal (global, filled via JS){%- endcomment -%}
   {%- if settings.quickview_enabled -%}
@@ -210,7 +210,10 @@
       collections:      {{ 'mn.collections' | t | json }},
       pages:            {{ 'mn.pages' | t | json }},
       view_all_results: {{ 'mn.view_all_results' | t: terms: '__TERMS__' | json }},
-      no_results:       {{ 'mn.no_results' | t: terms: '__TERMS__' | json }}
+      no_results:       {{ 'mn.no_results' | t: terms: '__TERMS__' | json }},
+      cart_only_left:   {{ 'mn.cart.only_left' | t: count: '__N__' | json }},
+      cart_error:       {{ 'mn.cart.error' | t | json }},
+      cart_demo:        {{ 'mn.cart.demo' | t | json }}
     };
     window.theme_strings = {
       added_to_cart:           {{ 'cart.added' | t | json }},
@@ -221,6 +224,7 @@
     };
     window.theme_settings = {
       cart_type:        {{ settings.cart_type | json }},
+      money_format:     {{ shop.money_format | json }},
       custom_cursor:    {{ settings.custom_cursor | json }},
       wishlist_enabled: {{ settings.wishlist_enabled | json }},
       quickview_enabled:{{ settings.quickview_enabled | json }},

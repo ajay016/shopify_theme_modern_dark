@@ -1,146 +1,138 @@
+{%- comment -%}
+  Cart drawer and cart notification, built to the Claude Design reference
+  (styles: assets/mn-core.css overlays, assets/mn-product.css cart parts).
+  Rendered in Liquid; assets/mn.js (MN.cart) re-renders it through the
+  Section Rendering API after every add / change, swapping #cartTitle,
+  #cartBody and #cartFoot, so prices always use the store's money format.
+  Theme settings → Cart: cart type (drawer / notification / page) and the
+  free shipping bar.
+{%- endcomment -%}
 {%- liquid
-  assign threshold = settings.cart_free_shipping_threshold | times: 100
-  assign show_bar  = settings.cart_free_shipping_bar
-  assign pct = 0
-  if show_bar and threshold > 0
-    assign pct = cart.total_price | times: 100 | divided_by: threshold | at_most: 100
+  assign threshold = settings.cart_free_shipping_threshold | plus: 0 | times: 100
+  assign show_bar = false
+  if settings.cart_free_shipping_bar and threshold > 0
+    assign show_bar = true
   endif
 -%}
 
-<div id="cart-overlay" class="cart-overlay" aria-hidden="true"></div>
-
-<div
-  id="cart-drawer"
-  class="cart-drawer"
-  role="dialog"
-  aria-modal="true"
-  aria-label="{{ 'cart.title' | t }}"
-  tabindex="-1"
->
-  {%- comment -%}Header{%- endcomment -%}
-  <div class="cart-drawer__header">
-    <div>
-      <h2 class="cart-drawer__title">{{ 'cart.title' | t }}</h2>
-      <p class="cart-drawer__count">
-        {{ 'cart.item_count_other' | t: count: cart.item_count }}
-      </p>
+<div class="overlay overlay--right" id="ov-cart" role="dialog" aria-modal="true" aria-labelledby="cartTitle" data-count="{{ cart.item_count }}">
+  <div class="overlay__scrim" data-close></div>
+  <div class="overlay__panel">
+    <div class="overlay__head">
+      <h2 class="overlay__title" id="cartTitle">{{ 'mn.cart.title' | t: count: cart.item_count }}</h2>
+      <button type="button" class="icon-btn" data-close aria-label="{{ 'mn.cart.close' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
     </div>
-    <button
-      data-close-cart
-      class="header-icon-btn"
-      aria-label="{{ 'accessibility.close_cart' | t }}"
-    >
-      {%- render 'icon-close' -%}
-    </button>
-  </div>
 
-  {%- comment -%}Free shipping bar{%- endcomment -%}
-  {%- if show_bar and threshold > 0 -%}
-    <div class="cart-drawer__shipping-bar">
-      {%- if pct >= 100 -%}
-        <span>{{ 'cart.free_shipping_achieved' | t }}</span>
-      {%- else -%}
-        {%- assign remaining_cents = threshold | minus: cart.total_price -%}
-        {%- assign remaining_money = remaining_cents | money -%}
-        <span>{{ 'cart.free_shipping_message' | t: amount: remaining_money }}</span>
-      {%- endif -%}
-      <div class="shipping-bar__track">
-        <div class="shipping-bar__fill" style="width:{{ pct }}%;"></div>
-      </div>
-    </div>
-  {%- endif -%}
+    <div class="overlay__body" id="cartBody">
+      {%- if cart.item_count > 0 -%}
+        {%- if show_bar -%}
+          {%- liquid
+            assign left = threshold | minus: cart.total_price
+            assign left_money = left | money
+            assign pct = cart.total_price | times: 100 | divided_by: threshold | at_most: 100
+          -%}
+          <div class="ship-progress">
+            <p>
+              {%- if left > 0 -%}
+                {{ 'mn.cart.ship_remaining_html' | t: amount: left_money }}
+              {%- else -%}
+                <svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"></use></svg>{{ 'mn.cart.ship_unlocked_html' | t }}
+              {%- endif -%}
+            </p>
+            <span class="ship-progress__track"><i style="width:{{ pct }}%"></i></span>
+          </div>
+        {%- endif -%}
 
-  {%- comment -%}Body — item list{%- endcomment -%}
-  <div class="cart-drawer__body" id="cart-drawer-items">
-    {%- if cart.item_count == 0 -%}
-      <div class="cart-drawer__empty">
-        <div class="cart-drawer__empty-icon">
-          {%- render 'icon-cart' -%}
-        </div>
-        <h3 class="cart-drawer__empty-title">{{ 'cart.empty' | t }}</h3>
-        <a href="{{ routes.collections_url }}/all" class="btn btn-ghost btn-sm">
-          {{ 'cart.continue_shopping' | t }}
-        </a>
-      </div>
-    {%- else -%}
-      {%- for item in cart.items -%}
-        <div class="cart-item" data-line-key="{{ item.key }}">
-          <a href="{{ item.url }}" class="cart-item__image">
-            {%- if item.image -%}
-              {{
-                item.image
-                | image_url: width: 160
-                | image_tag: loading: 'lazy', alt: item.product.title
-              }}
-            {%- endif -%}
-          </a>
-
-          <div class="cart-item__details">
-            <p class="cart-item__brand">{{ item.vendor }}</p>
-            <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
-            {%- unless item.variant.title == 'Default Title' -%}
-              <p class="cart-item__variant">{{ item.variant.title }}</p>
-            {%- endunless -%}
-
-            <div class="cart-item__qty">
-              <button
-                class="qty-btn"
-                data-qty="{{ item.quantity | minus: 1 }}"
-                aria-label="Decrease quantity"
-              >−</button>
-              <span class="qty-value">{{ item.quantity }}</span>
-              <button
-                class="qty-btn"
-                data-qty="{{ item.quantity | plus: 1 }}"
-                aria-label="Increase quantity"
-              >+</button>
+        {%- for item in cart.items -%}
+          {%- liquid
+            assign max = ''
+            if item.variant.inventory_management == 'shopify' and item.variant.inventory_policy == 'deny'
+              assign max = item.variant.inventory_quantity
+            endif
+          -%}
+          <div class="cart-line" data-key="{{ item.key }}" data-qty="{{ item.quantity }}" data-unit="{{ item.final_price | money | strip_html | escape }}"{% if max != '' %} data-max="{{ max }}"{% endif %}>
+            <a href="{{ item.url }}" class="cart-line__img" tabindex="-1" aria-hidden="true">
+              {%- if item.image -%}
+                {{ item.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: '', class: 'mn-fill', sizes: '76px' }}
+              {%- endif -%}
+            </a>
+            <div class="cart-line__text">
+              <a href="{{ item.url }}" class="cart-line__title">{{ item.product.title }}</a>
+              {%- unless item.product.has_only_default_variant -%}
+                <span class="cart-line__variant">{{ item.variant.options | join: ' · ' }}</span>
+              {%- endunless -%}
+              {%- if item.selling_plan_allocation -%}
+                <span class="cart-line__variant">{{ item.selling_plan_allocation.selling_plan.name }}</span>
+              {%- endif -%}
+              {%- for p in item.properties -%}
+                {%- assign first = p.first | slice: 0 -%}
+                {%- if p.last != blank and first != '_' -%}
+                  <span class="cart-line__variant">{{ p.first }}: {{ p.last }}</span>
+                {%- endif -%}
+              {%- endfor -%}
+              {%- for d in item.line_level_discount_allocations -%}
+                <span class="cart-line__variant cart-line__disc"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-tag"></use></svg>{{ d.discount_application.title }}</span>
+              {%- endfor -%}
+              <div class="stepper" role="group" aria-label="{{ 'mn.cart.quantity_for' | t: title: item.product.title | escape }}">
+                <button type="button" data-step-q="-1" aria-label="{{ 'accessibility.decrease_quantity' | t }}"{% if item.quantity <= 1 %} disabled{% endif %}><svg class="icon icon--sm" aria-hidden="true"><use href="#i-minus"></use></svg></button>
+                <span aria-live="polite">{{ item.quantity }}</span>
+                <button type="button" data-step-q="1" aria-label="{{ 'accessibility.increase_quantity' | t }}"{% if max != '' and item.quantity >= max %} disabled{% endif %}><svg class="icon icon--sm" aria-hidden="true"><use href="#i-plus"></use></svg></button>
+              </div>
             </div>
-
-            <div class="cart-item__bottom">
-              <span class="cart-item__price">{{ item.final_line_price | money }}</span>
-              <button
-                class="cart-item__remove"
-                data-qty="0"
-                aria-label="Remove {{ item.product.title | escape }}"
-                title="Remove"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="m19 6-.867 12.142A2 2 0 0 1 16.138 20H7.862a2 2 0 0 1-1.995-1.858L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-              </button>
+            <div class="cart-line__end">
+              <span class="cart-line__price">
+                {%- if item.original_line_price > item.final_line_price -%}
+                  <s class="cart-line__was">{{ item.original_line_price | money }}</s>
+                {%- endif -%}
+                <span>{{ item.final_line_price | money }}</span>
+              </span>
+              <button type="button" class="link-quiet" data-remove aria-label="{{ 'mn.cart.remove_title' | t: title: item.product.title | escape }}">{{ 'cart.remove' | t }}</button>
             </div>
           </div>
+        {%- endfor -%}
+      {%- else -%}
+        <div class="mn-cart-empty">
+          <p>{{ 'mn.cart.empty' | t }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="mn-btn mn-btn--secondary mn-btn--sm">{{ 'cart.continue_shopping' | t }}</a>
         </div>
-      {%- endfor -%}
-    {%- endif -%}
-  </div>
-
-  {%- comment -%}Footer — always in DOM, JS hides when empty{%- endcomment -%}
-  <div class="cart-drawer__footer"{% if cart.item_count == 0 %} style="display:none"{% endif %}>
-    <div class="cart-drawer__subtotal">
-      <span class="cart-drawer__subtotal-label">{{ 'cart.subtotal' | t }}</span>
-      <span class="cart-drawer__subtotal-price">{{ cart.total_price | money }}</span>
+      {%- endif -%}
     </div>
-    <p class="cart-drawer__taxes">{{ 'cart.taxes_and_shipping' | t }}</p>
 
-    <a
-      href="{{ routes.checkout }}"
-      class="btn btn-primary cart-drawer__checkout"
-    >{{ 'cart.checkout' | t }}</a>
+    <div class="overlay__foot" id="cartFoot"{% if cart.item_count == 0 %} hidden{% endif %}>
+      {%- for d in cart.cart_level_discount_applications -%}
+        <div class="cart-sub cart-sub--disc"><span><svg class="icon icon--sm" aria-hidden="true"><use href="#i-tag"></use></svg>{{ d.title }}</span><span>&minus;{{ d.total_allocated_amount | money }}</span></div>
+      {%- endfor -%}
+      <div class="cart-sub"><span>{{ 'cart.subtotal' | t }}</span><span id="cartSub">{{ cart.total_price | money }}</span></div>
+      <p class="mn-cart-note">{%- if cart.taxes_included or shop.taxes_included -%}{{ 'mn.cart.taxes_included' | t }}{%- else -%}{{ 'mn.cart.taxes_excluded' | t }}{%- endif -%}</p>
+      <form action="{{ routes.cart_url }}" method="post" id="CartDrawerForm" class="mn-cart-form">
+        <button type="submit" name="checkout" class="mn-btn mn-btn--block">{{ 'mn.cart.checkout' | t }}</button>
+      </form>
+      <a href="{{ routes.cart_url }}" class="mn-btn mn-btn--secondary mn-btn--block mn-btn--sm">{{ 'mn.cart.view' | t }}</a>
+    </div>
+  </div>
+</div>
 
-    <button data-close-cart class="cart-drawer__continue">
-      {{ 'cart.continue_shopping' | t }}
-    </button>
+<div class="cart-notify" id="cartNotify" role="status" aria-live="polite">
+  <div class="cart-notify__head">
+    <span><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"></use></svg>{{ 'mn.cart.added' | t }}</span>
+    <button type="button" class="icon-btn" data-notify-close aria-label="{{ 'mn.cart.close_notice' | t }}"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-close"></use></svg></button>
+  </div>
+  <div class="cart-notify__item" id="cartNotifyItem"></div>
+  <div class="cart-notify__actions">
+    <button type="button" class="mn-btn mn-btn--secondary mn-btn--sm" data-open="ov-cart">{%- capture n_html -%}<span data-cart-count>{{ cart.item_count }}</span>{%- endcapture -%}<span>{{ 'mn.cart.view_count_html' | t: n: n_html }}</span></button>
+    <button type="submit" form="CartDrawerForm" name="checkout" class="mn-btn mn-btn--sm">{{ 'mn.cart.checkout' | t }}</button>
   </div>
 </div>
 
 {% schema %}
 {
-  "name": "Cart Drawer",
+  "name": "Cart drawer",
   "class": "cart-drawer-section",
   "limit": 1,
-  "settings": [],
-  "presets": [
+  "settings": [
     {
-      "name": "Cart Drawer"
+      "type": "paragraph",
+      "content": "Cart type and the free shipping bar are in Theme settings → Cart."
     }
   ]
 }

@@ -75,8 +75,19 @@ This file is the plan and the record. Update the checkboxes as phases land.
       `scripts/footer-test.js` (46 checks: parts per style, contrast on every surface and
       scheme, no overflow at 390). Selects now right-align while closed too, so a hidden
       list never widens the page on phones.
-- [ ] **D4 Cart** — cart drawer (shipping progress, steppers, remove), cart notification,
-      toast, Ajax cart, header count bump.
+- [x] **D4 Cart** — `sections/cart-drawer.liquid` in the design markup (`#ov-cart`
+      drawer + `#cartNotify` card), rendered by Shopify and re-rendered through the Section
+      Rendering API on every add / change (`MN.cart` in `assets/mn.js`: one request at a
+      time, optimistic stepper with one request per burst, stock cap, animated remove,
+      only new lines animate in, count bump, `cart:updated` event, bfcache refresh).
+      Theme settings → Cart → cart type: drawer / notification / page; free shipping bar.
+      Line properties, selling plans, line and cart discounts, taxes-included note.
+      Prices always come from Liquid; `formatMoney` now follows `shop.money_format`.
+      Old drawer / notification / toast JS and CSS removed; `MaisonNoir.addToCart`,
+      `showToast`, `showCartNotification` kept as wrappers. Test `scripts/cart-check.py` +
+      `scripts/cart-test.js` (24 checks, mocked Ajax API).
+      For D7: the cart page's steppers / remove have no script yet, and
+      `cart_show_recommendations` does not gate the cart page upsell.
 - [ ] **D5 Product card, quick view, compare** — the design card everywhere, quick view
       modal / bottom sheet with the same pickers, compare tray and table.
 - [ ] **D6 Product page** — 8 layouts, 11 gallery positions, media (image, video, 3D,

@@ -1,0 +1,38 @@
+{%- comment -%}
+  Full-bleed banner, built to the Claude Design reference (.banner-sec):
+  image with a left shade, eyebrow, display title, text and a light button.
+{%- endcomment -%}
+{%- assign ss = section.settings -%}
+<section class="banner-sec reveal" style="min-height:{{ ss.height }}px">
+  <div class="banner-sec__bg">
+    {%- if ss.image != blank -%}
+      {{ ss.image | image_url: width: 2400 | image_tag: loading: 'lazy', class: 'mn-fill', sizes: '100vw', widths: '800,1200,1600,2000,2400', alt: ss.image.alt | default: '' }}
+    {%- else -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'mn-fill media__ph' }}
+    {%- endif -%}
+  </div>
+  <div class="mn-container mn-container--wide banner-sec__copy">
+    {%- if ss.eyebrow != blank -%}<span class="mn-eyebrow">{{ ss.eyebrow }}</span>{%- endif -%}
+    {%- if ss.title != blank -%}<h2 class="banner-sec__title">{{ ss.title }}</h2>{%- endif -%}
+    {%- if ss.text != blank -%}<p>{{ ss.text }}</p>{%- endif -%}
+    {%- if ss.button_label != blank -%}<a href="{{ ss.button_link | default: routes.all_products_collection_url }}" class="mn-btn mn-btn--light">{{ ss.button_label }}</a>{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Editorial banner",
+  "tag": "div",
+  "class": "section-mn-banner",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "range", "id": "height", "label": "Minimum height", "min": 360, "max": 800, "step": 20, "unit": "px", "default": 560 },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Silk Edition" },
+    { "type": "inline_richtext", "id": "title", "label": "Title", "default": "Washed in Como, <em>cut in Florence.</em>" },
+    { "type": "text", "id": "text", "label": "Text", "default": "Eleven pieces in 22-momme mulberry silk, finished by hand in our Florence atelier." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Discover the edition" },
+    { "type": "url", "id": "button_link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "Editorial banner" }]
+}
+{% endschema %}

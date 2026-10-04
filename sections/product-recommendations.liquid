@@ -1,58 +1,55 @@
-<section class="section product-recommendations" id="section-{{ section.id }}" data-product-id="{{ product.id }}" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}">
+{%- comment -%}
+  "You may also like", built to the Claude Design reference: section head
+  with eyebrow, display title and View all, then a row of product cards.
+  Filled from Shopify's product recommendations through Section Rendering.
+{%- endcomment -%}
+{%- assign ss = section.settings -%}
+<section class="mn-section product-recommendations" id="section-{{ section.id }}"{% if product %} data-recs="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ ss.products_to_show }}&intent={{ ss.intent | default: 'related' }}"{% endif %}>
   {%- if recommendations.performed? and recommendations.products_count > 0 -%}
-    <div class="container">
-      <div class="section-head">
-        {%- if section.settings.heading != blank -%}
-          <h2 class="section-head__title">{{ section.settings.heading }}</h2>
-        {%- endif -%}
+    <div class="mn-container">
+      <div class="mn-section__head reveal">
+        <div>
+          {%- if ss.eyebrow != blank -%}<span class="mn-eyebrow">{{ ss.eyebrow }}</span>{%- endif -%}
+          {%- if ss.heading != blank -%}<h2 class="section-title">{{ ss.heading }}</h2>{%- endif -%}
+        </div>
+        {%- if ss.link_label != blank -%}<a href="{{ ss.link | default: routes.all_products_collection_url }}" class="link-arrow">{{ ss.link_label }}<svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a>{%- endif -%}
       </div>
-      <div class="product-grid product-grid--{{ section.settings.columns }}">
-        {%- for product in recommendations.products -%}
-          {%- render 'product-card', product: product -%}
-        {%- endfor -%}
+      <div class="row-cards" style="--cols:{{ ss.columns }}">
+        {%- for product in recommendations.products -%}{%- render 'product-card', product: product -%}{%- endfor -%}
       </div>
     </div>
   {%- endif -%}
 </section>
-
-<style>
-  .product-recommendations { padding: var(--section-spacing) 0; border-top: 1px solid var(--border, rgba(200,169,110,.18)); }
-</style>
-
 <script>
-  (function() {
-    const section = document.getElementById('section-{{ section.id }}');
-    if (!section || section.querySelector('.product-card')) return;
-    const url = section.dataset.url;
-    if (!url) return;
-    fetch(url)
-      .then(r => r.text())
-      .then(html => {
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        const inner = doc.querySelector('.product-recommendations');
-        if (inner) section.innerHTML = inner.innerHTML;
-      })
-      .catch(() => {});
+  (() => {
+    const s = document.getElementById('section-{{ section.id }}');
+    if (!s || s.querySelector('.card') || !s.dataset.recs) return;
+    fetch(s.dataset.recs).then(r => r.text()).then(html => {
+      const inner = new DOMParser().parseFromString(html, 'text/html').querySelector('.product-recommendations');
+      if (inner && inner.innerHTML.trim()) { s.innerHTML = inner.innerHTML; s.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible')); }
+    }).catch(() => {});
   })();
 </script>
 
 {% schema %}
 {
-  "name": "Product Recommendations",
-  "tag": "section",
+  "name": "Product recommendations",
+  "tag": "div",
+  "class": "section-product-recommendations",
   "settings": [
-    { "type": "text",  "id": "heading",          "label": "Heading",           "default": "You May Also Like" },
-    { "type": "range", "id": "products_to_show", "label": "Products to Show",  "min": 2, "max": 8, "step": 1, "default": 4 },
-    {
-      "type": "select", "id": "columns", "label": "Columns",
-      "options": [
-        { "value": "2", "label": "2" },
-        { "value": "3", "label": "3" },
-        { "value": "4", "label": "4" }
-      ],
-      "default": "4"
-    }
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Recommended" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "You may <em>also like</em>" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "View all" },
+    { "type": "url", "id": "link", "label": "Link" },
+    { "type": "select", "id": "intent", "label": "Show", "default": "related", "options": [
+      { "value": "related", "label": "Related products" },
+      { "value": "complementary", "label": "Complementary products (set in Search & Discovery)" }
+    ] },
+    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "select", "id": "columns", "label": "Columns on desktop", "default": "4", "options": [
+      { "value": "2", "label": "2" }, { "value": "3", "label": "3" }, { "value": "4", "label": "4" }
+    ] }
   ],
-  "presets": [{ "name": "Product Recommendations" }]
+  "presets": [{ "name": "Product recommendations" }]
 }
 {% endschema %}

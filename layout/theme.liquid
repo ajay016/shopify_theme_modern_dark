@@ -173,8 +173,9 @@
 
   {%- comment -%}Quick View Modal (global, filled via JS){%- endcomment -%}
   {%- if settings.quickview_enabled -%}
-    <div id="quick-view-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-label="{{ 'quick_view.title' | t }}">
-      <div class="quick-view-modal" id="quick-view-modal"></div>
+    <div class="overlay overlay--modal" id="ov-quick" role="dialog" aria-modal="true" aria-labelledby="ov-quick-t">
+      <div class="overlay__scrim" data-close></div>
+      <div class="overlay__panel"><span class="sheet-handle"></span><button type="button" class="icon-btn qv__close" data-close aria-label="{{ 'mn.pdp.close_quick' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button><div id="qvBody" style="min-height:0;display:flex;flex-direction:column"></div></div>
     </div>
   {%- endif -%}
 
@@ -217,6 +218,7 @@
       cart_only_left:   {{ 'mn.cart.only_left' | t: count: '__N__' | json }},
       cart_error:       {{ 'mn.cart.error' | t | json }},
       cart_demo:        {{ 'mn.cart.demo' | t | json }},
+      in_compare:       {{ 'mn.pdp.in_compare' | t | json }},
       add:              {{ 'mn.card.add' | t | json }},
       choose:           {{ 'mn.card.choose' | t | json }},
       cmp:              {
@@ -261,6 +263,7 @@
 
   {{ 'theme.js' | asset_url | script_tag }}
   {{ 'mn.js' | asset_url | script_tag }}
+  {{ 'mn-product.js' | asset_url | script_tag }}
 
   {%- if settings.custom_cursor -%}
     {{ 'custom-cursor.js' | asset_url | script_tag }}

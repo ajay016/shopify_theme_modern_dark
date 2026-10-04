@@ -1,0 +1,92 @@
+{%- comment -%}
+  The product as JSON for assets/mn-product.js (product page pickers,
+  sticky bar, quick view). Options carry their kind (colour / size / other)
+  and, for colours, a swatch style and an image; variants carry stock when
+  Shopify tracks it and stops selling at zero.
+  Accepts: product, colour_names, size_names (comma lists, lower case)
+{%- endcomment -%}
+{%- liquid
+  assign colour_names = colour_names | default: 'color,colour,couleur,farbe,colore,kleur' | downcase | replace: ', ', ',' | replace: ' ,', ',' | strip | split: ','
+  assign size_names = size_names | default: 'size,taille,größe,grösse,taglia,maat,talla' | downcase | replace: ', ', ',' | replace: ' ,', ',' | strip | split: ','
+  assign rating = product.metafields.reviews.rating.value.rating | default: product.metafields.reviews.rating.value | default: 0
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+-%}
+{
+  "id": {{ product.id }},
+  "handle": {{ product.handle | json }},
+  "title": {{ product.title | json }},
+  "vendor": {{ product.vendor | json }},
+  "url": {{ product.url | json }},
+  "available": {{ product.available | json }},
+  "rating": {{ rating | json }},
+  "reviews": {{ rating_count | json }},
+  "options": [
+    {%- for opt in product.options_with_values -%}
+      {%- liquid
+        assign opt_i = forloop.index0
+        assign key = opt.name | downcase | strip
+        assign kind = 'other'
+        if colour_names contains key
+          assign kind = 'colour'
+        elsif size_names contains key
+          assign kind = 'size'
+        endif
+      -%}
+      {"name": {{ opt.name | json }}, "kind": {{ kind | json }}, "values": [
+        {%- for val in opt.values -%}
+          {%- liquid
+            assign img = nil
+            if kind == 'colour'
+              for v in product.variants
+                if v.options[opt_i] == val and v.featured_image
+                  assign img = v.featured_image
+                  break
+                endif
+              endfor
+              if img == nil
+                assign vk = val | downcase | strip
+                for im in product.images
+                  assign ia = im.alt | downcase
+                  if ia contains vk
+                    assign img = im
+                    break
+                  endif
+                endfor
+              endif
+            endif
+          -%}
+          {%- capture sw -%}{%- if kind == 'colour' -%}{%- render 'swatch-style', label: val, swatch: val.swatch -%}{%- endif -%}{%- endcapture -%}
+          {"label": {{ val | json }}, "swatch": {{ sw | strip | json }}, "image": {% if img %}{{ img | image_url: width: 400 | json }}{% else %}null{% endif %}}{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]}{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ],
+  "variants": [
+    {%- for v in product.variants -%}
+      {%- liquid
+        assign stock = 'null'
+        if v.inventory_management == 'shopify' and v.inventory_policy == 'deny'
+          assign stock = v.inventory_quantity | at_least: 0
+        endif
+        assign unit = 'null'
+        if v.unit_price_measurement
+          capture unit
+            echo '{"price":' | append: v.unit_price | append: ',"ref":'
+            if v.unit_price_measurement.reference_value != 1
+              echo v.unit_price_measurement.reference_value | append: v.unit_price_measurement.reference_unit | json
+            else
+              echo v.unit_price_measurement.reference_unit | json
+            endif
+            echo '}'
+          endcapture
+        endif
+      -%}
+      {"id": {{ v.id }}, "title": {{ v.title | json }}, "opts": {{ v.options | json }}, "available": {{ v.available | json }}, "price": {{ v.price }}, "compare": {{ v.compare_at_price | default: 0 }}, "stock": {{ stock }}, "sku": {{ v.sku | json }}, "media": {% if v.featured_media %}{{ v.featured_media.id }}{% else %}null{% endif %}, "image": {% if v.featured_image %}{{ v.featured_image | image_url: width: 600 | json }}{% else %}null{% endif %}, "unit": {{ unit }}, "plans": {{ v.requires_selling_plan | json }}}{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ],
+  "media": [
+    {%- for m in product.media -%}
+      {"id": {{ m.id }}, "type": {{ m.media_type | json }}, "alt": {{ m.alt | default: '' | json }}, "src": {{ m.preview_image | image_url: width: 1600 | json }}, "thumb": {{ m.preview_image | image_url: width: 300 | json }}, "ratio": {{ m.preview_image.aspect_ratio | default: 0.8 | json }}}{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}

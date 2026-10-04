@@ -55,6 +55,10 @@ This file is the plan and the record. Update the checkboxes as phases land.
 
 ## Phases
 
+Each phase is built, tested, pushed and reported on its own (owner's instruction,
+2026-10-04: "make a plan, do it in phases and push, then tell me what you did, what
+is left and what I need to check").
+
 - [x] **D1 Foundation** (6b32c83) — fonts (Newsreader + Geist + Geist Mono as a pairing, made the
       store font), tokens, schemes and surfaces, radius and motion mapped from settings,
       core components, icon sprite, overlay / accordion / tabs / select / qty / toast /
@@ -105,13 +109,32 @@ This file is the plan and the record. Update the checkboxes as phases land.
       (42 checks). **Quick view moves to D6**: it is built from the product page's
       pickers, price and buy button, so it lands with them; until then the card opens
       the existing quick view.
-- [ ] **D6 Product page** — 8 layouts, 11 gallery positions, media (image, video, 3D,
-      zoom, lightbox, popup video), 15 reorderable blocks, all picker types, qty styles,
-      custom buy button states, terms, notify-me, buy now, dynamic checkout, pickup,
-      offer, shipping, trust, ask / compare / share, details styles and placements,
-      sticky info column, smart sticky bar, size guide, compare colours, ask a question,
-      pickup drawer; sections below (complete the look, recommendations, banner,
-      recently viewed).
+- [x] **D6 Product page + quick view** — `sections/main-product.liquid` in the design's
+      markup. Every option in the design's "Product page" and "Buy button" panels is a
+      section setting (Online Store → Customize → a product → Product): layout (8),
+      gallery (11), image height, video popup / inline, zoom, colour-only images, colour
+      option type (5), size option type (3), details style (9) and placement (4) with
+      per-section modes, quantity style (3), button label / style / icon / hover, after
+      adding (drawer / notification), smart sticky bar, sticky info column, low-stock and
+      stock-bar levels, size guide (page or chart with cm/in), compare-colours and ask
+      notes. The 15 information blocks are section blocks (reorder, hide, settings each):
+      vendor/title/rating, price + notes, short description, badges, countdown/stock/
+      visitors, pickers, quantity, terms, buy buttons (+ Shopify dynamic checkout,
+      back-in-stock form), pickup (Shopify store availability), offer, shipping (live
+      delivery dates), trust + payments, ask/compare/share, details; plus Custom Liquid
+      and app blocks. Drawers / modals: size guide, compare colours, ask a question
+      (contact form), pickup stores, lightbox, video, details drawer. Behaviour:
+      `assets/mn-product.js`. Quick view (`templates/product.mn-quick.liquid`, Theme
+      settings → Quick View) uses the same pickers and buy button; the old quick view is
+      removed. Below the product: `mn-complete-look` (hotspots, add, add all),
+      `product-recommendations` and `recently-viewed` in the design's markup,
+      `mn-banner`. Product templates rewritten (default, digital, gradient, wide).
+      Colours: the design's palette is the fixed default scheme "Olive"; floating header
+      and rounded corners set as in the owner's screenshot. Test `scripts/pdp-check.py` +
+      `scripts/pdp-test.js` (81 checks).
+      Needs the store: a countdown end date (block setting), a reviews app widget for the
+      review list (section setting), pickup locations, product videos / 3D, and the
+      custom.material / origin / care / summary metafields where wanted.
 - [ ] **D7 Other pages** — collection, cart page, search, account, blog, pages,
       homepages: same tokens, type, buttons, fields, cards and motion.
 - [ ] **D8 Verification** — every setting renders and works (audit), editor re-render,

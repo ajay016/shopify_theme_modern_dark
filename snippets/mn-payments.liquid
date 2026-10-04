@@ -1,0 +1,32 @@
+{%- comment -%}Payment pills (design .pay) from the store's enabled payment types.{%- endcomment -%}
+{%- for type in shop.enabled_payment_types -%}
+  {%- liquid
+    case type
+      when 'visa'
+        assign pl = 'Visa'
+      when 'master'
+        assign pl = 'Mastercard'
+      when 'american_express'
+        assign pl = 'Amex'
+      when 'paypal'
+        assign pl = 'PayPal'
+      when 'apple_pay'
+        assign pl = 'Apple Pay'
+      when 'google_pay'
+        assign pl = 'Google Pay'
+      when 'shopify_pay'
+        assign pl = 'Shop Pay'
+      when 'diners_club'
+        assign pl = 'Diners Club'
+      when 'unionpay'
+        assign pl = 'UnionPay'
+      when 'jcb'
+        assign pl = 'JCB'
+      when 'klarna'
+        assign pl = 'Klarna'
+      else
+        assign pl = type | replace: '_', ' ' | capitalize
+    endcase
+  -%}
+  <span class="pay">{{ pl }}</span>
+{%- endfor -%}

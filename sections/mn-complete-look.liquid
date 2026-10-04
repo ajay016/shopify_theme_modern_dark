@@ -1,0 +1,109 @@
+{%- comment -%}
+  Complete the look, built to the Claude Design reference (#sections in
+  mn/extras.js): a styled image with numbered hotspots, the pieces with
+  their prices and Add buttons, and the look total with "Add all to bag".
+  Each piece is a block (product + hotspot position).
+{%- endcomment -%}
+{%- liquid
+  assign ss = section.settings
+  assign pieces = section.blocks | where: 'type', 'piece'
+  assign total = 0
+  assign ids = ''
+  for b in pieces
+    assign p = b.settings.product
+    if p != blank and p.available
+      assign total = total | plus: p.first_available_variant.price
+      assign ids = ids | append: p.first_available_variant.id | append: ','
+    endif
+  endfor
+  if ss.include_current and product and product.available
+    assign total = total | plus: product.selected_or_first_available_variant.price
+  endif
+-%}
+{%- if pieces.size > 0 -%}
+<section class="mn-section mn-look-section" data-look data-include-current="{{ ss.include_current }}">
+  <div class="mn-container">
+    <div class="look reveal">
+      <div class="look__img">
+        {%- if ss.image != blank -%}
+          {{ ss.image | image_url: width: 1600 | image_tag: loading: 'lazy', class: 'mn-fill', sizes: '(max-width:989px) 100vw, 50vw', widths: '600,900,1200,1600', alt: ss.image.alt | default: ss.heading | strip_html }}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'mn-fill media__ph' }}
+        {%- endif -%}
+        {%- for b in pieces -%}
+          {%- if b.settings.product != blank -%}
+            <button type="button" class="look__spot" style="left:{{ b.settings.x }}%;top:{{ b.settings.y }}%" data-spot="{{ forloop.index0 }}" aria-label="{{ b.settings.product.title | escape }}" {{ b.shopify_attributes }}>{{ forloop.index }}</button>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      <div class="look__body">
+        {%- if ss.eyebrow != blank -%}<span class="mn-eyebrow">{{ ss.eyebrow }}</span>{%- endif -%}
+        {%- if ss.heading != blank -%}<h2 class="section-title">{{ ss.heading }}</h2>{%- endif -%}
+        {%- if ss.lede != blank -%}<p class="look__lede">{{ ss.lede }}</p>{%- endif -%}
+        <div class="look__items">
+          {%- for b in pieces -%}
+            {%- assign p = b.settings.product -%}
+            {%- if p != blank -%}
+              {%- assign v = p.first_available_variant -%}
+              <div class="look-item" data-spot-item="{{ forloop.index0 }}">
+                <span class="look-item__n">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+                <a href="{{ p.url }}" class="look-item__img" tabindex="-1" aria-hidden="true">{%- if p.featured_image -%}{{ p.featured_image | image_url: width: 240 | image_tag: loading: 'lazy', alt: '', class: 'mn-fill' }}{%- endif -%}</a>
+                <div class="look-item__text">
+                  {%- if p.vendor != blank -%}<span class="card__brand mn-eyebrow">{{ p.vendor }}</span>{%- endif -%}
+                  <a href="{{ p.url }}" class="look-item__title">{{ p.title }}</a>
+                  {%- assign sale = false -%}{%- if p.compare_at_price > p.price -%}{%- assign sale = true -%}{%- endif -%}
+                  <div class="price{% if sale %} price--sale{% endif %}"><span class="price__now">{{ p.price | money }}</span>{%- if sale -%}<s class="price__was">{{ p.compare_at_price | money }}</s>{%- endif -%}</div>
+                </div>
+                {%- if p.available == false -%}
+                  <span class="mn-btn mn-btn--secondary mn-btn--sm" aria-disabled="true">{{ 'products.product.sold_out' | t }}</span>
+                {%- elsif p.has_only_default_variant -%}
+                  <button type="button" class="mn-btn mn-btn--secondary mn-btn--sm" data-look-add="{{ v.id }}">{{ ss.add_label }}</button>
+                {%- elsif settings.quickview_enabled -%}
+                  <button type="button" class="mn-btn mn-btn--secondary mn-btn--sm" data-open-quickview data-product-url="{{ p.url }}">{{ ss.add_label }}</button>
+                {%- else -%}
+                  <a class="mn-btn mn-btn--secondary mn-btn--sm" href="{{ p.url }}">{{ ss.add_label }}</a>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        {%- if ids != blank -%}
+          <div class="look__total">
+            <div><span class="mn-eyebrow">{{ ss.total_label }}</span><span class="look__sum">{{ total | money }}</span></div>
+            <button type="button" class="mn-btn" data-look-all="{{ ids | remove_last: ',' }}">{{ ss.add_all_label }}</button>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+{%- elsif request.design_mode -%}
+<section class="mn-section"><div class="mn-container"><p class="muted-note">{{ 'mn.look.empty' | t }}</p></div></section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Complete the look",
+  "tag": "div",
+  "class": "section-mn-look",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Look image" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Styled with" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "info": "Italic text uses the display italic.", "default": "Complete <em>the look</em>" },
+    { "type": "text", "id": "lede", "label": "Text", "default": "Paired for evening by our studio." },
+    { "type": "text", "id": "add_label", "label": "Add button", "default": "Add" },
+    { "type": "checkbox", "id": "include_current", "label": "Include this product in the total and in Add all", "default": true },
+    { "type": "text", "id": "total_label", "label": "Total label", "default": "Look total with this piece" },
+    { "type": "text", "id": "add_all_label", "label": "Add all button", "default": "Add the look to bag" }
+  ],
+  "blocks": [
+    { "type": "piece", "name": "Piece", "limit": 6, "settings": [
+      { "type": "product", "id": "product", "label": "Product" },
+      { "type": "range", "id": "x", "label": "Hotspot from the left", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+      { "type": "range", "id": "y", "label": "Hotspot from the top", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 }
+    ] }
+  ],
+  "presets": [{ "name": "Complete the look", "blocks": [{ "type": "piece", "settings": { "x": 62, "y": 22 } }, { "type": "piece", "settings": { "x": 30, "y": 58 } }, { "type": "piece", "settings": { "x": 56, "y": 90 } }] }],
+  "enabled_on": { "templates": ["product"] }
+}
+{% endschema %}

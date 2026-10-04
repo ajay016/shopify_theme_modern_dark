@@ -385,7 +385,18 @@
       { "type": "checkbox",  "id": "quickview_enabled",         "label": "Enable quick view",              "default": true },
       { "type": "checkbox",  "id": "quickview_show_description","label": "Show description in quick view", "default": true },
       { "type": "checkbox",  "id": "quickview_show_shipping",   "label": "Show shipping info",             "default": true },
-      { "type": "url",       "id": "size_guide_url",            "label": "Size guide page",                "info": "Adds a Size guide link beside the size options in quick view. Leave empty to hide it." }
+      { "type": "select",    "id": "quickview_colour_type", "label": "Colour option", "default": "colour", "options": [
+        { "value": "image", "label": "Image" }, { "value": "colour", "label": "Colour" }, { "value": "radio", "label": "Radio" }, { "value": "text", "label": "Text" }, { "value": "dropdown", "label": "Dropdown" }
+      ] },
+      { "type": "select",    "id": "quickview_size_type", "label": "Size and other options", "default": "text", "options": [
+        { "value": "text", "label": "Text" }, { "value": "radio", "label": "Radio" }, { "value": "dropdown", "label": "Dropdown" }
+      ] },
+      { "type": "checkbox",  "id": "quickview_buy_now", "label": "Show Buy it now", "default": true },
+      { "type": "text",      "id": "quickview_ship_title", "label": "Delivery line", "default": "Complimentary express delivery" },
+      { "type": "text",      "id": "quickview_ship_text", "label": "Delivery detail", "default": "Arrives in 2–4 business days" },
+      { "type": "text",      "id": "quickview_return_title", "label": "Returns line", "default": "Free returns within 30 days" },
+      { "type": "text",      "id": "quickview_return_text", "label": "Returns detail", "default": "Collected from your door" },
+      { "type": "url",       "id": "size_guide_url",            "label": "Size guide page",                "info": "Adds a Size & fit section with a link to this page in quick view. Leave empty to hide it." }
     ]
   },
   {

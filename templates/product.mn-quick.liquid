@@ -1,0 +1,82 @@
+{%- layout none -%}
+{%- comment -%}
+  Quick view, built to the Claude Design reference (MN.quickView in
+  mn/extras.js): media slider, badges, title, price, pickers, quantity, buy
+  button, Buy it now, wishlist, compare, delivery and details. Fetched as
+  /products/{handle}?view=mn-quick and driven by assets/mn-product.js.
+  Settings: Theme settings → Quick View.
+{%- endcomment -%}
+{%- liquid
+  assign rating = product.metafields.reviews.rating.value.rating | default: product.metafields.reviews.rating.value | default: 0
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+  assign r1 = rating | times: 1.0 | round: 1
+  assign is_new = false
+  if product.tags contains 'new' or product.tags contains 'New'
+    assign is_new = true
+  endif
+  assign summary = product.metafields.custom.summary.value | default: product.description | replace: '</p>', ' </p>' | replace: '</li>', ' </li>' | strip_html | strip | truncatewords: 34
+  assign mat = product.metafields.custom.material.value
+  assign ori = product.metafields.custom.origin.value
+  assign care = product.metafields.custom.care.value
+-%}
+<div class="qv" data-qv data-colour-type="{{ settings.quickview_colour_type | default: 'colour' }}" data-size-type="{{ settings.quickview_size_type | default: 'text' }}" data-low="{{ settings.product_card_low_stock_threshold | default: 5 }}">
+  <script type="application/json" data-product-json>{%- render 'mn-product-json', product: product -%}</script>
+  {%- assign qv_atc = 'mn.card.add' | t -%}
+  {%- render 'mn-pdp-strings', atc: qv_atc -%}
+  <div class="qv__media">
+    <div class="qv__track">
+      {%- for m in product.media -%}
+        <div class="qv__slide" data-media-id="{{ m.id }}" data-colour="{{ m.alt | downcase | strip | escape }}">{{ m.preview_image | image_url: width: 1200 | image_tag: alt: m.alt, class: 'mn-fill', loading: 'lazy', widths: '600,900,1200', sizes: '(max-width:749px) 72vw, 520px' }}</div>
+      {%- else -%}
+        <div class="qv__slide">{{ 'product-apparel-1' | placeholder_svg_tag: 'mn-fill' }}</div>
+      {%- endfor -%}
+    </div>
+    {%- if product.media.size > 1 -%}
+      <div class="qv__thumbs">{%- for m in product.media -%}<button type="button" class="thumb{% if forloop.first %} is-active{% endif %}" data-qv-go="{{ forloop.index0 }}" aria-label="{{ 'mn.pdp.show_media' | t: n: forloop.index }}">{{ m.preview_image | image_url: width: 160 | image_tag: alt: '', class: 'mn-fill', loading: 'lazy' }}</button>{%- endfor -%}</div>
+    {%- endif -%}
+  </div>
+  <div class="qv__info">
+    <div class="qv__meta pi-badges" data-qv-meta data-new="{% if is_new %}true{% endif %}" data-extra="{{ ori | escape }}"></div>
+    <div>
+      {%- if product.vendor != blank -%}<span class="mn-eyebrow">{{ product.vendor }}</span>{%- endif -%}
+      <h2 class="qv__title" id="ov-quick-t">{{ product.title }}</h2>
+      {%- if rating != 0 -%}<span class="pi-rating"><span class="stars" style="--r:{{ r1 }}" role="img" aria-label="{{ 'mn.card.rated' | t: rating: r1 }}"></span><span>{{ r1 }}</span>{%- if rating_count > 0 -%}<span class="pi-rating__count">{{ 'mn.pdp.reviews_count' | t: count: rating_count }}</span>{%- endif -%}</span>{%- endif -%}
+    </div>
+    <div data-qv-price></div>
+    {%- if settings.quickview_show_description and summary != blank -%}<div class="pi-summary"><p>{{ summary }}</p></div>{%- endif -%}
+    <div class="stockbar" data-qv-stock></div>
+    {%- unless product.has_only_default_variant -%}<div class="pi-variants" data-qv-pickers></div>{%- else -%}<div data-qv-pickers hidden></div>{%- endunless -%}
+    <div class="buy">
+      <div class="buy__row">
+        <div data-qv-qty></div>
+        <button type="button" class="mn-btn mn-btn--block atc atc--solid" data-qv-atc data-state="idle"><span class="atc__spinner"></span><span class="atc__icon"><svg class="icon" aria-hidden="true"><use href="#i-bag"></use></svg></span><span class="atc__check"><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg></span><span class="atc__label">{{ 'mn.card.add' | t }}</span></button>
+      </div>
+      <div class="qv__actions">
+        {%- if settings.quickview_buy_now -%}<a class="mn-btn mn-btn--secondary" style="flex:1" data-qv-buynow href="{{ routes.root_url }}">{{ 'products.product.buy_now' | t }}</a>{%- endif -%}
+        {%- if settings.wishlist_enabled -%}<button type="button" class="icon-btn card__wish" data-wishlist-id="{{ product.id }}" data-wishlist-handle="{{ product.handle }}" aria-pressed="false" aria-label="{{ 'mn.card.wish' | t: title: product.title | escape }}"><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg></button>{%- endif -%}
+        {%- if settings.product_card_show_compare -%}<button type="button" class="icon-btn" data-compare-id="{{ product.handle }}" aria-pressed="false" aria-label="{{ 'mn.card.compare' | t: title: product.title | escape }}"><svg class="icon" aria-hidden="true"><use href="#i-compare"></use></svg></button>{%- endif -%}
+      </div>
+    </div>
+    {%- if settings.quickview_show_shipping -%}
+      <div class="info-list">
+        {%- if settings.quickview_ship_title != blank -%}<div class="info-row"><svg class="icon" aria-hidden="true"><use href="#i-truck"></use></svg><div><b>{{ settings.quickview_ship_title }}</b><span>{{ settings.quickview_ship_text }}</span></div></div>{%- endif -%}
+        {%- if settings.quickview_return_title != blank -%}<div class="info-row"><svg class="icon" aria-hidden="true"><use href="#i-return"></use></svg><div><b>{{ settings.quickview_return_title }}</b><span>{{ settings.quickview_return_text }}</span></div></div>{%- endif -%}
+      </div>
+    {%- endif -%}
+    {%- if mat != blank or ori != blank or care != blank or settings.size_guide_url != blank -%}
+      <div>
+        {%- if mat != blank or ori != blank or care != blank -%}
+          <div class="acc"><button type="button" class="acc__trigger" aria-expanded="false">{{ 'mn.pdp.details_care' | t }}<span class="acc__icon"></span></button><div class="acc__panel"><div class="acc__inner"><div class="acc__content"><dl class="spec-dl">
+            {%- if mat != blank -%}<dt>{{ 'mn.compare.material' | t }}</dt><dd>{{ mat }}</dd>{%- endif -%}
+            {%- if ori != blank -%}<dt>{{ 'mn.compare.origin' | t }}</dt><dd>{{ ori }}</dd>{%- endif -%}
+            {%- if care != blank -%}<dt>{{ 'mn.compare.care' | t }}</dt><dd>{{ care }}</dd>{%- endif -%}
+          </dl></div></div></div></div>
+        {%- endif -%}
+        {%- if settings.size_guide_url != blank -%}
+          <div class="acc"><button type="button" class="acc__trigger" aria-expanded="false">{{ 'mn.pdp.size_fit' | t }}<span class="acc__icon"></span></button><div class="acc__panel"><div class="acc__inner"><div class="acc__content"><a class="link-quiet" href="{{ settings.size_guide_url }}">{{ 'mn.pdp.open_size_guide' | t }}</a></div></div></div></div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    <a href="{{ product.url }}" class="link-arrow qv__full">{{ 'products.product.view_full_details' | t }}<svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a>
+  </div>
+</div>

@@ -487,6 +487,8 @@
     async paint() {
       const ids = this.ids;
       $$('[data-compare-id]').forEach(b => b.setAttribute('aria-pressed', ids.includes(b.dataset.compareId)));
+      // the product page's Compare action reads "In compare" while chosen
+      $$('[data-cmp-main]').forEach(b => { const sp = b.querySelector('span'); if (!sp) return; sp.dataset.off = sp.dataset.off || sp.textContent; sp.textContent = ids.includes(b.dataset.compareId) ? (STR().in_compare || 'In compare') : sp.dataset.off; });
       const tray = $('#cmpTray'); if (!tray) return;
       tray.classList.toggle('is-visible', ids.length > 0);
       const n = tray.querySelector('[data-cmp-count]'); if (n) n.textContent = ids.length;

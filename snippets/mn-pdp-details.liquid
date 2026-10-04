@@ -1,0 +1,126 @@
+{%- comment -%}
+  Description, shipping & returns and reviews, in the style the section
+  settings choose (renderDetails in the design's mn/product.js, done in
+  Liquid): accordion, accordion cards, tabs, pill tabs, vertical tabs, open
+  sections, drawer links, or one style per section.
+  Accepts: product, ss (section.settings), all (style for every section, or
+  blank for per section), first_open (bool), sid (section id)
+{%- endcomment -%}
+{%- liquid
+  assign rating = product.metafields.reviews.rating.value.rating | default: product.metafields.reviews.rating.value | default: 0
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+  assign ship_html = ss.shipping_content
+  if ss.shipping_page
+    assign ship_html = ss.shipping_page.content
+  endif
+  assign keys = ''
+  if product.description != blank
+    assign keys = keys | append: 'desc,'
+  endif
+  if ship_html != blank
+    assign keys = keys | append: 'ship,'
+  endif
+  if ss.reviews_show and rating != 0 or ss.reviews_show and ss.reviews_liquid != blank
+    assign keys = keys | append: 'rev,'
+  endif
+  assign keys = keys | split: ','
+-%}
+{%- capture desc_c -%}<div class="prose rte">{{ product.description }}</div>{%- endcapture -%}
+{%- capture ship_c -%}<div class="prose rte">{{ ship_html }}</div>{%- endcapture -%}
+{%- capture rev_c -%}
+  <div class="reviews">
+    <div class="rv-summary">
+      {%- if rating != 0 -%}
+        {%- assign r1 = rating | times: 1.0 | round: 1 -%}
+        <div class="rv-summary__score">{{ r1 }}</div>
+        <span class="stars" style="--r:{{ r1 }}" role="img" aria-label="{{ 'mn.card.rated' | t: rating: r1 }}"></span>
+        <p class="rv-summary__count">{{ 'mn.pdp.based_on' | t: count: rating_count }}</p>
+      {%- endif -%}
+    </div>
+    <div class="rv-list">{{ ss.reviews_liquid }}</div>
+  </div>
+{%- endcapture -%}
+{%- liquid
+  assign desc_t = 'mn.pdp.description' | t
+  assign ship_t = ss.shipping_heading | default: 'Shipping & returns'
+  assign rev_t = 'mn.pdp.reviews' | t
+  capture rev_t_html
+    echo rev_t
+    if rating_count > 0
+      echo '<span class="tab-count">' | append: rating_count | append: '</span>'
+    endif
+  endcapture
+
+  assign tabs = '' | split: ''
+  assign accs = '' | split: ''
+  assign opens = '' | split: ''
+  assign rows = '' | split: ''
+  for k in keys
+    if all != blank
+      assign mode = all
+    else
+      case k
+        when 'desc'
+          assign mode = ss.tab_desc
+        when 'ship'
+          assign mode = ss.tab_ship
+        else
+          assign mode = ss.tab_rev
+      endcase
+    endif
+    assign kk = k | split: ','
+    if mode contains 'accordion'
+      assign accs = accs | concat: kk
+    elsif mode contains 'tabs'
+      assign tabs = tabs | concat: kk
+    elsif mode == 'open'
+      assign opens = opens | concat: kk
+    else
+      assign rows = rows | concat: kk
+    endif
+  endfor
+  assign tab_cls = ''
+  if all == 'tabs-pill'
+    assign tab_cls = 'tabs--pill'
+  elsif all == 'tabs-vertical'
+    assign tab_cls = 'tabs--vertical'
+  endif
+-%}
+{%- if tabs.size > 0 -%}
+  <div class="details-tabs"><div class="tabs {{ tab_cls }}">
+    <div class="tabs__list" role="tablist">
+      {%- for k in tabs -%}
+        <button type="button" role="tab" class="tabs__btn" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" data-tab="{{ forloop.index0 }}">{% case k %}{% when 'desc' %}{{ desc_t }}{% when 'ship' %}{{ ship_t }}{% else %}{{ rev_t_html }}{% endcase %}</button>
+      {%- endfor -%}
+      <span class="tabs__ink"></span>
+    </div>
+    <div class="tabs__panels">
+      {%- for k in tabs -%}
+        <div class="tabs__panel" role="tabpanel" data-panel="{{ forloop.index0 }}"{% unless forloop.first %} hidden{% endunless %}>{% case k %}{% when 'desc' %}{{ desc_c }}{% when 'ship' %}{{ ship_c }}{% else %}{{ rev_c }}{% endcase %}</div>
+      {%- endfor -%}
+    </div>
+  </div></div>
+{%- endif -%}
+{%- if accs.size > 0 -%}
+  <div class="details-accs{% if all == 'accordion-card' %} acc-cards{% endif %}">
+    {%- for k in accs -%}
+      {%- assign open = false -%}
+      {%- if forloop.first and first_open -%}{%- assign open = true -%}{%- endif -%}
+      <div class="acc{% if all == 'accordion-card' %} acc--card{% endif %}{% if open %} is-open{% endif %}" data-dsec-acc="{{ k }}">
+        <button type="button" class="acc__trigger" aria-expanded="{{ open }}">{% case k %}{% when 'desc' %}{{ desc_t }}{% when 'ship' %}{{ ship_t }}{% else %}{{ rev_t_html }}{% endcase %}<span class="acc__icon"></span></button>
+        <div class="acc__panel"><div class="acc__inner"><div class="acc__content">{% case k %}{% when 'desc' %}{{ desc_c }}{% when 'ship' %}{{ ship_c }}{% else %}{{ rev_c }}{% endcase %}</div></div></div>
+      </div>
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+{%- if rows.size > 0 -%}
+  <div class="drows">
+    {%- for k in rows -%}
+      <button type="button" class="drow" data-dsec="{{ k }}">{% case k %}{% when 'desc' %}{{ desc_t }}{% when 'ship' %}{{ ship_t }}{% else %}{{ rev_t }}{% if rating_count > 0 %}<small>{{ rating_count }}</small>{% endif %}{% endcase %}<svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></button>
+      <template id="dsec-{{ sid }}-{{ k }}" data-title="{% case k %}{% when 'desc' %}{{ desc_t | escape }}{% when 'ship' %}{{ ship_t | escape }}{% else %}{{ rev_t | escape }}{% endcase %}"><div class="pi-details">{% case k %}{% when 'desc' %}{{ desc_c }}{% when 'ship' %}{{ ship_c }}{% else %}{{ rev_c }}{% endcase %}</div></template>
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+{%- for k in opens -%}
+  <section class="details-open" data-dsec-open="{{ k }}"><h2 class="details-open__title">{% case k %}{% when 'desc' %}{{ desc_t }}{% when 'ship' %}{{ ship_t }}{% else %}{{ rev_t }}{% endcase %}</h2>{% case k %}{% when 'desc' %}{{ desc_c }}{% when 'ship' %}{{ ship_c }}{% else %}{{ rev_c }}{% endcase %}</section>
+{%- endfor -%}

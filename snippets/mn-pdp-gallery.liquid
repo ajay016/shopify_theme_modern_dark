@@ -1,0 +1,73 @@
+{%- comment -%}
+  Product gallery, built to the Claude Design reference (#gallery in
+  mn/product.js). Images zoom in place and open the lightbox; videos play
+  in a popup or inline (section setting); 3D models use Shopify's viewer.
+  Accepts: product, video_mode ('popup' | 'inline'), zoom (bool)
+{%- endcomment -%}
+{%- liquid
+  assign has_video = false
+  for m in product.media
+    if m.media_type == 'video' or m.media_type == 'external_video'
+      assign has_video = true
+      break
+    endif
+  endfor
+-%}
+<div class="gallery" id="gallery" data-video="{{ video_mode }}"{% unless zoom %} data-no-zoom{% endunless %}>
+  <div class="gallery__thumbs" aria-label="{{ 'mn.pdp.media' | t }}">
+    <button type="button" class="thumbs-nav thumbs-nav--prev" data-thumbs="-1" aria-label="{{ 'mn.pdp.thumbs_prev' | t }}" tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-chevron-left"></use></svg></button>
+    {%- for m in product.media -%}
+      <button type="button" class="thumb{% if forloop.first %} is-active{% endif %}" data-go="{{ forloop.index0 }}" data-media-id="{{ m.id }}" aria-label="{{ 'mn.pdp.show_media' | t: n: forloop.index }}">
+        {{ m.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '', class: 'mn-fill' }}
+        {%- if m.media_type == 'video' or m.media_type == 'external_video' -%}<svg class="icon" aria-hidden="true"><use href="#i-play"></use></svg>{%- elsif m.media_type == 'model' -%}<svg class="icon" aria-hidden="true"><use href="#i-cube"></use></svg>{%- endif -%}
+      </button>
+    {%- endfor -%}
+    <button type="button" class="thumbs-nav thumbs-nav--next" data-thumbs="1" aria-label="{{ 'mn.pdp.thumbs_next' | t }}" tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-chevron-right"></use></svg></button>
+  </div>
+
+  <div class="gallery__main">
+    <div class="gallery__track">
+      {%- for m in product.media -%}
+        {%- assign m_alt = m.alt | default: product.title | escape -%}
+        {%- assign m_colour = m.alt | downcase | strip | escape -%}
+        {%- if forloop.first -%}{%- assign m_load = 'eager' -%}{%- else -%}{%- assign m_load = 'lazy' -%}{%- endif -%}
+        {%- case m.media_type -%}
+          {%- when 'video', 'external_video' -%}
+            <div class="media media--video" data-i="{{ forloop.index0 }}" data-media-id="{{ m.id }}" data-colour="{{ m_colour }}" tabindex="0" role="button" aria-label="{{ 'mn.pdp.play_film' | t }}">
+              <div class="media__art">{{ m.preview_image | image_url: width: 1600 | image_tag: loading: 'lazy', alt: '', class: 'mn-fill', sizes: '(max-width:749px) 100vw, 60vw', widths: '600,900,1200,1600' }}</div>
+              <span class="media__tag"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-play"></use></svg>{{ 'mn.pdp.video' | t }}{% if m.duration %} · {{ m.duration | divided_by: 60000 }}:{{ m.duration | divided_by: 1000 | modulo: 60 | prepend: '0' | slice: -2, 2 }}{% endif %}</span>
+              <span class="media__play"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-play"></use></svg></span>
+              <template class="media__src">
+                {%- if m.media_type == 'video' -%}
+                  {{ m | video_tag: controls: true, playsinline: true, preload: 'metadata', class: 'media__video', image_size: '1600x' }}
+                {%- else -%}
+                  {{ m | external_video_tag: class: 'media__video' }}
+                {%- endif -%}
+              </template>
+            </div>
+          {%- when 'model' -%}
+            <div class="media media--model" data-i="{{ forloop.index0 }}" data-media-id="{{ m.id }}" data-colour="{{ m_colour }}" aria-label="{{ 'mn.pdp.model' | t }}">
+              <div class="media__stage">{{ m | model_viewer_tag: image_size: '1200x', reveal: 'interaction', toggleable: true, camera-controls: true, interaction-prompt-threshold: 0 }}</div>
+              <span class="media__tag"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-cube"></use></svg>{{ 'mn.pdp.model' | t }}</span>
+            </div>
+          {%- else -%}
+            <div class="media media--image" data-i="{{ forloop.index0 }}" data-media-id="{{ m.id }}" data-colour="{{ m_colour }}" tabindex="0" role="button" aria-label="{{ 'mn.pdp.open_image' | t: alt: m_alt }}">
+              <div class="media__art">{{ m.preview_image | image_url: width: 2000 | image_tag: loading: m_load, alt: m_alt, class: 'mn-fill', sizes: '(max-width:749px) 100vw, 60vw', widths: '600,900,1200,1600,2000' }}</div>
+            </div>
+        {%- endcase -%}
+      {%- else -%}
+        <div class="media media--image" data-i="0"><div class="media__art">{{ 'product-apparel-1' | placeholder_svg_tag: 'mn-fill media__ph' }}</div></div>
+      {%- endfor -%}
+    </div>
+    <button type="button" class="gallery__arrow gallery__arrow--prev" data-step="-1" aria-label="{{ 'mn.pdp.prev' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-chevron-left"></use></svg></button>
+    <button type="button" class="gallery__arrow gallery__arrow--next" data-step="1" aria-label="{{ 'mn.pdp.next' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-chevron-right"></use></svg></button>
+    <div class="gallery__dots" aria-hidden="true">{%- for m in product.media -%}<span class="gallery__dot{% if forloop.first %} is-active{% endif %}"></span>{%- endfor -%}</div>
+    <div class="gallery__tools">
+      {%- if has_video -%}
+        <button type="button" class="gallery__film" data-film><span class="gallery__film-dot"><svg class="icon" aria-hidden="true"><use href="#i-play"></use></svg></span><span>{{ 'mn.pdp.watch_film' | t }}</span></button>
+      {%- endif -%}
+      <button type="button" class="icon-btn gallery__expand" aria-label="{{ 'mn.pdp.fullscreen' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-expand"></use></svg></button>
+    </div>
+    <div class="gallery__progress"><i></i></div>
+  </div>
+</div>

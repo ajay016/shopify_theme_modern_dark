@@ -288,8 +288,26 @@
     chips && chips.addEventListener('click', e => { const c = e.target.closest('.chip'); if (c) { inp.value = c.textContent.trim(); render(inp.value); inp.focus(); } });
   }
 
+  /* ==================================================================
+     Footer — wordmark fitted to the width, back to top
+     (docs/claude_design_ref/mn/panel.js → fitWordmark / initFooter)
+     ================================================================== */
+  const fitWordmark = () => {
+    const w = $('.footer__wordmark'), s = w && w.firstElementChild;
+    if (!s || getComputedStyle(w).display === 'none') return;
+    s.style.fontSize = '100px';
+    const avail = w.clientWidth - parseFloat(getComputedStyle(w).paddingLeft) * 2;
+    s.style.fontSize = Math.floor(100 * avail / s.offsetWidth) + 'px';
+  };
+  function bindFooter() {
+    const f = $('#siteFooter'); if (!f || f._mn) return; f._mn = 1;
+    $('#toTop', f)?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    fitWordmark(); document.fonts && document.fonts.ready.then(fitWordmark);
+  }
+  addEventListener('resize', fitWordmark);
+
   /* ---- Boot ---- */
-  const boot = root => { MN.initTabs(root || document); bindHeader(); };
+  const boot = root => { MN.initTabs(root || document); bindHeader(); bindFooter(); };
   document.addEventListener('DOMContentLoaded', () => boot());
   document.addEventListener('shopify:section:load', e => { if (e.target.querySelector('#siteHeader')) { H.cur = null; } boot(e.target); });
 })();

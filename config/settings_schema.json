@@ -477,7 +477,7 @@
           { "value": "base",     "label": "Base — same as the page" },
           { "value": "soft",     "label": "Soft — one step off the page" },
           { "value": "deep",     "label": "Deep — the scheme's richest tone" },
-          { "value": "contrast", "label": "Contrast — inverted" }
+          { "value": "contrast", "label": "Inverted — contrast band" }
         ],
         "default": "soft"
       },
@@ -485,7 +485,10 @@
       { "type": "header", "content": "Newsletter" },
       { "type": "checkbox", "id": "footer_newsletter", "label": "Show newsletter signup", "default": true },
       { "type": "text", "id": "footer_newsletter_heading", "label": "Heading", "default": "Join the list" },
-      { "type": "text", "id": "footer_newsletter_text", "label": "Text", "default": "New collections, private sales and stories from the atelier. No more than twice a month." },
+      { "type": "text", "id": "footer_newsletter_text", "label": "Text (Statement band)", "default": "New collections, private sales and notes from Florence, twice a month." },
+      { "type": "inline_richtext", "id": "footer_band_title", "label": "Band title (Statement style)", "default": "Letters from <em>the atelier</em>" },
+      { "type": "text", "id": "footer_newsletter_note", "label": "Small print", "default": "Unsubscribe at any time. Read our privacy policy." },
+      { "type": "text", "id": "footer_newsletter_done", "label": "Thank-you message", "default": "Thank you. Your first letter arrives on Friday." },
       { "type": "header", "content": "Bottom bar" },
       { "type": "checkbox", "id": "footer_show_localization", "label": "Show country and language selectors", "info": "Appears when the store sells to more than one country or in more than one language.", "default": true },
       { "type": "checkbox", "id": "footer_back_to_top", "label": "Show back to top", "default": true },
@@ -499,6 +502,9 @@
       { "type": "text",         "id": "footer_menu_2_title","label": "Column 2 Heading",     "default": "Brand" },
       { "type": "link_list",    "id": "footer_menu_3",      "label": "Footer Column 3 Menu" },
       { "type": "text",         "id": "footer_menu_3_title","label": "Column 3 Heading",     "default": "Help" },
+      { "type": "link_list",    "id": "footer_menu_4",      "label": "Footer Column 4 Menu" },
+      { "type": "text",         "id": "footer_menu_4_title","label": "Column 4 Heading",     "default": "Stores" },
+      { "type": "text",         "id": "footer_copyright",   "label": "Copyright line", "info": "Leave empty for © year and store name." },
       { "type": "header",       "content": "Social Links" },
       { "type": "url", "id": "social_instagram", "label": "Instagram" },
       { "type": "url", "id": "social_pinterest", "label": "Pinterest" },

@@ -43,7 +43,9 @@ const dir = process.argv[2] || '.';
   check('keyboard: ArrowDown opens and focuses into the panel', (await mega(p)).open && await p.evaluate(() => !!document.activeElement.closest('.mega')));
   await p.keyboard.press('Escape'); await p.waitForTimeout(100);
   check('Escape closes and returns focus', !(await mega(p)).open && await p.evaluate(() => document.activeElement.classList.contains('nav__link')));
-  await p.hover('.nav__item[data-i="1"] .nav__link'); await p.waitForTimeout(500);
+  await p.hover('.nav__item[data-i="1"] .nav__link'); await p.waitForTimeout(300);
+  // let the panel finish animating in, or the hover point is computed mid-move
+  await p.waitForFunction(() => document.querySelector('#mega-1').getAnimations({ subtree: true }).every(a => a.playState !== 'running'), null, { timeout: 3000 }).catch(() => {});
   await p.hover('#mega-1 .flyout__group[data-k="2"]'); await p.waitForTimeout(400);
   const fk = await p.evaluate(() => [document.querySelector('#mega-1').classList.contains('is-open'), document.querySelector('#mega-1 .flyout__pane.is-active').dataset.k, document.querySelector('#mega-1 .flyout__group.is-active').dataset.k]);
   check('flyout: hovering a group shows its links', fk[1] === '2' && fk[2] === '2', JSON.stringify(fk));

@@ -92,4 +92,7 @@ for a in ('rotating', 'static'):
     open(os.path.join(OUT, f'hd_announce_{a}.html'), 'w').write(page('classic', 'columns', True, settings_extra={'announcement_style': a})); n += 1
 open(os.path.join(OUT, 'hd_transparent.html'), 'w').write(page('floating', 'columns', True, home=True)); n += 1
 open(os.path.join(OUT, 'hd_hide.html'), 'w').write(page('classic', 'columns', True, settings_extra={'header_hide_on_scroll': True})); n += 1
+import shutil
+for js in ('theme.js', 'mn.js'):
+    shutil.copy(os.path.join('assets', js), OUT)
 print(f'{n} pages written to {OUT}')

@@ -67,8 +67,14 @@ This file is the plan and the record. Update the checkboxes as phases land.
       Earlier plan line: — announcement bar (3 modes), 4 header styles, transparent over hero,
       compact and hide-on-scroll, 3 mega menu layouts ± images, search overlay with
       predictive results, menu drawer (3 levels).
-- [ ] **D3 Footer** — 3 styles × 4 surfaces, newsletter (band variant), wordmark,
-      localization selects, payments, back to top, phone accordions.
+- [x] **D3 Footer** — `sections/footer.liquid` in the design markup: 3 styles (columns /
+      statement / minimal) × 4 surfaces (base / soft / deep / inverted), newsletter (band
+      variant for Statement), fitted wordmark, localization selects, payment pills, back
+      to top, phone accordions. New Theme settings: band title, newsletter note and
+      thank-you, fourth menu, copyright, YouTube. Test `scripts/footer-check.py` +
+      `scripts/footer-test.js` (46 checks: parts per style, contrast on every surface and
+      scheme, no overflow at 390). Selects now right-align while closed too, so a hidden
+      list never widens the page on phones.
 - [ ] **D4 Cart** — cart drawer (shipping progress, steppers, remove), cart notification,
       toast, Ajax cart, header count bump.
 - [ ] **D5 Product card, quick view, compare** — the design card everywhere, quick view

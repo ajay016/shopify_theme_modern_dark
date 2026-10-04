@@ -1,195 +1,137 @@
+{%- comment -%}
+  Footer, built to the Claude Design reference (styles: assets/mn-footer.css).
+  html[data-footer] (Theme settings → Footer → Footer style) picks the
+  layout: columns · statement · minimal. Footer surface sets data-surface
+  on the footer: base · soft · deep · invert.
+  All parts are rendered; the style's CSS shows the ones it uses.
+{%- endcomment -%}
 {%- liquid
-  assign style = settings.footer_style | default: 'columns'
-  assign tone = settings.footer_tone | default: 'soft'
-  assign show_news = settings.footer_newsletter
-  assign wordmark = settings.footer_wordmark | default: settings.logo_text | default: shop.name
-
-  assign socials = 'instagram,pinterest,tiktok,facebook,x' | split: ','
-  assign has_social = false
-  if settings.social_instagram != blank or settings.social_pinterest != blank or settings.social_tiktok != blank or settings.social_facebook != blank or settings.social_twitter != blank
-    assign has_social = true
+  assign tone = settings.footer_tone | default: 'deep'
+  if tone == 'contrast'
+    assign tone = 'invert'
   endif
+  assign wordmark = settings.footer_wordmark | default: settings.logo_text | default: shop.name
+  assign done_msg = settings.footer_newsletter_done
 -%}
 
-{%- comment -%}
-  Three footer styles (Theme settings → Footer → Footer style):
-    columns    brand, newsletter and social on the left; link columns right
-    statement  a newsletter band on top, columns, and an oversized wordmark
-    minimal    centred: logo, one row of links, social, compact newsletter
-  Colours come from the scheme's tonal ladder (Footer surface), never a
-  fixed cream, which was unreadable on the light schemes. On phones the
-  link columns fold into accordions.
-{%- endcomment -%}
+<footer class="site-footer" id="siteFooter" data-surface="{{ tone }}">
+  {%- if settings.footer_newsletter -%}
+    <div class="footer__band">
+      <div class="mn-container footer__band-inner">
+        <h2 class="footer__band-title">{{ settings.footer_band_title }}</h2>
+        {%- form 'customer', id: 'FooterBandNewsletter', class: 'mn-newsletter mn-newsletter--band' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <label class="mn-newsletter__label" for="FooterBandEmail">{{ settings.footer_newsletter_text }}</label>
+          {%- if form.posted_successfully? -%}
+            <p class="mn-newsletter__done" style="display:flex"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"></use></svg>{{ done_msg }}</p>
+          {%- else -%}
+            <div class="mn-newsletter__field"><input id="FooterBandEmail" type="email" name="contact[email]" placeholder="{{ 'newsletter.label' | t }}" required autocomplete="email"><button type="submit">{{ 'newsletter.button' | t }}<svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow-right"></use></svg></button></div>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    </div>
+  {%- endif -%}
 
-{%- capture logo_markup -%}
-  <a href="{{ routes.root_url }}" class="site-footer__logo" aria-label="{{ shop.name | escape }}">
-    {%- if settings.footer_logo != blank -%}
-      {{ settings.footer_logo | image_url: width: 320 | image_tag: loading: 'lazy', alt: shop.name, width: 160, height: settings.footer_logo.height | times: 160 | divided_by: settings.footer_logo.width }}
-    {%- elsif settings.logo != blank -%}
-      {{ settings.logo | image_url: width: 320 | image_tag: loading: 'lazy', alt: shop.name, width: 160, height: settings.logo.height | times: 160 | divided_by: settings.logo.width }}
-    {%- else -%}
-      {{ settings.logo_text | default: shop.name }}
-    {%- endif -%}
-  </a>
-{%- endcapture -%}
+  <div class="mn-container footer__main">
+    <div class="footer__brand">
+      <a href="{{ routes.root_url }}" class="footer__logo">
+        {%- if settings.footer_logo != blank -%}
+          {{ settings.footer_logo | image_url: width: 320 | image_tag: loading: 'lazy', alt: shop.name, width: 160, class: 'header__logo-img' }}
+        {%- else -%}
+          {{ settings.logo_text | default: shop.name }}
+        {%- endif -%}
+      </a>
+      {%- if settings.footer_description != blank -%}
+        <p class="footer__desc">{{ settings.footer_description | strip_html }}</p>
+      {%- endif -%}
+      {%- assign row = linklists[settings.footer_menu_1] -%}
+      {%- if row.links.size > 0 -%}
+        <nav class="footer__linkrow" aria-label="{{ settings.footer_menu_1_title | default: row.title | escape }}">
+          {%- for l in row.links -%}<a href="{{ l.url }}">{{ l.title }}</a>{%- endfor -%}
+        </nav>
+      {%- endif -%}
+      {%- if settings.footer_newsletter -%}
+        {%- form 'customer', id: 'FooterNewsletter', class: 'mn-newsletter' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <label class="mn-newsletter__label" for="FooterEmail">{{ settings.footer_newsletter_heading }}</label>
+          {%- if form.posted_successfully? -%}
+            <p class="mn-newsletter__done" style="display:flex"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"></use></svg>{{ done_msg }}</p>
+          {%- else -%}
+            <div class="mn-newsletter__field"><input id="FooterEmail" type="email" name="contact[email]" placeholder="{{ 'newsletter.label' | t }}" required autocomplete="email"><button type="submit">{{ 'newsletter.button' | t }}<svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow-right"></use></svg></button></div>
+            {%- if settings.footer_newsletter_note != blank -%}<p class="mn-newsletter__note">{{ settings.footer_newsletter_note }}</p>{%- endif -%}
+            {%- if form.errors -%}<p class="mn-newsletter__note" role="alert">{{ 'newsletter.error' | t }}</p>{%- endif -%}
+          {%- endif -%}
+        {%- endform -%}
+      {%- endif -%}
+      {%- render 'mn-social' -%}
+    </div>
 
-{%- capture social_markup -%}
-  {%- if has_social -%}
-    <ul class="footer-social" role="list" aria-label="{{ 'footer.follow' | t }}">
-      {%- for name in socials -%}
+    <div class="footer__cols">
+      {%- for i in (1..4) -%}
         {%- liquid
-          assign key = 'social_' | append: name
-          if name == 'x'
-            assign key = 'social_twitter'
-          endif
-          assign url = settings[key]
+          assign hk = 'footer_menu_' | append: i
+          assign tk = 'footer_menu_' | append: i | append: '_title'
+          assign m = linklists[settings[hk]]
         -%}
-        {%- if url != blank -%}
-          <li><a href="{{ url }}" target="_blank" rel="noopener" aria-label="{{ name | capitalize | replace: 'X', 'X (Twitter)' }}">{%- render 'icon-social', name: name -%}</a></li>
+        {%- if m.links.size > 0 -%}
+          <div class="acc footer__col">
+            <button type="button" class="acc__trigger" aria-expanded="false">{{ settings[tk] | default: m.title }}<span class="acc__icon"></span></button>
+            <div class="acc__panel"><div class="acc__inner"><div class="acc__content">
+              <ul>{%- for l in m.links -%}<li><a href="{{ l.url }}">{{ l.title }}</a></li>{%- endfor -%}</ul>
+            </div></div></div>
+          </div>
         {%- endif -%}
       {%- endfor -%}
-    </ul>
-  {%- endif -%}
-{%- endcapture -%}
-
-{%- capture news_markup -%}
-  {%- if show_news -%}
-    <div class="footer-news">
-      {%- if settings.footer_newsletter_heading != blank -%}
-        <p class="footer-news__heading">{{ settings.footer_newsletter_heading }}</p>
-      {%- endif -%}
-      {%- if settings.footer_newsletter_text != blank -%}
-        <p class="footer-news__text">{{ settings.footer_newsletter_text }}</p>
-      {%- endif -%}
-      {%- form 'customer', id: 'FooterNewsletter', class: 'footer-news__form' -%}
-        <input type="hidden" name="contact[tags]" value="newsletter">
-        {%- if form.posted_successfully? -%}
-          <p class="footer-news__note" role="status">{{ 'newsletter.success' | t }}</p>
-        {%- else -%}
-          <div class="footer-news__row">
-            <label for="FooterNewsletterEmail" class="visually-hidden">{{ 'newsletter.label' | t }}</label>
-            <input id="FooterNewsletterEmail" type="email" name="contact[email]" required autocomplete="email" placeholder="{{ 'newsletter.placeholder' | t }}">
-            <button type="submit" class="footer-news__submit">{{ 'newsletter.button' | t }}</button>
-          </div>
-          {%- if form.errors -%}<p class="footer-news__note footer-news__note--error" role="alert">{{ 'newsletter.error' | t }}</p>{%- endif -%}
-        {%- endif -%}
-      {%- endform -%}
     </div>
-  {%- endif -%}
-{%- endcapture -%}
+  </div>
 
-{%- capture menus_markup -%}
-  {%- for i in (1..3) -%}
-    {%- liquid
-      assign handle_key = 'footer_menu_' | append: i
-      assign title_key = 'footer_menu_' | append: i | append: '_title'
-      assign menu = linklists[settings[handle_key]]
-      assign title = settings[title_key]
-    -%}
-    {%- if menu.links.size > 0 -%}
-      <div class="footer-col" data-footer-col>
-        <button type="button" class="footer-col__title" aria-expanded="false" aria-controls="FooterCol{{ i }}">
-          <span>{{ title | default: menu.title }}</span>
-          <svg class="footer-col__chev" width="12" height="8" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <ul class="footer-col__list" id="FooterCol{{ i }}" role="list">
-          {%- for link in menu.links -%}
-            <li><a href="{{ link.url }}"{% if link.active %} aria-current="page"{% endif %}>{{ link.title }}</a></li>
-          {%- endfor -%}
-        </ul>
+  <div class="footer__wordmark" aria-hidden="true"><span>{{ wordmark }}</span></div>
+
+  <div class="mn-container footer__bottom">
+    <span>{%- if settings.footer_copyright != blank -%}{{ settings.footer_copyright }}{%- else -%}&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}{%- endif -%}</span>
+    {%- if settings.footer_show_localization -%}
+      {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
+        {%- form 'localization', id: 'FooterLocalization', class: 'footer__selects' -%}
+          {%- render 'mn-localization', id_prefix: 'Footer' -%}
+        {%- endform -%}
+      {%- endif -%}
+    {%- endif -%}
+    {%- if settings.footer_show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+      <div class="footer__pay payments">
+        {%- for type in shop.enabled_payment_types -%}
+          {%- liquid
+            case type
+              when 'visa'
+                assign pl = 'Visa'
+              when 'master'
+                assign pl = 'Mastercard'
+              when 'american_express'
+                assign pl = 'Amex'
+              when 'paypal'
+                assign pl = 'PayPal'
+              when 'apple_pay'
+                assign pl = 'Apple Pay'
+              when 'google_pay'
+                assign pl = 'Google Pay'
+              when 'shopify_pay'
+                assign pl = 'Shop Pay'
+              when 'diners_club'
+                assign pl = 'Diners Club'
+              when 'unionpay'
+                assign pl = 'UnionPay'
+              when 'jcb'
+                assign pl = 'JCB'
+              else
+                assign pl = type | replace: '_', ' ' | capitalize
+            endcase
+          -%}
+          <span class="pay">{{ pl }}</span>
+        {%- endfor -%}
       </div>
     {%- endif -%}
-  {%- endfor -%}
-{%- endcapture -%}
-
-<footer class="site-footer site-footer--{{ style }} site-footer--tone-{{ tone }}" role="contentinfo">
-  <div class="site-footer__inner">
-
-    {%- case style -%}
-      {%- when 'statement' -%}
-        {%- if show_news -%}
-          <div class="site-footer__band">{{ news_markup }}</div>
-        {%- endif -%}
-        <div class="site-footer__main">
-          <div class="site-footer__brand">
-            {%- if settings.footer_description != blank -%}<div class="site-footer__desc">{{ settings.footer_description }}</div>{%- endif -%}
-            {{ social_markup }}
-          </div>
-          <div class="site-footer__menus">{{ menus_markup }}</div>
-        </div>
-        <p class="site-footer__wordmark" aria-hidden="true">{{ wordmark }}</p>
-
-      {%- when 'minimal' -%}
-        <div class="site-footer__center">
-          {{ logo_markup }}
-          {%- if settings.footer_description != blank -%}<div class="site-footer__desc">{{ settings.footer_description }}</div>{%- endif -%}
-          {%- assign first_menu = linklists[settings.footer_menu_1] -%}
-          {%- if first_menu.links.size > 0 -%}
-            <nav class="site-footer__inline" aria-label="{{ settings.footer_menu_1_title | default: first_menu.title | escape }}">
-              {%- for link in first_menu.links -%}<a href="{{ link.url }}">{{ link.title }}</a>{%- endfor -%}
-            </nav>
-          {%- endif -%}
-          {{ news_markup }}
-          {{ social_markup }}
-        </div>
-
-      {%- else -%}
-        <div class="site-footer__main">
-          <div class="site-footer__brand">
-            {{ logo_markup }}
-            {%- if settings.footer_description != blank -%}<div class="site-footer__desc">{{ settings.footer_description }}</div>{%- endif -%}
-            {{ news_markup }}
-            {{ social_markup }}
-          </div>
-          <div class="site-footer__menus">{{ menus_markup }}</div>
-        </div>
-    {%- endcase -%}
-
-    <div class="site-footer__bottom">
-      <p class="site-footer__copy">&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ 'footer.rights' | t }}</p>
-
-      {%- if settings.footer_show_localization -%}
-        {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
-          {%- form 'localization', id: 'FooterLocalization', class: 'site-footer__locale' -%}
-            {%- if localization.available_countries.size > 1 -%}
-              <div class="site-footer__locale-field">
-                <label for="FooterCountry" class="visually-hidden">{{ 'localization.country' | t }}</label>
-                <select id="FooterCountry" name="country_code" onchange="this.form.submit()">
-                  {%- for country in localization.available_countries -%}
-                    <option value="{{ country.iso_code }}"{% if country.iso_code == localization.country.iso_code %} selected{% endif %}>{{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})</option>
-                  {%- endfor -%}
-                </select>
-              </div>
-            {%- endif -%}
-            {%- if localization.available_languages.size > 1 -%}
-              <div class="site-footer__locale-field">
-                <label for="FooterLanguage" class="visually-hidden">{{ 'localization.language' | t }}</label>
-                <select id="FooterLanguage" name="language_code" onchange="this.form.submit()">
-                  {%- for language in localization.available_languages -%}
-                    <option value="{{ language.iso_code }}"{% if language.iso_code == localization.language.iso_code %} selected{% endif %}>{{ language.endonym_name | capitalize }}</option>
-                  {%- endfor -%}
-                </select>
-              </div>
-            {%- endif -%}
-          {%- endform -%}
-        {%- endif -%}
-      {%- endif -%}
-
-      {%- if settings.footer_show_payment_icons and shop.enabled_payment_types.size > 0 -%}
-        <ul class="site-footer__payment" role="list">
-          {%- for type in shop.enabled_payment_types -%}
-            <li>{{ type | payment_type_svg_tag: class: 'payment-icon' }}</li>
-          {%- endfor -%}
-        </ul>
-      {%- endif -%}
-
-      {%- if settings.footer_back_to_top -%}
-        <button type="button" class="site-footer__top-btn" data-back-to-top>
-          {{ 'footer.back_to_top' | t }}
-          <svg width="10" height="12" viewBox="0 0 10 12" fill="none" aria-hidden="true"><path d="M5 11V1M1 5l4-4 4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      {%- endif -%}
-    </div>
+    {%- if settings.footer_back_to_top -%}
+      <button type="button" class="to-top" id="toTop"><span>{{ 'footer.back_to_top' | t }}</span><span><svg class="icon" aria-hidden="true"><use href="#i-arrow-up"></use></svg></span></button>
+    {%- endif -%}
   </div>
 </footer>
 
@@ -201,13 +143,9 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Configure the footer style, surface, logo, newsletter, menus, social links, country and language selectors and payment icons in Theme Settings → Footer."
+      "content": "Footer style, surface, newsletter, menus, social links, selectors and payment icons are in Theme Settings → Footer."
     }
   ],
-  "presets": [
-    {
-      "name": "Footer"
-    }
-  ]
+  "presets": [{ "name": "Footer" }]
 }
 {% endschema %}

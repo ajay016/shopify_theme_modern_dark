@@ -1674,48 +1674,6 @@
 
 
   /* ============================================================
-     Footer — accordions on phones, back to top
-     ============================================================ */
-  function initFooter(root = document) {
-    root.querySelectorAll('[data-footer-col]').forEach(col => {
-      const btn = col.querySelector('.footer-col__title');
-      const list = col.querySelector('.footer-col__list');
-      if (!btn || !list || btn.dataset.bound) return;
-      btn.dataset.bound = '1';
-      btn.addEventListener('click', () => {
-        // Columns only fold on phones; on wider screens the title is a label.
-        if (getComputedStyle(btn).pointerEvents === 'none') return;
-        const open = !col.classList.contains('is-open');
-        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        slide(list, open, o => col.classList.toggle('is-open', o));
-      });
-    });
-    // The Statement wordmark fills the footer's width, whatever its length.
-    root.querySelectorAll('.site-footer__wordmark').forEach(mark => {
-      if (mark.dataset.bound) return;
-      mark.dataset.bound = '1';
-      const fit = () => {
-        mark.style.fontSize = '100px';
-        const natural = mark.scrollWidth, room = mark.clientWidth;
-        if (natural) mark.style.fontSize = Math.min(236, Math.floor(100 * room / natural * 0.98)) + 'px';
-      };
-      fit();
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
-      if ('ResizeObserver' in window) new ResizeObserver(fit).observe(mark.parentElement);
-    });
-    root.querySelectorAll('[data-back-to-top]').forEach(btn => {
-      if (btn.dataset.bound) return;
-      btn.dataset.bound = '1';
-      btn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: motionMs(2) ? 'smooth' : 'auto' });
-        const main = document.getElementById('MainContent');
-        if (main) main.focus({ preventScroll: true });
-      });
-    });
-  }
-
-
-  /* ============================================================
      Address forms — country and province
      Nothing filled the province list or preselected a saved country,
      so every address form showed one "Select a province" option. The
@@ -1769,6 +1727,7 @@
   const CSELECT_CHEVRON = '<svg class="icon select__chev" aria-hidden="true"><use href="#i-chevron-down"></use></svg>';
   let cselectSeq = 0;
   let cselectOpen = null;
+  const cselectAll = new Set();
 
   function enhanceSelects(root = document) {
     const scope = root.matches && root.matches('select') ? [root] : root.querySelectorAll('select');
@@ -1894,6 +1853,14 @@
       return from;
     }
 
+    // Right-align the list when it would run past the viewport. Also done
+    // while closed: a hidden list still widens the page on phones.
+    function align() {
+      const r = wrap.getBoundingClientRect();
+      if (!r.width) return;
+      if (r.left + Math.max(list.offsetWidth, r.width) > document.documentElement.clientWidth - 8) wrap.dataset.align = 'end'; else delete wrap.dataset.align;
+    }
+
     function open() {
       if (wrap.classList.contains('is-open') || sel.disabled) return;
       if (cselectOpen && cselectOpen !== api) cselectOpen.close(false);
@@ -1901,7 +1868,7 @@
       const r = wrap.getBoundingClientRect();
       const want = Math.min(list.scrollHeight, 300) + 12;
       wrap.dataset.dir = window.innerHeight - r.bottom < want && r.top > window.innerHeight - r.bottom ? 'up' : 'down';
-      if (r.left + Math.max(list.offsetWidth, r.width) > document.documentElement.clientWidth - 8) wrap.dataset.align = 'end'; else delete wrap.dataset.align;
+      align();
       wrap.classList.add('is-open');
       btn.setAttribute('aria-expanded', 'true');
       cselectOpen = api;
@@ -1988,9 +1955,11 @@
     });
     if (sel.form) sel.form.addEventListener('reset', () => setTimeout(sync));
 
-    const api = { close, sync };
+    const api = { close, sync, align, wrap };
     sel._cselect = api;
     render();
+    align();
+    cselectAll.add(api);
   }
 
   function initCustomSelects() {
@@ -1998,7 +1967,11 @@
     document.addEventListener('pointerdown', e => {
       if (cselectOpen && !e.target.closest('.cselect.is-open')) cselectOpen.close(false);
     });
-    window.addEventListener('resize', () => cselectOpen && cselectOpen.close(false));
+    let rt;
+    window.addEventListener('resize', () => {
+      if (cselectOpen) cselectOpen.close(false);
+      clearTimeout(rt); rt = setTimeout(() => cselectAll.forEach(a => (a.wrap.isConnected ? a.align() : cselectAll.delete(a))), 150);
+    });
     // Selects added later -- quick view, cart, editor re-renders -- are
     // enhanced as they arrive.
     new MutationObserver(records => {
@@ -2034,12 +2007,8 @@
     initPriceRange();
     initAddressForms();
     initCustomSelects();
-    initFooter();
   });
 
-  document.addEventListener('shopify:section:load', e => {
-    if (e.target && e.target.querySelector('.site-footer')) initFooter(e.target);
-  });
 
   // Re-bind hover carousels when a section is re-rendered in the theme editor.
   document.addEventListener('shopify:section:load', e => initCardCarousel(e.target));

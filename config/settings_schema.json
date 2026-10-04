@@ -285,7 +285,7 @@
         "label": "Default Card Style",
         "info": "The base look used for every product card across the whole site (homepages, collections, search).",
         "options": [
-          { "value": "atelier",  "label": "Atelier — eyebrow, name & price" },
+          { "value": "atelier",  "label": "Atelier — the design card" },
           { "value": "minimal",  "label": "Minimal — name & price only" },
           { "value": "overlay",  "label": "Editorial — info over image" },
           { "value": "bordered", "label": "Bordered — framed card" },
@@ -342,33 +342,35 @@
         "id": "product_card_media_hover",
         "label": "Image Hover Behaviour",
         "options": [
-          { "value": "zoom",         "label": "Zoom In" },
-          { "value": "second_image", "label": "Show Second Image" },
+          { "value": "second_image", "label": "Show second image (design)" },
+          { "value": "zoom",         "label": "Zoom in" },
           { "value": "carousel",     "label": "Carousel Autoplay" },
           { "value": "none",         "label": "None" }
         ],
-        "default": "zoom"
+        "default": "second_image"
       },
-      { "type": "checkbox", "id": "product_card_show_category",  "label": "Show category/type eyebrow",      "default": true },
-      { "type": "checkbox", "id": "product_card_show_vendor",    "label": "Show brand/vendor (if no category)", "default": true },
-      { "type": "checkbox", "id": "product_card_show_number",    "label": "Show index number badge",         "default": true },
+      { "type": "checkbox", "id": "product_card_show_category",  "label": "Show category/type under the title", "default": false },
+      { "type": "checkbox", "id": "product_card_show_vendor",    "label": "Show brand/vendor",               "default": true },
+      { "type": "checkbox", "id": "product_card_show_number",    "label": "Show index number",               "default": false },
       { "type": "checkbox", "id": "product_card_show_price_compare", "label": "Show compare-at (sale) price", "default": true },
-      { "type": "checkbox", "id": "product_card_show_material",  "label": "Show material/subtitle",          "default": true },
-      { "type": "checkbox", "id": "product_card_show_sizes",     "label": "Show sizes on hover",             "default": true },
+      { "type": "checkbox", "id": "product_card_show_material",  "label": "Show material", "info": "Reads the custom.material metafield.", "default": false },
+      { "type": "checkbox", "id": "product_card_show_sizes",     "label": "Show sizes",  "info": "Sizes that are sold out are struck through.", "default": true },
       { "type": "checkbox", "id": "product_card_show_swatches",  "label": "Show colour swatches",            "info": "Reads the product's Color / Colour option. Hovering a swatch previews that colour's image.", "default": true },
       { "type": "checkbox", "id": "product_card_show_rating",    "label": "Show star rating",                "info": "Reads the standard reviews metafields. Products without a rating simply show nothing.", "default": true },
       { "type": "checkbox", "id": "product_card_show_low_stock", "label": "Show \"only N left\" badge",       "info": "Only for variants where Shopify is tracking inventory.", "default": true },
       { "type": "range",    "id": "product_card_low_stock_threshold", "label": "Low stock threshold", "min": 1, "max": 20, "step": 1, "unit": "pcs", "default": 5 },
       { "type": "checkbox", "id": "product_card_show_wishlist",  "label": "Show wishlist button",            "default": true },
       { "type": "checkbox", "id": "product_card_show_quickview", "label": "Show quick view button",          "default": true },
+      { "type": "checkbox", "id": "product_card_show_compare",   "label": "Show compare button", "info": "Shoppers pick up to 4 pieces; a tray gathers them and opens a side-by-side table.", "default": true },
       {
         "type": "select",
         "id": "product_card_quickadd_style",
         "label": "Add to Cart Display",
         "options": [
-          { "value": "slide_up",  "label": "Slide Up on Hover" },
-          { "value": "popup",     "label": "Popup Size Selector" },
-          { "value": "always",    "label": "Always Visible" }
+          { "value": "slide_up",  "label": "Slide up on hover" },
+          { "value": "popup",     "label": "Always open quick view" },
+          { "value": "always",    "label": "Always visible" },
+          { "value": "none",      "label": "Hidden" }
         ],
         "default": "slide_up"
       }

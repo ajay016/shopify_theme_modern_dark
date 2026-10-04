@@ -1,0 +1,15 @@
+{%- comment -%}
+  Wishlist drawer, in the design's drawer style (overlay--right, cart lines).
+  Saved pieces live in the browser (theme.js); MN.wish in assets/mn.js
+  fills the list from /products/{handle}?view=mn-data when it opens.
+{%- endcomment -%}
+<div class="overlay overlay--right" id="ov-wish" role="dialog" aria-modal="true" aria-labelledby="wishTitle">
+  <div class="overlay__scrim" data-close></div>
+  <div class="overlay__panel">
+    <div class="overlay__head">
+      <h2 class="overlay__title" id="wishTitle">{{ 'mn.wish.title' | t }}</h2>
+      <button type="button" class="icon-btn" data-close aria-label="{{ 'mn.wish.close' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+    </div>
+    <div class="overlay__body" id="wishBody"></div>
+  </div>
+</div>

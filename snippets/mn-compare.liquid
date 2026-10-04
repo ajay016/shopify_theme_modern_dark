@@ -1,0 +1,22 @@
+{%- comment -%}
+  Compare tray and table (Claude Design reference: cmp-tray, ov-cmpp).
+  Filled by MN.compare in assets/mn.js from /products/{handle}?view=mn-data.
+  Shown when Theme settings → Product cards → Show compare button is on.
+{%- endcomment -%}
+<div class="cmp-tray" id="cmpTray" role="region" aria-label="{{ 'mn.compare.tray' | t }}">
+  <span class="cmp-tray__label">{{ 'mn.compare.label' | t }}</span>
+  <div class="cmp-tray__items"></div>
+  <button type="button" class="link-quiet" data-cmp-clear>{{ 'mn.compare.clear' | t }}</button>
+  <button type="button" class="mn-btn mn-btn--sm" data-open="ov-cmpp"><span>{{ 'mn.compare.open_html' | t: n: '<span data-cmp-count>0</span>' }}</span></button>
+</div>
+<div class="overlay overlay--modal" id="ov-cmpp" role="dialog" aria-modal="true" aria-labelledby="ov-cmpp-t">
+  <div class="overlay__scrim" data-close></div>
+  <div class="overlay__panel">
+    <span class="sheet-handle"></span>
+    <div class="overlay__head">
+      <h2 class="overlay__title" id="ov-cmpp-t">{{ 'mn.compare.title' | t }}</h2>
+      <button type="button" class="icon-btn" data-close aria-label="{{ 'mn.compare.close' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+    </div>
+    <div class="overlay__body" id="cmppBody"></div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+{%- layout none -%}
+{%- comment -%}
+  One product card, rendered by Shopify with Theme settings → Product cards.
+  Fetched as /products/{handle}?view=mn-card by recently viewed and the
+  wishlist, so cards built after page load match every other card.
+{%- endcomment -%}
+{%- render 'product-card', product: product -%}

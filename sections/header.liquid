@@ -83,7 +83,7 @@
           </a>
         {%- endif -%}
         {%- if settings.wishlist_enabled -%}
-          <button type="button" class="icon-btn header__icon--wish" data-open-wishlist aria-label="{{ 'mn.wishlist' | t }}">
+          <button type="button" class="icon-btn header__icon--wish" data-open="ov-wish" aria-label="{{ 'mn.wishlist' | t }}">
             <svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg><span class="count-dot header-wishlist-count" id="wishCount"></span>
           </button>
         {%- endif -%}
@@ -224,7 +224,7 @@
           <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"><svg class="icon" aria-hidden="true"><use href="#i-user"></use></svg>{{ 'mn.account' | t }}</a>
         {%- endif -%}
         {%- if settings.wishlist_enabled -%}
-          <a href="#" data-open-wishlist><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg>{{ 'mn.wishlist' | t }}</a>
+          <a href="#" data-open="ov-wish"><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg>{{ 'mn.wishlist' | t }}</a>
         {%- endif -%}
       </div>
       {%- render 'mn-social' -%}

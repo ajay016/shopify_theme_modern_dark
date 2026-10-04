@@ -178,62 +178,45 @@
 
 
   /* ============================================================
-     Add to Cart — product cards
+     Add to bag on product cards (snippets/product-card.liquid):
+     cards with one variant add at once; the others open quick view.
      ============================================================ */
   function initCardAddToCart() {
     document.addEventListener('click', async e => {
-      const addBtn = e.target.closest('.pcard-btn--atc[data-variant-id]');
-      if (!addBtn) return;
-      const variantId = addBtn.dataset.variantId;
-      if (!variantId) return;
-
-      const label = addBtn.querySelector('.pcard-atc__label, .pcard-btn__label');
-      const originalLabel = label ? label.textContent : '';
-      if (label) label.textContent = '…';
-      addBtn.disabled = true;
-
-      try {
-        await addToCart(variantId);
-        if (label) label.textContent = '✓';
-        setTimeout(() => {
-          if (label) label.textContent = originalLabel;
-          addBtn.disabled = false;
-        }, 1800);
-      } catch {
-        // addToCart has already shown the reason
-        if (label) label.textContent = originalLabel;
-        addBtn.disabled = false;
-      }
+      const addBtn = e.target.closest('.card__add[data-variant-id]');
+      if (!addBtn || addBtn.classList.contains('is-loading')) return;
+      e.preventDefault();
+      addBtn.classList.add('is-loading');
+      addBtn.setAttribute('aria-busy', 'true');
+      try { await addToCart(addBtn.dataset.variantId, 1); } catch (err) { /* MN.cart showed the reason */ }
+      addBtn.classList.remove('is-loading');
+      addBtn.removeAttribute('aria-busy');
     });
   }
 
 
   /* ============================================================
-     Product card — carousel autoplay on hover
-     Cycles the extra .pcard__img--cycle images while the pointer is
-     over a card whose media uses the "carousel" hover behaviour.
-     Works for every unified product card on the page (home + collection).
+     Product card: carousel on hover (Image hover behaviour =
+     Carousel). Delegated, so cards added later cycle too.
      ============================================================ */
-  function initCardCarousel(root) {
-    const scope = root || document;
-    scope.querySelectorAll('.pcard__media--hov-carousel').forEach(media => {
-      if (media.dataset.carouselBound) return;
-      const cycles = media.querySelectorAll('.pcard__img--cycle');
+  function initCardCarousel() {
+    const stop = media => {
+      clearInterval(media._cycle); media._cycle = null; media._idx = -1;
+      media.querySelectorAll('.card__img--cycle').forEach(c => c.classList.remove('is-on'));
+    };
+    document.addEventListener('mouseover', e => {
+      const media = e.target.closest('.card[data-hover="carousel"] .card__media');
+      if (!media || media._cycle) return;
+      const cycles = media.querySelectorAll('.card__img--cycle');
       if (!cycles.length) return;
-      media.dataset.carouselBound = '1';
-      let timer = null, idx = -1;
-      media.addEventListener('mouseenter', () => {
-        if (timer) return;
-        timer = setInterval(() => {
-          cycles.forEach(c => c.classList.remove('is-on'));
-          idx = (idx + 1) % (cycles.length + 1);
-          if (idx < cycles.length) cycles[idx].classList.add('is-on');
-        }, 900);
-      });
-      media.addEventListener('mouseleave', () => {
-        clearInterval(timer); timer = null; idx = -1;
+      media._idx = -1;
+      media._cycle = setInterval(() => {
         cycles.forEach(c => c.classList.remove('is-on'));
-      });
+        media._idx = (media._idx + 1) % (cycles.length + 1);
+        if (media._idx < cycles.length) cycles[media._idx].classList.add('is-on');
+      }, 900);
+      const leave = () => { stop(media); media.removeEventListener('mouseleave', leave); };
+      media.addEventListener('mouseleave', leave);
     });
   }
 
@@ -549,7 +532,8 @@
   }
 
   function saveWishlist(list) {
-    localStorage.setItem(WISHLIST_KEY, JSON.stringify(list));
+    try { localStorage.setItem(WISHLIST_KEY, JSON.stringify(list)); } catch (e) {}
+    document.dispatchEvent(new CustomEvent('wishlist:updated', { detail: { list } }));
   }
 
   function toggleWishlist(productId) {
@@ -593,7 +577,16 @@
       const btn = e.target.closest('[data-wishlist-id]');
       if (!btn) return;
       const id = btn.dataset.wishlistId;
+      // The wishlist drawer needs the handle to show the piece.
+      if (btn.dataset.wishlistHandle) {
+        try {
+          const map = JSON.parse(localStorage.getItem(WISHLIST_KEY + '_h') || '{}');
+          map[id] = btn.dataset.wishlistHandle;
+          localStorage.setItem(WISHLIST_KEY + '_h', JSON.stringify(map));
+        } catch (err) {}
+      }
       toggleWishlist(id);
+      window.MN?.bump?.(document.getElementById('wishCount'));
     });
   }
 
@@ -929,51 +922,47 @@
      scroll behave the same without re-binding.
      ============================================================ */
   function initCardSwatches() {
-    function mainImage(card) {
-      return card.querySelector('.pcard__img--a');
-    }
+    // The card's resting image; swatches show their colour's image on it.
+    const mainImage = card => card.querySelector('.card__img--a img');
+    const setActive = (card, sw, cls) => card.querySelectorAll('.card__swatch').forEach(s => s.classList.toggle(cls, s === sw));
 
     document.addEventListener('mouseover', e => {
-      const sw = e.target.closest('.pcard__swatch[data-swatch-image]');
+      const sw = e.target.closest('.card__swatch[data-swatch-image]');
       if (!sw) return;
-      const card = sw.closest('.pcard');
+      const card = sw.closest('.card');
       const img = card && mainImage(card);
       if (!img) return;
-      if (!card.dataset.swatchOriginal) card.dataset.swatchOriginal = img.currentSrc || img.src;
-      img.src = sw.dataset.swatchImage;
+      if (!card.dataset.swatchOriginal) { card.dataset.swatchOriginal = img.currentSrc || img.src; card._srcset = img.getAttribute('srcset'); }
       img.removeAttribute('srcset');
-      card.querySelectorAll('.pcard__swatch').forEach(s => s.classList.toggle('is-active', s === sw));
+      img.src = sw.dataset.swatchImage;
+      setActive(card, sw, 'is-active');
     });
 
     document.addEventListener('mouseleave', e => {
-      const card = e.target.closest && e.target.closest('.pcard');
+      const card = e.target.classList && e.target.classList.contains('card') ? e.target : null;
       if (!card || !card.dataset.swatchOriginal) return;
       const img = mainImage(card);
       if (img) img.src = card.dataset.swatchOriginal;
-      card.querySelectorAll('.pcard__swatch').forEach(s => s.classList.remove('is-active'));
+      const chosen = card.querySelector('.card__swatch[aria-pressed="true"]');
+      setActive(card, chosen, 'is-active');
     }, true);
 
-    // Clicking a swatch selects that colour on the card — it swaps the image
-    // and keeps it swapped, rather than navigating away. Leaving the card no
-    // longer reverts a colour the shopper chose deliberately.
+    // A click chooses that colour: the image stays and the card's links
+    // point at that variant, so the choice survives opening the product.
     document.addEventListener('click', e => {
-      const sw = e.target.closest('.pcard__swatch');
+      const sw = e.target.closest('.card__swatch');
       if (!sw) return;
       e.preventDefault();
-      const card = sw.closest('.pcard');
-      const img = card && mainImage(card);
-      if (!img) return;
-
-      if (sw.dataset.swatchImage) {
-        img.src = sw.dataset.swatchImage;
+      const card = sw.closest('.card');
+      if (!card) return;
+      const img = mainImage(card);
+      if (img && sw.dataset.swatchImage) {
         img.removeAttribute('srcset');
-        // This is now the card's resting image, not a hover preview.
+        img.src = sw.dataset.swatchImage;
         card.dataset.swatchOriginal = sw.dataset.swatchImage;
       }
-      card.querySelectorAll('.pcard__swatch').forEach(s => s.classList.toggle('is-selected', s === sw));
-      card.querySelectorAll('.pcard__swatch').forEach(s => s.setAttribute('aria-pressed', s === sw ? 'true' : 'false'));
-
-      // Point the card's links at that variant so the choice survives the click.
+      setActive(card, sw, 'is-active');
+      card.querySelectorAll('.card__swatch').forEach(s => s.setAttribute('aria-pressed', s === sw ? 'true' : 'false'));
       if (sw.dataset.swatchVariant) {
         card.querySelectorAll('a[href*="/products/"]').forEach(a => {
           const u = new URL(a.getAttribute('href'), window.location.origin);
@@ -1697,9 +1686,6 @@
     initCustomSelects();
   });
 
-
-  // Re-bind hover carousels when a section is re-rendered in the theme editor.
-  document.addEventListener('shopify:section:load', e => initCardCarousel(e.target));
 
   // The theme editor re-renders a section by swapping its HTML, and does not
   // re-run page-load scripts. Without this, every element-bound handler on

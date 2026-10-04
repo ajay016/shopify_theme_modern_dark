@@ -437,7 +437,149 @@
   };
   window.addEventListener('pageshow', e => { if (e.persisted && $('#ov-cart')) C.refresh(); });
 
-  const boot = root => { MN.initTabs(root || document); bindHeader(); bindFooter(); bindCart(); };
+  /* ---- Product facts for compare and the wishlist:
+     /products/{handle}?view=mn-data (templates/product.mn-data.liquid) ---- */
+  const rootUrl = () => ((routes().root_url) || '/').replace(/\/?$/, '/');
+  const pcache = new Map();
+  MN.pdata = handle => {
+    if (!pcache.has(handle)) {
+      pcache.set(handle, fetch(`${rootUrl()}products/${encodeURIComponent(handle)}?view=mn-data`)
+        .then(r => (r.ok ? r.text() : Promise.reject(r.status)))
+        .then(t => JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1)))
+        .catch(err => { pcache.delete(handle); throw err; }));
+    }
+    return pcache.get(handle);
+  };
+  const store = {
+    get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  };
+  const bg = url => (url ? `background:var(--bg-soft) center/cover no-repeat url('${String(url).replace(/'/g, '%27')}')` : 'background:var(--bg-soft)');
+  const t = (s, map) => Object.entries(map || {}).reduce((a, [k, v]) => a.split(k).join(v), s || '');
+  const priceHTML = d => `<div class="price${d.compare ? ' price--sale' : ''}"><span class="price__now">${esc(d.price)}</span>${d.compare ? `<s class="price__was">${esc(d.compare)}</s><span class="badge badge--sale">−${d.off}%</span>` : ''}</div>`;
+  const buyHTML = (d, attr) => !d.available
+    ? `<span class="mn-btn mn-btn--sm mn-btn--block mn-btn--secondary" aria-disabled="true">${esc(STR().cmp?.sold_out || 'Sold out')}</span>`
+    : d.single
+      ? `<button type="button" class="mn-btn mn-btn--sm mn-btn--block" ${attr}="${d.variant_id}">${esc(STR().add || 'Add to bag')}</button>`
+      : `<a class="mn-btn mn-btn--sm mn-btn--block mn-btn--secondary" href="${esc(d.url)}">${esc(STR().choose || 'Choose options')}</a>`;
+  const addFrom = async (btn, id) => {
+    btn.setAttribute('aria-busy', 'true');
+    try { await C.add([{ id: +id, quantity: 1 }]); } catch (e) { /* toast shown */ }
+    btn.removeAttribute('aria-busy');
+  };
+
+  /* ==================================================================
+     Compare — ported from docs/claude_design_ref/mn/compare.js
+     Up to four pieces, kept by handle in the browser; the tray gathers
+     them and the table compares price, rating, material, origin, care,
+     colours, sizes and availability. Rows nobody has are left out.
+     ================================================================== */
+  const CMP = MN.compare = {
+    max: 4, diff: false,
+    get ids() { return store.get('mn_compare', []).filter(h => typeof h === 'string'); },
+    set ids(v) { store.set('mn_compare', v.slice(0, this.max)); },
+    toggle(h) {
+      const ids = this.ids, i = ids.indexOf(h);
+      if (i > -1) ids.splice(i, 1);
+      else { if (ids.length >= this.max) { MN.toast(STR().cmp?.max || 'You can compare up to 4 pieces'); return; } ids.push(h); MN.toast(STR().cmp?.added || 'Added to compare'); }
+      this.ids = ids; this.paint();
+    },
+    async paint() {
+      const ids = this.ids;
+      $$('[data-compare-id]').forEach(b => b.setAttribute('aria-pressed', ids.includes(b.dataset.compareId)));
+      const tray = $('#cmpTray'); if (!tray) return;
+      tray.classList.toggle('is-visible', ids.length > 0);
+      const n = tray.querySelector('[data-cmp-count]'); if (n) n.textContent = ids.length;
+      const data = await Promise.all(ids.map(h => MN.pdata(h).catch(() => null)));
+      tray.querySelector('.cmp-tray__items').innerHTML = Array.from({ length: this.max }, (_, k) => {
+        const d = data[k];
+        return d ? `<span class="cmp-slot is-filled" style="${bg(d.image)}" title="${esc(d.title)}"><button type="button" data-cmp-remove="${esc(d.handle)}" aria-label="${esc(t(STR().cmp?.remove, { __T__: d.title }))}">${icon('close')}</button></span>` : '<span class="cmp-slot"></span>';
+      }).join('');
+      if ($('#ov-cmpp')?.classList.contains('is-open')) this.render();
+    },
+    async render() {
+      const body = $('#cmppBody'); if (!body) return;
+      const S = STR().cmp || {};
+      const ps = (await Promise.all(this.ids.map(h => MN.pdata(h).catch(() => null)))).filter(Boolean);
+      if (!ps.length) { body.innerHTML = `<p class="cmpt__empty">${esc(S.empty)}</p>`; return; }
+      const opt = (d, kind) => (d.options || []).find(o => o.kind === kind);
+      const rows = [
+        ['price', S.price, d => priceHTML(d)],
+        ['rating', S.rating, d => (+d.rating ? `${MN.stars(+d.rating)} <span class="muted-note">${(+d.rating).toFixed(1)}${d.rating_count ? ' (' + d.rating_count + ')' : ''}</span>` : '')],
+        ['material', S.material, d => esc(d.material)],
+        ['origin', S.origin, d => esc(d.origin)],
+        ['care', S.care, d => esc(d.care)],
+        ['colours', S.colours, d => { const o = opt(d, 'colour'); return o ? `<div class="card__swatches">${o.values.map(v => `<span class="card__swatch" style="${esc(v.style)}" title="${esc(v.label)}"></span>`).join('')}</div>` : ''; }],
+        ['sizes', S.sizes, d => { const o = opt(d, 'size'); return o ? `<div class="card__sizes">${o.values.map(v => (v.in_stock ? `<span>${esc(v.label)}</span>` : `<s>${esc(v.label)}</s>`)).join('')}</div>` : ''; }],
+        ['availability', S.availability, d => esc(!d.available ? S.sold_out : d.low ? t(S.only_left, { __N__: d.low }) : S.in_stock)],
+        ['buy', '', d => buyHTML(d, 'data-cmp-add')],
+      ].map(([k, l, f]) => [k, l, ps.map(f)]).filter(r => r[0] === 'buy' || r[2].some(v => v));
+      const diffKeys = ['material', 'origin', 'care', 'availability'];
+      const empty = Math.max(0, Math.min(this.max, Math.max(2, ps.length + 1)) - ps.length);
+      const cards = $$('.card[data-handle]').filter(c => !this.ids.includes(c.dataset.handle) && !c.classList.contains('is-soldout'));
+      const seen = new Set(), sug = cards.filter(c => !seen.has(c.dataset.handle) && seen.add(c.dataset.handle)).slice(0, 3);
+      const sugHTML = sug.map(c => { const img = c.querySelector('.card__img--a img'); return `<button type="button" class="cmpt__sug-item" data-cmp-pick="${esc(c.dataset.handle)}" aria-pressed="false"><span style="${bg(img && (img.currentSrc || img.src))}"></span><span><b>${esc(c.querySelector('.card__title')?.textContent.trim())}</b><small>${esc(c.querySelector('.price__now')?.textContent.trim())}</small></span>${icon('plus', 'icon--sm')}</button>`; }).join('');
+      const slot = empty ? `<td colspan="${empty}" class="cmpt__slot" rowspan="${rows.length + 1}"><div class="cmpt__add"><span class="cmpt__add-icon">${icon('plus')}</span><b>${esc(S.add_title)}</b><span class="muted-note">${esc(S.add_hint)}</span>${sugHTML ? `<div class="cmpt__sug">${sugHTML}</div>` : ''}</div></td>` : '';
+      body.innerHTML = `<div class="cmpt__toggle"><span class="muted-note">${esc(t(S.count, { __N__: ps.length }))}</span><label class="check"><input type="checkbox" data-cmp-diff${this.diff ? ' checked' : ''}><span>${esc(S.diff)}</span></label></div>`
+        + `<div class="cmpt"><table><colgroup><col style="width:130px">${ps.map(() => '<col>').join('')}${'<col>'.repeat(empty)}</colgroup><tbody>`
+        + `<tr><th></th>${ps.map(d => `<td><div class="cmpt__prod"><div class="cmpt__img" style="${bg(d.image)}"><button type="button" class="icon-btn" data-cmp-remove="${esc(d.handle)}" aria-label="${esc(t(S.remove, { __T__: d.title }))}">${icon('close', 'icon--sm')}</button></div><span class="mn-eyebrow">${esc(d.vendor)}</span><a class="cmpt__title" href="${esc(d.url)}">${esc(d.title)}</a></div></td>`).join('')}${slot}</tr>`
+        + rows.map(([k, l, vals]) => { const diff = this.diff && diffKeys.includes(k) && new Set(vals).size > 1; return `<tr class="${diff ? 'is-diff' : ''}"><th>${esc(l)}</th>${vals.map(v => `<td>${v || '<span class="muted-note">—</span>'}</td>`).join('')}</tr>`; }).join('')
+        + '</tbody></table></div>';
+    },
+  };
+  document.addEventListener('click', e => {
+    const c = e.target.closest('[data-compare-id]'); if (c) { e.preventDefault(); CMP.toggle(c.dataset.compareId); return; }
+    const r = e.target.closest('[data-cmp-remove]'); if (r) { e.preventDefault(); CMP.toggle(r.dataset.cmpRemove); return; }
+    const p = e.target.closest('[data-cmp-pick]'); if (p) { CMP.toggle(p.dataset.cmpPick); return; }
+    if (e.target.closest('[data-cmp-clear]')) { CMP.ids = []; CMP.paint(); return; }
+    const a = e.target.closest('[data-cmp-add]'); if (a) addFrom(a, a.dataset.cmpAdd);
+  });
+  document.addEventListener('change', e => { if (e.target.matches('[data-cmp-diff]')) { CMP.diff = e.target.checked; CMP.render(); } });
+  window.addEventListener('storage', e => { if (e.key === 'mn_compare') CMP.paint(); });
+
+  /* ==================================================================
+     Wishlist drawer. theme.js keeps the saved ids (mn_wishlist) and
+     their handles (mn_wishlist_h); this shows them in the design's
+     drawer, with add to bag and remove.
+     ================================================================== */
+  const W = MN.wish = {
+    async render() {
+      const body = $('#wishBody'); if (!body) return;
+      const S = STR().wish || {};
+      const ids = store.get('mn_wishlist', []), map = store.get('mn_wishlist_h', {});
+      const list = ids.filter(id => map[id]);
+      $('#wishTitle').textContent = list.length ? t(S.title_count, { __N__: list.length }) : S.title;
+      if (!list.length) {
+        body.innerHTML = `<div class="mn-cart-empty"><p>${esc(S.empty)}</p><a href="${esc(routes().all_products_url || '/collections/all')}" class="mn-btn mn-btn--secondary mn-btn--sm">${esc(S.browse)}</a></div>`;
+        return;
+      }
+      const data = await Promise.all(list.map(id => MN.pdata(map[id]).catch(() => null)));
+      body.innerHTML = list.map((id, k) => {
+        const d = data[k]; if (!d) return '';
+        return `<div class="cart-line wish-line" data-wish-id="${esc(id)}"><a href="${esc(d.url)}" class="cart-line__img" style="${bg(d.image)}" tabindex="-1" aria-hidden="true"></a><div class="cart-line__text"><span class="cart-line__variant">${esc(d.vendor)}</span><a href="${esc(d.url)}" class="cart-line__title">${esc(d.title)}</a>${priceHTML(d)}<div class="wish-line__buy">${buyHTML(d, 'data-wish-add')}</div></div><div class="cart-line__end"><span></span><button type="button" class="link-quiet" data-wishlist-id="${esc(id)}">${esc(S.remove)}</button></div></div>`;
+      }).join('');
+    },
+  };
+  document.addEventListener('click', e => { const a = e.target.closest('[data-wish-add]'); if (a) addFrom(a, a.dataset.wishAdd); });
+  document.addEventListener('wishlist:updated', () => { if ($('#ov-wish')?.classList.contains('is-open')) W.render(); });
+
+  // Cards that arrive later (load more, infinite scroll, recently viewed)
+  // show the saved / comparing state like the rest.
+  const syncCards = node => {
+    const cmp = CMP.ids, wish = store.get('mn_wishlist', []).map(String);
+    $$('[data-compare-id]', node).forEach(b => b.setAttribute('aria-pressed', cmp.includes(b.dataset.compareId)));
+    $$('.card [data-wishlist-id]', node).forEach(b => { const on = wish.includes(String(b.dataset.wishlistId)); b.setAttribute('aria-pressed', on); b.classList.toggle('is-active', on); });
+  };
+  new MutationObserver(rs => rs.forEach(r => r.addedNodes.forEach(n => { if (n.nodeType === 1 && (n.matches('.card') || n.querySelector('.card'))) syncCards(n); })))
+    .observe(document.documentElement, { childList: true, subtree: true });
+
+  const bindExtras = () => {
+    const cm = $('#ov-cmpp'); if (cm && !cm._bound) { cm._bound = 1; cm.addEventListener('overlay:open', () => CMP.render()); }
+    const wd = $('#ov-wish'); if (wd && !wd._bound) { wd._bound = 1; wd.addEventListener('overlay:open', () => W.render()); }
+    CMP.paint();
+  };
+
+  const boot = root => { MN.initTabs(root || document); bindHeader(); bindFooter(); bindCart(); bindExtras(); };
   document.addEventListener('DOMContentLoaded', () => boot());
   document.addEventListener('shopify:section:load', e => { if (e.target.querySelector('#siteHeader')) { H.cur = null; } boot(e.target); });
 })();

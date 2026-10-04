@@ -168,6 +168,8 @@
   {%- unless settings.cart_type == 'page' -%}
     {%- section 'cart-drawer' -%}
   {%- endunless -%}
+  {%- if settings.product_card_show_compare -%}{%- render 'mn-compare' -%}{%- endif -%}
+  {%- if settings.wishlist_enabled -%}{%- render 'mn-wishlist' -%}{%- endif -%}
 
   {%- comment -%}Quick View Modal (global, filled via JS){%- endcomment -%}
   {%- if settings.quickview_enabled -%}
@@ -203,7 +205,8 @@
       cart_url:        "{{ routes.cart_url }}",
       cart_add_url:    "{{ routes.cart_add_url }}",
       cart_change_url: "{{ routes.cart_change_url }}",
-      search_url:      "{{ routes.search_url }}"
+      search_url:      "{{ routes.search_url }}",
+      all_products_url: "{{ routes.all_products_collection_url }}"
     };
     window.MN_STRINGS = {
       products:         {{ 'mn.products' | t | json }},
@@ -213,7 +216,22 @@
       no_results:       {{ 'mn.no_results' | t: terms: '__TERMS__' | json }},
       cart_only_left:   {{ 'mn.cart.only_left' | t: count: '__N__' | json }},
       cart_error:       {{ 'mn.cart.error' | t | json }},
-      cart_demo:        {{ 'mn.cart.demo' | t | json }}
+      cart_demo:        {{ 'mn.cart.demo' | t | json }},
+      add:              {{ 'mn.card.add' | t | json }},
+      choose:           {{ 'mn.card.choose' | t | json }},
+      cmp:              {
+        added: {{ 'mn.compare.added' | t | json }}, max: {{ 'mn.compare.max' | t | json }}, remove: {{ 'mn.compare.remove' | t: title: '__T__' | json }},
+        count: {{ 'mn.compare.count' | t: n: '__N__' | json }}, diff: {{ 'mn.compare.diff' | t | json }}, empty: {{ 'mn.compare.empty' | t | json }},
+        add_title: {{ 'mn.compare.add_title' | t | json }}, add_hint: {{ 'mn.compare.add_hint' | t | json }},
+        price: {{ 'mn.compare.price' | t | json }}, rating: {{ 'mn.compare.rating' | t | json }}, material: {{ 'mn.compare.material' | t | json }},
+        origin: {{ 'mn.compare.origin' | t | json }}, care: {{ 'mn.compare.care' | t | json }}, colours: {{ 'mn.compare.colours' | t | json }},
+        sizes: {{ 'mn.compare.sizes' | t | json }}, availability: {{ 'mn.compare.availability' | t | json }}, in_stock: {{ 'mn.compare.in_stock' | t | json }},
+        sold_out: {{ 'mn.compare.sold_out' | t | json }}, only_left: {{ 'mn.compare.only_left' | t: n: '__N__' | json }}, reviews: {{ 'mn.compare.reviews' | t: n: '__N__' | json }}
+      },
+      wish:             {
+        title: {{ 'mn.wish.title' | t | json }}, title_count: {{ 'mn.wish.title_count' | t: n: '__N__' | json }}, empty: {{ 'mn.wish.empty' | t | json }},
+        browse: {{ 'mn.wish.browse' | t | json }}, remove: {{ 'mn.wish.remove' | t | json }}
+      }
     };
     window.theme_strings = {
       added_to_cart:           {{ 'cart.added' | t | json }},

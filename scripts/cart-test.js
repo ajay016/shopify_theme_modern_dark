@@ -5,6 +5,7 @@
 // remove, add, shipping progress, counts, errors, empty state, phones.
 //   python3 scripts/cart-check.py OUT && node scripts/cart-test.js OUT
 const { chromium } = require('playwright');
+const routeFonts = require('./fonts-route');
 const fs = require('fs'), path = require('path');
 const dir = process.argv[2] || '.';
 const mock = JSON.parse(fs.readFileSync(path.join(dir, 'cart_mock.json'), 'utf8'));
@@ -20,7 +21,7 @@ const ORIGIN = 'http://shop.test';
     const p = await b.newPage({ viewport: { width: w, height: 900 }, ignoreHTTPSErrors: true, ...opts });
     p.on('pageerror', e => errs.push(f + ': ' + e.message));
     const srv = { calls: [], answer: null, override: null };
-    if (process.env.NOFONTS) await p.route('https://fonts.googleapis.com/**', r => r.abort());
+    if (process.env.NOFONTS) await p.route('https://fonts.googleapis.com/**', r => r.abort()); else await routeFonts(p);
     await p.route(ORIGIN + '/**', async r => {
       const u = new URL(r.request().url());
       const body = r.request().postData();

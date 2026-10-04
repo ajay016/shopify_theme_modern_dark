@@ -3,7 +3,7 @@
     <div class="section-head">
       <h2 class="section-head__title">{{ section.settings.heading }}</h2>
     </div>
-    <div class="product-grid product-grid--{{ section.settings.columns }}" id="recently-viewed-grid"></div>
+    <div class="product-grid product-grid--{{ section.settings.columns }}"></div>
   </div>
 </section>
 
@@ -12,49 +12,29 @@
 </style>
 
 <script>
+  // Recently viewed: handles kept in localStorage, each card rendered by
+  // Shopify through the product.mn-card template, so it matches every other
+  // product card (Theme settings → Product cards).
   (function() {
-    const STORAGE_KEY = 'mn_recently_viewed';
-    const currentProductId = {{ product.id | json }};
+    const KEY = 'mn_recent';
+    const current = {{ product.handle | json }};
     const limit = {{ section.settings.products_to_show }};
-
-    let viewed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    viewed = viewed.filter(id => id !== currentProductId);
-    if (currentProductId) {
-      viewed.unshift(currentProductId);
-      viewed = viewed.slice(0, 12);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(viewed));
+    let seen = [];
+    try { seen = JSON.parse(localStorage.getItem(KEY) || '[]').filter(h => typeof h === 'string'); } catch (e) {}
+    seen = seen.filter(h => h !== current);
+    if (current) {
+      try { localStorage.setItem(KEY, JSON.stringify([current].concat(seen).slice(0, 12))); } catch (e) {}
     }
-
-    const displayIds = viewed.filter(id => id !== currentProductId).slice(0, limit);
-    if (displayIds.length === 0) return;
-
-    const container = document.querySelector('.recently-viewed__inner');
-    const grid = document.getElementById('recently-viewed-grid');
-    if (!container || !grid) return;
-
-    Promise.all(displayIds.map(id =>
-      fetch('/products.json?product_id=' + id + '&view=json').then(r => r.json()).catch(() => null)
-    )).then(results => {
-      results.forEach(data => {
-        if (data && data.product) {
-          const p = data.product;
-          const card = document.createElement('div');
-          card.className = 'product-card pcard pcard--theme pcard--{{ settings.product_card_style | default: 'atelier' }} pcard--align-{{ settings.product_card_text_align | default: 'left' }} pcard--rad-{{ settings.product_card_radius | default: 'subtle' }}';
-          card.innerHTML = `
-            <div class="pcard__media pcard__media--{{ settings.product_card_image_ratio | default: 'portrait' }} pcard__media--hov-none">
-              <a href="/products/${p.handle}" class="pcard__imglink" aria-label="${p.title}">
-                ${p.images[0] ? `<img class="pcard__img pcard__img--a" src="${p.images[0].src}" alt="${p.title}" loading="lazy">` : ''}
-              </a>
-            </div>
-            <div class="pcard__info">
-              <span class="pcard__name"><a href="/products/${p.handle}">${p.title}</a></span>
-              <span class="pcard__price">${window.MaisonNoir ? window.MaisonNoir.formatMoney(p.variants[0].price) : '$' + (p.variants[0].price / 100).toFixed(2)}</span>
-            </div>`;
-          grid.appendChild(card);
-        }
+    const show = seen.slice(0, limit);
+    const container = document.querySelector('#section-{{ section.id }} .recently-viewed__inner');
+    const grid = document.querySelector('#section-{{ section.id }} .product-grid');
+    if (!show.length || !container || !grid) return;
+    const root = ((window.routes && window.routes.root_url) || '/').replace(/\/?$/, '/');
+    Promise.all(show.map(h => fetch(`${root}products/${encodeURIComponent(h)}?view=mn-card`).then(r => (r.ok ? r.text() : '')).catch(() => '')))
+      .then(cards => {
+        grid.innerHTML = cards.filter(c => c.includes('data-pcard')).join('');
+        if (grid.children.length) container.style.display = '';
       });
-      if (grid.children.length > 0) container.style.display = '';
-    }).catch(() => {});
   })();
 </script>
 

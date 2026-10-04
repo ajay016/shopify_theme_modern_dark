@@ -1,46 +1,50 @@
 {%- comment -%}
-  Product Card Snippet — unified "Atelier" card used site-wide.
-
-  Renders one consistent, scheme-aware product card on collection, search,
-  cart, recommendations AND the bespoke homepage sections (product-rail,
-  product-showcase, featured-products). All visual options are driven by
-  Theme Settings → Product Cards, with per-render overrides.
+  Product card, built to the Claude Design reference (styles: assets/mn-core.css
+  .card, Shopify additions in assets/mn-shopify.css). Used site-wide:
+  collection, search, cart, recommendations and every homepage section.
+  Visual options come from Theme settings → Product cards, with per-render
+  overrides.
 
   Accepts:
     - product {Object}            a real product. If blank, demo_* params are used.
-    - scheme {String}             'theme' (default) | 'light' | 'dark' | 'warm'
-    - card_style {String}         'atelier' (default) | 'minimal' | 'overlay' | 'bordered'
+    - scheme {String}             kept for older sections; cards inherit the
+                                  colours of the section they sit in
+    - card_style {String}         'atelier' (default) | 'minimal' | 'overlay' | 'bordered' | 'plaque'
     - image_ratio {String}        'portrait' | 'square' | 'landscape'
-    - media_hover {String}        'zoom' | 'second_image' | 'carousel' | 'none'
-    - quickadd_style {String}     'slide_up' | 'popup' | 'always'
-    - show_vendor / show_category / show_number {Boolean}
-    - show_wishlist / show_quickview {Boolean}
-    - show_price_compare {Boolean}
+    - media_hover {String}        'second_image' | 'zoom' | 'carousel' | 'none'
+    - quickadd_style {String}     'slide_up' | 'popup' | 'always' | 'none'
+    - show_vendor / show_category / show_number / show_wishlist / show_quickview /
+      show_compare / show_price_compare / show_sizes / show_swatches / show_rating /
+      show_material / show_low_stock {Boolean}
     - text_align {String}         'left' | 'center'
     - radius {String}             'theme' | 'none' | 'subtle' | 'rounded'
-    - number {Number}             index used for the 01–08 corner badge (optional)
+    - number {Number}             index for the 01–08 number (optional)
     - rail {Boolean}              true when placed in a horizontal scroll rail
     - lazy {Boolean}              lazy-load images (default true)
 
   Demo fallback (when product is blank):
     - demo_title, demo_price, demo_category, demo_image, demo_url, demo_index
+
+  Hooks kept for theme.js: [data-pcard] + data-* facets (built-in filters),
+  .product-card__json (quick view), [data-wishlist-id], [data-open-quickview],
+  .card__add[data-variant-id] (add to bag), .card__swatch[data-swatch-image].
 {%- endcomment -%}
 
 {%- liquid
-  assign card_style    = card_style    | default: settings.product_card_style    | default: 'atelier'
-  assign image_ratio   = image_ratio   | default: settings.product_card_image_ratio | default: 'portrait'
-  assign media_hover   = media_hover   | default: settings.product_card_media_hover | default: 'zoom'
+  assign card_style     = card_style     | default: settings.product_card_style        | default: 'atelier'
+  assign image_ratio    = image_ratio    | default: settings.product_card_image_ratio  | default: 'portrait'
+  assign media_hover    = media_hover    | default: settings.product_card_media_hover  | default: 'second_image'
   assign quickadd_style = quickadd_style | default: settings.product_card_quickadd_style | default: 'slide_up'
-  assign text_align    = text_align    | default: settings.product_card_text_align | default: 'left'
-  assign radius        = radius        | default: settings.product_card_radius   | default: 'theme'
-  assign title_font    = settings.product_card_title_font | default: 'body'
-  assign scheme        = scheme        | default: 'theme'
+  assign text_align     = text_align     | default: settings.product_card_text_align   | default: 'left'
+  assign radius         = radius         | default: settings.product_card_radius       | default: 'theme'
+  assign title_font     = settings.product_card_title_font | default: 'body'
 
   assign show_vendor   = show_vendor   | default: settings.product_card_show_vendor
   assign show_category = show_category | default: settings.product_card_show_category
   assign show_number   = show_number   | default: settings.product_card_show_number
   assign show_wishlist = show_wishlist | default: settings.product_card_show_wishlist
   assign show_quickview = show_quickview | default: settings.product_card_show_quickview
+  assign show_compare  = show_compare  | default: settings.product_card_show_compare
   assign show_price_compare = show_price_compare | default: settings.product_card_show_price_compare
   assign show_sizes    = show_sizes    | default: settings.product_card_show_sizes
   assign show_material = show_material | default: settings.product_card_show_material
@@ -54,11 +58,6 @@
     assign img_loading = 'eager'
   endif
 
-  assign is_demo = false
-  if product == blank
-    assign is_demo = true
-  endif
-
   assign wl_on = false
   if settings.wishlist_enabled and show_wishlist
     assign wl_on = true
@@ -67,9 +66,25 @@
   if settings.quickview_enabled and show_quickview
     assign qv_on = true
   endif
+
+  case radius
+    when 'none'
+      assign r_style = '--r-card:0px;'
+    when 'subtle'
+      assign r_style = '--r-card:6px;'
+    when 'rounded'
+      assign r_style = '--r-card:20px;'
+    else
+      assign r_style = ''
+  endcase
+
+  assign card_attrs = 'data-style="' | append: card_style | append: '" data-ratio="' | append: image_ratio | append: '" data-hover="' | append: media_hover | append: '" data-align="' | append: text_align | append: '" data-title-font="' | append: title_font | append: '" data-quickadd="' | append: quickadd_style | append: '"'
+  if r_style != ''
+    assign card_attrs = card_attrs | append: ' style="' | append: r_style | append: '"'
+  endif
 -%}
 
-{%- if is_demo -%}
+{%- if product == blank -%}
   {%- comment -%}— Demo card (no collection connected) —{%- endcomment -%}
   {%- liquid
     assign d_title = demo_title | default: 'Atelier Piece'
@@ -79,12 +94,10 @@
     assign d_img   = demo_image
     # derive cents from the display price so the quick-view popup shows it
     assign d_cents = d_price | remove: '$' | remove: '€' | remove: '£' | remove: ',' | strip | times: 100
-  -%}
-  {%- liquid
+
     # Demo cards carry the same facets a real product would, so the filter
-    # panel on a store with no catalogue is a working demonstration rather
-    # than two lonely groups. Values are deterministic from demo_index, so
-    # the filters and the cards always agree.
+    # panel on a store with no catalogue is a working demonstration. Values
+    # are deterministic from demo_index, so the filters and cards agree.
     assign di = demo_index | default: 0 | modulo: 6
     assign d_sizes_all = 'XS|S|M|L~S|M|L|XL~XS|S|M~M|L|XL~S|M|L~XS|S|M|L|XL' | split: '~'
     assign d_cols_all  = 'Black|Ivory~Ivory|Sand~Black|Wine~Sand|Charcoal~Black|Ivory|Sand~Charcoal|Wine' | split: '~'
@@ -100,11 +113,11 @@
     if d_disc > 0
       assign d_onsale = true
     endif
+    assign d_cols = d_cols_all[di] | split: '|'
+    assign d_sizes = d_sizes_all[di] | split: '|'
   -%}
-  <div
-    class="product-card pcard pcard--{{ scheme }} pcard--{{ card_style }} pcard--align-{{ text_align }} pcard--rad-{{ radius }} pcard--title-{{ title_font }}{% if rail %} pcard--rail{% endif %}"
+  <article class="card product-card{% if rail %} card--rail{% endif %}" {{ card_attrs }}
     data-pcard
-    data-quickadd="{{ quickadd_style }}"
     data-price="{{ d_cents }}"
     data-available="true"
     data-onsale="{{ d_onsale }}"
@@ -116,49 +129,55 @@
     data-discount="{{ d_disc }}"
     data-age="{{ d_ages[di] }}"
     data-rating="{{ d_ratings[di] }}"
-    data-colours="{{ d_cols_all[di] | split: '|' | size }}"
+    data-colours="{{ d_cols.size }}"
   >
-    <script type="application/json" class="product-card__json">{"id":0,"title":{{ d_title | json }},"vendor":{{ shop.name | json }},"url":{{ d_url | json }},"price":{{ d_cents }},"compare_at_price":0,"body_html":"Demo product — connect a collection in the theme editor to show your own pieces.","images":[{{ d_img | json }}],"options":["Title"],"variants":[{"id":0,"price":{{ d_cents }},"compare_at_price":0,"available":true,"options":["Default Title"]}]}</script>
-
-    <div class="pcard__media pcard__media--{{ image_ratio }} pcard__media--hov-{{ media_hover }}">
-      <a href="{{ d_url }}" class="pcard__imglink" aria-label="{{ d_title | escape }}">
-        <img class="pcard__img pcard__img--a" src="{{ d_img }}" alt="{{ d_title | escape }}" loading="{{ img_loading }}" />
+    <script type="application/json" class="product-card__json">{"id":0,"title":{{ d_title | json }},"vendor":{{ shop.name | json }},"url":{{ d_url | json }},"price":{{ d_cents }},"compare_at_price":0,"body_html":"Demo product: connect a collection in the theme editor to show your own pieces.","images":[{{ d_img | json }}],"options":["Title"],"variants":[{"id":0,"price":{{ d_cents }},"compare_at_price":0,"available":true,"options":["Default Title"]}]}</script>
+    <div class="card__media">
+      <a href="{{ d_url }}" class="card__img card__img--a" aria-label="{{ d_title | escape }}">
+        {%- if d_img != blank -%}<img class="mn-fill" src="{{ d_img }}" alt="" loading="{{ img_loading }}">{%- endif -%}
       </a>
-      {%- if show_number and demo_index -%}
-        <span class="pcard__num">{{ demo_index | plus: 1 | prepend: '0' | slice: -2, 2 }}</span>
+      {%- if show_number and demo_index != blank -%}
+        <span class="card__num">{{ demo_index | plus: 1 | prepend: '0' | slice: -2, 2 }}</span>
       {%- endif -%}
-
-      <div class="pcard__icons">
+      <div class="card__badges">
+        {%- if d_tagsets[di] contains 'new' -%}<span class="badge badge--new">{{ 'products.product.new_badge' | t }}</span>{%- endif -%}
+      </div>
+      <div class="card__actions">
         {%- if wl_on -%}
-          <button class="pcard-icon-btn" data-wishlist-id="demo-{{ demo_index | default: 0 }}" aria-label="Add to wishlist" aria-pressed="false">{%- render 'icon-wishlist' -%}</button>
+          <button type="button" class="icon-btn card__wish" data-wishlist-id="demo-{{ demo_index | default: 0 }}" aria-pressed="false" aria-label="{{ 'accessibility.wishlist_add' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg></button>
         {%- endif -%}
         {%- if qv_on -%}
-          <button class="pcard-icon-btn" data-open-quickview data-product-url="{{ d_url }}" aria-label="Quick view {{ d_title | escape }}">{%- render 'icon-eye' -%}</button>
+          <button type="button" class="icon-btn card__qv" data-open-quickview data-product-url="{{ d_url }}" aria-label="{{ 'accessibility.quick_view' | t: product_title: d_title }}"><svg class="icon" aria-hidden="true"><use href="#i-eye"></use></svg></button>
         {%- endif -%}
       </div>
-
-      {%- comment -%}Demo Add to Bag — opens the quick-view popup from the embedded
-        JSON (same behaviour real multi-variant products get), so the hover
-        flow can be previewed before any collection is connected.{%- endcomment -%}
-      {%- if settings.quickview_enabled -%}
-        <button class="pcard-atc pcard-btn--atc" data-open-quickview data-product-url="{{ d_url }}">
-          {%- render 'icon-bag' -%}
-          <span class="pcard-atc__label">Add to Bag</span>
-        </button>
-      {%- else -%}
-        <a href="{{ d_url }}" class="pcard-atc pcard-btn--atc">
-          {%- render 'icon-bag' -%}
-          <span class="pcard-atc__label">View Product</span>
-        </a>
+      {%- unless quickadd_style == 'none' -%}
+        {%- if settings.quickview_enabled -%}
+          <button type="button" class="mn-btn card__add" data-open-quickview data-product-url="{{ d_url }}"><span class="card__add-label">{{ 'mn.card.add' | t }}</span></button>
+        {%- else -%}
+          <a href="{{ d_url }}" class="mn-btn card__add"><span class="card__add-label">{{ 'mn.card.view' | t }}</span></a>
+        {%- endif -%}
+      {%- endunless -%}
+    </div>
+    <div class="card__body">
+      {%- if show_vendor or show_rating -%}
+        <div class="card__meta">
+          {%- if show_vendor -%}<span class="card__brand">{{ d_vendors[di] }}</span>{%- endif -%}
+          {%- if show_rating -%}<span class="card__rating"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg>{{ d_ratings[di] }}.0</span>{%- endif -%}
+        </div>
+      {%- endif -%}
+      <h3 class="card__title"><a href="{{ d_url }}">{{ d_title }}</a></h3>
+      {%- if show_category -%}<span class="card__cat">{{ d_cat }}</span>{%- endif -%}
+      <div class="price"><span class="price__now">{{ d_price }}</span></div>
+      {%- if show_swatches -%}
+        <div class="card__swatches">
+          {%- for c in d_cols -%}<button type="button" class="card__swatch{% if forloop.first %} is-active{% endif %}" style="{%- render 'swatch-style', label: c -%}" aria-label="{{ c }}" aria-pressed="{{ forloop.first }}"></button>{%- endfor -%}
+        </div>
+      {%- endif -%}
+      {%- if show_sizes -%}
+        <div class="card__sizes" aria-label="{{ 'mn.card.sizes' | t }}">{%- for s in d_sizes -%}<span>{{ s }}</span>{%- endfor -%}</div>
       {%- endif -%}
     </div>
-
-    <div class="pcard__info">
-      {%- if show_category -%}<span class="pcard__cat">{{ d_cat }}</span>{%- endif -%}
-      <span class="pcard__name"><a href="{{ d_url }}">{{ d_title }}</a></span>
-      <span class="pcard__price">{{ d_price }}</span>
-    </div>
-  </div>
+  </article>
 
 {%- else -%}
   {%- comment -%}— Real product card —{%- endcomment -%}
@@ -203,24 +222,17 @@
       endif
     endfor
     assign vars_j = vars_j | append: ']'
-  -%}
-  {%- comment -%}
-    Facets published on the card itself, so the collection page can filter
-    without Shopify's Search & Discovery app. Option values are flattened into
-    one list because a filter only needs to know "does this product offer
-    Large" — not which option position holds it.
-  {%- endcomment -%}
-  {%- liquid
+
+    # Facets published on the card, so the collection page can filter without
+    # Shopify's Search & Discovery app. Option values are flattened: a filter
+    # only needs to know "does this product offer Large".
     assign opt_vals = ''
     for opt in product.options_with_values
       for val in opt.values
         assign opt_vals = opt_vals | append: val | append: '|'
       endfor
     endfor
-
-      # Option values that are ACTUALLY BUYABLE, not merely offered. "Large" on
-      # the card above means the product comes in Large; here it means a Large is
-      # in stock — which is what a shopper filtering by their size wants.
+    # Option values that are actually buyable, not merely offered.
     assign opt_instock = ''
     for v in product.variants
       if v.available
@@ -236,29 +248,61 @@
     assign discount_pc = 0
     if product.compare_at_price > product.price
       assign on_sale = true
-      assign discount_pc = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price
+      assign discount_pc = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round
     endif
 
-      # Age in days, so a "New in" filter can ask for the last 14/30/60 without
-      # the browser having to parse a date on every card.
+    # Age in days, so a "New in" filter can ask for the last 14/30/60 days.
     assign now_s = 'now' | date: '%s' | plus: 0
     assign pub_s = product.published_at | date: '%s' | plus: 0
     assign age_days = now_s | minus: pub_s | divided_by: 86400
 
     assign card_rating = product.metafields.reviews.rating.value.rating | default: product.metafields.reviews.rating.value | default: 0
-    assign colour_count = 0
+    assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+
+    assign colour_opt = nil
+    assign size_opt = nil
     for opt in product.options_with_values
       assign ok2 = opt.name | downcase | strip
       if ok2 == 'color' or ok2 == 'colour'
-        assign colour_count = opt.values.size
+        assign colour_opt = opt
+      elsif ok2 contains 'size'
+        assign size_opt = opt
       endif
     endfor
+    assign colour_count = 0
+    if colour_opt
+      assign colour_count = colour_opt.values.size
+    endif
+
+    # Low stock reads real inventory, only where Shopify tracks it.
+    assign stock_total = 0
+    assign stock_tracked = false
+    for v in product.variants
+      if v.inventory_management != blank
+        assign stock_tracked = true
+        if v.inventory_quantity > 0
+          assign stock_total = stock_total | plus: v.inventory_quantity
+        endif
+      endif
+    endfor
+    assign is_low = false
+    if show_low_stock and stock_tracked and stock_total > 0 and stock_total <= low_stock_threshold
+      assign is_low = true
+    endif
+    assign is_new = false
+    if product.tags contains 'new' or product.tags contains 'New'
+      assign is_new = true
+    endif
+
+    assign has_alt = false
+    if media_hover == 'second_image' and product.images.size > 1
+      assign has_alt = true
+    endif
   -%}
-  <div
-    class="product-card pcard pcard--{{ scheme }} pcard--{{ card_style }} pcard--align-{{ text_align }} pcard--rad-{{ radius }} pcard--title-{{ title_font }}{% if rail %} pcard--rail{% endif %}"
+  <article class="card product-card{% unless product.available %} is-soldout{% endunless %}{% if has_alt %} has-alt{% endif %}{% if rail %} card--rail{% endif %}" {{ card_attrs }}
     data-pcard
     data-product-id="{{ product.id }}"
-    data-quickadd="{{ quickadd_style }}"
+    data-handle="{{ product.handle }}"
     data-price="{{ product.price }}"
     data-available="{{ product.available }}"
     data-onsale="{{ on_sale }}"
@@ -274,146 +318,71 @@
   >
     <script type="application/json" class="product-card__json">{"id":{{ product.id }},"title":{{ product.title | json }},"vendor":{{ product.vendor | json }},"url":{{ product.url | json }},"price":{{ product.price }},"compare_at_price":{{ product.compare_at_price | default: 0 }},"body_html":{{ product.description | json }},"images":{{ imgs_j }},"options":{{ product.options | json }},"variants":{{ vars_j }}}</script>
 
-    <div class="pcard__media pcard__media--{{ image_ratio }} pcard__media--hov-{{ media_hover }}">
-      <a href="{{ product.url }}" class="pcard__imglink" aria-label="{{ p_alt }}">
+    <div class="card__media">
+      <a href="{{ product.url }}" class="card__img card__img--a" aria-label="{{ p_alt }}">
         {%- if product.featured_image != blank -%}
-          {{ product.featured_image | image_url: width: 700 | image_tag:
-            loading: img_loading, class: 'pcard__img pcard__img--a',
-            sizes: '(max-width:700px) 64vw, (max-width:1100px) 33vw, 24vw',
-            widths: '350,500,700,900', alt: p_alt }}
-          {%- if media_hover == 'second_image' and product.images.size > 1 -%}
-            {{ product.images[1] | image_url: width: 700 | image_tag:
-              loading: 'lazy', class: 'pcard__img pcard__img--b', alt: p_alt }}
-          {%- endif -%}
-          {%- if media_hover == 'carousel' and product.images.size > 1 -%}
-            {%- for img in product.images offset: 1 limit: 3 -%}
-              {{ img | image_url: width: 700 | image_tag:
-                loading: 'lazy', class: 'pcard__img pcard__img--cycle', alt: p_alt }}
-            {%- endfor -%}
-          {%- endif -%}
+          {{ product.featured_image | image_url: width: 900 | image_tag:
+            loading: img_loading, class: 'mn-fill',
+            sizes: '(max-width:700px) 50vw, (max-width:1100px) 33vw, 25vw',
+            widths: '360,540,720,900', alt: p_alt }}
         {%- else -%}
-          <span class="pcard__img pcard__img--a pcard__img--placeholder">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          </span>
+          {{ 'product-apparel-1' | placeholder_svg_tag: 'card__placeholder' }}
         {%- endif -%}
       </a>
-
-      {%- if show_number and number -%}
-        <span class="pcard__num">{{ number | prepend: '0' | slice: -2, 2 }}</span>
+      {%- if has_alt -%}
+        <span class="card__img card__img--b" aria-hidden="true">
+          {{ product.images[1] | image_url: width: 900 | image_tag: loading: 'lazy', class: 'mn-fill', sizes: '(max-width:700px) 50vw, (max-width:1100px) 33vw, 25vw', widths: '360,540,720,900', alt: '' }}
+        </span>
       {%- endif -%}
-
-      {%- liquid
-          # Low stock reads real inventory, so it only speaks when Shopify is
-          # actually tracking it. An untracked variant reports null, which would
-          # otherwise read as zero and mark every product "last few".
-        assign stock_total = 0
-        assign stock_tracked = false
-        for v in product.variants
-          if v.inventory_management != blank
-            assign stock_tracked = true
-            if v.inventory_quantity > 0
-              assign stock_total = stock_total | plus: v.inventory_quantity
-            endif
-          endif
-        endfor
-      -%}
-
-      {%- if product.available == false -%}
-        <span class="pcard__badge">{{ 'products.product.sold_out_badge' | t }}</span>
-      {%- elsif product.compare_at_price > product.price -%}
-        {%- assign discount_pct = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
-        <span class="pcard__badge pcard__badge--sale">−{{ discount_pct }}%</span>
-      {%- elsif show_low_stock and stock_tracked and stock_total > 0 and stock_total <= low_stock_threshold -%}
-        <span class="pcard__badge pcard__badge--low">Only {{ stock_total }} left</span>
-      {%- elsif product.tags contains 'new' or product.tags contains 'New' -%}
-        <span class="pcard__badge">{{ 'products.product.new_badge' | t }}</span>
-      {%- endif -%}
-
-      {%- comment -%}
-        Sizes on hover. The setting has existed in the theme editor since the
-        card was written but nothing read it, so switching it on did nothing.
-        Each size links straight to that variant, and sizes with no stock are
-        struck through rather than hidden — a shopper wants to know their size
-        exists before they learn it is gone.
-      {%- endcomment -%}
-      {%- if show_sizes -%}
-        {%- for opt in product.options_with_values -%}
-          {%- assign opt_key = opt.name | downcase | strip -%}
-          {%- if opt_key == 'size' -%}
-            <div class="pcard__sizes" aria-label="Available sizes">
-              {%- for val in opt.values limit: 8 -%}
-                {%- liquid
-                  assign val_available = false
-                  assign val_variant = nil
-                  for v in product.variants
-                    if v.options contains val
-                      unless val_variant
-                        assign val_variant = v
-                      endunless
-                      if v.available
-                        assign val_available = true
-                        assign val_variant = v
-                        break
-                      endif
-                    endif
-                  endfor
-                -%}
-                <a
-                  class="pcard__size{% unless val_available %} is-out{% endunless %}"
-                  href="{{ product.url }}{% if val_variant %}?variant={{ val_variant.id }}{% endif %}"
-                  {% unless val_available %}aria-disabled="true"{% endunless %}
-                >{{ val }}</a>
-              {%- endfor -%}
-            </div>
-          {%- endif -%}
+      {%- if media_hover == 'carousel' and product.images.size > 1 -%}
+        {%- for img in product.images offset: 1 limit: 3 -%}
+          <span class="card__img card__img--cycle" aria-hidden="true">{{ img | image_url: width: 900 | image_tag: loading: 'lazy', class: 'mn-fill', sizes: '(max-width:700px) 50vw, 25vw', widths: '360,540,720,900', alt: '' }}</span>
         {%- endfor -%}
       {%- endif -%}
 
-      <div class="pcard__icons">
+      {%- if show_number and number -%}
+        <span class="card__num">{{ number | prepend: '0' | slice: -2, 2 }}</span>
+      {%- endif -%}
+
+      <div class="card__badges">
+        {%- if is_new -%}<span class="badge badge--new">{{ 'products.product.new_badge' | t }}</span>{%- endif -%}
+        {%- if on_sale and show_price_compare -%}<span class="badge badge--sale">{{ 'mn.card.sale' | t: pc: discount_pc }}</span>{%- endif -%}
+        {%- unless product.available -%}<span class="badge badge--soldout">{{ 'products.product.sold_out_badge' | t }}</span>{%- endunless -%}
+        {%- if is_low -%}<span class="badge badge--low">{{ 'mn.card.low' | t }}</span>{%- endif -%}
+      </div>
+
+      <div class="card__actions">
         {%- if wl_on -%}
-          <button class="pcard-icon-btn" data-wishlist-id="{{ product.id }}" aria-label="{{ 'accessibility.wishlist_add' | t }}" aria-pressed="false">{%- render 'icon-wishlist' -%}</button>
+          <button type="button" class="icon-btn card__wish" data-wishlist-id="{{ product.id }}" data-wishlist-handle="{{ product.handle }}" aria-pressed="false" aria-label="{{ 'mn.card.wish' | t: title: product.title | escape }}"><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg></button>
         {%- endif -%}
         {%- if qv_on -%}
-          <button class="pcard-icon-btn" data-open-quickview data-product-url="{{ product.url }}" aria-label="{{ 'accessibility.quick_view' | t: product_title: product.title }}">{%- render 'icon-eye' -%}</button>
+          <button type="button" class="icon-btn card__qv" data-open-quickview data-product-url="{{ product.url }}" aria-label="{{ 'accessibility.quick_view' | t: product_title: product.title }}"><svg class="icon" aria-hidden="true"><use href="#i-eye"></use></svg></button>
+        {%- endif -%}
+        {%- if show_compare -%}
+          <button type="button" class="icon-btn card__cmp" data-compare-id="{{ product.handle }}" aria-pressed="false" aria-label="{{ 'mn.card.compare' | t: title: product.title | escape }}"><svg class="icon" aria-hidden="true"><use href="#i-compare"></use></svg></button>
         {%- endif -%}
       </div>
 
-      {%- comment -%}Add to bag — popup opens quick view; single variant adds directly; else select options{%- endcomment -%}
+      {%- comment -%}Add to bag: one variant adds at once; several open quick view (or the product page){%- endcomment -%}
       {%- unless quickadd_style == 'none' -%}
-        {%- if quickadd_style == 'popup' and settings.quickview_enabled -%}
-          <button class="pcard-atc pcard-btn--atc" data-open-quickview data-product-url="{{ product.url }}" aria-label="{{ 'accessibility.add_to_cart' | t: product_title: product.title }}">
-            {%- render 'icon-bag' -%}
-            <span class="pcard-atc__label">Add to Bag</span>
-          </button>
-        {%- elsif product.variants.size == 1 and first_variant -%}
-          <button class="pcard-atc pcard-btn--atc" data-variant-id="{{ first_variant.id }}" aria-label="{{ 'accessibility.add_to_cart' | t: product_title: product.title }}" {% unless first_variant.available %}disabled{% endunless %}>
-            {%- render 'icon-bag' -%}
-            <span class="pcard-atc__label">{% if first_variant.available %}Add to Bag{% else %}{{ 'products.product.sold_out' | t }}{% endif %}</span>
-          </button>
-        {%- elsif qv_on -%}
-          <button class="pcard-atc pcard-btn--atc" data-open-quickview data-product-url="{{ product.url }}">
-            {%- render 'icon-bag' -%}
-            <span class="pcard-atc__label">Add to Bag</span>
-          </button>
+        {%- if product.available == false -%}
+          <span class="mn-btn card__add" aria-disabled="true"><span class="card__add-label">{{ 'products.product.sold_out' | t }}</span></span>
+        {%- elsif quickadd_style == 'popup' and settings.quickview_enabled -%}
+          <button type="button" class="mn-btn card__add" data-open-quickview data-product-url="{{ product.url }}" aria-label="{{ 'accessibility.add_to_cart' | t: product_title: product.title }}"><span class="card__add-label">{{ 'mn.card.add' | t }}</span></button>
+        {%- elsif product.has_only_default_variant or product.variants.size == 1 -%}
+          <button type="button" class="mn-btn card__add" data-variant-id="{{ first_variant.id }}" aria-label="{{ 'accessibility.add_to_cart' | t: product_title: product.title }}"><span class="card__add-label">{{ 'mn.card.add' | t }}</span></button>
+        {%- elsif settings.quickview_enabled -%}
+          <button type="button" class="mn-btn card__add" data-open-quickview data-product-url="{{ product.url }}" aria-label="{{ 'accessibility.add_to_cart' | t: product_title: product.title }}"><span class="card__add-label">{{ 'mn.card.add' | t }}</span></button>
         {%- else -%}
-          <a href="{{ product.url }}" class="pcard-atc">
-            {%- render 'icon-bag' -%}
-            <span class="pcard-atc__label">Select Options</span>
-          </a>
+          <a href="{{ product.url }}" class="mn-btn card__add"><span class="card__add-label">{{ 'mn.card.choose' | t }}</span></a>
         {%- endif -%}
       {%- endunless -%}
     </div>
 
-    <div class="pcard__info">
-      {%- comment -%}
-        Brand and rating share the top row, rating pushed right, as in the
-        design reference. Category is its own line under the title rather
-        than competing with the brand for the same slot -- previously only
-        one of the two could ever show.
-      {%- endcomment -%}
+    <div class="card__body">
       {%- liquid
         assign has_rating = false
-        if show_rating and product.metafields.reviews.rating.value != blank
+        if show_rating and card_rating != 0 and card_rating != blank
           assign has_rating = true
         endif
         assign has_brand = false
@@ -422,161 +391,107 @@
         endif
       -%}
       {%- if has_brand or has_rating -%}
-        <div class="pcard__brow">
-          {%- if has_brand -%}<span class="pcard__brand">{{ product.vendor }}</span>{%- endif -%}
+        <div class="card__meta">
+          {%- if has_brand -%}<span class="card__brand">{{ product.vendor }}</span>{%- endif -%}
           {%- if has_rating -%}
-            {%- liquid
-              assign rating_val = product.metafields.reviews.rating.value.rating | default: product.metafields.reviews.rating.value | times: 1.0
-              assign rating_count = product.metafields.reviews.rating_count.value | default: 0
-              assign rating_rounded = rating_val | round
-            -%}
-            <span class="pcard__rating" aria-label="Rated {{ rating_val }} out of 5">
-              <span class="pcard__stars" aria-hidden="true">
-                {%- for i in (1..5) -%}
-                  <span class="pcard__star{% if i <= rating_rounded %} is-on{% endif %}">★</span>
-                {%- endfor -%}
-              </span>
-              {%- if rating_count > 0 -%}<span class="pcard__rating-count">({{ rating_count }})</span>{%- endif -%}
-            </span>
+            {%- assign rating_val = card_rating | times: 1.0 | round: 1 -%}
+            <span class="card__rating" aria-label="{{ 'mn.card.rated' | t: rating: rating_val }}"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg>{{ rating_val }}{%- if rating_count > 0 -%}<span>({{ rating_count }})</span>{%- endif -%}</span>
           {%- endif -%}
         </div>
       {%- endif -%}
 
-      <span class="pcard__name"><a href="{{ product.url }}">{{ product.title }}</a></span>
+      <h3 class="card__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
 
       {%- if show_category and product.type != blank -%}
-        <span class="pcard__cat">{{ product.type }}</span>
+        <span class="card__cat">{{ product.type }}</span>
       {%- endif -%}
 
-      {%- comment -%}
-        Carried for the list view, where the reference shows a short
-        description. Hidden in the grid by CSS.
-      {%- endcomment -%}
+      {%- comment -%}Short description for the collection list view; hidden in grids.{%- endcomment -%}
       {%- if product.description != blank -%}
-        <p class="pcard__desc">{{ product.description | strip_html | truncatewords: 22 }}</p>
+        <p class="card__desc">{{ product.description | strip_html | truncatewords: 22 }}</p>
       {%- endif -%}
 
-      <span class="pcard__price">
-        {%- if show_price_compare and product.compare_at_price > product.price -%}
-          {%- assign off_pc = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
-          <span class="pcard__price-now">{{ product.price | money }}</span>
-          <s class="pcard__price-was">{{ product.compare_at_price | money }}</s>
-          <span class="pcard__off">&minus;{{ off_pc }}%</span>
+      <div class="price{% if on_sale and show_price_compare %} price--sale{% endif %}">
+        {%- if product.price_varies -%}
+          {%- assign p_min = product.price_min | money -%}
+          <span class="price__now">{{ 'mn.card.from' | t: price: p_min }}</span>
         {%- else -%}
-          <span class="pcard__price-now">{{ product.price | money }}</span>
+          <span class="price__now">{{ product.price | money }}</span>
         {%- endif -%}
-      </span>
+        {%- if on_sale and show_price_compare -%}
+          <s class="price__was"><span class="visually-hidden">{{ 'mn.card.was' | t }} </span>{{ product.compare_at_price | money }}</s>
+          <span class="badge badge--sale">&minus;{{ discount_pc }}%</span>
+        {%- endif -%}
+      </div>
 
-
-      {%- comment -%}
-        Colour swatches. Each swatch carries the image of the first variant in
-        that colour, so hovering previews it without a request. The CSS named
-        colour is a deliberate fallback: a merchant who names an option
-        "Sand" gets a neutral chip rather than a broken one.
-      {%- endcomment -%}
-      {%- if show_swatches -%}
-        {%- for opt in product.options_with_values -%}
-          {%- assign opt_key = opt.name | downcase | strip -%}
-          {%- if opt_key == 'color' or opt_key == 'colour' -%}
-            <span class="pcard__swatches" aria-label="{{ opt.values.size }} colours">
-              {%- for val in opt.values limit: 6 -%}
-                {%- liquid
-                  assign sw_variant = nil
-                  for v in product.variants
-                    if v.options contains val
-                      assign sw_variant = v
-                      break
-                    endif
-                  endfor
-
-                  # Finding the image to preview. Relying on the variant having
-                  # its own image only works in stores that assign one per
-                  # colour, which most do not -- clicking a swatch then had
-                  # nothing to swap to and appeared dead. Fall back to matching
-                  # a product image by alt text, which is how merchants
-                  # normally label colourways.
-                  assign sw_image = nil
-                  if sw_variant != nil and sw_variant.featured_image != blank
-                    assign sw_image = sw_variant.featured_image
+      {%- if show_swatches and colour_opt -%}
+        <div class="card__swatches" aria-label="{{ 'mn.card.colours' | t: count: colour_count }}">
+          {%- for val in colour_opt.values limit: 4 -%}
+            {%- liquid
+              assign sw_variant = nil
+              for v in product.variants
+                if v.options contains val
+                  assign sw_variant = v
+                  break
+                endif
+              endfor
+              # The image to show: the variant's own, else a product image
+              # whose alt text names the colour (how merchants label colourways).
+              assign sw_image = nil
+              if sw_variant != nil and sw_variant.featured_image != blank
+                assign sw_image = sw_variant.featured_image
+              endif
+              assign val_key = val | downcase | strip
+              if sw_image == nil
+                for im in product.images
+                  assign im_alt = im.alt | downcase
+                  if im_alt contains val_key
+                    assign sw_image = im
+                    break
                   endif
-                  assign val_key = val | downcase | strip
-                  if sw_image == nil
-                    for im in product.images
-                      assign im_alt = im.alt | downcase
-                      if im_alt contains val_key
-                        assign sw_image = im
-                        break
-                      endif
-                    endfor
-                  endif
-                -%}
-                <button
-                  type="button"
-                  class="pcard__swatch"
-                  style="{%- render 'swatch-style', label: val -%}"
-                  title="{{ val | escape }}"
-                  aria-label="{{ val | escape }}"
-                  {% if sw_image != nil %}data-swatch-image="{{ sw_image | image_url: width: 700 }}"{% endif %}
-                  {% if sw_variant != nil %}data-swatch-variant="{{ sw_variant.id }}"{% endif %}
-                  aria-pressed="false"
-                ></button>
-              {%- endfor -%}
-              {%- if opt.values.size > 6 -%}
-                <span class="pcard__swatch-more">+{{ opt.values.size | minus: 6 }}</span>
-              {%- endif -%}
-            </span>
-          {%- endif -%}
-        {%- endfor -%}
+                endfor
+              endif
+            -%}
+            <button type="button" class="card__swatch{% if forloop.first %} is-active{% endif %}"
+              style="{%- render 'swatch-style', label: val, swatch: val.swatch -%}"
+              title="{{ val | escape }}" aria-label="{{ val | escape }}" aria-pressed="{{ forloop.first }}"
+              {% if sw_image != nil %}data-swatch-image="{{ sw_image | image_url: width: 900 }}"{% endif %}
+              {% if sw_variant != nil %}data-swatch-variant="{{ sw_variant.id }}"{% endif %}></button>
+          {%- endfor -%}
+          {%- if colour_count > 4 -%}<span class="card__more">+{{ colour_count | minus: 4 }}</span>{%- endif -%}
+        </div>
       {%- endif -%}
 
-      {%- comment -%}
-        Sizes as a readable line under the swatches, sold-out values struck
-        through, as the reference shows. The hover chips over the image stay
-        for quick-add; this is the at-a-glance version and survives on touch,
-        where there is no hover.
-      {%- endcomment -%}
-      {%- if show_sizes -%}
-        {%- for opt in product.options_with_values -%}
-          {%- assign size_key = opt.name | downcase | strip -%}
-          {%- if size_key contains 'size' -%}
-            <span class="pcard__sizeline">
-              {%- for val in opt.values -%}
-                {%- liquid
-                  assign val_in_stock = false
-                  for v in product.variants
-                    if v.options contains val and v.available
-                      assign val_in_stock = true
-                      break
-                    endif
-                  endfor
-                -%}
-                {%- if val_in_stock -%}{{ val }}{%- else -%}<s>{{ val }}</s>{%- endif -%}
-                {%- unless forloop.last %} &middot; {% endunless -%}
-              {%- endfor -%}
-            </span>
-          {%- endif -%}
-        {%- endfor -%}
+      {%- comment -%}Sizes, sold-out values struck through so a shopper sees their size exists before learning it is gone.{%- endcomment -%}
+      {%- if show_sizes and size_opt -%}
+        <div class="card__sizes" aria-label="{{ 'mn.card.sizes' | t }}">
+          {%- for val in size_opt.values -%}
+            {%- liquid
+              assign val_in_stock = false
+              for v in product.variants
+                if v.options contains val and v.available
+                  assign val_in_stock = true
+                  break
+                endif
+              endfor
+            -%}
+            {%- if val_in_stock -%}<span>{{ val }}</span>{%- else -%}<s>{{ val }}</s>{%- endif -%}
+          {%- endfor -%}
+        </div>
       {%- endif -%}
 
-      {%- comment -%}
-        Material and low stock share the last row, as in the reference.
-      {%- endcomment -%}
       {%- liquid
         assign show_mat = false
         if show_material and product.metafields.custom.material.value != blank
           assign show_mat = true
         endif
-        assign show_low = false
-        if show_low_stock and stock_tracked and stock_total > 0 and stock_total <= low_stock_threshold
-          assign show_low = true
-        endif
       -%}
-      {%- if show_mat or show_low -%}
-        <span class="pcard__meta">
-          {%- if show_mat -%}<span class="pcard__material">{{ product.metafields.custom.material.value }}</span>{%- endif -%}
-          {%- if show_low -%}<span class="pcard__low">{{ 'products.product.only_left' | t: count: stock_total }}</span>{%- endif -%}
+      {%- if show_mat or is_low -%}
+        <span class="card__extra">
+          {%- if show_mat -%}<span>{{ product.metafields.custom.material.value }}</span>{%- endif -%}
+          {%- if is_low -%}<span class="card__low">{{ 'products.product.only_left' | t: count: stock_total }}</span>{%- endif -%}
         </span>
       {%- endif -%}
     </div>
-  </div>
+  </article>
 {%- endif -%}

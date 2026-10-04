@@ -88,8 +88,23 @@ This file is the plan and the record. Update the checkboxes as phases land.
       `scripts/cart-test.js` (24 checks, mocked Ajax API).
       For D7: the cart page's steppers / remove have no script yet, and
       `cart_show_recommendations` does not gate the cart page upsell.
-- [ ] **D5 Product card, quick view, compare** — the design card everywhere, quick view
-      modal / bottom sheet with the same pickers, compare tray and table.
+- [x] **D5 Product card, compare, wishlist** — `snippets/product-card.liquid` is the
+      design's `.card` everywhere (collection, search, cart, recommendations, homepages),
+      keeping the filter facets, quick-view JSON and wishlist hooks. Every Product cards
+      setting maps onto it: style (atelier = the design; minimal, editorial, bordered,
+      plaque), ratio, radius, hover (second image = the design, zoom, carousel, none), add
+      to bag display, alignment, title font, brand, rating, swatches, sizes, category,
+      material, number, low stock, sale. New: Show compare button. Defaults and the
+      store's saved values moved to the design card (brand + rating on, sizes on,
+      second-image hover, material / number / category off). Compare tray + table
+      (`snippets/mn-compare.liquid`, `MN.compare`) and a wishlist drawer
+      (`snippets/mn-wishlist.liquid`, `MN.wish`; the heart had no view before) read
+      `templates/product.mn-data.liquid`; recently viewed now renders real cards through
+      `templates/product.mn-card.liquid` (it called an endpoint that does not exist).
+      Old `.pcard` CSS removed. Test `scripts/card-check.py` + `scripts/card-test.js`
+      (42 checks). **Quick view moves to D6**: it is built from the product page's
+      pickers, price and buy button, so it lands with them; until then the card opens
+      the existing quick view.
 - [ ] **D6 Product page** — 8 layouts, 11 gallery positions, media (image, video, 3D,
       zoom, lightbox, popup video), 15 reorderable blocks, all picker types, qty styles,
       custom buy button states, terms, notify-me, buy now, dynamic checkout, pickup,

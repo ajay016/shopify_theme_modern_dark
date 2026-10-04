@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="design_doc_mode" content="canvas">
+<title>Maison Noir — widths &amp; states</title>
+<style>
+body{margin:0;font-family:system-ui,sans-serif}
+.fr{position:absolute}
+.fr h3{position:absolute;left:0;bottom:100%;margin:0 0 10px;font:500 15px/1.2 system-ui,sans-serif;color:#222;white-space:nowrap}
+.fr h3 span{color:#888;font-weight:400;margin-left:8px}
+.fr iframe{display:block;border:0;background:#fff;border-radius:6px;box-shadow:0 2px 24px rgba(0,0,0,.14)}
+.row{position:absolute;left:0;font:600 13px/1 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#666}
+</style>
+</head>
+<body>
+<script>
+const G=100,ROWS=[
+ {t:'Phone states · 390 px',h:844,items:[['Quick view bottom sheet','open=quick'],['Menu drawer, three levels','open=menu'],['Search overlay','open=search'],['Size guide drawer','open=size'],['Sticky bar + variant change','open=sticky&scroll=700'],['Dark Luxury','scheme=dark']].map(i=>[...i,390])},
+ {t:'Desktop states · 1440 px',h:900,items:[['Mega menu · Columns','open=mega&mega=columns'],['Mega menu · Visual, no images','open=mega&mega=visual&megaImages=off'],['Mega menu · Flyout','open=mega&mega=flyout'],['Quick view modal','open=quick'],['Compare colours','open=compare']].map(i=>[...i,1440])},
+ {t:'Header styles · 1440 px',h:420,items:[['Classic · ticker','header=classic&announce=ticker'],['Centred · rotating','header=centred&announce=rotate'],['Minimal · static','header=minimal&announce=static'],['Floating · transparent over hero','header=floating&hero=on']].map(i=>[...i,1440])},
+ {t:'Footer styles · 1440 px',h:820,items:[['Columns · deep','footer=columns&footerSurface=deep&scroll=bottom'],['Statement · inverted','footer=statement&footerSurface=invert&scroll=bottom'],['Minimal · soft','footer=minimal&footerSurface=soft&scroll=bottom'],['Columns · base','footer=columns&footerSurface=base&scroll=bottom']].map(i=>[...i,1440])},
+ {t:'Product page · full length',h:'full',items:[['Light / Ivory · 1440','',1440],['Light / Ivory · 1024','',1024],['Light / Ivory · 390','',390],['Dark Luxury · 1440','scheme=dark',1440],['Dark Luxury · 390','scheme=dark',390]]}];
+let y=120;
+ROWS.forEach(r=>{const lab=document.createElement('div');lab.className='row';lab.style.top=(y-80)+'px';lab.textContent=r.t;document.body.appendChild(lab);let x=0;
+ r.items.forEach(([label,qs,w])=>{const f=document.createElement('div');f.className='fr';f.style.left=x+'px';f.style.top=y+'px';
+  const h=r.h==='full'?3000:r.h;f.innerHTML=`<h3>${label}<span>${w}px</span></h3><iframe loading="lazy" width="${w}" height="${h}" src="Product Page.html?panel=0${qs?'&'+qs:''}" title="${label}"></iframe>`;document.body.appendChild(f);
+  if(r.h==='full'){const ifr=f.querySelector('iframe');const fit=()=>{try{const d=ifr.contentDocument;if(d&&d.body)ifr.height=d.documentElement.scrollHeight}catch(e){}};ifr.addEventListener('load',()=>{setTimeout(fit,1500);setTimeout(fit,4000)})}
+  x+=w+G});
+ y+=(r.h==='full'?3000:r.h)+180});
+</script>
+</body>
+</html>

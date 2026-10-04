@@ -38,25 +38,40 @@
         },
         "summary": {
           "type": "summary",
-          "settings": {}
+          "settings": {
+            "words": 40,
+            "show_link": true
+          }
         },
         "badges": {
           "type": "badges",
-          "settings": {}
+          "settings": {
+            "extra": ""
+          }
         },
         "urgency": {
           "type": "urgency",
           "settings": {
-            "countdown_label": "Winter sale ends in"
+            "countdown_end": "",
+            "countdown_label": "Winter sale ends in",
+            "show_stock": true,
+            "show_visitors": false,
+            "visitors_min": 12,
+            "visitors_max": 26
           }
         },
         "terms": {
           "type": "terms",
-          "settings": {}
+          "settings": {
+            "text": "I agree to the <a href=\"/policies/terms-of-service\">terms of sale</a> and the <a href=\"/policies/refund-policy\">returns policy</a>."
+          }
         },
         "buy": {
           "type": "buy",
-          "settings": {}
+          "settings": {
+            "show_dynamic": true,
+            "show_notify": true
+          }
         },
         "pickup": {
           "type": "pickup",
@@ -64,19 +79,42 @@
         },
         "offer": {
           "type": "offer",
-          "settings": {}
+          "settings": {
+            "title": "Buy two silk pieces, save 10%",
+            "text": "Applied at checkout, or use the code.",
+            "code": "SILK10"
+          }
         },
         "shipping": {
           "type": "shipping",
-          "settings": {}
+          "settings": {
+            "ship_title": "Delivered [dates]",
+            "est_min": 2,
+            "est_max": 4,
+            "ship_text": "Complimentary express shipping over $500",
+            "ret_title": "Free returns within 30 days",
+            "ret_text": "Unworn with tags. We collect from your door."
+          }
         },
         "trust": {
           "type": "trust",
-          "settings": {}
+          "settings": {
+            "icon_1": "shield",
+            "text_1": "Authenticity guaranteed",
+            "icon_2": "lock",
+            "text_2": "Secure checkout",
+            "icon_3": "pin",
+            "text_3": "Made in Italy",
+            "show_payments": true
+          }
         },
         "actions": {
           "type": "actions",
-          "settings": {}
+          "settings": {
+            "show_ask": true,
+            "show_compare": true,
+            "show_share": true
+          }
         },
         "details": {
           "type": "details",
@@ -86,11 +124,11 @@
       "block_order": [
         "title",
         "price",
+        "variants",
+        "quantity",
         "summary",
         "badges",
         "urgency",
-        "variants",
-        "quantity",
         "terms",
         "buy",
         "pickup",
@@ -142,6 +180,18 @@
         "ask_note": "A client advisor replies within one business day."
       }
     },
+    "look": {
+      "type": "mn-complete-look",
+      "settings": {
+        "eyebrow": "Styled with",
+        "heading": "Complete <em>the look</em>",
+        "lede": "Paired for evening by our studio.",
+        "add_label": "Add",
+        "include_current": true,
+        "total_label": "Look total with this piece",
+        "add_all_label": "Add the look to bag"
+      }
+    },
     "recommendations": {
       "type": "product-recommendations",
       "settings": {
@@ -154,6 +204,17 @@
         "columns": "4"
       }
     },
+    "banner": {
+      "type": "mn-banner",
+      "settings": {
+        "height": 560,
+        "eyebrow": "The Silk Edition",
+        "title": "Washed in Como, <em>cut in Florence.</em>",
+        "text": "Eleven pieces in 22-momme mulberry silk, finished by hand in our Florence atelier.",
+        "button_label": "Discover the edition",
+        "button_link": ""
+      }
+    },
     "recently-viewed": {
       "type": "recently-viewed",
       "settings": {
@@ -162,16 +223,6 @@
         "products_to_show": 6,
         "columns": "6"
       }
-    },
-    "look": {
-      "type": "mn-complete-look",
-      "blocks": {},
-      "block_order": [],
-      "settings": {}
-    },
-    "banner": {
-      "type": "mn-banner",
-      "settings": {}
     }
   },
   "order": [

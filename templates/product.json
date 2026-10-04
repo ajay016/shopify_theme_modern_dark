@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -5,98 +14,45 @@
       "blocks": {
         "title": {
           "type": "title",
-          "settings": {}
+          "settings": {
+            "show_vendor": true,
+            "show_rating": true
+          }
         },
         "price": {
           "type": "price",
-          "settings": {}
-        },
-        "summary": {
-          "type": "summary",
-          "settings": {}
-        },
-        "badges": {
-          "type": "badges",
-          "settings": {}
-        },
-        "urgency": {
-          "type": "urgency",
           "settings": {
-            "countdown_label": "Winter sale ends in",
-            "show_stock": true,
-            "show_visitors": false,
-            "visitors_min": 12,
-            "visitors_max": 26
+            "show_notes": true
           }
         },
         "variants": {
           "type": "variants",
-          "settings": {}
+          "settings": {
+            "show_size_guide": true,
+            "show_compare": true
+          }
         },
         "quantity": {
           "type": "quantity",
-          "settings": {}
-        },
-        "terms": {
-          "type": "terms",
-          "settings": {}
-        },
-        "buy": {
-          "type": "buy",
-          "settings": {}
-        },
-        "pickup": {
-          "type": "pickup",
-          "settings": {}
-        },
-        "offer": {
-          "type": "offer",
-          "settings": {}
-        },
-        "shipping": {
-          "type": "shipping",
-          "settings": {}
-        },
-        "trust": {
-          "type": "trust",
-          "settings": {}
-        },
-        "actions": {
-          "type": "actions",
-          "settings": {}
-        },
-        "details": {
-          "type": "details",
           "settings": {}
         }
       },
       "block_order": [
         "title",
         "price",
-        "summary",
-        "badges",
-        "urgency",
         "variants",
-        "quantity",
-        "terms",
-        "buy",
-        "pickup",
-        "offer",
-        "shipping",
-        "trust",
-        "actions",
-        "details"
+        "quantity"
       ],
       "settings": {
-        "layout": "default",
+        "layout": "standard",
         "breadcrumb": true,
         "info_sticky": true,
-        "gallery": "top",
+        "gallery": "bottom",
         "media_size": "screen",
         "video": "popup",
         "zoom": true,
         "group_by_colour": false,
-        "colour_type": "dropdown",
+        "colour_type": "colour",
         "size_type": "text",
         "colour_names": "Color, Colour",
         "size_names": "Size",
@@ -105,6 +61,11 @@
         "tab_desc": "tabs",
         "tab_ship": "accordion",
         "tab_rev": "open",
+        "shipping_heading": "Shipping & returns",
+        "shipping_content": "<p><strong>Express delivery.</strong> 2–4 business days. Complimentary over $500.</p><p><strong>Returns.</strong> Free within 30 days. Unworn, with tags.</p>",
+        "shipping_policy": false,
+        "reviews_show": true,
+        "reviews_liquid": "",
         "qty_style": "stepper",
         "atc_label": "Add to bag",
         "atc_style": "solid",
@@ -113,33 +74,42 @@
         "after_add": "drawer",
         "sticky_bar": true,
         "low_stock": 5,
-        "stock_full": 20
+        "stock_full": 20,
+        "size_guide_page": "",
+        "size_chart": "Size,UK,US,Bust,Waist,Hip,Length\nXS,6,2,80,62,88,116\nS,8,4,84,66,92,118\nM,10,6,88,70,96,120\nL,12,8,93,75,101,122\nXL,14,10,98,80,106,124",
+        "size_cm_from": 4,
+        "size_fit": "Fits true to size. Between sizes, take the larger for a looser fall.",
+        "size_note": "Body measurements. Length is measured from the highest point of the shoulder.",
+        "size_measure": "<p><strong>Bust</strong> Around the fullest part of the chest, keeping the tape level under the arms.</p><p><strong>Waist</strong> Around the natural waistline, the narrowest part of the torso.</p><p><strong>Hip</strong> Around the fullest part of the hips, about 20 cm below the waist.</p><p><strong>Length</strong> From the highest point of the shoulder straight down to the hem.</p>",
+        "compare_note": "Each colourway is garment-washed separately, so tones vary slightly from piece to piece.",
+        "ask_note": "A client advisor replies within one business day."
       }
-    },
-    "look": {
-      "type": "mn-complete-look",
-      "blocks": {},
-      "block_order": [],
-      "settings": {}
     },
     "recommendations": {
       "type": "product-recommendations",
-      "settings": {}
-    },
-    "banner": {
-      "type": "mn-banner",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Recommended",
+        "heading": "You may <em>also like</em>",
+        "link_label": "View all",
+        "link": "",
+        "intent": "related",
+        "products_to_show": 4,
+        "columns": "4"
+      }
     },
     "recently-viewed": {
       "type": "recently-viewed",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Your history",
+        "heading": "Recently <em>viewed</em>",
+        "products_to_show": 6,
+        "columns": "6"
+      }
     }
   },
   "order": [
     "main",
-    "look",
     "recommendations",
-    "banner",
     "recently-viewed"
   ]
 }

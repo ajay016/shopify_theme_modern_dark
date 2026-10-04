@@ -74,9 +74,10 @@ const dir = process.argv[2] || '.';
 
   // ---- Gallery: arrows, thumbs, lightbox, video, zoom
   await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(300);
-  await p.click('.gallery__thumbs .thumb >> nth=0'); await p.waitForTimeout(500);
+  await p.click('.gallery__thumbs .thumb >> nth=0'); await p.waitForTimeout(1500);
   await p.hover('.gallery__main'); await p.click('.gallery__arrow--next'); await p.waitForTimeout(600);
-  check('gallery arrow moves to the next media', (await state(p)).thumb === 1);
+  const ga = await p.evaluate(() => ({ thumb: [...document.querySelectorAll('.gallery__thumbs .thumb')].findIndex(t => t.classList.contains('is-active')), sy: scrollY, stack: MN.overlay.stack.map(x => x.id), top: document.elementFromPoint(720, 450)?.className?.toString().slice(0, 60), hidden: [...document.querySelectorAll('.gallery__track > *')].filter(x => x.hidden).length }));
+  check('gallery arrow moves to the next media', ga.thumb === 1, JSON.stringify(ga));
   await p.mouse.move(400, 600); await p.waitForTimeout(100);
   check('hovering an image zooms in place', await p.evaluate(() => !!document.querySelector('.media--image.is-zooming')));
   await p.click('.gallery__expand'); await p.waitForTimeout(600);

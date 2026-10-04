@@ -22,7 +22,6 @@
         "urgency": {
           "type": "urgency",
           "settings": {
-            "countdown_end": "",
             "countdown_label": "Winter sale ends in",
             "show_stock": true,
             "show_visitors": false,

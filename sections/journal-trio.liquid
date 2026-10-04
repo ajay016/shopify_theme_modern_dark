@@ -92,9 +92,9 @@
   #section-{{ section.id }} .jtr-eyebrow {
     margin: 0 0 12px;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: calc(12px * var(--fs-scale, 1));
-    font-weight: 600; letter-spacing: .22em; text-transform: uppercase;
-    color: var(--acc);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium); letter-spacing: var(--ls-caps); text-transform: uppercase;
+    color: color-mix(in oklab, currentColor 64%, transparent);
   }
   #section-{{ section.id }} .jtr-heading {
     margin: 0;
@@ -108,8 +108,8 @@
     display: inline-flex; align-items: center; gap: 10px;
     padding-bottom: 4px; border-bottom: 1px solid currentColor;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: calc(12px * var(--fs-scale, 1));
-    font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    font-size: var(--fs-btn);
+    font-weight: var(--fw-medium); letter-spacing: .01em;
     text-decoration: none; color: var(--fg);
   }
   #section-{{ section.id }} .jtr-cta:hover { color: var(--acc); }
@@ -130,8 +130,8 @@
   #section-{{ section.id }} .jtr-meta {
     margin: 16px 0 8px;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: calc(11px * var(--fs-scale, 1));
-    font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium); letter-spacing: var(--ls-caps); text-transform: uppercase;
     color: var(--acc);
   }
   #section-{{ section.id }} .jtr-title {

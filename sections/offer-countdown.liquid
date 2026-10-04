@@ -74,9 +74,9 @@
   #section-{{ section.id }} .ocd-eyebrow {
     margin: 0 0 12px;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: calc(12px * var(--fs-scale, 1));
-    font-weight: 600; letter-spacing: .22em; text-transform: uppercase;
-    color: var(--acc);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium); letter-spacing: var(--ls-caps); text-transform: uppercase;
+    color: color-mix(in oklab, currentColor 64%, transparent);
   }
   #section-{{ section.id }}.ocd--with-image .ocd-eyebrow { color: var(--on-image, #FFFFFF); }
   #section-{{ section.id }} .ocd-heading {
@@ -96,13 +96,14 @@
     display: inline-flex; align-items: center; justify-content: center;
     min-height: 48px; padding: 0 30px;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: calc(12px * var(--fs-scale, 1));
-    font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    font-size: var(--fs-btn);
+    font-weight: var(--fw-medium); letter-spacing: var(--ls-btn);
     text-decoration: none;
     background: var(--btn-primary-bg, #C8A96E);
     color: var(--btn-primary-fg, #0A0A0A);
     border: 1px solid transparent;
     transition: transform .2s ease, opacity .2s ease;
+    border-radius: var(--r-btn);
   }
   #section-{{ section.id }}.ocd--with-image .ocd-btn {
     background: var(--onphoto-light, rgba(252,251,249,.96));
@@ -125,8 +126,8 @@
   }
   #section-{{ section.id }} .ocd-lbl {
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: calc(11px * var(--fs-scale, 1));
-    font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium); letter-spacing: var(--ls-caps); text-transform: uppercase;
     color: var(--mut);
   }
   #section-{{ section.id }} .ocd-sep {
@@ -138,7 +139,7 @@
     margin: 0;
     font-family: var(--ff-body,'Outfit',sans-serif);
     font-size: calc(14px * var(--fs-scale, 1));
-    font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+    font-weight: var(--fw-medium); letter-spacing: var(--ls-caps); text-transform: uppercase;
     color: var(--acc);
   }
   #section-{{ section.id }} .ocd-expired[hidden] { display: none; }

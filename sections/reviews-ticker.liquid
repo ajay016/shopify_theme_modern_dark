@@ -55,8 +55,8 @@
   #section-{{ section.id }} { background: var(--bg); color: var(--fg); padding: var(--section-spacing,80px) 0; overflow: hidden; }
 
   #section-{{ section.id }} .rvt-head { text-align: center; padding: 0 var(--side-padding,5vw); margin-bottom: clamp(28px,3.6vw,46px); }
-  #section-{{ section.id }} .rvt-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .3em; text-transform: uppercase; color: var(--acc); margin-bottom: 13px; }
-  #section-{{ section.id }} .rvt-heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(28px,3.6vw,52px) * var(--heading-scale,1)); font-weight: var(--fw-display, 300); line-height: 1.05; text-transform: uppercase; margin: 0; }
+  #section-{{ section.id }} .rvt-eyebrow { display: block; font-family: var(--ff-body,'Outfit',sans-serif); font-size: var(--fs-xs); font-weight: 500; letter-spacing: var(--ls-caps); text-transform: uppercase; color: color-mix(in oklab, currentColor 64%, transparent); margin-bottom: 13px; }
+  #section-{{ section.id }} .rvt-heading { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(clamp(28px,3.6vw,52px) * var(--heading-scale,1)); font-weight: var(--fw-display, 300); line-height: 1.05;  margin: 0; }
 
   /* — Auto-scrolling band; pauses on hover — */
   #section-{{ section.id }} .rvt-band { overflow: hidden; padding: 6px 0 10px; }
@@ -82,8 +82,8 @@
     line-height: 1.45; margin: 0 0 16px;
   }
   #section-{{ section.id }} .rvt-card__who {
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
-    letter-spacing: .2em; text-transform: uppercase; color: var(--mut);
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: var(--fs-xs); font-weight: 500;
+    letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--mut);
   }
 
   #section-{{ section.id }} .reveal.reveal-armed { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }

@@ -1,0 +1,15 @@
+/* Homepage sections: shared fixes on top of each section's own styles.
+   Product cards placed in a horizontal rail (product-rail and others that
+   pass rail: true) had no width, so the flex track squeezed them to a
+   sliver. */
+.card--rail{flex:0 0 clamp(220px,22vw,320px);min-width:0;scroll-snap-align:start}
+@media (max-width:700px){.card--rail{flex-basis:68vw}}
+
+/* The theme's original shared classes, still used by the Classic homepage
+   and a few older sections, brought to the design's components: buttons as
+   .mn-btn (sentence case, 13px, the design's radius), the eyebrow as
+   .mn-eyebrow, the section link as .link-arrow. */
+.btn,.btn-primary,.btn-ghost,.btn-dark{min-height:52px;padding:0 26px;border-radius:var(--r-btn);font-family:var(--font-sans);font-size:var(--fs-btn);font-weight:var(--fw-medium);letter-spacing:var(--ls-btn);text-transform:none;line-height:1.2}
+.eyebrow{font-family:var(--font-sans);font-size:var(--fs-xs);font-weight:var(--fw-medium);letter-spacing:var(--ls-caps);color:var(--muted)}
+.eyebrow::before{background:currentColor;opacity:.5}
+.section-link{font-family:var(--font-sans);font-size:var(--fs-sm);font-weight:var(--fw-medium);letter-spacing:0;text-transform:none;color:var(--fg);padding-bottom:3px;background:linear-gradient(currentColor,currentColor) left bottom/100% 1px no-repeat}

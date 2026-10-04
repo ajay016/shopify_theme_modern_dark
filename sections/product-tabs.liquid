@@ -50,7 +50,7 @@
     {%- for block in section.blocks -%}
       {%- liquid
         assign col = collections[block.settings.collection]
-        assign offset = forloop.index0 | times: 2
+        assign tab_shift = forloop.index0 | times: 2
       -%}
       <div
         class="ptab-panel{% if forloop.first %} is-active{% endif %}"
@@ -68,7 +68,7 @@
           {%- else -%}
             {%- for i in (1..8) -%}
               {%- if forloop.index > s.products_to_show -%}{%- break -%}{%- endif -%}
-              {%- assign idx = forloop.index0 | plus: offset | modulo: 8 -%}
+              {%- assign idx = forloop.index0 | plus: tab_shift | modulo: 8 -%}
               <div class="ptab-item reveal">{%- render 'product-card',
                 scheme: s.scheme,
                 demo_index: idx,
@@ -109,9 +109,9 @@
   #section-{{ section.id }} .ptab-eyebrow {
     margin: 0 0 12px;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: calc(12px * var(--fs-scale, 1));
-    font-weight: 600; letter-spacing: .22em; text-transform: uppercase;
-    color: var(--acc);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium); letter-spacing: var(--ls-caps); text-transform: uppercase;
+    color: color-mix(in oklab, currentColor 64%, transparent);
   }
   #section-{{ section.id }} .ptab-heading {
     margin: 0;
@@ -126,8 +126,8 @@
     padding: 0 0 5px; border: 0; border-bottom: 1px solid transparent;
     background: transparent; cursor: pointer;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: calc(12px * var(--fs-scale, 1));
-    font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    font-size: var(--fs-btn);
+    font-weight: var(--fw-medium); letter-spacing: var(--ls-btn);
     color: var(--mut);
     transition: color .2s ease, border-color .2s ease;
   }
@@ -147,8 +147,8 @@
     display: inline-flex; align-items: center; gap: 10px;
     padding-bottom: 4px; border-bottom: 1px solid currentColor;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: calc(12px * var(--fs-scale, 1));
-    font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    font-size: var(--fs-btn);
+    font-weight: var(--fw-medium); letter-spacing: .01em;
     text-decoration: none; color: var(--fg);
   }
   #section-{{ section.id }} .ptab-cta:hover { color: var(--acc); }

@@ -199,7 +199,7 @@
 
   .blog-card__tag {
     position: absolute; top: 20px; left: 20px;
-    font-size: calc(8px * var(--fs-scale, 1)); letter-spacing: 0.3em; text-transform: uppercase;
+    font-size: var(--fs-xs); letter-spacing: var(--ls-caps); text-transform: uppercase;
     color: var(--black, #0A0A0A); background: var(--gold, #C8A96E);
     padding: 5px 12px; font-weight: 500;
   }
@@ -207,7 +207,7 @@
   .blog-card__body { flex: 1; display: flex; flex-direction: column; }
 
   .blog-card__date {
-    font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase;
+    font-size: var(--fs-xs); letter-spacing: var(--ls-caps); text-transform: uppercase;
     color: var(--gold, #C8A96E); display: block; margin-bottom: 12px;
   }
 
@@ -227,7 +227,7 @@
   }
 
   .blog-card__cta {
-    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+    font-size: var(--fs-btn); font-weight: 500; letter-spacing: .01em;
     color: var(--gold, #C8A96E); display: flex; align-items: center; gap: 10px;
     transition: gap 0.3s;
   }

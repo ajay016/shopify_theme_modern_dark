@@ -192,7 +192,21 @@ is left and what I need to check").
       settings fixed in `page.about-v2`, `page.contact`, `page.contact-v2`,
       `index.classic`: `scripts/schema-check.py` reports 0 problems. Test
       `scripts/content-check.py` + `scripts/content-test.js` (46 checks).
-- [ ] **D7 Other pages** — collection, cart page, search, account, blog, pages,
-      homepages: same tokens, type, buttons, fields, cards and motion.
+- [x] **D7e Homepages** — all 7 homepage templates (54 sections) brought to the design's
+      details. Every section's own styles were rewritten by role: buttons and links in
+      sentence case at the design's size and tracking, with the design's radius (43
+      rules); eyebrows, kickers, tags and labels at the design's 11px / .14em, medium,
+      eyebrows muted rather than accent (90); section headings out of capitals (12, the
+      two hero lockups kept). The theme's original `.btn`, `.eyebrow`, `.section-link`
+      (Classic homepage) follow the same components (`assets/mn-home.css`). Fixes:
+      primary buttons on the Olive / Custom scheme were olive with near-black text,
+      now the design's text-on-page button; rail product cards had no width and were
+      squeezed to slivers; Lumière "The stories" pushed the phone page to 411px; the
+      Classic newsletter on a dark band kept dark text; category tile titles on the dark
+      scrim were dark; image-with-text buttons had their label stuck to the top.
+      Test `scripts/home-check.py` (renders each template as saved) +
+      `scripts/home-test.js` (51 checks).
+- [x] **D7 Other pages** — collection, cart page, search, account, blog, pages,
+      homepages: same tokens, type, buttons, fields, cards and motion (D7a–D7e).
 - [ ] **D8 Verification** — every setting renders and works (audit), editor re-render,
       390 / 1024 / 1440, all schemes, reduced motion, screenshots against the reference.

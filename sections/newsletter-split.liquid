@@ -108,7 +108,7 @@
     color: var(--cream, #F5F0E8); font-weight: var(--fw-display, 300); line-height: 1.35; margin-bottom: 14px;
   }
   #section-{{ section.id }} .nls__visual-quote cite {
-    font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.3em; text-transform: uppercase;
+    font-size: var(--fs-xs); letter-spacing: var(--ls-caps); text-transform: uppercase;
     color: var(--gold, #C8A96E); font-style: normal;
   }
 
@@ -130,8 +130,8 @@
 
   /* Eyebrow */
   #section-{{ section.id }} .nls__eyebrow {
-    font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.38em; text-transform: uppercase;
-    color: var(--gold, #C8A96E); display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+    font-size: var(--fs-xs); letter-spacing: var(--ls-caps); text-transform: uppercase;
+    color: color-mix(in oklab, currentColor 64%, transparent); display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
   }
   #section-{{ section.id }} .nls__eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--gold, #C8A96E); }
   #section-{{ section.id }} .nls__form-panel--gold .nls__eyebrow,
@@ -183,8 +183,9 @@
     display: inline-flex; align-items: center; gap: 10px; justify-content: center;
     width: 100%; padding: 16px 24px;
     background: var(--gold, #C8A96E); color: var(--black, #0A0A0A);
-    font-family: var(--ff-body); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase;
+    font-family: var(--ff-body); font-size: var(--fs-btn); font-weight: 500; letter-spacing: var(--ls-btn);
     border: none; cursor: pointer; transition: background var(--transition), transform 0.2s;
+    border-radius: var(--r-btn);
   }
   #section-{{ section.id }} .nls__input-row button:hover { background: var(--gold-light, #E8D4A8); transform: translateY(-1px); }
   #section-{{ section.id }} .nls__form-panel--gold .nls__input-row button { background: var(--black, #0A0A0A); color: var(--gold, #C8A96E); }

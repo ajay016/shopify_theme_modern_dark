@@ -131,7 +131,7 @@
   #section-{{ section.id }} .hno-eyebrow {
     display: inline-flex; align-items: center; gap: 10px;
     font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .28em; text-transform: uppercase;
+    font-size: var(--fs-xs); font-weight: 500; letter-spacing: var(--ls-caps); text-transform: uppercase;
     color: var(--acc); margin-bottom: clamp(14px, 2.4svh, 24px);
     animation: hnoUp{{ section.id }} .7s .08s both;
   }
@@ -162,8 +162,8 @@
   #section-{{ section.id }} .hno-ctas { display: flex; align-items: center; flex-wrap: wrap; gap: 22px; margin-top: clamp(22px, 3.4svh, 34px); animation: hnoUp{{ section.id }} .85s .6s both; }
   #section-{{ section.id }} .hno-btn {
     display: inline-flex; align-items: center; gap: 8px;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500;
-    letter-spacing: .16em; text-transform: uppercase; text-decoration: none;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: var(--fs-btn); font-weight: 500;
+    letter-spacing: var(--ls-btn); text-decoration: none;
     transition: transform .22s, background .22s, color .22s, border-color .22s, box-shadow .22s;
   }
   #section-{{ section.id }} .hno-btn--solid { background: var(--btn-bg); color: var(--btn-fg); padding: 16px 32px; }
@@ -206,8 +206,8 @@
     background: rgba(16,16,17,.55);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.22); color: var(--on-image, #FFFFFF); padding: 10px 16px;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
-    letter-spacing: .2em; text-transform: uppercase;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: var(--fs-xs); font-weight: 500;
+    letter-spacing: var(--ls-caps); text-transform: uppercase;
   }
   #section-{{ section.id }} .hno-tag__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--acc); }
 

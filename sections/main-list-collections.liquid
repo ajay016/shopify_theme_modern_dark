@@ -133,8 +133,8 @@
   }
   #section-{{ section.id }} .clist-eyebrow {
     margin: 0 0 12px;
-    font-size: calc(12px * var(--fs-scale,1));
-    font-weight: 600; letter-spacing: .24em; text-transform: uppercase;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium); letter-spacing: var(--ls-caps); text-transform: uppercase;
     color: var(--cl-acc);
   }
   #section-{{ section.id }} .clist-title {
@@ -232,8 +232,8 @@
     display: inline-flex; align-items: center; gap: 8px; width: fit-content;
     padding-bottom: 3px; margin-top: 4px;
     border-bottom: 1px solid currentColor;
-    font-size: calc(11px * var(--fs-scale,1));
-    font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+    font-size: var(--fs-btn);
+    font-weight: var(--fw-medium); letter-spacing: .01em;
     color: var(--on-image,#FFFFFF);
     opacity: 0; transform: translateY(6px);
     transition: opacity .3s ease, transform .3s ease;

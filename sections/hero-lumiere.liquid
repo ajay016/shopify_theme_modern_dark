@@ -129,8 +129,8 @@
   }
   #section-{{ section.id }} .hlm-btn {
     display: inline-flex; align-items: center; gap: 8px;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500;
-    letter-spacing: .18em; text-transform: uppercase; text-decoration: none;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: var(--fs-btn); font-weight: 500;
+    letter-spacing: var(--ls-btn); text-decoration: none;
     transition: transform .22s, box-shadow .22s, color .22s;
   }
   #section-{{ section.id }} .hlm-btn--gold { background: var(--acc); color: var(--on-gold, #0A0A0A); padding: 16px 36px; border-radius: var(--r-pill, 999px); }
@@ -162,8 +162,8 @@
   #section-{{ section.id }} .hlm-frame__cap {
     display: flex; align-items: center; gap: 10px;
     margin-top: 12px;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
-    letter-spacing: .22em; text-transform: uppercase; color: var(--mut);
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: var(--fs-xs); font-weight: 500;
+    letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--mut);
   }
   #section-{{ section.id }} .hlm-frame__num { font-family: var(--ff-display,'Cormorant Garamond',serif); font-size: calc(14px * var(--fs-scale, 1)); letter-spacing: 0; color: var(--acc); }
   #section-{{ section.id }} .hlm-tag {
@@ -172,8 +172,8 @@
     background: var(--onphoto-light, rgba(252,251,249,.96)); color: var(--onphoto-light-fg, #16130F);
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     color: var(--s1-fg, #F5F0E8); padding: 9px 15px; border-radius: var(--r-pill, 999px);
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
-    letter-spacing: .18em; text-transform: uppercase;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: var(--fs-xs); font-weight: 500;
+    letter-spacing: var(--ls-caps); text-transform: uppercase;
   }
   #section-{{ section.id }} .hlm-tag__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--acc); }
 

@@ -90,13 +90,13 @@
   #section-{{ section.id }} .pvt-panel__stick { position: sticky; top: clamp(110px, 15vh, 150px); }
   #section-{{ section.id }} .pvt-eyebrow {
     display: block; font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .3em; text-transform: uppercase;
-    color: var(--acc); margin-bottom: 16px;
+    font-size: var(--fs-xs); font-weight: 500; letter-spacing: var(--ls-caps); text-transform: uppercase;
+    color: color-mix(in oklab, currentColor 64%, transparent); margin-bottom: 16px;
   }
   #section-{{ section.id }} .pvt-heading {
     font-family: var(--ff-display,'Cormorant Garamond',serif);
     font-size: calc(clamp(34px, 4.2vw, 60px) * var(--heading-scale,1));
-    font-weight: var(--fw-display, 300); line-height: 1.04; text-transform: uppercase; margin: 0 0 20px;
+    font-weight: var(--fw-display, 300); line-height: 1.04;  margin: 0 0 20px;
   }
   #section-{{ section.id }} .pvt-text {
     font-family: var(--ff-body,'Outfit',sans-serif);
@@ -105,8 +105,8 @@
   }
   #section-{{ section.id }} .pvt-cta {
     display: inline-block;
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500;
-    letter-spacing: .18em; text-transform: uppercase; text-decoration: none;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: var(--fs-btn); font-weight: 500;
+    letter-spacing: .01em; text-decoration: none;
     color: var(--on-gold, #0A0A0A); background: var(--acc); padding: 15px 34px; border-radius: var(--r-pill, 999px);
     transition: transform .22s, box-shadow .22s;
   }
@@ -114,8 +114,8 @@
   #section-{{ section.id }} .pvt-note {
     display: flex; align-items: center; gap: 12px;
     margin-top: clamp(28px, 4vh, 44px);
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
-    letter-spacing: .24em; text-transform: uppercase; color: var(--mut);
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: var(--fs-xs); font-weight: 500;
+    letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--mut);
   }
   #section-{{ section.id }} .pvt-note__rule { width: 36px; height: 1px; background: var(--acc); flex: 0 0 auto; }
   #section-{{ section.id }} .pvt-panel__media {
@@ -128,8 +128,8 @@
     background: var(--onphoto-light, rgba(252,251,249,.96)); color: var(--onphoto-light-fg, #16130F);
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     padding: 8px 14px; border-radius: var(--r-pill, 999px);
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500;
-    letter-spacing: .18em; text-transform: uppercase;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: var(--fs-xs); font-weight: 500;
+    letter-spacing: var(--ls-caps); text-transform: uppercase;
   }
 
   /* — Product wall: 2 columns, right column offset down — */

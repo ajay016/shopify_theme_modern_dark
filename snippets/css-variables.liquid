@@ -311,8 +311,9 @@
     --badge-bg: {{ c_gold_light }};
     --badge-fg: #0A0A0A;
 
-    --btn-primary-bg: {{ c_gold }};
-    --btn-primary-fg: #0A0A0A;
+    {%- comment -%} The design's primary button: text colour on the page colour. {%- endcomment -%}
+    --btn-primary-bg: {{ c_cream }};
+    --btn-primary-fg: {{ c_black }};
     --btn-ghost-fg: {{ c_cream }};
     --btn-ghost-bdr: color-mix(in srgb, {{ c_cream }} 28%, transparent);
   }

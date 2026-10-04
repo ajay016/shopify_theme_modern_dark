@@ -126,19 +126,7 @@
     margin-bottom: 56px;
   }
 
-  .section-link {
-    font-size: calc(10px * var(--fs-scale, 1));
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--gold, #C8A96E);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: gap 0.3s;
-    flex-shrink: 0;
-  }
-  .section-link:hover { gap: 14px; }
-  .section-link::after { content: '→'; }
+
 
   .collection-list__grid { display: grid; gap: 2px; }
   .collection-list__grid--2 { grid-template-columns: repeat(2, 1fr); }
@@ -211,16 +199,16 @@
     font-weight: 400;
     letter-spacing: 0.05em;
     line-height: 1.2;
-    color: var(--cream, #F5F0E8);
+    color: var(--on-image, #FFFFFF);
     margin-bottom: 4px;
   }
 
   .collection-list__sublabel {
-    font-size: calc(11px * var(--fs-scale, 1));
+    font-size: var(--fs-xs);
     font-weight: 400;
-    letter-spacing: 0.15em;
+    letter-spacing: var(--ls-caps);
     text-transform: uppercase;
-    color: var(--cream, #F5F0E8);
+    color: var(--on-image, #FFFFFF);
     opacity: 0.6;
     margin-bottom: 16px;
     word-break: break-word;
@@ -228,10 +216,9 @@
   }
 
   .clist-cta {
-    font-size: calc(11px * var(--fs-scale, 1));
+    font-size: var(--fs-btn);
     font-weight: 500;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
+    letter-spacing: .01em;
     color: var(--gold, #C8A96E);
     opacity: 0;
     transform: translateY(8px);

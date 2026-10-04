@@ -79,8 +79,8 @@
   #section-{{ section.id }} .nli-orn { display: block; font-size: calc(15px * var(--fs-scale, 1)); color: var(--acc); margin-bottom: 18px; }
   #section-{{ section.id }} .nli-eyebrow {
     display: block; font-family: var(--ff-body,'Outfit',sans-serif);
-    font-size: calc(10px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .34em; text-transform: uppercase;
-    color: var(--acc); margin-bottom: 16px;
+    font-size: var(--fs-xs); font-weight: 500; letter-spacing: var(--ls-caps); text-transform: uppercase;
+    color: color-mix(in oklab, currentColor 64%, transparent); margin-bottom: 16px;
   }
   #section-{{ section.id }} .nli-heading {
     font-family: var(--ff-display,'Cormorant Garamond',serif);
@@ -108,9 +108,10 @@
   #section-{{ section.id }} .nli-row input::placeholder { color: var(--mut); }
   #section-{{ section.id }} .nli-row button {
     border: none; cursor: pointer; background: var(--acc); color: var(--on-gold, #0A0A0A);
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(11px * var(--fs-scale, 1)); font-weight: 600;
-    letter-spacing: .18em; text-transform: uppercase; padding: 0 30px;
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: var(--fs-btn); font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-btn); padding: 0 30px;
     transition: filter .2s;
+    border-radius: var(--r-btn);
   }
   #section-{{ section.id }} .nli-row button:hover { filter: brightness(1.08); }
 
@@ -126,8 +127,8 @@
     display: flex; align-items: center; justify-content: center; gap: 14px;
     margin-top: clamp(24px, 3.4vh, 34px); padding-top: 18px;
     border-top: 1px solid var(--bdr);
-    font-family: var(--ff-body,'Outfit',sans-serif); font-size: calc(9px * var(--fs-scale, 1)); font-weight: 500;
-    letter-spacing: .3em; text-transform: uppercase; color: var(--mut);
+    font-family: var(--ff-body,'Outfit',sans-serif); font-size: var(--fs-xs); font-weight: 500;
+    letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--mut);
   }
   #section-{{ section.id }} .nli-foot__dia { color: var(--acc); font-size: calc(9px * var(--fs-scale, 1)); }
 

@@ -1,4 +1,19 @@
-<section class="section newsletter" id="section-{{ section.id }}" style="background:{{ section.settings.bg_color }}">
+{%- liquid
+  assign nl_bg = section.settings.bg_color
+  assign nl_style = ''
+  if nl_bg != blank and nl_bg != 'rgba(0,0,0,0)'
+    assign nl_style = 'background:' | append: nl_bg | append: ';'
+    assign nl_light = nl_bg | color_brightness
+    if nl_light < 128
+      comment
+        A dark background picked here kept the scheme's text colour, so on a
+        light scheme the heading was dark on dark. Text follows the band.
+      endcomment
+      assign nl_style = nl_style | append: 'color:#F2F1EA;--cream:#F2F1EA;--fg:#F2F1EA;--muted:rgba(242,241,234,.66);--border:rgba(242,241,234,.2);--line:rgba(242,241,234,.2);--line-strong:rgba(242,241,234,.34)'
+    endif
+  endif
+-%}
+<section class="section newsletter" id="section-{{ section.id }}"{% if nl_style != '' %} style="{{ nl_style }}"{% endif %}>
   <div class="container">
     <div class="newsletter__inner">
       <div class="newsletter__text">

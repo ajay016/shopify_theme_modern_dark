@@ -169,7 +169,7 @@
   #section-{{ section.id }} .hlb-eyebrow {
     display: inline-block;
     font-family: var(--ff-body, 'Outfit', sans-serif);
-    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .24em; text-transform: uppercase;
+    font-size: var(--fs-xs); font-weight: 500; letter-spacing: var(--ls-caps); text-transform: uppercase;
     color: var(--hacc); margin-bottom: 22px;
     animation: hlbUp{{ section.id }} .8s .1s both;
   }
@@ -196,7 +196,7 @@
   .hlb-btn {
     display: inline-flex; align-items: center;
     font-family: var(--ff-body, 'Outfit', sans-serif);
-    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: .16em; text-transform: uppercase;
+    font-size: var(--fs-btn); font-weight: 500; letter-spacing: var(--ls-btn);
     padding: 15px 32px; text-decoration: none; border-radius: var(--r-btn, 2px);
     transition: transform .22s, background .22s, color .22s;
   }

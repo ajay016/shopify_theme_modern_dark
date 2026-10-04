@@ -360,10 +360,10 @@
 
   /* Typography */
   .hero__eyebrow {
-    font-size: calc(10px * var(--fs-scale, 1));
-    letter-spacing: 0.4em;
+    font-size: var(--fs-xs);
+    letter-spacing: var(--ls-caps);
     text-transform: uppercase;
-    color: var(--gold, #C8A96E);
+    color: color-mix(in oklab, currentColor 64%, transparent);
     margin-bottom: 24px;
     display: flex; align-items: center; gap: 16px;
   }
@@ -440,7 +440,7 @@
   }
   .hero__stat { display: flex; flex-direction: column; gap: 4px; }
   .hero__stat-value { font-family: var(--ff-display); font-size: calc(28px * var(--fs-scale, 1)); color: var(--gold, #C8A96E); font-weight: 400; }
-  .hero__stat-label { font-size: calc(9px * var(--fs-scale, 1)); letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); }
+  .hero__stat-label { font-size: var(--fs-xs); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); }
 
   @media (max-width: 900px) {
     .hero--split { grid-template-columns: 1fr; }

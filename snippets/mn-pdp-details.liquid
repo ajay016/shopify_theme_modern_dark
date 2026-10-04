@@ -10,8 +10,8 @@
   assign rating = product.metafields.reviews.rating.value.rating | default: product.metafields.reviews.rating.value | default: 0
   assign rating_count = product.metafields.reviews.rating_count.value | default: 0
   assign ship_html = ss.shipping_content
-  if ss.shipping_page
-    assign ship_html = ss.shipping_page.content
+  if ss.shipping_policy and shop.shipping_policy.body != blank
+    assign ship_html = shop.shipping_policy.body
   endif
   assign keys = ''
   if product.description != blank

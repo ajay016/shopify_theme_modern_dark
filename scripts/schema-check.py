@@ -22,6 +22,9 @@ for f in sorted(glob.glob('sections/*.liquid')):
     schemas[f[9:-7]] = sc
     def chk(sets, where):
         ids = set()
+        # Shopify accepts only one setting of these types per settings list
+        for one in ('page',):
+            if sum(1 for s in sets if s.get('type') == one) > 1: bad.append(f'{f} {where}: more than one "{one}" setting (Shopify allows one)')
         for s in sets:
             t, d, i = s.get('type'), s.get('default'), s.get('id')
             if i:

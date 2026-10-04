@@ -250,7 +250,8 @@
     --ivory: {{ settings.color_ivory }};
     --gold: {{ settings.color_gold }};
     --gold-light: {{ settings.color_gold_light }};
-    --on-gold: #0A0A0A;
+    {%- assign accent_light = settings.color_gold | color_brightness -%}
+    --on-gold: {% if accent_light < 150 %}#FFFFFF{% else %}#0A0A0A{% endif %};
     --sale-text: {{ settings.color_sale }};
     --sale-bg: {{ settings.color_sale_bg }};
 
@@ -553,6 +554,10 @@
     --cu-accent: {{ settings.color_gold }};
     --cu-sale: {{ settings.color_sale_bg }};
   }
+  {%- if settings.color_scheme == 'custom' -%}
+    {%- assign accent_light = settings.color_gold | color_brightness -%}
+    {%- if accent_light >= 150 -%}[data-scheme=custom]{ --on-accent: #111111; }{%- endif -%}
+  {%- endif -%}
   html[data-motion-level="subtle"] { --dur-fast: 120ms; --dur: 200ms; --dur-slow: 360ms; }
   {%- if settings.font_pairing == 'custom' -%}
     {%- liquid

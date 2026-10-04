@@ -16,24 +16,24 @@
         "label": "Color Scheme",
         "info": "Applies a preset palette. You can still override individual colors below.",
         "options": [
-          { "value": "dark",  "label": "Dark Luxury (Default)" },
-          { "value": "light", "label": "Light / Ivory" },
-          { "value": "ivory-wine", "label": "Ivory / Wine" },
-          { "value": "warm",  "label": "Warm Taupe" },
-          { "value": "custom","label": "Custom (use pickers below)" }
+          { "value": "dark",  "label": "Dark" },
+          { "value": "light", "label": "Light" },
+          { "value": "ivory-wine", "label": "Wine" },
+          { "value": "warm",  "label": "Taupe" },
+          { "value": "custom","label": "Custom (the four colours below)" }
         ],
-        "default": "dark"
+        "default": "custom"
       },
-      { "type": "header", "content": "Custom Colors — only used when scheme is set to Custom" },
-      { "type": "color", "id": "color_black",      "label": "Background — Deep Black",  "default": "#0A0A0A" },
-      { "type": "color", "id": "color_charcoal",   "label": "Surface — Charcoal",       "default": "#161616" },
-      { "type": "color", "id": "color_cream",      "label": "Text — Cream",             "default": "#F5F0E8" },
-      { "type": "color", "id": "color_gold",       "label": "Accent — Gold",            "default": "#C8A96E" },
-      { "type": "color", "id": "color_gold_light", "label": "Accent Light — Gold",      "default": "#E8D4A8" },
-      { "type": "color", "id": "color_muted",      "label": "Muted Text",               "default": "#6E6A66" },
-      { "type": "color", "id": "color_ivory",      "label": "Ivory",                    "default": "#FAF8F3" },
-      { "type": "color", "id": "color_sale",       "label": "Sale Badge Text",          "default": "#FFBABA" },
-      { "type": "color", "id": "color_sale_bg",    "label": "Sale Badge Background",    "default": "#7A2020" }
+      { "type": "header", "content": "Custom colours — used when the scheme is Custom" },
+      { "type": "color", "id": "color_black",      "label": "Base",  "default": "#F2F1EA" },
+      { "type": "color", "id": "color_charcoal",   "label": "Raised surface (older sections)", "default": "#E9E8E1" },
+      { "type": "color", "id": "color_cream",      "label": "Text",  "default": "#1F2620" },
+      { "type": "color", "id": "color_gold",       "label": "Accent", "default": "#55663F" },
+      { "type": "color", "id": "color_gold_light", "label": "Accent, light (older sections)", "default": "#A9B39B" },
+      { "type": "color", "id": "color_muted",      "label": "Muted text (older sections)", "default": "#5C635C" },
+      { "type": "color", "id": "color_ivory",      "label": "Ivory (older sections)", "default": "#F7F6F1" },
+      { "type": "color", "id": "color_sale",       "label": "Text on sale badges (older sections)", "default": "#FFFFFF" },
+      { "type": "color", "id": "color_sale_bg",    "label": "Sale", "default": "#8B1A1A" }
     ]
   },
   {

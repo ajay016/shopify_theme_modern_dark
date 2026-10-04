@@ -33,13 +33,17 @@ const ORIGIN = 'http://shop.test';
         if (!st) return r.fulfill({ status: 422, contentType: 'application/json', body: JSON.stringify({ status: 422, message: 'Cart Error', description: a.error }) });
         const items = srv.override ? st.items.map(i => (srv.override[i.key] != null ? { ...i, quantity: srv.override[i.key] } : i)) : st.items;
         const sections = { 'cart-drawer': st.html };
+        if (String(req.sections || '').includes('main')) sections.main = st.page;
         const json = u.pathname === '/cart/add.js' ? { items: items.filter(i => (req.items || []).some(x => String(x.id) === i.key)), sections } : { item_count: st.item_count, items, sections };
         return r.fulfill({ contentType: 'application/json', body: JSON.stringify(json) });
       }
-      if (u.searchParams.get('sections') === 'cart-drawer') {
+      if ((u.searchParams.get('sections') || '').startsWith('cart-drawer')) {
         srv.calls.push({ path: 'sections' });
-        return r.fulfill({ contentType: 'application/json', body: JSON.stringify({ 'cart-drawer': mock[srv.answer || 'two'].html }) });
+        const st2 = mock[srv.answer || 'two'], out = { 'cart-drawer': st2.html };
+        if (u.searchParams.get('sections').includes('main')) out.main = st2.page;
+        return r.fulfill({ contentType: 'application/json', body: JSON.stringify(out) });
       }
+      if (u.pathname === '/cart/update.js') { srv.calls.push({ path: '/cart/update.js', req: JSON.parse(body || '{}') }); return r.fulfill({ contentType: 'application/json', body: '{}' }); }
       if (u.pathname === '/cart') return r.fulfill({ contentType: 'text/html', body: '<!doctype html><title>cart page</title>Cart page' });
       const file = path.join(dir, u.pathname);
       if (fs.existsSync(file)) return r.fulfill({ path: file });
@@ -169,6 +173,55 @@ const ORIGIN = 'http://shop.test';
   await p.screenshot({ path: path.join(dir, 's_drawer_390.png') });
   await p.tap('#ov-cart .overlay__scrim', { position: { x: 4, y: 450 } }).catch(async () => p.mouse.click(4, 450)); await p.waitForTimeout(500);
   check('phone: tapping outside closes', await p.evaluate(() => !document.getElementById('ov-cart').classList.contains('is-open')));
+  await p.close();
+
+  // ==== Cart page (sections/main-cart.liquid)
+  const cp = p2 => p2.evaluate(() => ({
+    lines: [...document.querySelectorAll('.mn-cartpage .cart-line')].map(l => l.dataset.key + 'x' + l.querySelector('.stepper span').textContent.trim()).join(','),
+    total: document.querySelector('.mn-cartpage__total span:last-child')?.textContent.trim(),
+    ship: document.querySelector('.mn-cartpage .ship-progress p')?.textContent.trim(),
+    count: document.getElementById('cartCount').textContent.trim(),
+    title: document.querySelector('.mn-cartpage__head h1')?.textContent.trim(),
+  }));
+  ({ p, srv } = await page('cp_two'));
+  let c = await cp(p);
+  check('cart page: lines, shipping progress, subtotal, title with count', c.lines === 'scarfx1,hoopsx1' && c.total === '$530' && /unlocked/.test(c.ship) && /2 pieces/.test(c.title), JSON.stringify(c));
+  check('cart page: checkout posts to /cart; header bag links to the cart page here', await p.evaluate(() => document.getElementById('CartPageForm').getAttribute('action') === '/cart' && !!document.querySelector('#CartPageForm button[name="checkout"]') && document.querySelector('.header__icon--cart').getAttribute('href') === '/cart'));
+  await p.screenshot({ path: path.join(dir, 's_cartpage_1440.png'), fullPage: true });
+  srv.answer = 'scarf2'; srv.calls = [];
+  await p.click('.mn-cartpage .cart-line[data-key="scarf"] [data-step-q="1"]'); await p.waitForTimeout(900);
+  c = await cp(p);
+  const ch = srv.calls.find(x => x.path === '/cart/change.js');
+  check('cart page +: one change request asking for both sections; page and count update', ch && ch.req.quantity === 2 && /main/.test(ch.req.sections) && c.lines === 'scarfx2,hoopsx1' && c.total === '$770' && c.count === '3', JSON.stringify({ c, sec: ch && ch.req.sections }));
+  srv.answer = 'hoops'; srv.calls = [];
+  await p.click('.mn-cartpage .cart-line[data-key="scarf"] [data-remove]'); await p.waitForTimeout(900);
+  c = await cp(p);
+  check('cart page remove: line gone, totals and shipping progress follow', c.lines === 'hoopsx1' && c.total === '$290' && /Add \$210/.test(c.ship) && c.count === '1', JSON.stringify(c));
+  await p.fill('[data-cart-note]', 'Gift wrap please'); await p.waitForTimeout(900);
+  const noteCall = srv.calls.find(x => x.path === '/cart/update.js');
+  check('order note saves itself', noteCall && noteCall.req.note === 'Gift wrap please', JSON.stringify(noteCall));
+  srv.answer = 'empty';
+  await p.click('.mn-cartpage .cart-line[data-key="hoops"] [data-remove]'); await p.waitForTimeout(900);
+  check('removing the last piece shows the empty bag', await p.evaluate(() => !!document.querySelector('.mn-cartpage__empty') && !document.querySelector('.mn-cartpage .cart-line') && document.getElementById('cartCount').textContent === ''));
+  await p.close();
+  ({ p, srv } = await page('cp_pagemode'));
+  srv.answer = 'scarf2';
+  await p.click('.mn-cartpage .cart-line[data-key="scarf"] [data-step-q="1"]'); await p.waitForTimeout(900);
+  c = await cp(p);
+  check('cart page with no drawer (Cart type = page): still updates, count from the cart', c.lines === 'scarfx2,hoopsx1' && c.count === '3', JSON.stringify(c));
+  await p.close();
+  ({ p } = await page('cp_disc'));
+  check('cart page shows discounts and struck prices', await p.evaluate(() => !!document.querySelector('.mn-cartpage .cart-line__was') && !!document.querySelector('.mn-cartpage .cart-line__disc') && document.querySelectorAll('.mn-cartpage .cart-sub--disc').length >= 2));
+  await p.close();
+  ({ p } = await page('cp_empty'));
+  check('empty cart page', await p.evaluate(() => !!document.querySelector('.mn-cartpage__empty a.mn-btn')));
+  await p.screenshot({ path: path.join(dir, 's_cartpage_empty.png') });
+  await p.close();
+  ({ p } = await page('cp_dark')); await p.screenshot({ path: path.join(dir, 's_cartpage_dark.png'), fullPage: true }); await p.close();
+  ({ p } = await page('cp_two', 390, { hasTouch: true, isMobile: true }));
+  const cph = await p.evaluate(() => ({ over: document.documentElement.scrollWidth - 390, sum: getComputedStyle(document.querySelector('.mn-cartpage__summary')).position }));
+  check('cart page on phones: one column, nothing spills', cph.over <= 0 && cph.sum === 'static', JSON.stringify(cph));
+  await p.screenshot({ path: path.join(dir, 's_cartpage_390.png'), fullPage: true });
   await p.close();
 
   await b.close();

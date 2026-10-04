@@ -285,6 +285,16 @@
       "sizes": "Sizes"
     },
     "recent": { "clear": "Clear" },
+    "cartpage": {
+      "eyebrow": "Shopping bag",
+      "title_html": "Your <em>bag</em>",
+      "count": { "one": "{{ count }} piece", "other": "{{ count }} pieces" },
+      "update": "Update bag",
+      "summary": "Order summary",
+      "items": { "one": "{{ count }} item", "other": "{{ count }} items" },
+      "note_placeholder": "Gift message or delivery notes",
+      "recs_eyebrow": "Complete your order"
+    },
     "look": { "empty": "Add pieces to this section to build the look." },
     "pdp": {
       "adding": "Adding",

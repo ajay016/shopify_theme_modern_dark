@@ -135,6 +135,15 @@ is left and what I need to check").
       Needs the store: a countdown end date (block setting), a reviews app widget for the
       review list (section setting), pickup locations, product videos / 3D, and the
       custom.material / origin / care / summary metafields where wanted.
+- [x] **D7a Cart page** — `sections/main-cart.liquid` in the design's language: the drawer's
+      lines (image, vendor, title, options, properties, discounts, unit price, stepper,
+      remove), shipping progress, a summary panel (items, cart discounts, subtotal, taxes
+      note, order note that saves itself, checkout, express checkout buttons, payment
+      methods) and an empty state. Quantity and remove now work (they never had a script):
+      MN.cart re-renders the page and the drawer together, also with Cart type = page.
+      Recommendations from the first item, behind both the section setting and Theme
+      settings → Cart → Show product recommendations in cart. Tests in
+      `scripts/cart-check.py` + `scripts/cart-test.js` (34 checks).
 - [ ] **D7 Other pages** — collection, cart page, search, account, blog, pages,
       homepages: same tokens, type, buttons, fields, cards and motion.
 - [ ] **D8 Verification** — every setting renders and works (audit), editor re-render,

@@ -323,12 +323,39 @@
     queue(fn) { const run = this.q.then(fn, fn); this.q = run.catch(() => {}); return run; },
     async post(url, body) {
       const fd = body instanceof FormData;
-      if (fd) { body.append('sections', this.section); body.append('sections_url', location.pathname); }
-      else body = Object.assign({}, body, { sections: this.section, sections_url: location.pathname });
+      if (fd) { body.append('sections', this.sections()); body.append('sections_url', location.pathname); }
+      else body = Object.assign({}, body, { sections: this.sections(), sections_url: location.pathname });
       const r = await fetch(url, { method: 'POST', headers: fd ? { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' } : { 'Content-Type': 'application/json', Accept: 'application/json' }, body: fd ? body : JSON.stringify(body) });
       const j = await r.json().catch(() => ({}));
       if (!r.ok || j.status) { const e = new Error(j.description || j.message || STR().cart_error || 'Something went wrong.'); e.data = j; throw e; }
       return j;
+    },
+    // The drawer, plus the cart page when it is open
+    sections() { const pg = $('[data-cart-page]'); return pg ? `${this.section},${pg.dataset.cartPage}` : this.section; },
+    paintAll(sections, j) {
+      if (!sections) return;
+      this.paint(sections[this.section]);
+      const pg = $('[data-cart-page]');
+      if (pg && sections[pg.dataset.cartPage]) this.paintPage(pg, sections[pg.dataset.cartPage]);
+      if (!$('#ov-cart') && j && j.item_count != null) this.count(j.item_count);
+    },
+    // Cart page: swap its parts; lines already on the page do not replay the entrance
+    paintPage(pg, html) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const had = new Set($$('.cart-line[data-key]', pg).map(l => l.dataset.key));
+      const note = $('[data-cart-note]', pg), keepNote = note && document.activeElement === note;
+      $$('[data-cart-part]', pg).forEach(a => {
+        if (keepNote && a.contains(note)) { // do not wipe what is being typed
+          const b = doc.querySelector(`[data-cart-part="${a.dataset.cartPart}"]`);
+          const lines = b && b.querySelector('.mn-cartpage__lines'), sum = b && b.querySelector('.mn-cartpage__rows');
+          if (lines) $('.mn-cartpage__lines', a).innerHTML = lines.innerHTML;
+          if (sum) $('.mn-cartpage__rows', a).innerHTML = sum.innerHTML;
+          return;
+        }
+        const b = doc.querySelector(`[data-cart-part="${a.dataset.cartPart}"]`); if (b) a.innerHTML = b.innerHTML;
+      });
+      $$('.cart-line[data-key]', pg).forEach(l => had.has(l.dataset.key) && l.classList.add('is-settled'));
+      if (!$('.cart-line[data-key]', pg)) $('[data-cart-recs]', pg)?.remove();
     },
     // Swap the re-rendered parts in; the overlay shell (and its open state) stays.
     paint(html) {
@@ -363,7 +390,7 @@
         const added = j.items || [j];
         const after = opts.after || (window.theme_settings && window.theme_settings.cart_type) || 'drawer';
         if (after === 'page') { location.href = routes().cart_url || '/cart'; return j; }
-        this.paint(j.sections && j.sections[this.section]);
+        this.paintAll(j.sections, null);
         if (after === 'notification') this.notify(added[0]);
         else if (after !== 'none' && $('#ov-cart')) MN.overlay.open('ov-cart', opts.opener);
         return j;
@@ -372,7 +399,7 @@
     change(key, quantity) {
       return this.queue(async () => {
         const j = await this.post(routes().cart_change_url ? routes().cart_change_url + '.js' : '/cart/change.js', { id: key, quantity });
-        this.paint(j.sections && j.sections[this.section]);
+        this.paintAll(j.sections, j);
         const line = (j.items || []).find(i => i.key === key);
         if (quantity > 0 && line && line.quantity < quantity) MN.toast((STR().cart_only_left || 'Only __N__ available').replace('__N__', line.quantity));
         return j;
@@ -381,8 +408,8 @@
     // Re-read the cart (another tab, back/forward cache, an app changed it)
     refresh() {
       return this.queue(async () => {
-        const r = await fetch(`${location.pathname}?sections=${this.section}`, { headers: { Accept: 'application/json' } });
-        if (r.ok) this.paint((await r.json())[this.section]);
+        const r = await fetch(`${location.pathname}?sections=${this.sections()}`, { headers: { Accept: 'application/json' } });
+        if (r.ok) this.paintAll(await r.json(), null);
       });
     },
     notify(item) {
@@ -408,7 +435,7 @@
 
   // Steppers and remove, delegated so they survive every re-render
   document.addEventListener('click', e => {
-    const line = e.target.closest('#cartBody .cart-line'); if (!line) return;
+    const line = e.target.closest('.cart-line[data-key]'); if (!line) return;
     const st = e.target.closest('[data-step-q]'), rm = e.target.closest('[data-remove]');
     if (!st && !rm) return;
     e.preventDefault();
@@ -431,7 +458,23 @@
     line._t = setTimeout(() => C.change(key, +line.dataset.qty).catch(fail), 280);
   });
 
+  // Cart page: the order note saves itself; recommendations load from the first item
+  let noteT;
+  document.addEventListener('input', e => {
+    const n = e.target.closest('[data-cart-note]'); if (!n) return;
+    clearTimeout(noteT);
+    noteT = setTimeout(() => fetch((routes().cart_url || '/cart') + '/update.js', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ note: n.value }) }).catch(() => {}), 500);
+  });
+  const loadRecs = () => {
+    const r = $('[data-cart-recs]'); if (!r || r._loaded || $('[data-recs-inner]', r)) return; r._loaded = 1;
+    fetch(r.dataset.cartRecs).then(x => (x.ok ? x.text() : '')).then(html => {
+      const inner = new DOMParser().parseFromString(html, 'text/html').querySelector('[data-recs-inner]');
+      if (inner) r.innerHTML = inner.outerHTML;
+    }).catch(() => {});
+  };
+
   const bindCart = () => {
+    loadRecs();
     const d = $('#ov-cart'); if (!d || d._bound) return; d._bound = 1;
     C.count(+d.dataset.count || 0, false);
   };

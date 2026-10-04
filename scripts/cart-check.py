@@ -20,7 +20,7 @@ def src(path):
     s = re.sub(r"\{%-?\s*form\s+'(\w+)',\s*id:\s*'(\w+)',\s*class:\s*'([\w-]+)'\s*-?%\}", r'<form id="\2" class="\3" data-form="\1">', s)
     return re.sub(r'\{%-?\s*endform\s*-?%\}', '</form>', s)
 
-snips = {n: src(f'snippets/{n}.liquid') for n in ('mn-mega', 'mn-social', 'mn-localization', 'mn-icons')}
+snips = {n: src(f'snippets/{n}.liquid') for n in ('mn-mega', 'mn-social', 'mn-localization', 'mn-icons', 'mn-payments', 'product-card', 'swatch-style')}
 env = Environment(loader=DictLoader(snips))
 TONES = {'scarf': '%23E9E2D3', 'hoops': '%23B48A3C', 'dress': '%23151515', 'coat': '%238A6A4A'}
 def svg(c): return f'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 3 4%22%3E%3Crect width=%223%22 height=%224%22 fill=%22{c}%22/%3E%3C/svg%3E'
@@ -30,7 +30,7 @@ env.filters['money'] = lambda v, *a, **k: '$' + format(int(v) / 100, ',.2f').rep
 env.filters['t'] = rc._translate
 
 def item(k, title, options, qty, unit, was=None, mx=None, props=(), disc=()):
-    return {'key': k, 'url': '/products/' + k, 'image': k, 'quantity': qty,
+    return {'key': k, 'url': '/products/' + k, 'image': k, 'quantity': qty, 'vendor': 'Maison Noir', 'product_id': abs(hash(k)) % 1000, 'unit_price_measurement': None,
             'product': {'title': title, 'has_only_default_variant': not options},
             'variant': {'options': list(options), 'inventory_management': 'shopify' if mx else None, 'inventory_policy': 'deny' if mx else 'continue', 'inventory_quantity': mx or 0},
             'final_price': unit, 'final_line_price': unit * qty, 'original_line_price': (was or unit) * qty,
@@ -50,7 +50,7 @@ STATES = {
 }
 
 def cart(items, extra=None):
-    c = {'item_count': sum(i['quantity'] for i in items), 'total_price': sum(i['final_line_price'] for i in items), 'items': items,
+    c = {'item_count': sum(i['quantity'] for i in items), 'total_price': sum(i['final_line_price'] for i in items), 'items_subtotal_price': sum(i['final_line_price'] for i in items), 'items': items, 'note': '',
          'cart_level_discount_applications': [], 'taxes_included': True}
     c.update(extra or {})
     return c
@@ -64,6 +64,14 @@ ROUTES = {'root_url': '/', 'account_url': '/account', 'account_login_url': '/acc
           'predictive_search_url': '/search/suggest', 'all_products_collection_url': '/collections/all'}
 DRAWER = src('sections/cart-drawer.liquid')
 HEADER = src('sections/header.liquid')
+CARTPAGE = src('sections/main-cart.liquid').replace('recommendations.performed?', 'recommendations.performed')
+CP_DEF = {'show_note': True, 'show_shipping_bar': True, 'show_express': True, 'show_payments': True, 'show_recommendations': True, 'recs_heading': 'You may <em>also like</em>', 'recs_count': 4}
+def cartpage(state, **s):
+    c = ctx(state, **s); c['section'] = {'id': 'main', 'settings': CP_DEF}
+    c['shop'] = dict(c['shop'], enabled_payment_types=['visa', 'master', 'paypal', 'shopify_pay'])
+    c['settings'] = dict(c['settings'], cart_show_recommendations=True)
+    c['recommendations'] = {'performed': False, 'products_count': 0, 'products': []}
+    return env.from_string(CARTPAGE).render(**c)
 
 def ctx(state, **s):
     st = dict(SETTINGS, **s)
@@ -77,14 +85,16 @@ def drawer(state, **s):
     return env.from_string(DRAWER).render(**ctx(state, **s))
 
 ICONS = env.from_string(snips['mn-icons']).render()
-def page(state, cart_type='drawer', scheme='light', **s):
+def page(state, cart_type='drawer', scheme='light', cartpage_body=False, **s):
     c = ctx(state, cart_type=cart_type, **s)
+    if cartpage_body: c['template'] = {'name': 'cart'}
     hd = env.from_string(HEADER).render(**c)
     dr = '' if cart_type == 'page' else f'<div id="shopify-section-cart-drawer" class="shopify-section cart-drawer-section">{drawer(state, cart_type=cart_type, **s)}</div>'
     attrs = f'data-scheme="{scheme}" data-corners="soft" data-buttons="default" data-motion="full" data-header="classic" data-announce="static" data-mega="columns" data-mega-images="on" data-footer="columns"'
     fonts = '<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..500&display=swap" rel="stylesheet">'
     css = ''.join(f'<link rel="stylesheet" href="{c}">' for c in ('theme.css', 'mn-core.css', 'mn-header.css', 'mn-product.css', 'mn-footer.css', 'mn-motion.css', 'mn-shopify.css'))
     content = ''.join(f'<section style="height:420px;margin:0 48px;border-bottom:1px solid #ddd;display:grid;place-items:center;color:#999;font:28px serif">Content {i}</section>' for i in range(3))
+    if cartpage_body: content = f'<div id="shopify-section-main" class="shopify-section">{cartpage(state, cart_type=cart_type, **s)}</div>'
     return (f'<!doctype html><html {attrs}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">{fonts}{css}'
             f'<style>:root{{--ff-display:"Newsreader",Georgia,serif;--ff-body:"Geist",system-ui,sans-serif;--ff-mono:"Geist Mono",monospace}}</style></head>'
             f'<body class="template-product" data-scroll-reveal="false">{ICONS}{hd}<main id="MainContent" class="content-for-layout">{content}</main>{dr}'
@@ -93,10 +103,13 @@ def page(state, cart_type='drawer', scheme='light', **s):
             '<script src="theme.js"></script><script src="mn.js"></script></body></html>')
 
 pages = {'ct_drawer': page('two'), 'ct_notify': page('two', 'notification'), 'ct_page': page('two', 'page'),
-         'ct_empty': page('empty'), 'ct_disc': page('disc'), 'ct_dark': page('two', scheme='dark'), 'ct_hoops': page('hoops')}
+         'ct_empty': page('empty'), 'ct_disc': page('disc'), 'ct_dark': page('two', scheme='dark'), 'ct_hoops': page('hoops'),
+         'cp_two': page('two', cartpage_body=True), 'cp_disc': page('disc', cartpage_body=True), 'cp_empty': page('empty', cartpage_body=True),
+         'cp_pagemode': page('two', 'page', cartpage_body=True), 'cp_dark': page('two', scheme='dark', cartpage_body=True)}
 for n, h in pages.items():
     open(os.path.join(OUT, n + '.html'), 'w').write(h)
 mock = {k: {'html': f'<div id="shopify-section-cart-drawer" class="shopify-section">{drawer(k)}</div>',
+            'page': f'<div id="shopify-section-main" class="shopify-section">{cartpage(k)}</div>',
             'items': [{'key': i['key'], 'quantity': i['quantity'], 'product_title': i['product']['title'], 'variant_title': ' / '.join(i['variant']['options'])} for i in v],
             'item_count': sum(i['quantity'] for i in v)} for k, v in STATES.items()}
 json.dump(mock, open(os.path.join(OUT, 'cart_mock.json'), 'w'))

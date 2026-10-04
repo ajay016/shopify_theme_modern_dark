@@ -132,6 +132,7 @@
   {{ 'mn-product.css' | asset_url | stylesheet_tag }}
   {{ 'mn-footer.css' | asset_url | stylesheet_tag }}
   {{ 'mn-motion.css' | asset_url | stylesheet_tag }}
+  {{ 'mn-shopify.css' | asset_url | stylesheet_tag }}
 </head>
 
 <body
@@ -203,6 +204,13 @@
       cart_add_url:    "{{ routes.cart_add_url }}",
       cart_change_url: "{{ routes.cart_change_url }}",
       search_url:      "{{ routes.search_url }}"
+    };
+    window.MN_STRINGS = {
+      products:         {{ 'mn.products' | t | json }},
+      collections:      {{ 'mn.collections' | t | json }},
+      pages:            {{ 'mn.pages' | t | json }},
+      view_all_results: {{ 'mn.view_all_results' | t: terms: '__TERMS__' | json }},
+      no_results:       {{ 'mn.no_results' | t: terms: '__TERMS__' | json }}
     };
     window.theme_strings = {
       added_to_cart:           {{ 'cart.added' | t | json }},

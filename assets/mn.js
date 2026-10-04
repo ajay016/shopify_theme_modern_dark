@@ -160,8 +160,136 @@
   };
   MN.bump = el => { if (!el) return; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); };
 
-  /* ---- Boot: tabs present in server-rendered markup ---- */
-  const boot = root => MN.initTabs(root || document);
+  /* ==================================================================
+     Header — ported from docs/claude_design_ref/mn/header.js
+     Announcement rotation, mega menus (hover intent, flyout placement,
+     keyboard), predictive search, compact / transparent / hide-on-scroll.
+     ================================================================== */
+  const H = MN.header = { cur: null, tm: 0 };
+  const hdr = () => $('#siteHeader');
+
+  H.openMega = i => {
+    clearTimeout(H.tm); if (H.cur === i) return; H.closeMega();
+    const p = $('#mega-' + i), it = $(`.nav__item[data-i="${i}"]`); if (!p || !it) return;
+    if (p.classList.contains('mega--flyout')) {
+      const hb = $('.header__bar').getBoundingClientRect(), r = it.getBoundingClientRect(), w = Math.min(760, innerWidth - 32);
+      let l = r.left - hb.left - 12; l = Math.max(16, Math.min(l, hb.width - w - 16)); p.style.left = l + 'px';
+    }
+    p.classList.add('is-open'); it.classList.add('is-open'); it.firstElementChild.setAttribute('aria-expanded', 'true');
+    hdr().classList.add('has-mega'); H.cur = i;
+  };
+  H.closeMega = () => {
+    $$('.mega.is-open').forEach(m => m.classList.remove('is-open'));
+    $$('.nav__item.is-open').forEach(n => { n.classList.remove('is-open'); n.firstElementChild.setAttribute('aria-expanded', 'false'); });
+    hdr() && hdr().classList.remove('has-mega'); H.cur = null;
+  };
+  const later = () => { clearTimeout(H.tm); H.tm = setTimeout(H.closeMega, 180); };
+  const activateFly = g => {
+    const fl = g.closest('.flyout');
+    fl.querySelectorAll('.flyout__group').forEach(x => x.classList.toggle('is-active', x === g));
+    fl.querySelectorAll('.flyout__pane').forEach(p => p.classList.toggle('is-active', p.dataset.k === g.dataset.k));
+  };
+
+  let lastY = scrollY;
+  H.onScroll = () => {
+    const h = hdr(); if (!h) return;
+    const y = scrollY, root = document.documentElement;
+    h.classList.toggle('is-compact', y > 40);
+    if (h.dataset.transparentHome === 'true') {
+      const hero = $('#MainContent > .shopify-section, main .shopify-section');
+      h.classList.toggle('is-transparent', !!hero && y < hero.offsetHeight - h.offsetHeight - 10);
+    }
+    if (Math.abs(y - lastY) > 4) {
+      h.classList.toggle('is-hidden', h.dataset.hideOnScroll === 'true' && y > lastY && y > 260 && !h.classList.contains('has-mega'));
+      lastY = y;
+    }
+    const sticky = h.dataset.sticky !== 'false';
+    const off = !sticky || h.classList.contains('is-hidden') ? 0 : h.offsetHeight;
+    root.style.setProperty('--header-live', h.offsetHeight + 'px');
+    root.style.setProperty('--header-offset', off + 'px');
+    // The theme's pinned toolbars and sidebars read --header-h.
+    root.style.setProperty('--header-h', off + 'px');
+  };
+
+  function bindHeader() {
+    const h = hdr(); if (!h || h._mn) return; h._mn = 1;
+    const root = document.documentElement;
+    const ann = $('.announce');
+    if (ann && !ann._mn) {
+      ann._mn = 1; let ai = 0;
+      const rot = d => { const sl = $$('.announce__slide', ann); if (sl.length < 2) return; sl[ai].classList.remove('is-active'); ai = (ai + d + sl.length) % sl.length; sl[ai].classList.add('is-active'); };
+      ann.querySelector('.announce__prev')?.addEventListener('click', () => rot(-1));
+      ann.querySelector('.announce__next')?.addEventListener('click', () => rot(1));
+      setInterval(() => { if (root.dataset.announce === 'rotate' && !ann.matches(':hover')) rot(1); }, 4500);
+    }
+    const nav = h.querySelector('.nav__list'), bar = h.querySelector('.header__bar'), host = h.querySelector('.mega-host');
+    if (nav) {
+      nav.addEventListener('mouseover', e => {
+        const it = e.target.closest('.nav__item'); if (!it) return;
+        $('#mega-' + it.dataset.i) ? H.openMega(+it.dataset.i) : later();
+      });
+      // Touch: the first tap opens the panel, the second follows the link.
+      let tapOpens = false;
+      nav.addEventListener('pointerdown', e => {
+        const it = e.target.closest('.nav__item'); tapOpens = !!it && e.pointerType !== 'mouse' && !!$('#mega-' + it.dataset.i) && H.cur !== +it.dataset.i;
+      });
+      nav.addEventListener('click', e => { if (!tapOpens) return; const it = e.target.closest('.nav__item'); e.preventDefault(); tapOpens = false; H.openMega(+it.dataset.i); });
+      nav.addEventListener('keydown', e => {
+        const it = e.target.closest('.nav__item'); if (!it || !$('#mega-' + it.dataset.i)) return;
+        if (e.key === 'ArrowDown' || e.key === ' ') {
+          e.preventDefault(); H.openMega(+it.dataset.i);
+          setTimeout(() => $(`#mega-${it.dataset.i} a, #mega-${it.dataset.i} button`)?.focus(), 40);
+        }
+      });
+    }
+    if (bar) {
+      bar.addEventListener('mouseleave', later);
+      bar.addEventListener('mouseenter', () => { if (H.cur !== null) clearTimeout(H.tm); });
+      bar.addEventListener('keydown', e => { if (e.key === 'Escape' && H.cur !== null) { const i = H.cur; H.closeMega(); $(`.nav__item[data-i="${i}"] .nav__link`)?.focus(); } });
+      bar.addEventListener('focusout', e => { if (!bar.contains(e.relatedTarget)) later(); });
+    }
+    if (host) {
+      host.addEventListener('mouseover', e => { const g = e.target.closest('.flyout__group'); if (g) activateFly(g); });
+      host.addEventListener('focusin', e => { const g = e.target.closest('.flyout__group'); if (g) activateFly(g); });
+    }
+    document.addEventListener('pointerdown', e => { if (H.cur !== null && !e.target.closest('.header__bar')) H.closeMega(); });
+    bindSearch();
+    H.onScroll();
+  }
+  addEventListener('scroll', H.onScroll, { passive: true });
+  addEventListener('resize', H.onScroll);
+  if ('ResizeObserver' in window) document.addEventListener('DOMContentLoaded', () => { const h = hdr(); if (h) new ResizeObserver(H.onScroll).observe(h); });
+
+  /* ---- Predictive search (Shopify /search/suggest.json) ---- */
+  const hl = (t, q) => q ? esc(t).replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>') : esc(t);
+  const sized = (u, w) => !u ? '' : u + (u.includes('?') ? '&' : '?') + 'width=' + w;
+  function bindSearch() {
+    const inp = $('#searchInput'), res = $('#searchResults'), chips = $('#searchChips');
+    if (!inp || !res || inp._mn) return; inp._mn = 1;
+    const initial = res.innerHTML, base = res.dataset.predictiveUrl || '/search/suggest';
+    let seq = 0, tm = 0;
+    const render = raw => {
+      const q = raw.trim(); if (chips) chips.hidden = !!q;
+      if (!q) { res.innerHTML = initial; return; }
+      const my = ++seq;
+      fetch(`${base}.json?q=${encodeURIComponent(q)}&resources[type]=product,collection,page&resources[limit]=4&resources[options][unavailable_products]=last`)
+        .then(r => r.json()).then(d => {
+          if (my !== seq) return;
+          const R = (d.resources && d.resources.results) || {}, ps = R.products || [], cs = R.collections || [], pg = R.pages || [];
+          const all = `${(window.routes && window.routes.search_url) || '/search'}?q=${encodeURIComponent(q)}&options[prefix]=last`;
+          if (!ps.length && !cs.length && !pg.length) { res.innerHTML = `<p class="search__empty">${esc((window.MN_STRINGS && MN_STRINGS.no_results || 'No results for “__TERMS__”.').replace('__TERMS__', q))}</p>`; return; }
+          const img = p => sized((p.featured_image && p.featured_image.url) || p.image, 360);
+          const price = p => p.price != null ? MN.money(Math.round(parseFloat(p.price) * 100)) : '';
+          res.innerHTML = `<div class="search__col"><span class="mn-eyebrow search__label">${esc(MN_STRINGS.products)}</span><div class="search__products">${ps.map(p => `<a href="${p.url}" class="sresult"><span class="sresult__img">${img(p) ? `<img class="mn-fill" src="${img(p)}" alt="" loading="lazy">` : ''}</span><span class="sresult__title">${hl(p.title, q)}</span><span class="sresult__price">${price(p)}</span></a>`).join('') || `<p class="search__empty">—</p>`}</div><a href="${all}" class="link-arrow" style="margin-top:22px">${esc(MN_STRINGS.view_all_results.replace('__TERMS__', q))}${icon('arrow-right')}</a></div>
+            <div class="search__side">${cs.length ? `<div><span class="mn-eyebrow search__label">${esc(MN_STRINGS.collections)}</span><ul class="search__list">${cs.map(c => `<li><a href="${c.url}">${hl(c.title, q)}${icon('arrow-right')}</a></li>`).join('')}</ul></div>` : ''}${pg.length ? `<div><span class="mn-eyebrow search__label">${esc(MN_STRINGS.pages)}</span><ul class="search__list">${pg.map(c => `<li><a href="${c.url}">${hl(c.title, q)}${icon('arrow-right')}</a></li>`).join('')}</ul></div>` : ''}</div>`;
+        }).catch(() => {});
+    };
+    inp.addEventListener('input', () => { clearTimeout(tm); tm = setTimeout(() => render(inp.value), 160); });
+    chips && chips.addEventListener('click', e => { const c = e.target.closest('.chip'); if (c) { inp.value = c.textContent.trim(); render(inp.value); inp.focus(); } });
+  }
+
+  /* ---- Boot ---- */
+  const boot = root => { MN.initTabs(root || document); bindHeader(); };
   document.addEventListener('DOMContentLoaded', () => boot());
-  document.addEventListener('shopify:section:load', e => boot(e.target));
+  document.addEventListener('shopify:section:load', e => { if (e.target.querySelector('#siteHeader')) { H.cur = null; } boot(e.target); });
 })();

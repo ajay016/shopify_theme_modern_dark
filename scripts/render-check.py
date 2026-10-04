@@ -64,7 +64,10 @@ def _translate(key, *a, **kw):
             return f'Translation missing: en.{key}'
         form = 'one' if count == 1 else 'other'
         node = node.get(form, node.get('other', ''))
-    return str(node).replace('{{ count }}', str(kw.get('count', ''))).strip()
+    out = str(node)
+    for k, v in kw.items():
+        out = out.replace('{{ ' + k + ' }}', str(v))
+    return out.strip()
 
 def strip(src):
     src = re.sub(r'\{%\s*schema\s*%\}.*?\{%\s*endschema\s*%\}', '', src, flags=re.S)

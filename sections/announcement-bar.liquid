@@ -1,50 +1,55 @@
+{%- comment -%}
+  Announcement bar, as in the Claude Design reference (assets/mn-header.css).
+  All three modes are rendered; html[data-announce] (Theme settings →
+  Announcement Bar → Bar Style) shows one: ticker, rotating or static.
+  Messages come from the Message settings; each may hold several
+  announcements separated by ✦ or |.
+{%- endcomment -%}
 {%- if settings.announcement_enabled -%}
   {%- liquid
-    assign bar_style = settings.announcement_style
-    assign text_1 = settings.announcement_text_1
-    assign text_2 = settings.announcement_text_2
-    assign bar_link = settings.announcement_link
+    assign raw = settings.announcement_text_1
+    if settings.announcement_text_2 != blank
+      assign raw = raw | append: '|' | append: settings.announcement_text_2
+    endif
+    if settings.announcement_text_3 != blank
+      assign raw = raw | append: '|' | append: settings.announcement_text_3
+    endif
+    if settings.announcement_text_4 != blank
+      assign raw = raw | append: '|' | append: settings.announcement_text_4
+    endif
+    assign raw = raw | replace: '✦', '|'
+    assign parts = raw | split: '|'
+    assign surface = settings.announcement_surface | default: 'invert'
   -%}
-
-  <div class="announcement-bar" role="banner" aria-label="Announcement">
-    {%- if bar_link != blank -%}<a href="{{ bar_link }}">{%- endif -%}
-
-    {%- if bar_style == 'ticker' -%}
-      <div class="announcement-bar__ticker-wrap" aria-live="off">
-        <div class="announcement-bar__ticker">
-          {%- comment -%}Duplicate for seamless loop{%- endcomment -%}
-          <span>{{ text_1 }}</span>
-          {%- if text_2 != blank -%}<span>{{ text_2 }}</span>{%- endif -%}
-          <span>{{ text_1 }}</span>
-          {%- if text_2 != blank -%}<span>{{ text_2 }}</span>{%- endif -%}
-        </div>
+  <div class="announce" data-surface="{{ surface }}" role="region" aria-label="{{ 'mn.announcements' | t }}">
+    <div class="announce__ticker">
+      <div class="announce__track">
+        {%- for i in (1..2) -%}
+          {%- for m in parts -%}
+            {%- assign msg = m | strip -%}
+            {%- if msg != blank -%}<span class="announce__item"{% if i == 2 %} aria-hidden="true"{% endif %}>{{ msg }}</span>{%- endif -%}
+          {%- endfor -%}
+        {%- endfor -%}
       </div>
-
-    {%- elsif bar_style == 'rotating' -%}
-      {%- liquid
-        assign messages = text_1
-        if text_2 != blank
-          assign messages = text_1 | append: '|' | append: text_2
-        endif
-        assign messages_arr = messages | split: '|'
-        assign messages_json = messages_arr | json
-      -%}
-      <div
-        class="announcement-bar__rotating"
-        data-messages="{{ messages_json | escape }}"
-      >{{ messages_arr[0] }}</div>
-
-    {%- else -%}
-      <div class="announcement-bar__static">
-        <span>{{ text_1 }}</span>
-        {%- if text_2 != blank -%}
-          <span aria-hidden="true">✦</span>
-          <span>{{ text_2 }}</span>
-        {%- endif -%}
+    </div>
+    <div class="announce__rotate">
+      <button type="button" class="icon-btn announce__prev" aria-label="{{ 'accessibility.previous_slide' | t }}"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-left"></use></svg></button>
+      <div class="announce__slides" aria-live="polite">
+        {%- assign n = 0 -%}
+        {%- for m in parts -%}
+          {%- assign msg = m | strip -%}
+          {%- if msg != blank -%}
+            <p class="announce__slide{% if n == 0 %} is-active{% endif %}"><span>{{ msg }}</span></p>
+            {%- assign n = n | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
       </div>
-    {%- endif -%}
-
-    {%- if bar_link != blank -%}</a>{%- endif -%}
+      <button type="button" class="icon-btn announce__next" aria-label="{{ 'accessibility.next_slide' | t }}"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-right"></use></svg></button>
+    </div>
+    <p class="announce__static">
+      {{- parts.first | strip -}}
+      {%- if settings.announcement_link != blank and settings.announcement_link_text != blank %} · <a href="{{ settings.announcement_link }}">{{ settings.announcement_link_text }}</a>{%- endif -%}
+    </p>
   </div>
 {%- endif -%}
 
@@ -56,13 +61,9 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Configure the announcement bar (on/off, style, text) in Theme Settings → Announcement Bar."
+      "content": "Configure the announcement bar (on/off, style, messages, surface) in Theme Settings → Announcement Bar."
     }
   ],
-  "presets": [
-    {
-      "name": "Announcement Bar"
-    }
-  ]
+  "presets": [{ "name": "Announcement Bar" }]
 }
 {% endschema %}

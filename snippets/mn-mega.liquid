@@ -1,0 +1,131 @@
+{%- comment -%}
+  One mega menu panel, in the design reference's three layouts:
+    v1 → columns   every submenu a column of its links, plus a feature card
+    v2 → visual    a tile per submenu (collection image, or a text tile)
+    v3 → flyout    submenus listed on the left, the hovered one's links beside
+  Accepts: link, index, block (Mega Menu Item or nil), layout, images
+{%- endcomment -%}
+{%- liquid
+  assign show_img = true
+  if images == false
+    assign show_img = false
+  endif
+
+  assign f_img = nil
+  assign f_url = link.url
+  assign f_eyebrow = ''
+  assign f_title = link.title
+  assign f_cta = 'mn.view_all' | t
+  if block
+    assign f_img = block.settings.featured_image
+    assign f_url = block.settings.featured_link | default: link.url
+    assign f_eyebrow = block.settings.featured_label
+    assign f_title = block.settings.featured_title | default: link.title
+    assign f_cta = block.settings.featured_cta | default: f_cta
+  endif
+  unless f_img
+    if link.type == 'collection_link'
+      assign f_img = link.object.image | default: link.object.featured_image
+    endif
+  endunless
+  unless show_img
+    assign f_img = nil
+  endunless
+
+  assign leaves = 0
+  for child in link.links
+    if child.links.size == 0
+      assign leaves = leaves | plus: 1
+    endif
+  endfor
+-%}
+
+{%- capture feature -%}
+  <a href="{{ f_url }}" class="mega__feature{% if f_img %} has-img{% endif %}">
+    {%- if f_img -%}<span class="mega__feature-img">{{ f_img | image_url: width: 800 | image_tag: loading: 'lazy', alt: f_title, sizes: '340px' }}</span>{%- endif -%}
+    <span class="mega__feature-copy">
+      {%- if f_eyebrow != blank -%}<span class="mn-eyebrow">{{ f_eyebrow }}</span>{%- endif -%}
+      <span class="mega__feature-title">{{ f_title }}</span>
+      <span class="link-arrow">{{ f_cta }}<svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></span>
+    </span>
+  </a>
+{%- endcapture -%}
+
+{%- if layout == 'v2' -%}
+<div class="mega mega--visual" id="mega-{{ index }}" data-i="{{ index }}">
+  <div class="mega__inner">
+    <div class="mega__tiles">
+      {%- for child in link.links limit: 8 -%}
+        {%- liquid
+          assign t_img = nil
+          if show_img
+            if child.type == 'collection_link'
+              assign t_img = child.object.image | default: child.object.featured_image
+            elsif child.type == 'product_link'
+              assign t_img = child.object.featured_media
+            endif
+          endif
+        -%}
+        <div class="mega__tile">
+          <a href="{{ child.url }}" class="mega__tile-img{% unless t_img %} is-text{% endunless %}">
+            {%- if t_img -%}<span class="mega__tile-bg">{{ t_img | image_url: width: 640 | image_tag: loading: 'lazy', alt: '', sizes: '320px' }}</span>{%- endif -%}
+            <span>{{ child.title }}</span><svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+          </a>
+          {%- if child.links.size > 0 -%}
+            <ul class="mega__links">{%- for g in child.links -%}<li><a href="{{ g.url }}">{{ g.title }}</a></li>{%- endfor -%}</ul>
+            <a href="{{ child.url }}" class="mega__all">{%- assign lt = child.title | downcase -%}{{ 'mn.view_all_in' | t: title: lt }}</a>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{%- elsif layout == 'v3' -%}
+<div class="mega mega--flyout" id="mega-{{ index }}" data-i="{{ index }}">
+  <div class="flyout">
+    <ul class="flyout__groups">
+      {%- for child in link.links -%}
+        <li><button type="button" class="flyout__group{% if forloop.first %} is-active{% endif %}" data-k="{{ forloop.index0 }}">{{ child.title }}<svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-right"></use></svg></button></li>
+      {%- endfor -%}
+    </ul>
+    <div class="flyout__links">
+      {%- for child in link.links -%}
+        <div class="flyout__pane{% if forloop.first %} is-active{% endif %}" data-k="{{ forloop.index0 }}">
+          <a href="{{ child.url }}" class="mega__heading">{{ child.title }}</a>
+          {%- if child.links.size > 0 -%}
+            <ul class="mega__links">{%- for g in child.links -%}<li><a href="{{ g.url }}">{{ g.title }}</a></li>{%- endfor -%}</ul>
+          {%- endif -%}
+          <a href="{{ child.url }}" class="mega__all">{%- assign lt = child.title | downcase -%}{{ 'mn.view_all_in' | t: title: lt }}</a>
+        </div>
+      {%- endfor -%}
+    </div>
+    {{ feature }}
+  </div>
+</div>
+
+{%- else -%}
+<div class="mega mega--columns" id="mega-{{ index }}" data-i="{{ index }}">
+  <div class="mega__inner">
+    <div class="mega__cols">
+      {%- if leaves > 0 -%}
+        <div class="mega__col">
+          <a href="{{ link.url }}" class="mega__heading">{{ link.title }}</a>
+          <ul class="mega__links">{%- for child in link.links -%}{%- if child.links.size == 0 -%}<li><a href="{{ child.url }}">{{ child.title }}</a></li>{%- endif -%}{%- endfor -%}</ul>
+          <a href="{{ link.url }}" class="mega__all">{{ 'mn.view_all' | t }}</a>
+        </div>
+      {%- endif -%}
+      {%- for child in link.links -%}
+        {%- if child.links.size > 0 -%}
+          <div class="mega__col">
+            <a href="{{ child.url }}" class="mega__heading">{{ child.title }}</a>
+            <ul class="mega__links">{%- for g in child.links -%}<li><a href="{{ g.url }}">{{ g.title }}</a></li>{%- endfor -%}</ul>
+            <a href="{{ child.url }}" class="mega__all">{{ 'mn.view_all' | t }}</a>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    {{ feature }}
+  </div>
+</div>
+{%- endif -%}

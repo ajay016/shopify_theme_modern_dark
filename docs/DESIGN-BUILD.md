@@ -55,11 +55,16 @@ This file is the plan and the record. Update the checkboxes as phases land.
 
 ## Phases
 
-- [ ] **D1 Foundation** — fonts (Newsreader + Geist + Geist Mono as a pairing, made the
+- [x] **D1 Foundation** (6b32c83) — fonts (Newsreader + Geist + Geist Mono as a pairing, made the
       store font), tokens, schemes and surfaces, radius and motion mapped from settings,
       core components, icon sprite, overlay / accordion / tabs / select / qty / toast /
       reveal runtime. Old theme tokens aliased so other pages follow.
-- [ ] **D2 Header** — announcement bar (3 modes), 4 header styles, transparent over hero,
+- [x] **D2 Header** — `sections/header.liquid`, `sections/announcement-bar.liquid`,
+      `snippets/mn-mega.liquid`, `mn-social`, `mn-localization`; behaviour in `assets/mn.js`;
+      test `scripts/header-check.py` + `scripts/header-test.js` (41 checks). Old header JS and
+      CSS removed; the header is sticky in the page flow, so content no longer needs a
+      top offset.
+      Earlier plan line: — announcement bar (3 modes), 4 header styles, transparent over hero,
       compact and hide-on-scroll, 3 mega menu layouts ± images, search overlay with
       predictive results, menu drawer (3 levels).
 - [ ] **D3 Footer** — 3 styles × 4 surfaces, newsletter (band variant), wordmark,

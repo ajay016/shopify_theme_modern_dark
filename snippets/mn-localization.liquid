@@ -1,0 +1,25 @@
+{%- comment -%}
+  Country / region and language selectors for a {% form 'localization' %}.
+  Native selects: theme.js renders them as the design's compact select.
+  Accepts: id_prefix
+{%- endcomment -%}
+{%- if localization.available_countries.size > 1 -%}
+  <div>
+    <label class="visually-hidden" for="{{ id_prefix }}Country">{{ 'mn.country' | t }}</label>
+    <select id="{{ id_prefix }}Country" name="country_code" data-select-class="select--compact" onchange="this.form.submit()">
+      {%- for c in localization.available_countries -%}
+        <option value="{{ c.iso_code }}"{% if c.iso_code == localization.country.iso_code %} selected{% endif %}>{{ c.name }} ({{ c.currency.iso_code }} {{ c.currency.symbol }})</option>
+      {%- endfor -%}
+    </select>
+  </div>
+{%- endif -%}
+{%- if localization.available_languages.size > 1 -%}
+  <div>
+    <label class="visually-hidden" for="{{ id_prefix }}Language">{{ 'mn.language' | t }}</label>
+    <select id="{{ id_prefix }}Language" name="language_code" data-select-class="select--compact" onchange="this.form.submit()">
+      {%- for l in localization.available_languages -%}
+        <option value="{{ l.iso_code }}"{% if l.iso_code == localization.language.iso_code %} selected{% endif %}>{{ l.endonym_name | capitalize }}</option>
+      {%- endfor -%}
+    </select>
+  </div>
+{%- endif -%}

@@ -139,152 +139,6 @@
 
 
   /* ============================================================
-     Header — sticky + transparent
-     ============================================================ */
-  function initHeader() {
-    const header = document.querySelector('.site-header');
-    const bar    = document.querySelector('.announcement-bar');
-    const root   = document.documentElement;
-
-    // --header-h is what every sticky element on the page offsets itself by:
-    // the collection toolbar, the filter sidebar, anything else that pins
-    // under the navigation. It was read in several places and set nowhere,
-    // so each fell back to a guessed 66-72px while the real header is taller
-    // and the toolbar slid underneath it. It is measured here, and kept
-    // current as the header's height changes (logo load, fonts, breakpoints).
-    // A header that scrolls away with the page leaves nothing to clear, so
-    // the offset is then 0 and pinned elements sit at the very top.
-    // --header-space is the room the page leaves above its content for the
-    // header, whatever its style; it replaces a fixed 80px that every header
-    // taller or shorter than that got wrong.
-    function setHeaderVar() {
-      if (!header) { root.style.setProperty('--header-h', '0px'); root.style.setProperty('--header-space', '0px'); return; }
-      const full = Math.ceil(header.getBoundingClientRect().height + (parseFloat(getComputedStyle(header).marginTop) || 0));
-      const pinned = getComputedStyle(header).position === 'fixed';
-      const hidden = header.classList.contains('is-hidden');
-      root.style.setProperty('--header-space', full + 'px');
-      root.style.setProperty('--header-h', (pinned && !hidden ? full : 0) + 'px');
-    }
-    setHeaderVar();
-    window.addEventListener('resize', setHeaderVar);
-    if (header && 'ResizeObserver' in window) new ResizeObserver(setHeaderVar).observe(header);
-    if (!header) return;
-
-    // Push header below announcement bar
-    function setHeaderOffset() {
-      const barH = bar ? bar.offsetHeight : 0;
-      header.style.top = barH + 'px';
-    }
-    setHeaderOffset();
-    window.addEventListener('resize', setHeaderOffset);
-
-    // "Hide header when scrolling down": slides away on the way down, back
-    // on the way up, never while a menu is open. Pinned toolbars follow it
-    // through --header-h.
-    const hideOnScroll = header.dataset.hideOnScroll === 'true' && header.classList.contains('is-sticky');
-    let lastY = window.scrollY;
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      if (hideOnScroll) {
-        const goingDown = y > lastY + 4, goingUp = y < lastY - 4;
-        const menuOpen = header.querySelector('.has-megamenu.is-open');
-        if (goingDown && y > header.offsetHeight + 120 && !menuOpen) header.classList.add('is-hidden');
-        else if (goingUp || y < header.offsetHeight) header.classList.remove('is-hidden');
-        if (goingDown || goingUp) lastY = y;
-        setHeaderVar();
-      }
-    }, { passive: true });
-
-    window.addEventListener('scroll', () => {
-      const scrolled = window.scrollY > 60;
-      // Drives the solid/transparent backdrop entirely via CSS classes so the
-      // "Transparent" and "Sticky" settings stay independent (see theme.css).
-      header.classList.toggle('scrolled', scrolled);
-
-      // Once user scrolls past announcement bar, snap header to top
-      if (bar) {
-        header.style.top = (scrolled || window.scrollY > bar.offsetHeight)
-          ? '0'
-          : bar.offsetHeight + 'px';
-      }
-    }, { passive: true });
-  }
-
-
-  /* ============================================================
-     Mobile Menu
-     ============================================================ */
-  function initMobileMenu() {
-    const openBtns  = document.querySelectorAll('[data-open-mobile-menu]');
-    const closeBtn  = document.querySelector('[data-close-mobile-menu]');
-    const menu      = document.getElementById('mobile-menu');
-    const overlay   = document.getElementById('mobile-menu-overlay');
-    if (!menu) return;
-
-    let opener = null;
-    function open(e) {
-      opener = e && e.currentTarget;
-      menu.classList.add('is-open');
-      overlay.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
-      openBtns.forEach(b => b.setAttribute('aria-expanded', 'true'));
-      setTimeout(() => (closeBtn || menu).focus({ preventScroll: true }), 60);
-    }
-    function close() {
-      if (!menu.classList.contains('is-open')) return;
-      menu.classList.remove('is-open');
-      overlay.classList.remove('is-open');
-      document.body.style.overflow = '';
-      openBtns.forEach(b => b.setAttribute('aria-expanded', 'false'));
-      if (opener) opener.focus({ preventScroll: true });
-    }
-
-    openBtns.forEach(btn => btn.addEventListener('click', open));
-    closeBtn && closeBtn.addEventListener('click', close);
-    overlay && overlay.addEventListener('click', close);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-
-    // Submenus
-    document.querySelectorAll('[data-toggle-submenu]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const target = document.getElementById(btn.dataset.toggleSubmenu);
-        const open = target ? !target.classList.contains('is-open') : false;
-        if (target) slide(target, open, o => target.classList.toggle('is-open', o));
-        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        const arrow = btn.querySelector('.submenu-arrow');
-        if (arrow) arrow.classList.toggle('is-open', open);
-      });
-    });
-  }
-
-
-  /* ============================================================
-     Search Overlay
-     ============================================================ */
-  function initSearch() {
-    const overlay   = document.getElementById('search-overlay');
-    const input     = overlay && overlay.querySelector('input');
-    const openBtns  = document.querySelectorAll('[data-open-search]');
-    const closeBtn  = document.querySelector('[data-close-search]');
-    if (!overlay) return;
-
-    function open() {
-      overlay.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
-      setTimeout(() => input && input.focus(), 100);
-    }
-    function close() {
-      overlay.classList.remove('is-open');
-      document.body.style.overflow = '';
-    }
-
-    openBtns.forEach(btn => btn.addEventListener('click', open));
-    closeBtn && closeBtn.addEventListener('click', close);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-  }
-
-
-  /* ============================================================
      Cart Drawer
      ============================================================ */
   function initCartDrawer() {
@@ -1820,125 +1674,6 @@
 
 
   /* ============================================================
-     Announcement Bar — rotating messages
-     ============================================================ */
-  function initAnnouncementRotation() {
-    const bar = document.querySelector('.announcement-bar__rotating');
-    if (!bar) return;
-    const messages = bar.dataset.messages ? JSON.parse(bar.dataset.messages) : [];
-    if (messages.length < 2) return;
-
-    let current = 0;
-    setInterval(() => {
-      bar.style.opacity = '0';
-      setTimeout(() => {
-        current = (current + 1) % messages.length;
-        bar.textContent = messages[current];
-        bar.style.opacity = '1';
-      }, 400);
-    }, 4000);
-
-    bar.style.transition = 'opacity 0.4s';
-  }
-
-
-  /* ============================================================
-     Mega Menu hover — keyboard accessible
-     ============================================================ */
-  function initMegaMenu() {
-    const header = document.querySelector('.site-header');
-    const items = [...document.querySelectorAll('.has-megamenu')];
-    if (!header || !items.length) return;
-    let current = null, openTimer = 0, closeTimer = 0, quietFocus = false;
-
-    const triggerOf = item => item.querySelector(':scope > .site-nav__link');
-    function set(item, open) {
-      item.classList.toggle('is-open', open);
-      const t = triggerOf(item);
-      if (t) t.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if (open && item.classList.contains('has-megamenu--v3')) {
-        // The flyout sits under its own link, kept inside the header.
-        const panel = item.querySelector('.mega-menu');
-        if (panel) {
-          const hr = header.getBoundingClientRect(), ir = item.getBoundingClientRect();
-          const left = Math.max(8, Math.min(ir.left - hr.left - 12, hr.width - panel.offsetWidth - 8));
-          panel.style.setProperty('--fly-left', left + 'px');
-        }
-      }
-    }
-    function open(item) {
-      clearTimeout(closeTimer);
-      if (current && current !== item) set(current, false);
-      current = item;
-      set(item, true);
-      header.classList.add('has-open-menu');
-    }
-    function close(item, focusTrigger) {
-      if (!item) return;
-      set(item, false);
-      if (current === item) current = null;
-      header.classList.toggle('has-open-menu', !!current);
-      if (focusTrigger) {
-        // Returning focus must not count as focusing in, or it reopens the panel.
-        const t = triggerOf(item);
-        if (t) { quietFocus = true; t.focus(); quietFocus = false; }
-      }
-    }
-
-    items.forEach(item => {
-      // Hover intent: a short delay to open, so sweeping the pointer across
-      // the bar does not flash every panel; moving between items is instant.
-      item.addEventListener('pointerenter', e => {
-        if (e.pointerType === 'touch') return;
-        clearTimeout(closeTimer); clearTimeout(openTimer);
-        openTimer = setTimeout(() => open(item), current ? 0 : 110);
-      });
-      item.addEventListener('pointerleave', e => {
-        if (e.pointerType === 'touch') return;
-        clearTimeout(openTimer);
-        closeTimer = setTimeout(() => close(item), 220);
-      });
-      const t = triggerOf(item);
-      if (t) {
-        // Touch: the first tap opens the panel, the second follows the link.
-        // The state is read at pointerdown, before the tap focuses the link
-        // (which opens the panel through focusin on Android).
-        let tapOpensMenu = false;
-        t.addEventListener('pointerdown', e => { tapOpensMenu = e.pointerType !== 'mouse' && !item.classList.contains('is-open'); });
-        t.addEventListener('click', e => {
-          if (tapOpensMenu) { e.preventDefault(); open(item); }
-          tapOpensMenu = false;
-        });
-        t.addEventListener('keydown', e => {
-          if (e.key === 'ArrowDown' || ((e.key === ' ') && !item.classList.contains('is-open'))) {
-            e.preventDefault(); open(item);
-            const first = item.querySelector('.mega-menu a');
-            if (first) setTimeout(() => first.focus(), 30);
-          }
-        });
-      }
-      item.addEventListener('focusin', () => { if (!quietFocus) open(item); });
-      item.addEventListener('focusout', e => { if (!item.contains(e.relatedTarget)) close(item); });
-
-      // Flyout: the hovered or focused submenu shows its links beside it.
-      const flyout = item.querySelector('[data-flyout]');
-      if (flyout) {
-        const show = i => {
-          flyout.querySelectorAll('[data-flyout-item]').forEach(a => a.classList.toggle('is-current', a.dataset.flyoutItem === i));
-          flyout.querySelectorAll('[data-flyout-pane]').forEach(p => p.classList.toggle('is-current', p.dataset.flyoutPane === i));
-        };
-        flyout.addEventListener('pointerover', e => { const a = e.target.closest('[data-flyout-item]'); if (a) show(a.dataset.flyoutItem); });
-        flyout.addEventListener('focusin', e => { const a = e.target.closest('[data-flyout-item]'); if (a) show(a.dataset.flyoutItem); });
-      }
-    });
-
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && current) close(current, true); });
-    document.addEventListener('pointerdown', e => { if (current && !current.contains(e.target)) close(current); });
-  }
-
-
-
-  /* ============================================================
      Footer — accordions on phones, back to top
      ============================================================ */
   function initFooter(root = document) {
@@ -2049,6 +1784,7 @@
 
     const wrap = document.createElement('div');
     wrap.className = 'select cselect';
+    if (sel.dataset.selectClass) wrap.classList.add(...sel.dataset.selectClass.split(' '));
     sel.parentNode.insertBefore(wrap, sel);
     wrap.appendChild(sel);
     sel.classList.add('cselect__native');
@@ -2283,9 +2019,6 @@
      ============================================================ */
   document.addEventListener('DOMContentLoaded', () => {
     initScrollReveal();
-    initHeader();
-    initMobileMenu();
-    initSearch();
     initCartDrawer();
     initCardAddToCart();
     initCardCarousel();
@@ -2299,22 +2032,13 @@
     initInfiniteScroll();
     initTabs();
     initPriceRange();
-    initAnnouncementRotation();
-    initMegaMenu();
     initAddressForms();
     initCustomSelects();
     initFooter();
   });
 
-  // The theme editor swaps the header's HTML when a header setting changes;
-  // its menus, drawer and scroll behaviour are bound to elements, so re-bind.
   document.addEventListener('shopify:section:load', e => {
     if (e.target && e.target.querySelector('.site-footer')) initFooter(e.target);
-    if (!e.target || !e.target.querySelector('.site-header')) return;
-    initHeader();
-    initMobileMenu();
-    initSearch();
-    initMegaMenu();
   });
 
   // Re-bind hover carousels when a section is re-rendered in the theme editor.

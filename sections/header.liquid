@@ -1,211 +1,239 @@
-{%- liquid
-  assign header_style    = settings.header_style | default: 'v1'
-  assign mega_style      = settings.mega_menu_style | default: 'v1'
-  assign mega_images     = settings.mega_menu_images
-  assign is_transparent  = settings.header_transparent_home
-  assign is_sticky       = settings.header_sticky
-  assign menu            = linklists[settings.menu]
-  assign logo            = settings.logo
-  assign logo_width      = settings.logo_width
-  assign logo_text       = settings.logo_text
-  assign show_wishlist   = settings.wishlist_enabled
-  assign cart_type       = settings.cart_type
+{%- comment -%}
+  Header, mega menus, search overlay and menu drawer, built to the Claude
+  Design reference (docs/claude_design_ref; styles in assets/mn-header.css,
+  behaviour in assets/mn.js → header).
 
-  assign transparent_class = ''
-  if is_transparent and request.page_type == 'index'
-    assign transparent_class = ' is-transparent'
+  Theme settings → Header drives the html attributes that pick the variant:
+    data-header       classic · centred · minimal · floating
+    data-mega         columns · visual · flyout
+    data-mega-images  on · off
+  Menus come from the Main Navigation Menu (menu → submenu → sub-submenu).
+  A Mega Menu Item block, matched to a top-level link by title, supplies that
+  menu's feature card.
+{%- endcomment -%}
+{%- liquid
+  assign menu = linklists[settings.menu]
+  assign transparent = false
+  if settings.header_transparent_home and request.page_type == 'index'
+    assign transparent = true
   endif
+  assign logo_text = settings.logo_text | default: shop.name
 -%}
 
-{%- comment -%}
-  Four header styles (Theme settings → Header → Header style):
-    v1  Classic   logo left, menu centred, icons right
-    v2  Centred   logo centred above a full-width menu row, search pill left
-    v3  Minimal   menu button left, logo centred, icons right; the menu
-                  opens as a drawer at every width
-    v4  Floating  the Classic layout in an inset, rounded bar
-  The mobile menu drawer below serves every style on small screens.
-{%- endcomment -%}
 <header
-  class="site-header header-{{ header_style }}{{ transparent_class }}{% if is_sticky %} is-sticky{% endif %}"
-  data-transparent="{{ is_transparent }}"
+  class="site-header"
+  id="siteHeader"
+  data-transparent-home="{{ transparent }}"
   data-hide-on-scroll="{{ settings.header_hide_on_scroll }}"
-  role="banner"
+  data-sticky="{{ settings.header_sticky }}"
 >
-  <div class="site-header__bar">
-    {%- capture burger -%}
-      <button
-        class="header-icon-btn header-burger{% unless header_style == 'v3' %} header-burger--mobile{% endunless %}"
-        data-open-mobile-menu
-        aria-label="{{ 'accessibility.open_nav' | t }}"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-      >
-        {%- render 'icon-menu' -%}
-        {%- if header_style == 'v3' -%}<span class="header-burger__label">{{ 'accessibility.menu' | t }}</span>{%- endif -%}
+  <div class="header__bar">
+    <div class="header__inner">
+      <button type="button" class="header__menu-btn" data-open="ov-menu" aria-label="{{ 'mn.open_menu' | t }}">
+        <svg class="icon" aria-hidden="true"><use href="#i-menu"></use></svg><span class="header__menu-label">{{ 'mn.menu' | t }}</span>
       </button>
-    {%- endcapture -%}
+      <button type="button" class="header__search-field" data-open="ov-search">
+        <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg><span>{{ section.settings.search_field_text }}</span>
+      </button>
 
-    {%- case header_style -%}
-      {%- when 'v2' -%}
-        <div class="site-header__start">
-          {{ burger }}
-          <button class="header-search-pill" data-open-search aria-label="{{ 'accessibility.open_search' | t }}" aria-expanded="false" aria-controls="search-overlay">
-            {%- render 'icon-search' -%}<span>{{ 'general.search.title' | t }}</span>
+      <a href="{{ routes.root_url }}" class="header__logo" aria-label="{{ shop.name | escape }}">
+        {%- if settings.logo != blank -%}
+          {{ settings.logo | image_url: width: 400 | image_tag: width: settings.logo_width, loading: 'eager', alt: shop.name, class: 'header__logo-img' }}
+        {%- else -%}
+          {{ logo_text }}
+        {%- endif -%}
+      </a>
+
+      <nav class="header__nav" aria-label="{{ 'mn.main_menu' | t }}">
+        <ul class="nav__list">
+          {%- for link in menu.links -%}
+            {%- liquid
+              assign tag = ''
+              assign key = link.title | downcase | strip
+              assign tag_key = section.settings.nav_tag_item | downcase | strip
+              if tag_key != blank and key == tag_key
+                assign tag = section.settings.nav_tag_text
+              endif
+            -%}
+            <li class="nav__item" data-i="{{ forloop.index0 }}">
+              {%- if link.links.size > 0 -%}
+                <a class="nav__link" href="{{ link.url }}" aria-expanded="false" aria-controls="mega-{{ forloop.index0 }}" aria-haspopup="true">
+                  {{- link.title -}}
+                  {%- if tag != blank %}<span class="nav__tag">{{ tag }}</span>{% endif -%}
+                  <svg class="icon" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+                </a>
+              {%- else -%}
+                <a class="nav__link" href="{{ link.url }}"{% if link.active %} aria-current="page"{% endif %}>
+                  {{- link.title -}}
+                  {%- if tag != blank %}<span class="nav__tag">{{ tag }}</span>{% endif -%}
+                </a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+
+      <div class="header__icons">
+        <button type="button" class="icon-btn header__icon--search" data-open="ov-search" aria-label="{{ 'mn.search' | t }}">
+          <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+        </button>
+        {%- if shop.customer_accounts_enabled -%}
+          <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="icon-btn header__icon--account" aria-label="{{ 'mn.account' | t }}">
+            <svg class="icon" aria-hidden="true"><use href="#i-user"></use></svg>
+          </a>
+        {%- endif -%}
+        {%- if settings.wishlist_enabled -%}
+          <button type="button" class="icon-btn header__icon--wish" data-open-wishlist aria-label="{{ 'mn.wishlist' | t }}">
+            <svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg><span class="count-dot header-wishlist-count" id="wishCount"></span>
           </button>
-        </div>
-        <div class="site-header__brand">
-          {%- render 'header-logo', logo: logo, logo_width: logo_width, logo_text: logo_text -%}
-        </div>
-        <div class="site-header__end">
-          {%- render 'header-actions', show_wishlist: show_wishlist, cart_type: cart_type, hide_search: true -%}
-        </div>
-
-      {%- when 'v3' -%}
-        <div class="site-header__start">{{ burger }}</div>
-        <div class="site-header__brand">
-          {%- render 'header-logo', logo: logo, logo_width: logo_width, logo_text: logo_text -%}
-        </div>
-        <div class="site-header__end">
-          {%- render 'header-actions', show_wishlist: show_wishlist, cart_type: cart_type -%}
-        </div>
-
-      {%- else -%}
-        <div class="site-header__start">
-          {{ burger }}
-          {%- render 'header-logo', logo: logo, logo_width: logo_width, logo_text: logo_text -%}
-        </div>
-        {%- render 'header-nav', menu: menu, blocks: section.blocks, mega_style: mega_style, images: mega_images -%}
-        <div class="site-header__end">
-          {%- render 'header-actions', show_wishlist: show_wishlist, cart_type: cart_type -%}
-        </div>
-    {%- endcase -%}
-  </div>
-
-  {%- if header_style == 'v2' -%}
-    <div class="site-header__row">
-      {%- render 'header-nav', menu: menu, blocks: section.blocks, mega_style: mega_style, images: mega_images, align: 'center' -%}
+        {%- endif -%}
+        {%- if settings.cart_type == 'drawer' -%}
+          <button type="button" class="icon-btn header__icon--cart" data-open-cart aria-label="{{ 'mn.bag' | t }}">
+            <svg class="icon" aria-hidden="true"><use href="#i-bag"></use></svg><span class="count-dot header-cart-count" id="cartCount" data-cart-count>{% if cart.item_count > 0 %}{{ cart.item_count }}{% endif %}</span>
+          </button>
+        {%- else -%}
+          <a href="{{ routes.cart_url }}" class="icon-btn header__icon--cart" aria-label="{{ 'mn.bag' | t }}">
+            <svg class="icon" aria-hidden="true"><use href="#i-bag"></use></svg><span class="count-dot header-cart-count" id="cartCount" data-cart-count>{% if cart.item_count > 0 %}{{ cart.item_count }}{% endif %}</span>
+          </a>
+        {%- endif -%}
+      </div>
     </div>
-  {%- endif -%}
+
+    <div class="mega-host">
+      {%- for link in menu.links -%}
+        {%- if link.links.size > 0 -%}
+          {%- liquid
+            assign mega_block = nil
+            assign key = link.title | downcase | strip
+            for block in section.blocks
+              assign bkey = block.settings.menu_item | downcase | strip
+              if block.type == 'mega_menu_item' and bkey == key
+                assign mega_block = block
+              endif
+            endfor
+          -%}
+          {%- render 'mn-mega', link: link, index: forloop.index0, block: mega_block, layout: settings.mega_menu_style, images: settings.mega_menu_images -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
 </header>
 
-{%- comment -%}Mobile menu (every style on small screens; the Minimal style at every width){%- endcomment -%}
-<div id="mobile-menu-overlay" class="mobile-menu-overlay" aria-hidden="true"></div>
-
-<div
-  id="mobile-menu"
-  class="mobile-menu"
-  role="dialog"
-  aria-modal="true"
-  aria-label="{{ 'accessibility.menu' | t }}"
-  tabindex="-1"
->
-  <div class="mobile-menu__header">
-    {%- render 'header-logo', logo: logo, logo_width: logo_width, logo_text: logo_text -%}
-    <button data-close-mobile-menu class="header-icon-btn" aria-label="{{ 'accessibility.close_menu' | t }}">
-      {%- render 'icon-close' -%}
-    </button>
-  </div>
-
-  <ul class="mobile-menu__nav" role="list">
-    {%- for link in menu.links -%}
-      {%- assign top = forloop.index -%}
-      <li>
-        {%- if link.links.size > 0 -%}
-          {%- comment -%}
-            One data-toggle-submenu attribute. There were two -- an empty one
-            first -- and the browser keeps the first, so no submenu could open.
-          {%- endcomment -%}
-          <button
-            class="mobile-menu__toggle"
-            data-toggle-submenu="mobile-sub-{{ top }}"
-            aria-expanded="false"
-            aria-controls="mobile-sub-{{ top }}"
-          >
-            <span>{{ link.title }}</span>
-            <svg class="submenu-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <ul id="mobile-sub-{{ top }}" class="mobile-menu__subnav" role="list">
-            <li><a href="{{ link.url }}" class="mobile-menu__all">{{ 'general.view_all' | t }}</a></li>
-            {%- for childlink in link.links -%}
-              <li>
-                {%- if childlink.links.size > 0 -%}
-                  <button
-                    class="mobile-menu__toggle mobile-menu__toggle--child"
-                    data-toggle-submenu="mobile-sub-{{ top }}-{{ forloop.index }}"
-                    aria-expanded="false"
-                    aria-controls="mobile-sub-{{ top }}-{{ forloop.index }}"
-                  >
-                    <span>{{ childlink.title }}</span>
-                    <svg class="submenu-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-                  </button>
-                  <ul id="mobile-sub-{{ top }}-{{ forloop.index }}" class="mobile-menu__subnav mobile-menu__subnav--deep" role="list">
-                    <li><a href="{{ childlink.url }}" class="mobile-menu__all">{{ 'general.view_all' | t }}</a></li>
-                    {%- for grandchild in childlink.links -%}
-                      <li><a href="{{ grandchild.url }}"{% if grandchild.active %} aria-current="page"{% endif %}>{{ grandchild.title }}</a></li>
-                    {%- endfor -%}
-                  </ul>
-                {%- else -%}
-                  <a href="{{ childlink.url }}"{% if childlink.active %} aria-current="page"{% endif %}>{{ childlink.title }}</a>
-                {%- endif -%}
-              </li>
-            {%- endfor -%}
-          </ul>
-        {%- else -%}
-          <a href="{{ link.url }}" class="mobile-menu__link"{% if link.active %} aria-current="page"{% endif %}>{{ link.title }}</a>
-        {%- endif -%}
-      </li>
-    {%- endfor -%}
-  </ul>
-
-  <div class="mobile-menu__footer">
-    {%- if shop.customer_accounts_enabled -%}
-      <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="mobile-menu__account">
-        {%- render 'icon-account' -%}
-        <span>{{ 'customer.account.title' | t }}</span>
-      </a>
+{%- comment -%}Search overlay{%- endcomment -%}
+<div class="overlay overlay--top search" id="ov-search" role="dialog" aria-modal="true" aria-label="{{ 'mn.search' | t }}">
+  <div class="overlay__scrim" data-close></div>
+  <div class="overlay__panel">
+    <form class="search__head" action="{{ routes.search_url }}" method="get" role="search">
+      <label class="search__field">
+        <svg class="icon icon--lg" aria-hidden="true"><use href="#i-search"></use></svg>
+        <input class="search__input" id="searchInput" name="q" type="search" placeholder="{{ 'mn.search_placeholder' | t: shop: shop.name }}" autocomplete="off" autofocus aria-label="{{ 'mn.search' | t }}">
+      </label>
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="button" class="icon-btn" data-close aria-label="{{ 'mn.close_search' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+    </form>
+    {%- assign chips = section.settings.search_chips | split: ',' -%}
+    {%- if chips.size > 0 -%}
+      <div class="mn-container" style="width:100%;padding-top:20px">
+        <div class="search__chips" id="searchChips" style="margin-bottom:0">
+          {%- for c in chips -%}{%- assign t = c | strip -%}{%- if t != blank -%}<button type="button" class="chip">{{ t }}</button>{%- endif -%}{%- endfor -%}
+        </div>
+      </div>
     {%- endif -%}
-    <div class="mobile-menu__social">
-      {%- if settings.social_instagram != blank -%}<a href="{{ settings.social_instagram }}">Instagram</a>{%- endif -%}
-      {%- if settings.social_pinterest != blank -%}<a href="{{ settings.social_pinterest }}">Pinterest</a>{%- endif -%}
-      {%- if settings.social_tiktok != blank -%}<a href="{{ settings.social_tiktok }}">TikTok</a>{%- endif -%}
+    <div class="search__body" id="searchResults" data-predictive-url="{{ routes.predictive_search_url }}">
+      {%- comment -%}Empty state: trending products and quick links, server-rendered{%- endcomment -%}
+      {%- liquid
+        assign trend = section.settings.search_trending
+        if trend == blank
+          assign trend = collections.all
+        endif
+      -%}
+      <div class="search__col">
+        <span class="mn-eyebrow search__label">{{ 'mn.trending' | t }}</span>
+        <div class="search__products">
+          {%- for p in trend.products limit: 4 -%}
+            <a href="{{ p.url }}" class="sresult">
+              <span class="sresult__img">{%- if p.featured_media -%}{{ p.featured_media | image_url: width: 360 | image_tag: loading: 'lazy', alt: p.title, class: 'mn-fill' }}{%- endif -%}</span>
+              <span class="sresult__title">{{ p.title }}</span>
+              <span class="sresult__price">{{ p.price | money }}</span>
+            </a>
+          {%- endfor -%}
+        </div>
+      </div>
+      <div class="search__side">
+        {%- assign qcol = linklists[section.settings.search_collections_menu] -%}
+        {%- if qcol.links.size > 0 -%}
+          <div><span class="mn-eyebrow search__label">{{ 'mn.collections' | t }}</span>
+            <ul class="search__list">{%- for l in qcol.links limit: 5 -%}<li><a href="{{ l.url }}">{{ l.title }}<svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a></li>{%- endfor -%}</ul>
+          </div>
+        {%- endif -%}
+        {%- assign qpg = linklists[section.settings.search_pages_menu] -%}
+        {%- if qpg.links.size > 0 -%}
+          <div><span class="mn-eyebrow search__label">{{ 'mn.pages' | t }}</span>
+            <ul class="search__list">{%- for l in qpg.links limit: 4 -%}<li><a href="{{ l.url }}">{{ l.title }}<svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a></li>{%- endfor -%}</ul>
+          </div>
+        {%- endif -%}
+      </div>
     </div>
   </div>
 </div>
 
-{%- comment -%}Search Overlay{%- endcomment -%}
-<div
-  id="search-overlay"
-  class="search-overlay"
-  role="dialog"
-  aria-modal="true"
-  aria-label="{{ 'search.title' | t }}"
->
-  <button
-    data-close-search
-    class="search-overlay__close"
-    aria-label="{{ 'accessibility.close_search' | t }}"
-  >
-    {%- render 'icon-close' -%}
-  </button>
-
-  <form class="search-overlay__field" action="{{ routes.search_url }}" method="get" role="search">
-    <input
-      type="search"
-      name="q"
-      class="search-overlay__input"
-      placeholder="{{ 'search.placeholder' | t }}"
-      autocomplete="off"
-      aria-label="{{ 'search.title' | t }}"
-    >
-    <input type="hidden" name="type" value="product">
-    <button type="submit" class="search-overlay__submit" aria-label="{{ 'general.search.submit' | t }}">
-      {%- render 'icon-search' -%}
-    </button>
-  </form>
-
-  <div class="search-overlay__results" id="search-results" aria-live="polite">
-    <p class="search-overlay__hint">{{ 'search.placeholder' | t }}</p>
+{%- comment -%}Menu drawer: the menu on phones, and for the Minimal style at every width{%- endcomment -%}
+<div class="overlay overlay--left" id="ov-menu" role="dialog" aria-modal="true" aria-labelledby="ov-menu-t">
+  <div class="overlay__scrim" data-close></div>
+  <div class="overlay__panel">
+    <div class="overlay__head">
+      <h2 class="overlay__title" id="ov-menu-t">{{ 'mn.menu' | t }}</h2>
+      <button type="button" class="icon-btn" data-close aria-label="{{ 'mn.close_menu' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+    </div>
+    <div class="overlay__body">
+      <nav class="mnav" id="menuNav" aria-label="{{ 'mn.main_menu' | t }}">
+        {%- for link in menu.links -%}
+          {%- if link.links.size > 0 -%}
+            <div class="acc mnav__acc1">
+              <button type="button" class="acc__trigger" aria-expanded="false">{{ link.title }}<span class="acc__icon"></span></button>
+              <div class="acc__panel"><div class="acc__inner"><div class="acc__content">
+                <div class="mnav__l2" data-acc-single>
+                  {%- for child in link.links -%}
+                    {%- if child.links.size > 0 -%}
+                      <div class="acc mnav__acc2">
+                        <button type="button" class="acc__trigger" aria-expanded="false">{{ child.title }}<span class="acc__icon"></span></button>
+                        <div class="acc__panel"><div class="acc__inner"><div class="acc__content">
+                          <ul class="mnav__l3">
+                            {%- for g in child.links -%}<li><a href="{{ g.url }}">{{ g.title }}</a></li>{%- endfor -%}
+                            <li><a href="{{ child.url }}" class="mnav__all">{%- assign lt = child.title | downcase -%}{{ 'mn.view_all_in' | t: title: lt }}</a></li>
+                          </ul>
+                        </div></div></div>
+                      </div>
+                    {%- else -%}
+                      <a href="{{ child.url }}" class="mnav__l2link">{{ child.title }}</a>
+                    {%- endif -%}
+                  {%- endfor -%}
+                  <a href="{{ link.url }}" class="mnav__all mnav__all--l1">{%- assign lt = link.title | downcase -%}{{ 'mn.view_all_in' | t: title: lt }}</a>
+                </div>
+              </div></div></div>
+            </div>
+          {%- else -%}
+            <a href="{{ link.url }}" class="mnav__link">{{ link.title }}</a>
+          {%- endif -%}
+        {%- endfor -%}
+      </nav>
+    </div>
+    <div class="overlay__foot mdrawer__foot">
+      <div class="mdrawer__links">
+        {%- if shop.customer_accounts_enabled -%}
+          <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"><svg class="icon" aria-hidden="true"><use href="#i-user"></use></svg>{{ 'mn.account' | t }}</a>
+        {%- endif -%}
+        {%- if settings.wishlist_enabled -%}
+          <a href="#" data-open-wishlist><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg>{{ 'mn.wishlist' | t }}</a>
+        {%- endif -%}
+      </div>
+      {%- render 'mn-social' -%}
+      {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
+        {%- form 'localization', id: 'MenuLocalization', class: 'mdrawer__selects' -%}
+          {%- render 'mn-localization', id_prefix: 'Menu' -%}
+        {%- endform -%}
+      {%- endif -%}
+    </div>
   </div>
 </div>
 
@@ -217,79 +245,34 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Configure header style, logo, navigation, and transparency in Theme Settings → Header."
-    }
+      "content": "Header style, mega menu layout, menu images, transparency and hide-on-scroll are in Theme Settings → Header."
+    },
+    { "type": "text", "id": "search_field_text", "label": "Search field text (Centred style)", "default": "Search silk, cashmere, coats" },
+    { "type": "header", "content": "Menu tag" },
+    { "type": "text", "id": "nav_tag_item", "label": "Menu item to tag", "info": "Exact title of a top-level menu item.", "default": "New In" },
+    { "type": "text", "id": "nav_tag_text", "label": "Tag text", "default": "NEW" },
+    { "type": "header", "content": "Search overlay" },
+    { "type": "text", "id": "search_chips", "label": "Popular searches", "info": "Separate with commas.", "default": "Silk, Slip dress, Cashmere, Bordeaux, Leather bag" },
+    { "type": "collection", "id": "search_trending", "label": "Trending products from" },
+    { "type": "link_list", "id": "search_collections_menu", "label": "Collections list" },
+    { "type": "link_list", "id": "search_pages_menu", "label": "Pages list" }
   ],
   "blocks": [
     {
       "type": "mega_menu_item",
       "name": "Mega Menu Item",
-      "limit": 6,
+      "limit": 8,
       "settings": [
-        {
-          "type": "text",
-          "id": "menu_item",
-          "label": "Navigation link title (exact match)",
-          "info": "Must match the menu link title exactly (case-insensitive)."
-        },
-        {
-          "type": "header",
-          "content": "Featured Image / Card"
-        },
-        {
-          "type": "image_picker",
-          "id": "featured_image",
-          "label": "Featured image"
-        },
-        {
-          "type": "text",
-          "id": "featured_label",
-          "label": "Image label",
-          "default": "New Arrival"
-        },
-        {
-          "type": "text",
-          "id": "featured_title",
-          "label": "Image title",
-          "default": "SS 2025"
-        },
-        {
-          "type": "url",
-          "id": "featured_link",
-          "label": "Image link"
-        },
-        {
-          "type": "header",
-          "content": "Promo Banner (Mega Menu 3)"
-        },
-        {
-          "type": "image_picker",
-          "id": "promo_image",
-          "label": "Promo image"
-        },
-        {
-          "type": "text",
-          "id": "promo_title",
-          "label": "Promo title"
-        },
-        {
-          "type": "text",
-          "id": "promo_label",
-          "label": "Promo label",
-          "default": "Shop Now →"
-        },
-        {
-          "type": "url",
-          "id": "promo_link",
-          "label": "Promo link"
-        }
+        { "type": "text", "id": "menu_item", "label": "Navigation link title (exact match)", "info": "Must match a top-level menu link title (case-insensitive)." },
+        { "type": "header", "content": "Feature card" },
+        { "type": "image_picker", "id": "featured_image", "label": "Image" },
+        { "type": "text", "id": "featured_label", "label": "Eyebrow", "default": "New season" },
+        { "type": "text", "id": "featured_title", "label": "Title", "default": "The Silk Edition" },
+        { "type": "text", "id": "featured_cta", "label": "Link text", "default": "Shop the edit" },
+        { "type": "url", "id": "featured_link", "label": "Link" }
       ]
     }
   ],
-  "presets": [
-    {
-      "name": "Header"
-    }
-  ]
+  "presets": [{ "name": "Header" }]
 }
 {% endschema %}

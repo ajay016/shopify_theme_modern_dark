@@ -1,0 +1,38 @@
+{%- comment -%}Social links as icon buttons (design reference .social). Shown only for networks with a URL in Theme settings → Footer.{%- endcomment -%}
+{%- liquid
+  assign nets = 'instagram,tiktok,pinterest,youtube,facebook,x' | split: ','
+  assign any = false
+  for n in nets
+    assign k = 'social_' | append: n
+    if n == 'x'
+      assign k = 'social_twitter'
+    endif
+    if settings[k] != blank
+      assign any = true
+    endif
+  endfor
+-%}
+{%- if any -%}
+  <div class="social">
+    {%- for n in nets -%}
+      {%- liquid
+        assign k = 'social_' | append: n
+        if n == 'x'
+          assign k = 'social_twitter'
+        endif
+        assign label = n | capitalize
+        case n
+          when 'tiktok'
+            assign label = 'TikTok'
+          when 'youtube'
+            assign label = 'YouTube'
+          when 'x'
+            assign label = 'X'
+        endcase
+      -%}
+      {%- if settings[k] != blank -%}
+        <a href="{{ settings[k] }}" class="icon-btn" target="_blank" rel="noopener" aria-label="{{ label }}"><svg class="icon" aria-hidden="true"><use href="#i-{{ n }}"></use></svg></a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}

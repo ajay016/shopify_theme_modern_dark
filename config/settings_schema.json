@@ -237,9 +237,24 @@
         ],
         "default": "ticker"
       },
-      { "type": "text", "id": "announcement_text_1", "label": "Message 1", "default": "New Arrivals ✦ Free Shipping Over $500 ✦ SS 2025 Collection Now Live" },
-      { "type": "text", "id": "announcement_text_2", "label": "Message 2 (rotating only)", "default": "Exclusive Members Preview ✦ Sustainable Luxury ✦ Complimentary Gift Wrapping" },
-      { "type": "url",  "id": "announcement_link",   "label": "Bar Link (optional)" }
+      { "type": "text", "id": "announcement_text_1", "label": "Message 1", "info": "Separate several announcements with ✦ or |.", "default": "Complimentary express shipping on orders over $500 ✦ Free returns within 30 days" },
+      { "type": "text", "id": "announcement_text_2", "label": "Message 2", "default": "The Silk Edition: washed in Como, cut in Florence" },
+      { "type": "text", "id": "announcement_text_3", "label": "Message 3" },
+      { "type": "text", "id": "announcement_text_4", "label": "Message 4" },
+      { "type": "url",  "id": "announcement_link",   "label": "Link (static style)" },
+      { "type": "text", "id": "announcement_link_text", "label": "Link text (static style)", "default": "Shop the Silk Edition" },
+      {
+        "type": "select",
+        "id": "announcement_surface",
+        "label": "Surface",
+        "options": [
+          { "value": "invert", "label": "Contrast (inverted)" },
+          { "value": "deep",   "label": "Deep" },
+          { "value": "soft",   "label": "Soft" },
+          { "value": "base",   "label": "Base" }
+        ],
+        "default": "invert"
+      }
     ]
   },
   {
@@ -490,6 +505,7 @@
       { "type": "url", "id": "social_tiktok",    "label": "TikTok" },
       { "type": "url", "id": "social_facebook",  "label": "Facebook" },
       { "type": "url", "id": "social_twitter",   "label": "X (Twitter)" },
+      { "type": "url", "id": "social_youtube",   "label": "YouTube" },
       { "type": "header", "content": "Payment Icons" },
       { "type": "checkbox", "id": "footer_show_payment_icons", "label": "Show accepted payment icons", "default": true }
     ]

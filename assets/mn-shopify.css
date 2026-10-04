@@ -1,0 +1,26 @@
+/* ============================================================
+   Shopify adapter for the Claude Design system.
+   The reference paints product art as backgrounds; the theme uses real
+   <img> elements inside the same slots. Anything here exists only
+   because of that, or because Shopify data has a shape the demo did
+   not (menu items without submenus, empty counts). Visual rules stay
+   in the ported mn-*.css files.
+   ============================================================ */
+.mn-fill,
+.mega__feature-img > img,
+.mega__tile-bg > img,
+.sresult__img > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.sresult__img { position: relative; display: block; overflow: hidden; background: var(--bg-soft); }
+
+/* A count with nothing to count is not shown */
+.count-dot:empty { display: none; }
+
+/* Logo as an image */
+.header__logo-img { display: block; height: auto; max-width: 100%; }
+.site-header.is-transparent .header__logo-img { filter: brightness(0) invert(1); }
+
+/* A submenu with no links of its own, in the menu drawer */
+.mnav__l2link { display: block; padding: 14px 0; border-top: 1px solid var(--line); font-size: 15px; font-weight: var(--fw-medium); }
+
+/* The header is in the page flow; the old fixed-header offset is gone */
+.site-header[data-sticky="false"] { position: relative; }

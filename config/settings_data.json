@@ -10,6 +10,7 @@
 {
   "current": {
     "color_scheme": "olive",
+    "corner_radius": "rounded",
     "color_black": "#f2f1ea",
     "color_charcoal": "#e9e8e1",
     "color_cream": "#1f2620",
@@ -25,7 +26,7 @@
     "layout_container_width": "100%",
     "layout_section_spacing": 140,
     "layout_side_padding": 80,
-    "header_style": "v1",
+    "header_style": "v4",
     "mega_menu_style": "v3",
     "header_transparent_home": true,
     "header_sticky": true,

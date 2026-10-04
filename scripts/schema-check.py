@@ -61,8 +61,10 @@ for f in sorted(glob.glob('templates/*.json')):
             if not str(sec.get('type', '')).startswith('apps'): bad.append(f'{f}: section {k} uses unknown type {sec.get("type")}')
             continue
         ids = {s['id'] for s in sc.get('settings', []) if 'id' in s}
-        for sk in sec.get('settings', {}):
+        opts = {s['id']: [o['value'] for o in s.get('options', [])] for s in sc.get('settings', []) if s.get('type') == 'select'}
+        for sk, sv in sec.get('settings', {}).items():
             if sk not in ids: warn.append(f'{f}: section {k} has unknown setting {sk} (Shopify ignores it)')
+            elif sk in opts and sv not in opts[sk]: bad.append(f'{f}: section {k} setting {sk} = "{sv}" is not one of its options')
         bt = {b['type']: {s['id'] for s in b.get('settings', []) if 'id' in s} for b in sc.get('blocks', [])}
         for bk, b in sec.get('blocks', {}).items():
             if b.get('type') not in bt and '@app' not in bt:

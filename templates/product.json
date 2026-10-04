@@ -35,16 +35,73 @@
         "quantity": {
           "type": "quantity",
           "settings": {}
+        },
+        "summary": {
+          "type": "summary",
+          "settings": {}
+        },
+        "badges": {
+          "type": "badges",
+          "settings": {}
+        },
+        "urgency": {
+          "type": "urgency",
+          "settings": {
+            "countdown_label": "Winter sale ends in"
+          }
+        },
+        "terms": {
+          "type": "terms",
+          "settings": {}
+        },
+        "buy": {
+          "type": "buy",
+          "settings": {}
+        },
+        "pickup": {
+          "type": "pickup",
+          "settings": {}
+        },
+        "offer": {
+          "type": "offer",
+          "settings": {}
+        },
+        "shipping": {
+          "type": "shipping",
+          "settings": {}
+        },
+        "trust": {
+          "type": "trust",
+          "settings": {}
+        },
+        "actions": {
+          "type": "actions",
+          "settings": {}
+        },
+        "details": {
+          "type": "details",
+          "settings": {}
         }
       },
       "block_order": [
         "title",
         "price",
+        "summary",
+        "badges",
+        "urgency",
         "variants",
-        "quantity"
+        "quantity",
+        "terms",
+        "buy",
+        "pickup",
+        "offer",
+        "shipping",
+        "trust",
+        "actions",
+        "details"
       ],
       "settings": {
-        "layout": "standard",
+        "layout": "default",
         "breadcrumb": true,
         "info_sticky": true,
         "gallery": "bottom",
@@ -105,11 +162,23 @@
         "products_to_show": 6,
         "columns": "6"
       }
+    },
+    "look": {
+      "type": "mn-complete-look",
+      "blocks": {},
+      "block_order": [],
+      "settings": {}
+    },
+    "banner": {
+      "type": "mn-banner",
+      "settings": {}
     }
   },
   "order": [
     "main",
+    "look",
     "recommendations",
+    "banner",
     "recently-viewed"
   ]
 }

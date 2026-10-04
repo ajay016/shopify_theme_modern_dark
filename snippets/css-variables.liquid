@@ -26,7 +26,29 @@
 {%- endcomment -%}
 <style>
 {%- liquid
-  assign scheme = settings.color_scheme | default: 'dark'
+  assign scheme = settings.color_scheme | default: 'olive'
+  # Olive is the Claude Design default palette, fixed; Custom reads the pickers.
+  if scheme == 'olive'
+    assign c_black = '#F2F1EA'
+    assign c_charcoal = '#E9E8E1'
+    assign c_cream = '#1F2620'
+    assign c_gold = '#55663F'
+    assign c_gold_light = '#A9B39B'
+    assign c_muted = '#5C635C'
+    assign c_ivory = '#F7F6F1'
+    assign c_sale = '#FFFFFF'
+    assign c_sale_bg = '#8B1A1A'
+  else
+    assign c_black = settings.color_black
+    assign c_charcoal = settings.color_charcoal
+    assign c_cream = settings.color_cream
+    assign c_gold = settings.color_gold
+    assign c_gold_light = settings.color_gold_light
+    assign c_muted = settings.color_muted
+    assign c_ivory = settings.color_ivory
+    assign c_sale = settings.color_sale
+    assign c_sale_bg = settings.color_sale_bg
+  endif
 -%}
 
 {%- case scheme -%}
@@ -223,76 +245,76 @@
     --btn-ghost-bdr: rgba(237,224,204,0.28);
   }
 
-{%- when 'custom' -%}
+{%- when 'custom', 'olive' -%}
   :root {
-    --s1-bg: {{ settings.color_black }};
-    --lift: color-mix(in srgb, {{ settings.color_cream }} 4%, transparent);
-    --s1-fg: {{ settings.color_cream }};
-    --s1-mut: color-mix(in srgb, {{ settings.color_cream }} 66%, transparent);
-    --s1-bdr: color-mix(in srgb, {{ settings.color_cream }} 18%, transparent);
-    --s2-bg: {{ settings.color_charcoal }};
-    --s2-fg: {{ settings.color_cream }};
-    --s2-mut: color-mix(in srgb, {{ settings.color_cream }} 66%, transparent);
-    --s2-bdr: color-mix(in srgb, {{ settings.color_cream }} 18%, transparent);
-    --s3-bg: color-mix(in srgb, {{ settings.color_charcoal }} 88%, {{ settings.color_cream }});
-    --s3-fg: {{ settings.color_cream }};
-    --s3-mut: color-mix(in srgb, {{ settings.color_cream }} 66%, transparent);
-    --s3-bdr: color-mix(in srgb, {{ settings.color_cream }} 18%, transparent);
-    --s4-bg: {{ settings.color_cream }};
-    --s4-fg: {{ settings.color_black }};
-    --s4-mut: color-mix(in srgb, {{ settings.color_black }} 66%, transparent);
-    --s4-bdr: color-mix(in srgb, {{ settings.color_black }} 18%, transparent);
+    --s1-bg: {{ c_black }};
+    --lift: color-mix(in srgb, {{ c_cream }} 4%, transparent);
+    --s1-fg: {{ c_cream }};
+    --s1-mut: color-mix(in srgb, {{ c_cream }} 66%, transparent);
+    --s1-bdr: color-mix(in srgb, {{ c_cream }} 18%, transparent);
+    --s2-bg: {{ c_charcoal }};
+    --s2-fg: {{ c_cream }};
+    --s2-mut: color-mix(in srgb, {{ c_cream }} 66%, transparent);
+    --s2-bdr: color-mix(in srgb, {{ c_cream }} 18%, transparent);
+    --s3-bg: color-mix(in srgb, {{ c_charcoal }} 88%, {{ c_cream }});
+    --s3-fg: {{ c_cream }};
+    --s3-mut: color-mix(in srgb, {{ c_cream }} 66%, transparent);
+    --s3-bdr: color-mix(in srgb, {{ c_cream }} 18%, transparent);
+    --s4-bg: {{ c_cream }};
+    --s4-fg: {{ c_black }};
+    --s4-mut: color-mix(in srgb, {{ c_black }} 66%, transparent);
+    --s4-bdr: color-mix(in srgb, {{ c_black }} 18%, transparent);
 
-    --black: {{ settings.color_black }};
-    --charcoal: {{ settings.color_charcoal }};
-    --cream: {{ settings.color_cream }};
-    --muted: {{ settings.color_muted }};
-    --ivory: {{ settings.color_ivory }};
-    --gold: {{ settings.color_gold }};
-    --gold-light: {{ settings.color_gold_light }};
-    {%- assign accent_light = settings.color_gold | color_brightness -%}
+    --black: {{ c_black }};
+    --charcoal: {{ c_charcoal }};
+    --cream: {{ c_cream }};
+    --muted: {{ c_muted }};
+    --ivory: {{ c_ivory }};
+    --gold: {{ c_gold }};
+    --gold-light: {{ c_gold_light }};
+    {%- assign accent_light = c_gold | color_brightness -%}
     --on-gold: {% if accent_light < 150 %}#FFFFFF{% else %}#0A0A0A{% endif %};
-    --sale-text: {{ settings.color_sale }};
-    --sale-bg: {{ settings.color_sale_bg }};
+    --sale-text: {{ c_sale }};
+    --sale-bg: {{ c_sale_bg }};
 
-    --border: color-mix(in srgb, {{ settings.color_gold }} 22%, transparent);
-    --border-strong: color-mix(in srgb, {{ settings.color_gold }} 40%, transparent);
-    --gold-dim: color-mix(in srgb, {{ settings.color_gold }} 14%, transparent);
-    --gold-glow: color-mix(in srgb, {{ settings.color_gold }} 9%, transparent);
-    --cream-faint: color-mix(in srgb, {{ settings.color_cream }} 6%, transparent);
-    --black-overlay: color-mix(in srgb, {{ settings.color_black }} 75%, transparent);
+    --border: color-mix(in srgb, {{ c_gold }} 22%, transparent);
+    --border-strong: color-mix(in srgb, {{ c_gold }} 40%, transparent);
+    --gold-dim: color-mix(in srgb, {{ c_gold }} 14%, transparent);
+    --gold-glow: color-mix(in srgb, {{ c_gold }} 9%, transparent);
+    --cream-faint: color-mix(in srgb, {{ c_cream }} 6%, transparent);
+    --black-overlay: color-mix(in srgb, {{ c_black }} 75%, transparent);
 
-    --hdr-bg: {{ settings.color_black }};
-    --hdr-fg: {{ settings.color_cream }};
-    --hdr-mut: color-mix(in srgb, {{ settings.color_cream }} 66%, transparent);
-    --hdr-bdr: color-mix(in srgb, {{ settings.color_cream }} 18%, transparent);
-    --hdr-bg-scroll: color-mix(in srgb, {{ settings.color_black }} 96%, transparent);
-    --hdr-bg-trans: color-mix(in srgb, {{ settings.color_black }} 40%, transparent);
-    --hdr-hover: color-mix(in srgb, {{ settings.color_cream }} 7%, transparent);
+    --hdr-bg: {{ c_black }};
+    --hdr-fg: {{ c_cream }};
+    --hdr-mut: color-mix(in srgb, {{ c_cream }} 66%, transparent);
+    --hdr-bdr: color-mix(in srgb, {{ c_cream }} 18%, transparent);
+    --hdr-bg-scroll: color-mix(in srgb, {{ c_black }} 96%, transparent);
+    --hdr-bg-trans: color-mix(in srgb, {{ c_black }} 40%, transparent);
+    --hdr-hover: color-mix(in srgb, {{ c_cream }} 7%, transparent);
 
-    --modal-bg: {{ settings.color_black }};
-    --modal-fg: {{ settings.color_cream }};
-    --modal-mut: color-mix(in srgb, {{ settings.color_cream }} 66%, transparent);
-    --modal-bdr: color-mix(in srgb, {{ settings.color_cream }} 18%, transparent);
-    --modal-surface: {{ settings.color_charcoal }};
+    --modal-bg: {{ c_black }};
+    --modal-fg: {{ c_cream }};
+    --modal-mut: color-mix(in srgb, {{ c_cream }} 66%, transparent);
+    --modal-bdr: color-mix(in srgb, {{ c_cream }} 18%, transparent);
+    --modal-surface: {{ c_charcoal }};
 
-    --drawer-bg: {{ settings.color_black }};
-    --drawer-fg: {{ settings.color_cream }};
-    --drawer-mut: color-mix(in srgb, {{ settings.color_cream }} 66%, transparent);
-    --drawer-bdr: color-mix(in srgb, {{ settings.color_cream }} 18%, transparent);
+    --drawer-bg: {{ c_black }};
+    --drawer-fg: {{ c_cream }};
+    --drawer-mut: color-mix(in srgb, {{ c_cream }} 66%, transparent);
+    --drawer-bdr: color-mix(in srgb, {{ c_cream }} 18%, transparent);
 
-    --field-bg: color-mix(in srgb, {{ settings.color_cream }} 5%, transparent);
-    --field-bdr: color-mix(in srgb, {{ settings.color_cream }} 22%, transparent);
-    --field-fg: {{ settings.color_cream }};
-    --field-ph: color-mix(in srgb, {{ settings.color_cream }} 45%, transparent);
+    --field-bg: color-mix(in srgb, {{ c_cream }} 5%, transparent);
+    --field-bdr: color-mix(in srgb, {{ c_cream }} 22%, transparent);
+    --field-fg: {{ c_cream }};
+    --field-ph: color-mix(in srgb, {{ c_cream }} 45%, transparent);
 
-    --badge-bg: {{ settings.color_gold_light }};
+    --badge-bg: {{ c_gold_light }};
     --badge-fg: #0A0A0A;
 
-    --btn-primary-bg: {{ settings.color_gold }};
+    --btn-primary-bg: {{ c_gold }};
     --btn-primary-fg: #0A0A0A;
-    --btn-ghost-fg: {{ settings.color_cream }};
-    --btn-ghost-bdr: color-mix(in srgb, {{ settings.color_cream }} 28%, transparent);
+    --btn-ghost-fg: {{ c_cream }};
+    --btn-ghost-bdr: color-mix(in srgb, {{ c_cream }} 28%, transparent);
   }
 
 {%- else -%}
@@ -549,13 +571,13 @@
   }
   /* Design system (assets/mn-core.css) inputs that come from settings */
   :root {
-    --cu-base: {{ settings.color_black }};
-    --cu-text: {{ settings.color_cream }};
-    --cu-accent: {{ settings.color_gold }};
-    --cu-sale: {{ settings.color_sale_bg }};
+    --cu-base: {{ c_black }};
+    --cu-text: {{ c_cream }};
+    --cu-accent: {{ c_gold }};
+    --cu-sale: {{ c_sale_bg }};
   }
-  {%- if settings.color_scheme == 'custom' -%}
-    {%- assign accent_light = settings.color_gold | color_brightness -%}
+  {%- if scheme == 'custom' or scheme == 'olive' -%}
+    {%- assign accent_light = c_gold | color_brightness -%}
     {%- if accent_light >= 150 -%}[data-scheme=custom]{ --on-accent: #111111; }{%- endif -%}
   {%- endif -%}
   html[data-motion-level="subtle"] { --dur-fast: 120ms; --dur: 200ms; --dur-slow: 360ms; }

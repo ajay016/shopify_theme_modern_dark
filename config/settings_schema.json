@@ -16,13 +16,14 @@
         "label": "Color Scheme",
         "info": "Applies a preset palette. You can still override individual colors below.",
         "options": [
+          { "value": "olive", "label": "Olive (Claude Design default)" },
           { "value": "dark",  "label": "Dark" },
           { "value": "light", "label": "Light" },
           { "value": "ivory-wine", "label": "Wine" },
           { "value": "warm",  "label": "Taupe" },
           { "value": "custom","label": "Custom (the four colours below)" }
         ],
-        "default": "custom"
+        "default": "olive"
       },
       { "type": "header", "content": "Custom colours — used when the scheme is Custom" },
       { "type": "color", "id": "color_black",      "label": "Base",  "default": "#F2F1EA" },

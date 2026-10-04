@@ -1,0 +1,12 @@
+{%- comment -%}
+  Account navigation shared by the account, order and addresses pages.
+  Accepts: current ('orders' | 'addresses')
+{%- endcomment -%}
+<nav class="mn-acct__nav" aria-label="{{ 'mn.acct.nav' | t }}">
+  <a href="{{ routes.account_url }}"{% if current == 'orders' %} aria-current="page"{% endif %}><svg class="icon icon--sm" aria-hidden="true"><use href="#i-bag"></use></svg>{{ 'customer.orders.title' | t }}</a>
+  <a href="{{ routes.account_addresses_url }}"{% if current == 'addresses' %} aria-current="page"{% endif %}><svg class="icon icon--sm" aria-hidden="true"><use href="#i-pin"></use></svg>{{ 'customer.addresses.title' | t }}</a>
+  {%- if settings.wishlist_enabled -%}
+    <a href="#ov-wish" data-open="ov-wish"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-heart"></use></svg>{{ 'mn.acct.wishlist' | t }}</a>
+  {%- endif -%}
+  <a href="{{ routes.account_logout_url }}" class="mn-acct__logout"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow-right"></use></svg>{{ 'customer.log_out' | t }}</a>
+</nav>

@@ -624,7 +624,42 @@
     CMP.paint();
   };
 
-  const boot = root => { MN.initTabs(root || document); bindHeader(); bindFooter(); bindCart(); bindExtras(); };
+  /* ==================================================================
+     Account pages: password show / hide, forms that open in place,
+     delete confirmation, and the sign-in / reset-password switch.
+     ================================================================== */
+  document.addEventListener('click', e => {
+    const pw = e.target.closest('[data-pw-toggle]');
+    if (pw) {
+      const inp = document.getElementById(pw.getAttribute('aria-controls')); if (!inp) return;
+      const show = inp.type === 'password'; inp.type = show ? 'text' : 'password';
+      pw.setAttribute('aria-pressed', show); pw.setAttribute('aria-label', show ? pw.dataset.labelHide : pw.dataset.labelShow);
+      return;
+    }
+    const tg = e.target.closest('[data-acct-toggle]');
+    if (tg) {
+      const el = document.getElementById(tg.dataset.acctToggle); if (!el) return;
+      const open = el.hidden; el.hidden = !open;
+      $$(`[data-acct-toggle="${tg.dataset.acctToggle}"][aria-expanded]`).forEach(b => b.setAttribute('aria-expanded', open));
+      el.closest('.mn-addr__card')?.classList.toggle('is-editing', open);
+      if (open) { el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); el.querySelector('input:not([type=hidden]), select')?.focus({ preventScroll: true }); }
+      return;
+    }
+    const del = e.target.closest('[data-confirm]');
+    if (del && !window.confirm(del.dataset.confirm)) { e.preventDefault(); return; }
+    const auth = e.target.closest('[data-auth-recover], [data-auth-login]');
+    if (auth) {
+      const root = auth.closest('.mn-auth'); if (!root) return;
+      e.preventDefault();
+      const rec = auth.hasAttribute('data-auth-recover'); root.classList.toggle('is-recover', rec);
+      history.replaceState(null, '', rec ? '#recover' : location.pathname + location.search);
+      $(rec ? '.mn-auth__recover input[type=email]' : '.mn-auth__login input[type=email]', root)?.focus();
+    }
+  });
+  const bindAuth = () => { if (location.hash === '#recover') $$('.mn-auth').forEach(r => { if ($('#recover', r)) r.classList.add('is-recover'); }); };
+  window.addEventListener('hashchange', bindAuth);
+
+  const boot = root => { MN.initTabs(root || document); bindHeader(); bindFooter(); bindCart(); bindExtras(); bindAuth(); };
   document.addEventListener('DOMContentLoaded', () => boot());
   document.addEventListener('shopify:section:load', e => { if (e.target.querySelector('#siteHeader')) { H.cur = null; } boot(e.target); });
 })();

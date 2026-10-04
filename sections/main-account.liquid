@@ -1,80 +1,86 @@
-<div class="account-page" id="section-{{ section.id }}">
-  <div class="container">
-    <div class="account-header">
-      <h1 class="account-header__title">{{ 'customer.account.title' | t }}</h1>
-      <a href="{{ routes.account_logout_url }}" class="account-header__logout">{{ 'customer.log_out' | t }}</a>
+{%- comment -%}
+  Account overview, in the design's language: greeting, account navigation,
+  order history (a table on wide screens, cards on phones) and the default
+  address.
+{%- endcomment -%}
+{%- assign ss = section.settings -%}
+{%- paginate customer.orders by 20 -%}
+<div class="mn-acct" id="section-{{ section.id }}">
+  <div class="mn-container">
+    <div class="mn-acct__head">
+      <div>
+        <span class="mn-eyebrow">{{ 'mn.acct.eyebrow' | t }}</span>
+        <h1 class="section-title">
+          {%- if customer.first_name != blank -%}{{ 'mn.acct.welcome_html' | t: name: customer.first_name }}{%- else -%}{{ 'mn.acct.welcome_plain_html' | t }}{%- endif -%}
+        </h1>
+        <p class="mn-acct__sub">{{ customer.email }}</p>
+      </div>
     </div>
 
-    <div class="account-grid">
-      <aside class="account-sidebar">
-        <nav class="account-nav">
-          <a href="{{ routes.account_url }}"         class="account-nav__item {% if request.path == routes.account_url %}is-active{% endif %}">{{ 'customer.account.orders' | t }}</a>
-          <a href="{{ routes.account_addresses_url }}" class="account-nav__item {% if request.path contains 'addresses' %}is-active{% endif %}">{{ 'customer.addresses.title' | t }}</a>
-        </nav>
-      </aside>
+    <div class="mn-acct__grid">
+      {%- render 'mn-account-nav', current: 'orders' -%}
 
-      <div class="account-main">
-        <h2 class="account-section-title">{{ 'customer.orders.title' | t }}</h2>
+      <div class="mn-acct__main">
+        <h2 class="mn-acct__title">{{ 'customer.orders.title' | t }}{%- if customer.orders_count > 0 -%}<span class="mn-acct__count">{{ customer.orders_count }}</span>{%- endif -%}</h2>
         {%- if customer.orders.size > 0 -%}
-          <table class="account-orders">
-            <thead>
-              <tr>
-                <th>{{ 'customer.orders.order_number' | t }}</th>
-                <th>{{ 'customer.orders.date' | t }}</th>
-                <th>{{ 'customer.orders.payment_status' | t }}</th>
-                <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
-                <th>{{ 'customer.orders.total' | t }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {%- for order in customer.orders -%}
-                <tr>
-                  <td><a href="{{ order.customer_url }}" class="account-order-link">{{ order.name }}</a></td>
-                  <td>{{ order.created_at | date: '%B %-d, %Y' }}</td>
-                  <td><span class="order-badge order-badge--{{ order.financial_status }}">{{ order.financial_status_label }}</span></td>
-                  <td><span class="order-badge order-badge--{{ order.fulfillment_status }}">{{ order.fulfillment_status_label }}</span></td>
-                  <td>{{ order.total_price | money }}</td>
-                </tr>
-              {%- endfor -%}
-            </tbody>
-          </table>
+          <div class="mn-orders" role="table" aria-label="{{ 'customer.orders.title' | t }}">
+            <div class="mn-orders__row mn-orders__row--head" role="row">
+              <span role="columnheader">{{ 'customer.orders.order_number' | t }}</span>
+              <span role="columnheader">{{ 'customer.orders.date' | t }}</span>
+              <span role="columnheader">{{ 'customer.orders.payment_status' | t }}</span>
+              <span role="columnheader">{{ 'customer.orders.fulfillment_status' | t }}</span>
+              <span role="columnheader" class="mn-orders__num">{{ 'customer.orders.total' | t }}</span>
+            </div>
+            {%- for order in customer.orders -%}
+              <a href="{{ order.customer_url }}" class="mn-orders__row" role="row" aria-label="{{ 'mn.acct.view_order' | t: name: order.name | escape }}">
+                <span role="cell" class="mn-orders__name">{{ order.name }}</span>
+                <span role="cell" data-label="{{ 'customer.orders.date' | t }}">{{ order.created_at | date: '%B %-d, %Y' }}</span>
+                <span role="cell" data-label="{{ 'customer.orders.payment_status' | t }}"><span class="badge mn-status mn-status--{{ order.financial_status }}">{{ order.financial_status_label }}</span></span>
+                <span role="cell" data-label="{{ 'customer.orders.fulfillment_status' | t }}"><span class="badge mn-status mn-status--{{ order.fulfillment_status }}">{{ order.fulfillment_status_label }}</span></span>
+                <span role="cell" class="mn-orders__num" data-label="{{ 'customer.orders.total' | t }}">{{ order.total_price | money }}<svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-right"></use></svg></span>
+              </a>
+            {%- endfor -%}
+          </div>
+          {%- if paginate.pages > 1 -%}{%- render 'mn-pagination', paginate: paginate -%}{%- endif -%}
         {%- else -%}
-          <p class="account-empty">{{ 'customer.orders.none' | t }}</p>
-          <a href="{{ routes.all_products_collection_url }}" class="btn-ghost">{{ 'general.continue_shopping' | t }}</a>
+          <div class="mn-acct__empty">
+            <span class="mn-cartpage__empty-icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-bag"></use></svg></span>
+            <p>{{ 'customer.orders.none' | t }}</p>
+            <a href="{{ routes.all_products_collection_url }}" class="mn-btn mn-btn--sm">{{ 'customer.account.start_shopping' | t }}</a>
+          </div>
         {%- endif -%}
       </div>
+
+      <aside class="mn-acct__aside">
+        <div class="mn-acct__card">
+          <h2 class="mn-acct__card-title">{{ 'mn.acct.default_address' | t }}</h2>
+          {%- if customer.default_address -%}
+            <address class="mn-acct__address">{{ customer.default_address | format_address }}</address>
+          {%- else -%}
+            <p class="mn-acct__muted">{{ 'mn.acct.no_address' | t }}</p>
+          {%- endif -%}
+          <a href="{{ routes.account_addresses_url }}" class="link-arrow">{{ 'mn.acct.manage_addresses' | t: count: customer.addresses_count }}<svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a>
+        </div>
+        {%- if ss.help_text != blank -%}
+          <div class="mn-acct__card mn-acct__card--soft">
+            <h2 class="mn-acct__card-title">{{ 'mn.acct.help' | t }}</h2>
+            <div class="rte mn-acct__muted">{{ ss.help_text }}</div>
+          </div>
+        {%- endif -%}
+      </aside>
     </div>
   </div>
 </div>
-
-<style>
-  .account-page { padding: var(--section-spacing) 0; }
-  .account-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 48px; }
-  .account-header__title { font-family: var(--ff-display); font-size: calc(clamp(24px, 3vw, 40px) * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); }
-  .account-header__logout { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); border-bottom: 1px solid var(--muted, rgba(245,240,232,.62)); transition: all 0.2s; }
-  .account-header__logout:hover { color: var(--gold, #C8A96E); border-bottom-color: var(--gold, #C8A96E); }
-  .account-grid { display: grid; grid-template-columns: 200px 1fr; gap: 48px; }
-  .account-nav { display: flex; flex-direction: column; gap: 4px; }
-  .account-nav__item { font-size: calc(12px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); padding: 10px 0; border-bottom: 1px solid transparent; transition: all 0.2s; }
-  .account-nav__item.is-active, .account-nav__item:hover { color: var(--gold, #C8A96E); border-bottom-color: var(--gold, #C8A96E); }
-  .account-section-title { font-family: var(--ff-display); font-size: calc(22px * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); margin-bottom: 24px; }
-  .account-orders { width: 100%; border-collapse: collapse; font-size: calc(13px * var(--fs-scale, 1)); }
-  .account-orders th { text-align: left; font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); padding: 12px 0; border-bottom: 1px solid var(--border, rgba(200,169,110,.18)); }
-  .account-orders td { padding: 16px 0; border-bottom: 1px solid var(--border, rgba(200,169,110,.18)); vertical-align: middle; color: var(--cream, #F5F0E8); opacity: 0.8; }
-  .account-order-link { color: var(--gold, #C8A96E); }
-  .order-badge { font-size: calc(9px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 8px; background: var(--charcoal, #161616); border: 1px solid var(--border, rgba(200,169,110,.18)); }
-  .account-empty { opacity: 0.6; margin-bottom: 24px; }
-  @media (max-width: 768px) {
-    .account-grid { grid-template-columns: 1fr; }
-    .account-orders { display: block; overflow-x: auto; }
-  }
-</style>
+{%- endpaginate -%}
 
 {% schema %}
 {
   "name": "Account",
-  "tag": "div",
-  "settings": [],
+  "tag": "section",
+  "class": "section-main-account",
+  "settings": [
+    { "type": "richtext", "id": "help_text", "label": "Help text", "info": "Shown in a card beside the orders, for example how to reach client care.", "default": "<p>Questions about an order? Write to our client care team and we will reply within one working day.</p>" }
+  ],
   "presets": [{ "name": "Account" }]
 }
 {% endschema %}

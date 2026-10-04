@@ -158,6 +158,21 @@ is left and what I need to check").
       journal / page rows, and a no-results state with suggestion chips (menu setting) and
       products from a chosen collection. Test `scripts/collection-check.py` +
       `scripts/collection-test.js` (40 checks).
+- [x] **D7c Account** — every customer page rewritten in the design's language
+      (`assets/mn-pages.css`): sign in with a new-customer side panel (heading, three
+      benefits, optional image), password reset on the same page (`/account/login#recover`,
+      which had no form before, so "Forgot password?" did nothing), guest checkout when the
+      store allows it, password show / hide; create account with newsletter opt-in and
+      small print; **new** activate-account and reset-password templates (the links in
+      Shopify's customer emails had no template); account overview with greeting,
+      navigation (orders, addresses, wishlist, log out), order history as a table that
+      becomes cards on phones, default address and a help card; one order with the cart
+      page's lines, tracking, discounts, summary, addresses, note and a cancelled notice;
+      addresses as cards with add / edit forms that open in place (and stay open on
+      errors), country → province, delete confirmation. Address fields now read the
+      saved values (`form.first_name`, not the non-existent `form.value.first_name`, which
+      left every edit form empty). Test `scripts/account-check.py` +
+      `scripts/account-test.js` (51 checks).
 - [ ] **D7 Other pages** — collection, cart page, search, account, blog, pages,
       homepages: same tokens, type, buttons, fields, cards and motion.
 - [ ] **D8 Verification** — every setting renders and works (audit), editor re-render,

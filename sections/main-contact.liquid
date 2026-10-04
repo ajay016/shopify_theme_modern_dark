@@ -1,105 +1,81 @@
-<div class="contact-page" id="section-{{ section.id }}">
-  <div class="container">
-    <div class="contact-inner contact-inner--{{ section.settings.layout }}">
+{%- comment -%}
+  Contact page, in the design's language: eyebrow + display title, intro,
+  contact details (blocks) and the page's own content beside the design's
+  form; or the form alone, centred. Sends through Shopify's contact form.
+{%- endcomment -%}
+{%- assign ss = section.settings -%}
+<div class="mn-content mn-contact mn-contact--{{ ss.layout }}" id="section-{{ section.id }}">
+  <div class="mn-container mn-contact__grid">
+    <div class="mn-contact__info">
+      {%- if ss.eyebrow != blank -%}<span class="mn-eyebrow">{{ ss.eyebrow }}</span>{%- endif -%}
+      <h1 class="section-title">{%- if ss.use_page_title and page.title != blank -%}{{ page.title }}{%- else -%}{{ ss.heading }}{%- endif -%}</h1>
+      {%- if ss.intro != blank -%}<div class="mn-content__lead rte">{{ ss.intro }}</div>{%- endif -%}
+      {%- if page.content != blank and ss.layout == 'split' -%}<div class="mn-prose rte mn-contact__page">{{ page.content }}</div>{%- endif -%}
+      {%- if section.blocks.size > 0 and ss.layout == 'split' -%}
+        <dl class="mn-contact__details">
+          {%- for block in section.blocks -%}
+            <div class="mn-contact__detail" {{ block.shopify_attributes }}>
+              {%- if block.settings.label != blank -%}<dt class="mn-acct__card-title">{{ block.settings.label }}</dt>{%- endif -%}
+              <dd>
+                {%- liquid
+                  assign v = block.settings.value
+                  assign link = block.settings.link
+                  if link == blank and v contains '@' and v contains '.'
+                    assign link = 'mailto:' | append: v
+                  endif
+                -%}
+                {%- if link != blank -%}<a href="{{ link }}" class="link-quiet mn-contact__value">{{ v }}</a>{%- else -%}<span class="mn-contact__value">{{ v }}</span>{%- endif -%}
+                {%- if block.settings.note != blank -%}<span class="mn-acct__muted">{{ block.settings.note }}</span>{%- endif -%}
+              </dd>
+            </div>
+          {%- endfor -%}
+        </dl>
+      {%- endif -%}
+    </div>
 
-      <div class="contact-info">
-        {%- if section.settings.eyebrow != blank -%}
-          <p class="eyebrow">{{ section.settings.eyebrow }}</p>
-        {%- endif -%}
-        <h1 class="contact-title">{{ page.title | default: section.settings.heading }}</h1>
-        {%- if section.settings.intro != blank -%}
-          <p class="contact-intro">{{ section.settings.intro }}</p>
-        {%- endif -%}
-
-        {%- for block in section.blocks -%}
-          {%- case block.type -%}
-            {%- when 'detail' -%}
-              <div class="contact-detail" {{ block.shopify_attributes }}>
-                {%- if block.settings.label != blank -%}
-                  <p class="contact-detail__label">{{ block.settings.label }}</p>
-                {%- endif -%}
-                {%- if block.settings.value != blank -%}
-                  <p class="contact-detail__value">{{ block.settings.value }}</p>
-                {%- endif -%}
-              </div>
-          {%- endcase -%}
-        {%- endfor -%}
-      </div>
-
-      <div class="contact-form-wrap">
-        {%- form 'contact', id: 'contact-form', class: 'contact-form' -%}
-          {%- if form.posted_successfully? -%}
-            <div class="contact-success">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold, #C8A96E)" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="16 12 12 8 8 12"/><line x1="12" y1="16" x2="12" y2="8"/></svg>
-              <p>{{ 'contact.form.success' | t }}</p>
-            </div>
-          {%- else -%}
-            {%- if form.errors -%}
-              <p class="contact-error">{{ 'contact.form.error' | t }}</p>
-            {%- endif -%}
-            <div class="contact-form__row">
-              <div class="form-field">
-                <label for="contact-name">{{ 'contact.form.name' | t }}</label>
-                <input type="text" id="contact-name" name="contact[name]" value="{{ form.name }}" autocomplete="name" required>
-              </div>
-              <div class="form-field">
-                <label for="contact-email">{{ 'contact.form.email' | t }}</label>
-                <input type="email" id="contact-email" name="contact[email]" value="{{ form.email }}" autocomplete="email" required>
-              </div>
-            </div>
-            {%- if section.settings.show_phone -%}
-              <div class="form-field">
-                <label for="contact-phone">{{ 'contact.form.phone' | t }}</label>
-                <input type="tel" id="contact-phone" name="contact[phone]" value="{{ form.phone }}" autocomplete="tel">
-              </div>
-            {%- endif -%}
-            <div class="form-field">
-              <label for="contact-subject">{{ 'contact.form.subject' | t | default: 'Subject' }}</label>
-              <input type="text" id="contact-subject" name="contact[subject]">
-            </div>
-            <div class="form-field">
-              <label for="contact-message">{{ 'contact.form.message' | t }}</label>
-              <textarea id="contact-message" name="contact[body]" rows="{{ section.settings.textarea_rows }}" required>{{ form.body }}</textarea>
-            </div>
-            <button type="submit" class="btn-primary contact-form__submit">{{ 'contact.form.send' | t }}</button>
+    <div class="mn-contact__form">
+      {%- form 'contact', id: 'ContactForm', class: 'mn-acct__card mn-contact__card' -%}
+        {%- if form.posted_successfully? -%}
+          <div class="mn-contact__done" role="status" tabindex="-1">
+            <span class="mn-cartpage__empty-icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-check"></use></svg></span>
+            <p class="mn-searchpage__empty-title">{{ 'mn.contactpage.thanks' | t }}</p>
+            <p class="mn-acct__muted">{{ 'contact.form.success' | t }}</p>
+          </div>
+        {%- else -%}
+          {%- if form.errors -%}<div class="mn-alert mn-alert--error" role="alert" tabindex="-1">{{ form.errors | default_errors }}</div>{%- endif -%}
+          <div class="mn-auth__pair">
+            <label class="mn-field"><span class="mn-field__label">{{ 'contact.form.name' | t }}</span><input class="input" type="text" name="contact[name]" value="{{ form.name }}" autocomplete="name" required></label>
+            <label class="mn-field"><span class="mn-field__label">{{ 'contact.form.email' | t }}</span><input class="input" type="email" name="contact[email]" value="{{ form.email }}" autocomplete="email" autocapitalize="off" required></label>
+          </div>
+          {%- if ss.show_phone -%}
+            <label class="mn-field"><span class="mn-field__label">{{ 'contact.form.phone' | t }}</span><input class="input" type="tel" name="contact[phone]" value="{{ form.phone }}" autocomplete="tel"></label>
           {%- endif -%}
-        {%- endform -%}
-      </div>
-
+          {%- if ss.show_subject -%}
+            <label class="mn-field"><span class="mn-field__label">{{ 'contact.form.subject' | t }}</span><input class="input" type="text" name="contact[subject]" value="{{ form.subject }}"></label>
+          {%- endif -%}
+          {%- if ss.show_order -%}
+            <label class="mn-field"><span class="mn-field__label">{{ 'mn.contactpage.order' | t }}</span><input class="input" type="text" name="contact[order]" value="{{ form.order }}" placeholder="#1001"></label>
+          {%- endif -%}
+          <label class="mn-field"><span class="mn-field__label">{{ 'contact.form.message' | t }}</span><textarea class="input" name="contact[body]" rows="{{ ss.textarea_rows }}" required>{{ form.body }}</textarea></label>
+          <button type="submit" class="mn-btn mn-btn--block">{{ 'contact.form.send' | t }}</button>
+          {%- if ss.note != blank -%}<p class="mn-auth__fine">{{ ss.note }}</p>{%- endif -%}
+        {%- endif -%}
+      {%- endform -%}
     </div>
   </div>
 </div>
 
-<style>
-  .contact-page { padding: var(--section-spacing) 0; }
-  .contact-inner { display: grid; gap: 64px; align-items: flex-start; }
-  .contact-inner--split { grid-template-columns: 1fr 1.4fr; }
-  .contact-inner--centered { grid-template-columns: 1fr; max-width: 680px; margin: 0 auto; }
-  .contact-title { font-family: var(--ff-display); font-size: calc(clamp(28px, 3vw, 48px) * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); margin: 16px 0 24px; }
-  .contact-intro { font-size: calc(14px * var(--fs-scale, 1)); line-height: 1.8; opacity: 0.6; margin-bottom: 40px; }
-  .contact-detail { margin-bottom: 28px; }
-  .contact-detail__label { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold, #C8A96E); margin-bottom: 6px; }
-  .contact-detail__value { font-size: calc(14px * var(--fs-scale, 1)); line-height: 1.6; opacity: 0.8; }
-  .contact-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .contact-form__submit { margin-top: 8px; font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.25em; padding: 16px 36px; }
-  .contact-success { display: flex; align-items: center; gap: 16px; padding: 32px; border: 1px solid var(--border, rgba(200,169,110,.18)); }
-  .contact-success p { font-size: calc(14px * var(--fs-scale, 1)); color: var(--cream, #F5F0E8); }
-  .contact-error { color: var(--sale-text, #E8A0A0); font-size: calc(13px * var(--fs-scale, 1)); margin-bottom: 20px; }
-  @media (max-width: 900px) {
-    .contact-inner--split { grid-template-columns: 1fr; }
-    .contact-form__row { grid-template-columns: 1fr; }
-  }
-</style>
-
 {% schema %}
 {
   "name": "Contact",
-  "tag": "div",
+  "tag": "section",
+  "class": "section-main-contact",
   "max_blocks": 6,
   "settings": [
-    { "type": "text",     "id": "eyebrow",  "label": "Eyebrow",         "default": "Get in Touch" },
-    { "type": "text",     "id": "heading",  "label": "Heading Fallback", "default": "Contact Us" },
-    { "type": "textarea", "id": "intro",    "label": "Intro Text" },
+    { "type": "text",     "id": "eyebrow",  "label": "Eyebrow",         "default": "Client care" },
+    { "type": "inline_richtext", "id": "heading",  "label": "Heading", "default": "Get in <em>touch</em>" },
+    { "type": "checkbox", "id": "use_page_title", "label": "Use the page title as heading", "default": false },
+    { "type": "richtext", "id": "intro",    "label": "Intro Text", "default": "<p>Questions about sizing, an order or a piece you have seen? Write to us and we will reply within one working day.</p>" },
     {
       "type": "select", "id": "layout", "label": "Layout",
       "options": [
@@ -109,7 +85,10 @@
       "default": "split"
     },
     { "type": "checkbox", "id": "show_phone",    "label": "Show Phone Field",   "default": false },
-    { "type": "range",    "id": "textarea_rows", "label": "Message Field Rows", "min": 4, "max": 12, "step": 1, "default": 6 }
+    { "type": "checkbox", "id": "show_subject",  "label": "Show Subject Field", "default": true },
+    { "type": "checkbox", "id": "show_order",    "label": "Show Order Number Field", "default": false },
+    { "type": "range",    "id": "textarea_rows", "label": "Message Field Rows", "min": 4, "max": 12, "step": 1, "default": 6 },
+    { "type": "text",     "id": "note",          "label": "Note under the button" }
   ],
   "blocks": [
     {
@@ -117,7 +96,9 @@
       "name": "Contact Detail",
       "settings": [
         { "type": "text", "id": "label", "label": "Label", "default": "Email" },
-        { "type": "text", "id": "value", "label": "Value", "default": "hello@maisonnoir.com" }
+        { "type": "text", "id": "value", "label": "Value", "default": "hello@maisonnoir.com" },
+        { "type": "url",  "id": "link",  "label": "Link", "info": "Emails link themselves. Use tel:+15550000000 for a phone number." },
+        { "type": "text", "id": "note",  "label": "Note", "info": "For example opening hours." }
       ]
     }
   ],

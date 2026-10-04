@@ -1,0 +1,60 @@
+{%- comment -%}
+  The <html> tag's attributes for the design system (scheme, corners,
+  buttons, motion, header, announcement, mega menu, footer), shared by
+  layout/theme.liquid, layout/password.liquid and templates/gift_card.liquid.
+{%- endcomment -%}
+{%- liquid
+  case settings.color_scheme
+    when 'light'
+      assign mn_scheme = 'light'
+    when 'ivory-wine'
+      assign mn_scheme = 'wine'
+    when 'warm'
+      assign mn_scheme = 'warm'
+    when 'custom', 'olive'
+      assign mn_scheme = 'custom'
+    else
+      assign mn_scheme = 'dark'
+  endcase
+  assign mn_motion = 'full'
+  if settings.motion_level == 'off'
+    assign mn_motion = 'reduced'
+  elsif settings.motion_reduce_mode == 'strict'
+    assign mn_motion = 'system'
+  endif
+  case settings.header_style
+    when 'v2'
+      assign mn_header = 'centred'
+    when 'v3'
+      assign mn_header = 'minimal'
+    when 'v4'
+      assign mn_header = 'floating'
+    else
+      assign mn_header = 'classic'
+  endcase
+  case settings.mega_menu_style
+    when 'v2'
+      assign mn_mega = 'visual'
+    when 'v3'
+      assign mn_mega = 'flyout'
+    else
+      assign mn_mega = 'columns'
+  endcase
+  assign mn_announce = settings.announcement_style | default: 'ticker'
+  if mn_announce == 'rotating'
+    assign mn_announce = 'rotate'
+  endif
+-%}
+  class="no-js{% if settings.motion_reduce_mode == 'strict' %} motion-strict{% endif %}"
+  data-scheme="{{ mn_scheme }}"
+  data-corners="{{ settings.corner_radius | default: 'soft' }}"
+  data-buttons="{% if settings.button_shape == 'pill' %}pill{% else %}default{% endif %}"
+  data-motion="{{ mn_motion }}"
+  data-motion-level="{{ settings.motion_level | default: 'expressive' }}"
+  data-header="{{ mn_header }}"
+  data-announce="{{ mn_announce }}"
+  data-mega="{{ mn_mega }}"
+  data-mega-images="{% if settings.mega_menu_images == false %}off{% else %}on{% endif %}"
+  data-footer="{{ settings.footer_style | default: 'columns' }}"
+  lang="{{ request.locale.iso_code }}"
+  dir="ltr"

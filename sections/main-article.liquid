@@ -1,181 +1,187 @@
-<article class="article-page" id="section-{{ section.id }}" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="container article-page__inner {% if section.settings.show_sidebar %}article-page__inner--has-sidebar{% endif %}">
-    <div class="article-main">
-      {%- if article.image -%}
-        {%- assign hero_img_alt = article.image.alt | default: article.title | escape -%}
-        <div class="article-hero" itemprop="image">
-          {{
-            article.image
-            | image_url: width: 1600
-            | image_tag:
-              class: 'article-hero__img',
-              loading: 'eager',
-              alt: hero_img_alt,
-              widths: '800, 1200, 1600'
-          }}
-        </div>
-      {%- endif -%}
+{%- comment -%}
+  One journal article, in the design's language: breadcrumb, eyebrow, display
+  title, byline, hero image, a reading column, share (copy link and
+  networks), previous / next, "more from the journal" and comments with the
+  design's fields. Optional sidebar left or right.
+{%- endcomment -%}
+{%- liquid
+  assign ss = section.settings
+  assign side = ss.sidebar | default: 'none'
+  assign words = article.content | strip_html | split: ' '
+  assign minutes = words.size | divided_by: 220 | at_least: 1
+  assign share_url = shop.url | append: article.url
+-%}
+<article class="mn-content mn-article mn-article--{{ ss.width }}" id="section-{{ section.id }}" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="mn-container">
+    <nav class="mn-breadcrumb" aria-label="{{ 'mn.pdp.breadcrumb' | t }}">
+      <a href="{{ routes.root_url }}">{{ 'mn.pdp.home' | t }}</a><span class="sep">/</span>
+      <a href="{{ blog.url }}">{{ blog.title }}</a><span class="sep">/</span>
+      <span aria-current="page">{{ article.title | truncate: 48 }}</span>
+    </nav>
 
-      <header class="article-header">
-        <nav class="breadcrumb" aria-label="breadcrumb">
-          <a href="/">{{ 'general.home' | t }}</a>
-          <span>{{ 'general.breadcrumb_separator' | t }}</span>
-          <a href="{{ blog.url }}">{{ blog.title }}</a>
-          <span>{{ 'general.breadcrumb_separator' | t }}</span>
-          <span>{{ article.title | truncate: 40 }}</span>
-        </nav>
+    <header class="mn-article__head">
+      <span class="mn-eyebrow mn-post__meta">
+        {%- if article.tags.size > 0 -%}<a href="{{ blog.url }}/tagged/{{ article.tags.first | handle }}">{{ article.tags.first }}</a>{%- endif -%}
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">{{ article.published_at | date: '%B %-d, %Y' }}</time>
+      </span>
+      <h1 class="mn-article__title" itemprop="headline">{{ article.title }}</h1>
+      {%- if article.excerpt != blank and ss.show_excerpt -%}<div class="mn-article__dek">{{ article.excerpt | strip_html }}</div>{%- endif -%}
+      <p class="mn-article__byline">
+        {%- if article.author != blank -%}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ 'mn.journal.by' | t: author: article.author }}</span></span>{%- endif -%}
+        {%- if ss.show_reading_time -%}<span>{{ 'mn.journal.minutes' | t: count: minutes }}</span>{%- endif -%}
+      </p>
+    </header>
+
+    {%- if article.image -%}
+      <figure class="mn-article__hero" itemprop="image">
+        {%- assign hero_alt = article.image.alt | default: article.title | escape -%}
+        {{ article.image | image_url: width: 2000 | image_tag: loading: 'eager', fetchpriority: 'high', class: 'mn-article__hero-img', alt: hero_alt, widths: '800,1200,1600,2000', sizes: '(min-width: 1320px) 1224px, 100vw' }}
+      </figure>
+    {%- endif -%}
+
+    <div class="mn-article__layout mn-article__layout--{{ side }}">
+      <div class="mn-article__main">
+        <div class="mn-prose rte" itemprop="articleBody">{{ article.content }}</div>
+
         {%- if article.tags.size > 0 -%}
-          <div class="article-tags">
-            {%- for tag in article.tags -%}
-              <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="blog-tag">{{ tag }}</a>
-            {%- endfor -%}
+          <div class="mn-article__tags search__chips">
+            {%- for tag in article.tags -%}<a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="chip">{{ tag }}</a>{%- endfor -%}
           </div>
         {%- endif -%}
-        <h1 class="article-title" itemprop="headline">{{ article.title }}</h1>
-        <div class="article-meta">
-          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-            <span itemprop="name">{{ article.author }}</span>
-          </span>
-          <span class="article-meta__sep">·</span>
-          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">
-            {{ article.published_at | date: '%B %-d, %Y' }}
-          </time>
-          {%- if section.settings.show_reading_time -%}
-            {%- assign words = article.content | strip_html | split: ' ' -%}
-            {%- assign minutes = words.size | divided_by: 200 | plus: 1 -%}
-            <span class="article-meta__sep">·</span>
-            <span>{{ minutes }} {{ 'blogs.article.reading_time' | t | default: 'min read' }}</span>
-          {%- endif -%}
-        </div>
-      </header>
 
-      <div class="article-content rte" itemprop="articleBody">
-        {{ article.content }}
+        {%- if ss.show_share -%}
+          <div class="mn-article__share">
+            <span class="mn-eyebrow">{{ 'blogs.article.share' | t }}</span>
+            <button type="button" class="icon-btn" data-copy-link="{{ share_url }}" data-copied="{{ 'mn.journal.copied' | t }}" aria-label="{{ 'mn.journal.copy_link' | t }}"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-link"></use></svg></button>
+            <a class="icon-btn" href="https://www.facebook.com/sharer.php?u={{ share_url | url_encode }}" target="_blank" rel="noopener" aria-label="Facebook"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-facebook"></use></svg></a>
+            <a class="icon-btn" href="https://twitter.com/intent/tweet?url={{ share_url | url_encode }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener" aria-label="X"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-x"></use></svg></a>
+            <a class="icon-btn" href="https://pinterest.com/pin/create/button/?url={{ share_url | url_encode }}{% if article.image %}&media={{ article.image | image_url: width: 1200 | prepend: 'https:' | url_encode }}{% endif %}&description={{ article.title | url_encode }}" target="_blank" rel="noopener" aria-label="Pinterest"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-pinterest"></use></svg></a>
+            <a class="icon-btn" href="mailto:?subject={{ article.title | url_encode }}&body={{ share_url | url_encode }}" aria-label="{{ 'mn.journal.email' | t }}"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-mail"></use></svg></a>
+          </div>
+        {%- endif -%}
+
+        {%- if blog.previous_article or blog.next_article -%}
+          <nav class="mn-article__pager" aria-label="{{ 'mn.journal.more' | t }}">
+            {%- if blog.previous_article -%}<a href="{{ blog.previous_article.url | default: blog.previous_article }}" class="mn-article__prev"><span class="mn-eyebrow">{{ 'mn.journal.previous' | t }}</span><span>{{ blog.previous_article.title | default: blog.title }}</span></a>{%- else -%}<span></span>{%- endif -%}
+            {%- if blog.next_article -%}<a href="{{ blog.next_article.url | default: blog.next_article }}" class="mn-article__next"><span class="mn-eyebrow">{{ 'mn.journal.next' | t }}</span><span>{{ blog.next_article.title | default: blog.title }}</span></a>{%- endif -%}
+          </nav>
+        {%- endif -%}
+
+        {%- if blog.comments_enabled? and ss.show_comments -%}
+          <div class="mn-article__comments" id="comments">
+            <h2 class="mn-acct__title">{{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}</h2>
+            {%- if article.comments_count > 0 -%}
+              {%- paginate article.comments by 10 -%}
+                {%- for comment in article.comments -%}
+                  <div class="mn-comment" id="comment-{{ comment.id }}">
+                    <span class="mn-comment__avatar" aria-hidden="true">{{ comment.author | slice: 0 }}</span>
+                    <div>
+                      <p class="mn-comment__meta"><b>{{ comment.author }}</b><time datetime="{{ comment.created_at | date: '%Y-%m-%d' }}">{{ comment.created_at | date: '%B %-d, %Y' }}</time></p>
+                      <div class="mn-comment__body rte">{{ comment.content }}</div>
+                    </div>
+                  </div>
+                {%- endfor -%}
+                {%- if paginate.pages > 1 -%}{%- render 'mn-pagination', paginate: paginate -%}{%- endif -%}
+              {%- endpaginate -%}
+            {%- endif -%}
+            {%- form 'new_comment', article, class: 'mn-acct__card mn-comment-form' -%}
+              <h3 class="mn-acct__card-title">{{ 'mn.journal.leave' | t }}</h3>
+              {%- if form.posted_successfully? -%}
+                <p class="mn-alert mn-alert--ok" role="status"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"></use></svg>{%- if blog.moderated? -%}{{ 'mn.journal.moderated' | t }}{%- else -%}{{ 'blogs.comments.success' | t }}{%- endif -%}</p>
+              {%- endif -%}
+              {%- if form.errors -%}<div class="mn-alert mn-alert--error" role="alert">{{ form.errors | default_errors }}</div>{%- endif -%}
+              <div class="mn-auth__pair">
+                <label class="mn-field"><span class="mn-field__label">{{ 'blogs.comments.name' | t }}</span><input class="input" type="text" name="comment[author]" value="{{ form.author }}" autocomplete="name" required></label>
+                <label class="mn-field"><span class="mn-field__label">{{ 'blogs.comments.email' | t }}</span><input class="input" type="email" name="comment[email]" value="{{ form.email }}" autocomplete="email" required></label>
+              </div>
+              <label class="mn-field"><span class="mn-field__label">{{ 'blogs.comments.message' | t }}</span><textarea class="input" name="comment[body]" rows="5" required>{{ form.body }}</textarea></label>
+              {%- if blog.moderated? -%}<p class="mn-acct__muted">{{ 'mn.journal.moderated_note' | t }}</p>{%- endif -%}
+              <button type="submit" class="mn-btn">{{ 'blogs.comments.post' | t }}</button>
+            {%- endform -%}
+          </div>
+        {%- endif -%}
       </div>
 
-      {%- if section.settings.show_share -%}
-        <div class="article-share">
-          <span>{{ 'blogs.article.share' | t | default: 'Share' }}:</span>
-          <a href="https://www.facebook.com/sharer.php?u={{ shop.url }}{{ article.url }}" target="_blank" rel="noopener" aria-label="Share on Facebook">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-          </a>
-          <a href="https://twitter.com/intent/tweet?url={{ shop.url }}{{ article.url }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener" aria-label="Share on X">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
-          </a>
-        </div>
-      {%- endif -%}
-
-      {%- if blog.comments_enabled? and section.settings.show_comments -%}
-        <div class="article-comments" id="comments">
-          {%- if article.comments_count > 0 -%}
-            <h2 class="article-comments__title">{{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}</h2>
-            {%- paginate article.comments by 10 -%}
-              {%- for comment in article.comments -%}
-                <div class="comment" id="comment-{{ comment.id }}">
-                  <div class="comment__meta">
-                    <span class="comment__author">{{ comment.author }}</span>
-                    <time>{{ comment.created_at | date: '%B %-d, %Y' }}</time>
-                  </div>
-                  <div class="comment__body">{{ comment.content }}</div>
-                </div>
+      {%- if side != 'none' -%}
+        <aside class="mn-article__aside">
+          <div class="mn-acct__card">
+            <span class="mn-acct__card-title">{{ 'blogs.sidebar.recent' | t }}</span>
+            <ul class="mn-blog__recent">
+              {%- for a in blog.articles limit: 5 -%}
+                {%- unless a.id == article.id -%}
+                  <li><a href="{{ a.url }}">
+                    <span class="mn-blog__recent-img">{%- if a.image -%}{{ a.image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '', class: 'mn-fill', sizes: '64px' }}{%- endif -%}</span>
+                    <span><span class="mn-blog__recent-title">{{ a.title }}</span><time datetime="{{ a.published_at | date: '%Y-%m-%d' }}">{{ a.published_at | date: '%b %-d, %Y' }}</time></span>
+                  </a></li>
+                {%- endunless -%}
               {%- endfor -%}
-            {%- endpaginate -%}
-          {%- endif -%}
-          {%- form 'new_comment', article, class: 'comment-form' -%}
-            <h2 class="comment-form__title">{{ 'blogs.comments.title' | t }}</h2>
-            {%- if form.posted_successfully? -%}
-              <p class="comment-form__success">{{ 'blogs.comments.success' | t }}</p>
-            {%- endif -%}
-            {%- if form.errors -%}
-              <p class="comment-form__error">{{ 'blogs.comments.error' | t }}</p>
-            {%- endif -%}
-            <div class="comment-form__row">
-              <div class="form-field"><label for="comment-author">{{ 'blogs.comments.name' | t }}</label><input type="text" id="comment-author" name="comment[author]" required></div>
-              <div class="form-field"><label for="comment-email">{{ 'blogs.comments.email' | t }}</label><input type="email" id="comment-email" name="comment[email]" required></div>
-            </div>
-            <div class="form-field"><label for="comment-body">{{ 'blogs.comments.message' | t }}</label><textarea id="comment-body" name="comment[body]" rows="5" required></textarea></div>
-            <button type="submit" class="btn-primary">{{ 'blogs.comments.post' | t }}</button>
-          {%- endform -%}
-        </div>
+            </ul>
+          </div>
+        </aside>
       {%- endif -%}
     </div>
-
-    {%- if section.settings.show_sidebar -%}
-      <aside class="article-sidebar">
-        <div class="blog-sidebar__widget">
-          <h3 class="blog-sidebar__title">{{ 'blogs.sidebar.recent' | t | default: 'Recent Posts' }}</h3>
-          <ul class="blog-sidebar__recent">
-            {%- for a in blog.articles limit: 5 -%}
-              {%- unless a == article -%}
-                <li>
-                  <a href="{{ a.url }}" class="blog-sidebar__recent-item">
-                    {%- if a.image -%}{{ a.image | image_url: width: 80 | image_tag: class: 'blog-sidebar__recent-img', loading: 'lazy', alt: a.title }}{%- endif -%}
-                    <div>
-                      <p class="blog-sidebar__recent-title">{{ a.title }}</p>
-                      <time>{{ a.published_at | date: '%b %-d, %Y' }}</time>
-                    </div>
-                  </a>
-                </li>
-              {%- endunless -%}
-            {%- endfor -%}
-          </ul>
-        </div>
-      </aside>
-    {%- endif -%}
   </div>
-</article>
 
-<style>
-  .article-page { padding: var(--section-spacing) 0; }
-  .article-page__inner { display: grid; gap: 64px; }
-  .article-page__inner--has-sidebar { grid-template-columns: 1fr 280px; }
-  .article-hero { margin-bottom: 48px; }
-  .article-hero__img { width: 100%; max-height: 560px; object-fit: cover; display: block; }
-  .article-header { margin-bottom: 48px; }
-  .article-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-  .article-title { font-family: var(--ff-display); font-size: calc(clamp(28px, 4vw, 56px) * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); line-height: 1.1; margin: 16px 0 20px; }
-  .article-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); }
-  .article-meta__sep { color: var(--border-strong, rgba(200,169,110,.35)); }
-  .article-content { font-size: calc(15px * var(--fs-scale, 1)); line-height: 1.9; max-width: 720px; }
-  .article-content h2 { font-family: var(--ff-display); font-size: calc(26px * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); margin: 40px 0 16px; }
-  .article-content h3 { font-family: var(--ff-display); font-size: calc(20px * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); margin: 32px 0 12px; }
-  .article-content p { margin-bottom: 20px; opacity: 0.8; }
-  .article-content img { max-width: 100%; height: auto; }
-  .article-share { display: flex; align-items: center; gap: 12px; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border, rgba(200,169,110,.18)); font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); }
-  .article-share a { color: var(--muted, rgba(245,240,232,.62)); transition: color 0.2s; }
-  .article-share a:hover { color: var(--gold, #C8A96E); }
-  .article-comments { margin-top: 64px; padding-top: 48px; border-top: 1px solid var(--border, rgba(200,169,110,.18)); }
-  .article-comments__title, .comment-form__title { font-family: var(--ff-display); font-size: calc(24px * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); margin-bottom: 32px; }
-  .comment { padding: 24px 0; border-bottom: 1px solid var(--border, rgba(200,169,110,.18)); }
-  .comment__meta { display: flex; gap: 12px; margin-bottom: 10px; font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); }
-  .comment__author { color: var(--cream, #F5F0E8); }
-  .comment__body { font-size: calc(14px * var(--fs-scale, 1)); line-height: 1.7; opacity: 0.7; }
-  .comment-form { margin-top: 48px; }
-  .comment-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .comment-form__success { color: var(--gold, #C8A96E); margin-bottom: 24px; }
-  .comment-form__error { color: var(--sale-text, #E8A0A0); margin-bottom: 24px; }
-  .form-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-  .form-field label { font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); }
-  .form-field input, .form-field textarea, .form-field select {
-    background: transparent; border: 1px solid var(--border, rgba(200,169,110,.18)); color: var(--cream, #F5F0E8);
-    font-family: var(--ff-body); font-size: calc(14px * var(--fs-scale, 1)); padding: 12px 16px; outline: none; transition: border-color 0.3s; resize: vertical;
-  }
-  .form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: var(--gold, #C8A96E); }
-  @media (max-width: 900px) {
-    .article-page__inner--has-sidebar { grid-template-columns: 1fr; }
-    .comment-form__row { grid-template-columns: 1fr; }
-  }
-</style>
+  {%- if ss.show_more -%}
+    {%- liquid
+      assign more = 0
+      for a in blog.articles limit: 4
+        unless a.id == article.id
+          assign more = more | plus: 1
+        endunless
+      endfor
+    -%}
+    {%- if more > 0 -%}
+      <section class="mn-section mn-article__more">
+        <div class="mn-container">
+          <div class="mn-section__head">
+            <div><span class="mn-eyebrow">{{ blog.title }}</span><h2 class="section-title">{{ ss.more_heading }}</h2></div>
+            <a href="{{ blog.url }}" class="link-arrow">{{ 'mn.searchpage.view_all' | t }}<svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a>
+          </div>
+          <div class="mn-blog__posts mn-blog__posts--row">
+            {%- assign shown = 0 -%}
+            {%- for a in blog.articles limit: 4 -%}
+              {%- if a.id != article.id and shown < 3 -%}
+                {%- assign shown = shown | plus: 1 -%}
+                {%- render 'mn-article-card', article: a, show_author: false, show_excerpt: false -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      </section>
+    {%- endif -%}
+  {%- endif -%}
+</article>
 
 {% schema %}
 {
   "name": "Article",
-  "tag": "article",
+  "tag": "div",
+  "class": "section-main-article",
   "settings": [
-    { "type": "checkbox", "id": "show_sidebar",      "label": "Show Sidebar",        "default": false },
-    { "type": "checkbox", "id": "show_share",         "label": "Show Share Buttons",  "default": true },
-    { "type": "checkbox", "id": "show_comments",      "label": "Show Comments",       "default": true },
-    { "type": "checkbox", "id": "show_reading_time",  "label": "Show Reading Time",   "default": true }
+    {
+      "type": "select", "id": "sidebar", "label": "Sidebar",
+      "options": [
+        { "value": "none",  "label": "None" },
+        { "value": "left",  "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select", "id": "width", "label": "Reading width",
+      "options": [
+        { "value": "narrow", "label": "Narrow" },
+        { "value": "wide",   "label": "Wide" }
+      ],
+      "default": "narrow"
+    },
+    { "type": "checkbox", "id": "show_excerpt",      "label": "Show excerpt under the title", "default": true },
+    { "type": "checkbox", "id": "show_reading_time", "label": "Show Reading Time",   "default": true },
+    { "type": "checkbox", "id": "show_share",        "label": "Show Share Buttons",  "default": true },
+    { "type": "checkbox", "id": "show_comments",     "label": "Show Comments",       "info": "Only when comments are on for the blog in Online Store → Blog posts.", "default": true },
+    { "type": "checkbox", "id": "show_more",         "label": "Show more from the journal", "default": true },
+    { "type": "inline_richtext", "id": "more_heading", "label": "More heading", "default": "Keep <em>reading</em>" }
   ],
   "presets": [{ "name": "Article" }]
 }

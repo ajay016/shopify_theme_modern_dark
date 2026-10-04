@@ -173,6 +173,25 @@ is left and what I need to check").
       saved values (`form.first_name`, not the non-existent `form.value.first_name`, which
       left every edit form empty). Test `scripts/account-check.py` +
       `scripts/account-test.js` (51 checks).
+- [x] **D7d Content pages** — journal (`main-blog`: grid / list / masonry, featured
+      first post, topic chips from the tags, image shape, sidebar with search and recent;
+      cards in `snippets/mn-article-card.liquid`), article (breadcrumb, display title,
+      excerpt, byline with reading time, hero, `.mn-prose` reading column, tags, share with
+      copy link, previous / next, comments with moderation note, "keep reading"; sidebar
+      none / left / right, reading width), page (standard / editorial; the templates'
+      `layout` setting now exists), contact (split / centred, detail blocks with links and
+      notes, subject and order fields, thank-you state), 404 (outlined numerals, search,
+      products), **password page** (there was no `templates/password.json`, so the page
+      had no password form; now logo, heading, store message, newsletter sign-up tagged
+      "password page", password form that opens in place, optional image) and **gift
+      card** (`{% layout none %}` was missing, so the card was wrapped in the full store
+      layout; the QR code was an `<img>` pointing at the card's identifier and never
+      showed: now Shopify's QR script, Apple Wallet, copy code, balance, expiry). The
+      `<html>` attributes and fonts are shared snippets (`mn-html-attrs`, `mn-fonts`), so
+      the password and gift card pages follow the theme's scheme and fonts. Invalid saved
+      settings fixed in `page.about-v2`, `page.contact`, `page.contact-v2`,
+      `index.classic`: `scripts/schema-check.py` reports 0 problems. Test
+      `scripts/content-check.py` + `scripts/content-test.js` (46 checks).
 - [ ] **D7 Other pages** — collection, cart page, search, account, blog, pages,
       homepages: same tokens, type, buttons, fields, cards and motion.
 - [ ] **D8 Verification** — every setting renders and works (audit), editor re-render,

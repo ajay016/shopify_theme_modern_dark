@@ -285,6 +285,11 @@
       "sizes": "Sizes"
     },
     "recent": { "clear": "Clear" },
+    "journal": {"topics": "Topics", "all": "All", "empty": "No stories here yet.", "by": "By {{ author }}", "minutes": {"one": "{{ count }} min read", "other": "{{ count }} min read"}, "copied": "Link copied", "copy_link": "Copy link", "email": "Share by email", "more": "More stories", "previous": "Previous story", "next": "Next story", "moderated": "Thank you. Your comment will appear once it has been approved.", "moderated_note": "Comments are reviewed before they appear.", "leave": "Leave a comment"},
+    "contactpage": {"thanks": "Thank you", "order": "Order number"},
+    "notfound": {"eyebrow": "Page not found"},
+    "pw": {"password": "Password", "enter": "Enter", "subscribed": "Thank you. We will write when the doors open.", "email": "Your email", "notify": "Notify me", "open": "Enter using password", "owner": "Are you the store owner?", "admin": "Log in here"},
+    "gift": {"heading_html": "A gift, <em>for you</em>", "expires": "Valid until {{ date }}", "copied": "Code copied", "copy": "Copy code", "wallet": "Add to Apple Wallet"},
     "acct": {
       "eyebrow": "Your account",
       "nav": "Account",

@@ -1,0 +1,38 @@
+{%- comment -%}
+  An article card in the design's language, used by the journal page and
+  the "more from the journal" row on an article.
+  Accepts: article, featured (bool), show_date, show_author,
+  show_tags, show_excerpt (bools, default on), ratio
+  ('landscape' | 'portrait' | 'square' | 'natural').
+{%- endcomment -%}
+{%- liquid
+  assign ratio = ratio | default: 'landscape'
+-%}
+<article class="mn-post{% if featured %} mn-post--featured{% endif %}">
+  <a href="{{ article.url }}" class="mn-post__media mn-post__media--{{ ratio }}" tabindex="-1" aria-hidden="true">
+    {%- if article.image -%}
+      {%- if featured -%}{%- assign sz = '(min-width: 990px) 66vw, 100vw' -%}{%- else -%}{%- assign sz = '(min-width: 990px) 33vw, (min-width: 600px) 50vw, 100vw' -%}{%- endif -%}
+      {{ article.image | image_url: width: 1400 | image_tag: loading: 'lazy', alt: '', class: 'mn-post__img', widths: '400,600,800,1000,1400', sizes: sz }}
+    {%- else -%}
+      <span class="mn-post__ph" aria-hidden="true">{{ article.title | slice: 0 }}</span>
+    {%- endif -%}
+  </a>
+  <div class="mn-post__body">
+    <span class="mn-eyebrow mn-post__meta">
+      {%- if show_tags != false and article.tags.size > 0 -%}<span>{{ article.tags.first }}</span>{%- endif -%}
+      {%- if show_date != false -%}<time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%B %-d, %Y' }}</time>{%- endif -%}
+    </span>
+    <h2 class="mn-post__title"><a href="{{ article.url }}">{{ article.title }}</a></h2>
+    {%- if show_excerpt != false -%}
+      {%- if article.excerpt != blank -%}
+        <p class="mn-post__excerpt">{{ article.excerpt | strip_html | truncatewords: 32 }}</p>
+      {%- elsif article.content != blank -%}
+        <p class="mn-post__excerpt">{{ article.content | replace: '</', ' </' | strip_html | strip_newlines | truncatewords: 26 }}</p>
+      {%- endif -%}
+    {%- endif -%}
+    <span class="mn-post__foot">
+      {%- if show_author != false and article.author != blank -%}<span class="mn-post__author">{{ 'mn.journal.by' | t: author: article.author }}</span>{%- endif -%}
+      <a href="{{ article.url }}" class="link-arrow">{{ 'blogs.article.read_more' | t }}<svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg><span class="visually-hidden">: {{ article.title }}</span></a>
+    </span>
+  </div>
+</article>

@@ -645,6 +645,12 @@
       if (open) { el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); el.querySelector('input:not([type=hidden]), select')?.focus({ preventScroll: true }); }
       return;
     }
+    const cp = e.target.closest('[data-copy-link]');
+    if (cp) {
+      const done = () => MN.toast(cp.dataset.copied || 'Copied');
+      navigator.clipboard ? navigator.clipboard.writeText(cp.dataset.copyLink).then(done, done) : done();
+      return;
+    }
     const del = e.target.closest('[data-confirm]');
     if (del && !window.confirm(del.dataset.confirm)) { e.preventDefault(); return; }
     const auth = e.target.closest('[data-auth-recover], [data-auth-login]');

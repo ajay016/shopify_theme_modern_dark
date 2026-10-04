@@ -2,7 +2,7 @@
   "sections": {
     "main": {
       "type": "main-contact",
-      "settings": { "layout": "v1" }
+      "settings": { "layout": "split" }
     }
   },
   "order": ["main"]

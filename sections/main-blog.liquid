@@ -1,94 +1,69 @@
-{% liquid
-  assign layout   = section.settings.layout
-  assign columns  = section.settings.columns
-  assign show_sidebar = section.settings.show_sidebar
-  assign posts_per_page = section.settings.posts_per_page
-%}
-
-{%- paginate blog.articles by posts_per_page -%}
-<div class="blog-page blog-page--{{ layout }}" id="section-{{ section.id }}">
-  <div class="container">
-    <div class="blog-page__header">
-      <p class="eyebrow">{{ 'blogs.article.blog' | t }}</p>
-      <h1 class="blog-page__title">{{ blog.title }}</h1>
+{%- comment -%}
+  Journal (blog) page, in the Claude Design reference's language: eyebrow +
+  display title, tag chips, editorial article cards in a grid, list or
+  masonry, an optional featured first post and an optional sidebar.
+{%- endcomment -%}
+{%- liquid
+  assign ss = section.settings
+  assign layout = ss.layout
+  assign show_sidebar = ss.show_sidebar
+-%}
+{%- paginate blog.articles by ss.posts_per_page -%}
+<div class="mn-content mn-blog mn-blog--{{ layout }}" id="section-{{ section.id }}">
+  <div class="mn-container">
+    <div class="mn-content__head">
+      <span class="mn-eyebrow">{{ ss.eyebrow }}</span>
+      <h1 class="section-title">
+        {%- if current_tags -%}{{ blog.title }} · <em>{{ current_tags.first }}</em>{%- else -%}{{ blog.title }}{%- endif -%}
+      </h1>
+      {%- if ss.intro != blank -%}<div class="mn-content__lead rte">{{ ss.intro }}</div>{%- endif -%}
     </div>
 
-    <div class="blog-layout {% if show_sidebar %}blog-layout--has-sidebar{% endif %}">
-      <div class="blog-posts blog-posts--{{ layout }}">
+    {%- if ss.show_tag_filter and blog.all_tags.size > 0 -%}
+      <nav class="mn-blog__tags search__chips" aria-label="{{ 'mn.journal.topics' | t }}">
+        <a href="{{ blog.url }}" class="chip"{% unless current_tags %} aria-current="page"{% endunless %}>{{ 'mn.journal.all' | t }}</a>
+        {%- for tag in blog.all_tags -%}
+          <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="chip"{% if current_tags contains tag %} aria-current="page"{% endif %}>{{ tag }}</a>
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+
+    <div class="mn-blog__layout{% if show_sidebar %} mn-blog__layout--sidebar{% endif %}">
+      <div class="mn-blog__posts">
+        {%- if blog.articles.size == 0 -%}
+          <div class="mn-acct__empty"><p>{{ 'mn.journal.empty' | t }}</p></div>
+        {%- endif -%}
         {%- for article in blog.articles -%}
-          <article class="blog-card blog-card--{{ layout }}" itemscope itemtype="http://schema.org/BlogPosting">
-            {%- if article.image -%}
-              {%- assign blog_card_alt = article.image.alt | default: article.title | escape -%}
-              <a href="{{ article.url }}" class="blog-card__media" tabindex="-1" aria-hidden="true">
-                {{
-                  article.image
-                  | image_url: width: 800
-                  | image_tag:
-                    class: 'blog-card__img',
-                    loading: 'lazy',
-                    alt: blog_card_alt,
-                    widths: '400, 600, 800'
-                }}
-              </a>
-            {%- endif -%}
-            <div class="blog-card__info">
-              <div class="blog-card__meta">
-                {%- if section.settings.show_date -%}
-                  <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">
-                    {{ article.published_at | date: '%B %-d, %Y' }}
-                  </time>
-                {%- endif -%}
-                {%- if section.settings.show_author -%}
-                  <span class="blog-card__author" itemprop="author">{{ article.author }}</span>
-                {%- endif -%}
-                {%- if section.settings.show_tags and article.tags.size > 0 -%}
-                  {%- for tag in article.tags limit: 2 -%}
-                    <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="blog-tag">{{ tag }}</a>
-                  {%- endfor -%}
-                {%- endif -%}
-              </div>
-              <h2 class="blog-card__title" itemprop="headline">
-                <a href="{{ article.url }}">{{ article.title }}</a>
-              </h2>
-              {%- if section.settings.show_excerpt and article.excerpt != blank -%}
-                <p class="blog-card__excerpt" itemprop="description">{{ article.excerpt | strip_html | truncate: 130 }}</p>
-              {%- endif -%}
-              <a href="{{ article.url }}" class="blog-card__read-more">
-                {{ 'blogs.article.read_more' | t }}
-                {%- render 'icon-arrow-right' -%}
-              </a>
-            </div>
-          </article>
+          {%- liquid
+            assign featured = false
+            if ss.feature_first and forloop.first and paginate.current_page == 1 and layout != 'list'
+              assign featured = true
+            endif
+          -%}
+          {%- render 'mn-article-card', article: article, featured: featured, show_date: ss.show_date, show_author: ss.show_author, show_tags: ss.show_tags, show_excerpt: ss.show_excerpt, ratio: ss.image_ratio -%}
         {%- endfor -%}
       </div>
 
       {%- if show_sidebar -%}
-        <aside class="blog-sidebar">
-          {%- if section.settings.show_search -%}
-            <div class="blog-sidebar__widget">
-              <h3 class="blog-sidebar__title">{{ 'blogs.sidebar.search' | t | default: 'Search' }}</h3>
-              <form action="{{ routes.search_url }}" method="get" class="blog-search">
-                <input type="hidden" name="type" value="article">
-                <div class="blog-search__row">
-                  <input type="search" name="q" placeholder="{{ 'general.search.placeholder' | t }}">
-                  <button type="submit" aria-label="Search">{%- render 'icon-search' -%}</button>
-                </div>
-              </form>
-            </div>
+        <aside class="mn-blog__aside">
+          {%- if ss.show_search -%}
+            <form action="{{ routes.search_url }}" method="get" role="search" class="mn-acct__card mn-blog__search">
+              <span class="mn-acct__card-title">{{ 'blogs.sidebar.search' | t }}</span>
+              <input type="hidden" name="type" value="article">
+              <label class="mn-searchpage__field">
+                <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+                <input type="search" name="q" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'blogs.sidebar.search' | t }}">
+              </label>
+            </form>
           {%- endif -%}
-          <div class="blog-sidebar__widget">
-            <h3 class="blog-sidebar__title">{{ 'blogs.sidebar.recent' | t | default: 'Recent Posts' }}</h3>
-            <ul class="blog-sidebar__recent">
-              {%- for article in blog.articles limit: 5 -%}
+          <div class="mn-acct__card">
+            <span class="mn-acct__card-title">{{ 'blogs.sidebar.recent' | t }}</span>
+            <ul class="mn-blog__recent">
+              {%- for a in blog.articles limit: 4 -%}
                 <li>
-                  <a href="{{ article.url }}" class="blog-sidebar__recent-item">
-                    {%- if article.image -%}
-                      {{ article.image | image_url: width: 80 | image_tag: class: 'blog-sidebar__recent-img', loading: 'lazy', alt: article.title }}
-                    {%- endif -%}
-                    <div>
-                      <p class="blog-sidebar__recent-title">{{ article.title }}</p>
-                      <time>{{ article.published_at | date: '%b %-d, %Y' }}</time>
-                    </div>
+                  <a href="{{ a.url }}">
+                    <span class="mn-blog__recent-img">{%- if a.image -%}{{ a.image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '', class: 'mn-fill', sizes: '64px' }}{%- endif -%}</span>
+                    <span><span class="mn-blog__recent-title">{{ a.title }}</span><time datetime="{{ a.published_at | date: '%Y-%m-%d' }}">{{ a.published_at | date: '%b %-d, %Y' }}</time></span>
                   </a>
                 </li>
               {%- endfor -%}
@@ -98,73 +73,19 @@
       {%- endif -%}
     </div>
 
-    {%- if paginate.pages > 1 -%}
-      <nav class="pagination" aria-label="{{ 'accessibility.pagination' | t }}">
-        {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" class="pagination__item pagination__item--prev">← {{ 'general.pagination.previous' | t }}</a>{%- endif -%}
-        {%- for part in paginate.parts -%}
-          {%- if part.is_link -%}
-            <a href="{{ part.url }}" class="pagination__item">{{ part.title }}</a>
-          {%- elsif part.title == paginate.current_page -%}
-            <span class="pagination__item pagination__item--current" aria-current="page">{{ part.title }}</span>
-          {%- else -%}
-            <span class="pagination__item pagination__item--gap">{{ part.title }}</span>
-          {%- endif -%}
-        {%- endfor -%}
-        {%- if paginate.next -%}<a href="{{ paginate.next.url }}" class="pagination__item pagination__item--next">{{ 'general.pagination.next' | t }} →</a>{%- endif -%}
-      </nav>
-    {%- endif -%}
+    {%- if paginate.pages > 1 -%}{%- render 'mn-pagination', paginate: paginate -%}{%- endif -%}
   </div>
 </div>
 {%- endpaginate -%}
 
-<style>
-  .blog-page { padding: var(--section-spacing) 0; }
-  .blog-page__header { text-align: center; margin-bottom: 56px; }
-  .blog-page__title { font-family: var(--ff-display); font-size: calc(clamp(32px, 4vw, 60px) * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); margin-top: 12px; }
-  .blog-layout { display: grid; gap: 48px; }
-  .blog-layout--has-sidebar { grid-template-columns: 1fr 280px; }
-  .blog-posts--grid { display: grid; gap: 32px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
-  .blog-posts--masonry { columns: 2; column-gap: 32px; }
-  .blog-posts--list .blog-card { display: grid; grid-template-columns: 340px 1fr; gap: 40px; margin-bottom: 40px; border-bottom: 1px solid var(--border, rgba(200,169,110,.18)); padding-bottom: 40px; }
-  .blog-card { }
-  .blog-card__media { display: block; overflow: hidden; aspect-ratio: 16/9; }
-  .blog-posts--list .blog-card__media { aspect-ratio: 4/3; }
-  .blog-card__img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s var(--ease-out); }
-  .blog-card__media:hover .blog-card__img { transform: scale(1.04); }
-  .blog-card__info { padding: 20px 0 0; }
-  .blog-posts--list .blog-card__info { padding: 0; display: flex; flex-direction: column; justify-content: center; }
-  .blog-card__meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream, #F5F0E8); opacity: 0.6; margin-bottom: 12px; }
-  .blog-card__meta time { color: var(--gold, #C8A96E); }
-  .blog-tag { background: var(--gold-dim, rgba(200,169,110,.12)); color: var(--gold, #C8A96E); padding: 2px 8px; font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.2em; text-transform: uppercase; }
-  .blog-card__title { font-family: var(--ff-display); font-size: calc(clamp(18px, 2vw, 24px) * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); line-height: 1.2; margin-bottom: 12px; }
-  .blog-card__title a { color: var(--cream, #F5F0E8); transition: color 0.2s; }
-  .blog-card__title a:hover { color: var(--gold, #C8A96E); }
-  .blog-card__excerpt { font-size: calc(13px * var(--fs-scale, 1)); line-height: 1.7; opacity: 0.6; margin-bottom: 16px; }
-  .blog-card__read-more { display: inline-flex; align-items: center; gap: 6px; font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold, #C8A96E); transition: gap 0.2s; }
-  .blog-card__read-more:hover { gap: 10px; }
-  .blog-sidebar__widget { margin-bottom: 40px; }
-  .blog-sidebar__title { font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border, rgba(200,169,110,.18)); }
-  .blog-search__row { display: flex; border: 1px solid var(--border, rgba(200,169,110,.18)); }
-  .blog-search__row input { flex: 1; background: transparent; border: none; color: var(--cream, #F5F0E8); font-family: var(--ff-body); font-size: calc(13px * var(--fs-scale, 1)); padding: 10px 14px; outline: none; }
-  .blog-search__row button { background: transparent; border: none; border-left: 1px solid var(--border, rgba(200,169,110,.18)); color: var(--muted, rgba(245,240,232,.62)); padding: 0 14px; cursor: pointer; }
-  .blog-search__row button:hover { color: var(--gold, #C8A96E); }
-  .blog-sidebar__recent { list-style: none; display: flex; flex-direction: column; gap: 16px; }
-  .blog-sidebar__recent-item { display: flex; gap: 12px; align-items: center; color: var(--cream, #F5F0E8); }
-  .blog-sidebar__recent-img { width: 56px; height: 56px; object-fit: cover; flex-shrink: 0; }
-  .blog-sidebar__recent-title { font-size: calc(13px * var(--fs-scale, 1)); line-height: 1.4; margin-bottom: 4px; }
-  .blog-sidebar__recent-item time { font-size: calc(11px * var(--fs-scale, 1)); color: var(--cream, #F5F0E8); opacity: 0.6; }
-  @media (max-width: 900px) {
-    .blog-layout--has-sidebar { grid-template-columns: 1fr; }
-    .blog-posts--list .blog-card { grid-template-columns: 1fr; }
-    .blog-posts--masonry { columns: 1; }
-  }
-</style>
-
 {% schema %}
 {
   "name": "Blog Posts",
-  "tag": "div",
+  "tag": "section",
+  "class": "section-main-blog",
   "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The journal" },
+    { "type": "richtext", "id": "intro", "label": "Intro" },
     {
       "type": "select", "id": "layout", "label": "Layout",
       "options": [
@@ -174,6 +95,18 @@
       ],
       "default": "grid"
     },
+    { "type": "checkbox", "id": "feature_first", "label": "Feature the newest post", "info": "Grid and masonry: the first post on page 1 spans two columns.", "default": true },
+    {
+      "type": "select", "id": "image_ratio", "label": "Image shape",
+      "options": [
+        { "value": "landscape", "label": "Landscape" },
+        { "value": "portrait",  "label": "Portrait" },
+        { "value": "square",    "label": "Square" },
+        { "value": "natural",   "label": "As uploaded" }
+      ],
+      "default": "landscape"
+    },
+    { "type": "checkbox", "id": "show_tag_filter", "label": "Show topic filter", "info": "Uses the article tags.", "default": true },
     { "type": "checkbox", "id": "show_sidebar", "label": "Show Sidebar",       "default": false },
     { "type": "checkbox", "id": "show_date",    "label": "Show Publish Date",  "default": true },
     { "type": "checkbox", "id": "show_author",  "label": "Show Author",        "default": true },

@@ -2,7 +2,7 @@
   "sections": {
     "hero": {
       "type": "image-with-text",
-      "settings": { "layout": "image_right", "full_height": true }
+      "settings": { "layout": "right" }
     },
     "main": {
       "type": "main-page",

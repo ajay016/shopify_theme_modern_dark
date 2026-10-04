@@ -1,34 +1,43 @@
-<div class="page-section" id="section-{{ section.id }}">
-  <div class="container">
-    <div class="page-inner {% if section.settings.narrow %}page-inner--narrow{% endif %}">
-      <h1 class="page-title">{{ page.title }}</h1>
-      <div class="page-content rte">
-        {{ page.content }}
-      </div>
+{%- comment -%}
+  A standard page, in the design's language. Standard: breadcrumb, display
+  title and a reading column. Editorial: a centred title with an eyebrow and
+  a wider column.
+{%- endcomment -%}
+{%- assign ss = section.settings -%}
+<div class="mn-content mn-page mn-page--{{ ss.layout }}" id="section-{{ section.id }}">
+  <div class="mn-container">
+    {%- if ss.layout == 'v1' -%}
+      <nav class="mn-breadcrumb" aria-label="{{ 'mn.pdp.breadcrumb' | t }}">
+        <a href="{{ routes.root_url }}">{{ 'mn.pdp.home' | t }}</a><span class="sep">/</span>
+        <span aria-current="page">{{ page.title }}</span>
+      </nav>
+    {%- endif -%}
+    <div class="mn-page__inner{% if ss.narrow %} mn-page__inner--narrow{% endif %}">
+      <header class="mn-content__head">
+        {%- if ss.eyebrow != blank -%}<span class="mn-eyebrow">{{ ss.eyebrow }}</span>{%- endif -%}
+        <h1 class="section-title">{{ page.title }}</h1>
+      </header>
+      <div class="mn-prose rte">{{ page.content }}</div>
     </div>
   </div>
 </div>
 
-<style>
-  .page-section { padding: var(--section-spacing) 0; }
-  .page-inner { max-width: 860px; }
-  .page-inner--narrow { max-width: 640px; }
-  .page-title { font-family: var(--ff-display); font-size: calc(clamp(28px, 4vw, 52px) * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); margin-bottom: 40px; }
-  .page-content { font-size: calc(15px * var(--fs-scale, 1)); line-height: 1.9; }
-  .page-content p { margin-bottom: 20px; opacity: 0.8; }
-  .page-content h2 { font-family: var(--ff-display); font-size: calc(26px * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); margin: 40px 0 16px; }
-  .page-content h3 { font-family: var(--ff-display); font-size: calc(20px * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); margin: 32px 0 12px; }
-  .page-content img { max-width: 100%; height: auto; }
-  .page-content a { color: var(--gold, #C8A96E); border-bottom: 1px solid var(--border, rgba(200,169,110,.18)); }
-  .page-content a:hover { border-bottom-color: var(--gold, #C8A96E); }
-</style>
-
 {% schema %}
 {
   "name": "Page",
-  "tag": "div",
+  "tag": "section",
+  "class": "section-main-page",
   "settings": [
-    { "type": "checkbox", "id": "narrow", "label": "Narrow width (640px)", "default": false }
+    {
+      "type": "select", "id": "layout", "label": "Layout",
+      "options": [
+        { "value": "v1", "label": "Standard" },
+        { "value": "v2", "label": "Editorial (centred)" }
+      ],
+      "default": "v1"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "checkbox", "id": "narrow", "label": "Narrow reading column", "default": false }
   ],
   "presets": [{ "name": "Page" }]
 }

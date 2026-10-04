@@ -39,6 +39,11 @@ for f in sorted(glob.glob('sections/*.liquid')):
                 bad.append(f'{f} {where}: {i} richtext default must start with a block tag')
             if t == 'inline_richtext' and d and re.search(r'<(?!/?(em|strong|b|i|a)\b)', d):
                 bad.append(f'{f} {where}: {i} inline_richtext default uses a tag that is not allowed')
+    if len(sc.get('name', '')) > 25: bad.append(f'{f}: section name longer than 25 characters')
+    for b in sc.get('blocks', []):
+        if b.get('name') and len(b['name']) > 25: bad.append(f'{f}: block {b.get("type")} name "{b["name"]}" is longer than 25 characters')
+    for pr in sc.get('presets', []):
+        if len(pr.get('name', '')) > 25: bad.append(f'{f}: preset name "{pr.get("name")}" is longer than 25 characters')
     chk(sc.get('settings', []), 'settings')
     for b in sc.get('blocks', []):
         chk(b.get('settings', []), 'block ' + b.get('type', ''))

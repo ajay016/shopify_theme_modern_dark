@@ -299,21 +299,21 @@
             </div>
             {%- assign sg_rows = ss.size_chart | strip | newline_to_br | split: '<br />' -%}
             {%- capture sg_table -%}
+              {%- assign sg_head = sg_rows.first | strip | split: ',' -%}
               <div class="sg__table" data-sg-table><table class="table">
-                {%- for row in sg_rows -%}
-                  {%- assign cells = row | strip | split: ',' -%}
-                  {%- if forloop.first -%}
-                    <thead><tr>{%- for c in cells -%}<th>{{ c | strip }}</th>{%- endfor -%}</tr></thead><tbody>
-                  {%- else -%}
+                <thead><tr>{%- for c in sg_head -%}<th>{{ c | strip }}</th>{%- endfor -%}</tr></thead>
+                <tbody>
+                  {%- for row in sg_rows offset: 1 -%}
+                    {%- assign cells = row | strip | split: ',' -%}
                     <tr data-size="{{ cells.first | strip | escape }}">
                       {%- for c in cells -%}
                         {%- assign cv = c | strip -%}
                         {%- if forloop.first -%}<td><b>{{ cv }}</b></td>{%- elsif forloop.index >= ss.size_cm_from -%}<td data-cm="{{ cv }}">{{ cv }}</td>{%- else -%}<td>{{ cv }}</td>{%- endif -%}
                       {%- endfor -%}
                     </tr>
-                  {%- endif -%}
-                {%- endfor -%}
-                </tbody></table></div>
+                  {%- endfor -%}
+                </tbody>
+              </table></div>
               {%- if ss.size_note != blank -%}<p class="sg__note">{{ ss.size_note }}</p>{%- endif -%}
             {%- endcapture -%}
             {%- if ss.size_measure != blank -%}
@@ -558,7 +558,7 @@
     { "type": "badges", "name": "Badges", "limit": 1, "settings": [
       { "type": "text", "id": "extra", "label": "Extra badge", "info": "Leave blank to use the custom.origin metafield (e.g. Made in Italy)." }
     ] },
-    { "type": "urgency", "name": "Countdown, stock, visitors", "limit": 1, "settings": [
+    { "type": "urgency", "name": "Countdown & stock", "limit": 1, "settings": [
       { "type": "text", "id": "countdown_end", "label": "Countdown ends", "info": "YYYY-MM-DD HH:MM in the store's time, e.g. 2026-12-31 23:59. Leave blank to hide." },
       { "type": "text", "id": "countdown_label", "label": "Countdown label", "default": "Winter sale ends in" },
       { "type": "checkbox", "id": "show_stock", "label": "Show stock bar", "default": true },
@@ -608,7 +608,7 @@
       { "type": "checkbox", "id": "show_compare", "label": "Compare", "default": true },
       { "type": "checkbox", "id": "show_share", "label": "Share", "default": true }
     ] },
-    { "type": "details", "name": "Description, shipping, reviews", "limit": 1, "settings": [
+    { "type": "details", "name": "Details & reviews", "limit": 1, "settings": [
       { "type": "paragraph", "content": "Holds the details here when Placement is Right column (or the layout is Tab accordion inner)." }
     ] },
     { "type": "custom_liquid", "name": "Custom Liquid", "settings": [

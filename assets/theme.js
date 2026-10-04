@@ -2030,7 +2030,8 @@
      and [data-native] selects.
      ============================================================ */
   const CSELECT_SKIP = 'select[multiple], select[size]:not([size="1"]), select.sr-only, select[data-native]';
-  const CSELECT_CHEVRON = '<svg class="cselect__chev" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  // Markup and classes are the design system's select (assets/mn-core.css).
+  const CSELECT_CHEVRON = '<svg class="icon select__chev" aria-hidden="true"><use href="#i-chevron-down"></use></svg>';
   let cselectSeq = 0;
   let cselectOpen = null;
 
@@ -2047,7 +2048,7 @@
     sel.dataset.cselect = id;
 
     const wrap = document.createElement('div');
-    wrap.className = 'cselect';
+    wrap.className = 'select cselect';
     sel.parentNode.insertBefore(wrap, sel);
     wrap.appendChild(sel);
     sel.classList.add('cselect__native');
@@ -2056,17 +2057,17 @@
 
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'cselect__trigger';
+    btn.className = 'select__trigger';
     btn.id = id + '-trigger';
     btn.setAttribute('role', 'combobox');
     btn.setAttribute('aria-haspopup', 'listbox');
     btn.setAttribute('aria-expanded', 'false');
     btn.setAttribute('aria-controls', id + '-list');
-    btn.innerHTML = '<span class="cselect__value"></span>' + CSELECT_CHEVRON;
+    btn.innerHTML = '<span class="select__value"></span>' + CSELECT_CHEVRON;
     const valueEl = btn.firstChild;
 
     const list = document.createElement('ul');
-    list.className = 'cselect__list';
+    list.className = 'select__list';
     list.id = id + '-list';
     list.setAttribute('role', 'listbox');
     list.tabIndex = -1;
@@ -2103,12 +2104,17 @@
         opts.forEach(o => {
           if (o.tagName !== 'OPTION' || o.hidden) return;
           const li = document.createElement('li');
-          li.className = 'cselect__option';
+          li.className = 'select__option' + (o.dataset.soldout != null ? ' is-soldout' : '');
           li.id = `${id}-o${o.index}`;
           li.setAttribute('role', 'option');
           li.dataset.index = o.index;
-          li.style.setProperty('--i', Math.min(n++, 12));
-          li.textContent = o.text.trim();
+          n++;
+          // Optional colour dot and right-hand note: <option data-swatch="#000" data-meta="Sold out">
+          li.innerHTML = (o.dataset.swatch ? `<span class="select__dot" style="background:${o.dataset.swatch}"></span>` : '')
+            + `<span class="select__label"></span>`
+            + (o.dataset.meta ? `<span class="select__meta"></span>` : '');
+          li.querySelector('.select__label').textContent = o.text.trim();
+          if (o.dataset.meta) li.querySelector('.select__meta').textContent = o.dataset.meta;
           if (o.disabled || (node.tagName === 'OPTGROUP' && node.disabled)) li.setAttribute('aria-disabled', 'true');
           list.appendChild(li);
           items.push(li);
@@ -2119,7 +2125,8 @@
 
     function sync() {
       const opt = sel.options[sel.selectedIndex];
-      valueEl.textContent = opt ? opt.text.trim() : '';
+      valueEl.innerHTML = (opt && opt.dataset.swatch ? `<span class="select__dot" style="background:${opt.dataset.swatch}"></span>` : '') + '<span></span>';
+      valueEl.lastChild.textContent = opt ? opt.text.trim() : '';
       wrap.classList.toggle('is-placeholder', !!opt && opt.value === '');
       items.forEach(li => li.setAttribute('aria-selected', String(+li.dataset.index === sel.selectedIndex)));
       btn.disabled = sel.disabled;
@@ -2157,8 +2164,8 @@
       sync();
       const r = wrap.getBoundingClientRect();
       const want = Math.min(list.scrollHeight, 300) + 12;
-      wrap.classList.toggle('is-up', window.innerHeight - r.bottom < want && r.top > window.innerHeight - r.bottom);
-      wrap.classList.toggle('is-end', r.left + Math.max(list.offsetWidth, r.width) > document.documentElement.clientWidth - 8);
+      wrap.dataset.dir = window.innerHeight - r.bottom < want && r.top > window.innerHeight - r.bottom ? 'up' : 'down';
+      if (r.left + Math.max(list.offsetWidth, r.width) > document.documentElement.clientWidth - 8) wrap.dataset.align = 'end'; else delete wrap.dataset.align;
       wrap.classList.add('is-open');
       btn.setAttribute('aria-expanded', 'true');
       cselectOpen = api;
@@ -2224,11 +2231,11 @@
     // Keep focus on the trigger while the pointer works the list.
     list.addEventListener('pointerdown', e => e.preventDefault());
     list.addEventListener('click', e => {
-      const li = e.target.closest('.cselect__option');
+      const li = e.target.closest('.select__option');
       if (li) choose(items.indexOf(li));
     });
     list.addEventListener('pointermove', e => {
-      const li = e.target.closest('.cselect__option');
+      const li = e.target.closest('.select__option');
       if (li && items.indexOf(li) !== active && enabled(items.indexOf(li))) setActive(items.indexOf(li), false);
     });
 

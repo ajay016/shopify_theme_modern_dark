@@ -3226,6 +3226,7 @@ body.anim-hover-off .blog-card:hover .blog-card__placeholder {
 .cfilter-pills { display: flex; flex-wrap: wrap; gap: 7px; }
 .cfilter-pills--price { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
 .cfilter-pills--price button {
+  text-align: center;
   border: 1px solid var(--f-bdr); background: none;
   padding: 7px 4px; border-radius: var(--r-sm);
   font-family: var(--ff-body);
@@ -3953,139 +3954,39 @@ input[type="radio"] { border-radius: 50%; }
 .auth-card { border-radius: var(--r-lg, 0); }
 
 /* ============================================================
-   CUSTOM SELECT — theme.js wraps every native <select> in
-   .cselect and keeps it underneath as the value source. Nothing
-   on the page shows a browser-default select.
-   Colours come from whichever surface the select sits on: the
-   collection page (--cp-*), the collections list (--cl-*), forms
-   (--field-*), or the scheme's base rung.
+   SELECTS — theme.js wraps every native <select> in the design
+   system's select markup (.select, .select__trigger, .select__list,
+   .select__option; styled in assets/mn-core.css) and keeps the native
+   element underneath as the value source. Below: only the places where
+   a select sits inline in a toolbar or bar and needs a compact trigger.
    ============================================================ */
-.cselect {
-  --cs-fg:   var(--cp-fg,  var(--cl-fg,  var(--field-fg, var(--s1-fg, #F5F0E8))));
-  --cs-mut:  var(--cp-mut, var(--cl-mut, var(--s1-mut, rgba(245,240,232,.62))));
-  --cs-bdr:  var(--cp-bdr, var(--cl-bdr, var(--field-bdr, var(--s1-bdr, rgba(245,240,232,.22)))));
-  --cs-acc:  var(--cp-acc, var(--cl-acc, var(--gold, #C8A96E))));
-  --cs-bg:   var(--cp-bg,  var(--cl-bg,  var(--s1-bg, #0A0A0A)));
-  --cs-pad:  6px;
-  position: relative;
-  display: block;
-  width: 100%;
-  min-width: 0;
-  text-align: left;
-}
-
-/* The native select: present for forms and validation, never seen. */
 .cselect > select.cselect__native {
   position: absolute !important; inset: 0 !important;
   width: 100% !important; height: 100% !important;
   opacity: 0 !important; pointer-events: none !important;
   margin: 0 !important; padding: 0 !important; border: 0 !important;
 }
-
-.cselect__trigger {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  width: 100%; min-height: 46px;
-  padding: 12px 14px;
-  background: var(--field-bg, transparent);
-  border: 1px solid var(--cs-bdr);
-  border-radius: var(--r-sm, 0);
-  color: var(--cs-fg);
-  font-family: var(--ff-body);
-  font-size: calc(14px * var(--fs-scale, 1));
-  font-weight: inherit; letter-spacing: inherit; line-height: 1.3;
-  text-align: left; cursor: pointer;
-  transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
-}
-.cselect__trigger:hover { border-color: color-mix(in srgb, var(--cs-fg) 45%, transparent); }
-.cselect__trigger:focus-visible { outline: 2px solid var(--cs-acc); outline-offset: 2px; }
-.cselect.is-open .cselect__trigger { border-color: var(--cs-acc); }
-.cselect__trigger:disabled { opacity: .5; cursor: not-allowed; }
-.cselect__value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.cselect.is-placeholder .cselect__value { color: var(--cs-mut); }
-.cselect__chev {
-  flex: none; color: var(--cs-mut);
-  transition: transform .28s cubic-bezier(.2,.8,.2,1), color .2s ease;
-}
-.cselect.is-open .cselect__chev { transform: rotate(180deg); color: var(--cs-acc); }
-
-/* The list: fades and lifts into place from the trigger's edge */
-.cselect__list {
-  position: absolute; z-index: calc(var(--z-overlay, 150) - 1);
-  top: calc(100% + 6px); left: 0;
-  min-width: 100%; width: max-content; max-width: min(360px, 92vw);
-  max-height: 300px; overflow-y: auto; overscroll-behavior: contain;
-  margin: 0; padding: var(--cs-pad); list-style: none;
-  background: var(--cs-bg);
-  color: var(--cs-fg);
-  border: 1px solid var(--cs-bdr);
-  border-radius: var(--r-md, 0);
-  box-shadow: 0 22px 48px -18px rgba(0,0,0,.45), 0 2px 6px rgba(0,0,0,.08);
-  opacity: 0; visibility: hidden;
-  transform: translateY(-6px) scale(.98);
-  transform-origin: top left;
-  transition: opacity .18s ease, transform .24s cubic-bezier(.2,.8,.2,1), visibility 0s linear .24s;
-  scrollbar-width: thin; scrollbar-color: var(--cs-bdr) transparent;
-}
-.cselect.is-end .cselect__list { left: auto; right: 0; transform-origin: top right; }
-.cselect.is-up .cselect__list {
-  top: auto; bottom: calc(100% + 6px);
-  transform: translateY(6px) scale(.98); transform-origin: bottom left;
-}
-.cselect.is-up.is-end .cselect__list { transform-origin: bottom right; }
-.cselect.is-open .cselect__list {
-  opacity: 1; visibility: visible; transform: none;
-  transition: opacity .18s ease, transform .28s cubic-bezier(.2,.8,.2,1), visibility 0s;
-}
-
-.cselect__option {
-  position: relative;
-  display: flex; align-items: center; gap: 10px;
-  padding: 9px 34px 9px 12px;
-  border-radius: max(0px, calc(var(--r-md, 0px) - var(--cs-pad)));
-  font-family: var(--ff-body);
-  font-size: 13.5px; letter-spacing: .01em; line-height: 1.35;
-  white-space: nowrap; cursor: pointer;
-  opacity: 0; transform: translateY(-3px);
-  transition: background-color .15s ease, color .15s ease, opacity .2s ease, transform .25s cubic-bezier(.2,.8,.2,1);
-}
-.cselect.is-open .cselect__option {
-  opacity: 1; transform: none;
-  transition-delay: 0s, 0s, calc(var(--i, 0) * 18ms + 30ms), calc(var(--i, 0) * 18ms + 30ms);
-}
-.cselect__option.is-active { background: color-mix(in srgb, var(--cs-fg) 8%, transparent); }
-.cselect__option[aria-selected="true"] { color: var(--cs-acc); }
-.cselect__option[aria-selected="true"]::after {
-  content: ""; position: absolute; right: 12px; top: 50%;
-  width: 9px; height: 5px; margin-top: -4px;
-  border-left: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
-  transform: rotate(-45deg);
-}
-.cselect__option[aria-disabled="true"] { opacity: .4; cursor: not-allowed; text-decoration: line-through; }
-.cselect.is-open .cselect__option[aria-disabled="true"] { opacity: .4; }
-.cselect__group {
-  padding: 10px 12px 4px;
-  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--cs-mut);
-}
+/* Keyboard highlight follows aria-activedescendant, not focus */
+.select__option.is-active { background: var(--bg-raise); }
+.cselect__group { padding: 10px 10px 4px; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.cselect.is-placeholder .select__value { color: var(--muted); }
+.select__trigger:disabled { opacity: .5; cursor: not-allowed; }
 
 /* In the collection toolbar the select is the inline value after "Sort by" */
-.sort-by .cselect { display: inline-block; width: auto; }
-.sort-by .cselect__trigger {
+.sort-by .select { display: inline-block; width: auto; }
+.sort-by .select__trigger {
   min-height: 0; padding: 0; gap: 8px;
   background: none; border: 0; border-radius: 0;
-  font-size: 12px; letter-spacing: .05em;
+  color: var(--cp-fg, var(--fg)); font-size: 12px; letter-spacing: .05em;
 }
-.sort-by:has(.cselect.is-open) { border-color: var(--cp-acc, #C8A96E); }
-.sort-by .cselect__list { top: calc(100% + 14px); }
-.sort-by .cselect.is-up .cselect__list { bottom: calc(100% + 14px); }
+.sort-by:has(.select.is-open) { border-color: var(--cp-acc, var(--accent)); }
+.sort-by .select__list { top: calc(100% + 14px); }
+.sort-by .select[data-dir=up] .select__list { top: auto; bottom: calc(100% + 14px); }
 
 /* Collections list sort */
-.clist-sort .cselect { width: clamp(170px, 18vw, 220px); }
-.clist-sort .cselect__trigger { min-height: 0; padding: 11px 14px; font-size: calc(13px * var(--fs-scale, 1)); }
+.clist-sort .select { width: clamp(170px, 18vw, 220px); }
+.clist-sort .select__trigger { min-height: 0; padding: 11px 14px; font-size: 13px; }
 
-@media (prefers-reduced-motion: reduce) {
-  html.motion-strict .cselect__list, html.motion-strict .cselect__option, html.motion-strict .cselect__chev { transition: none !important; }
-}
 
 /* ============================================================
    MOTION — owner's addition 3: everything that opens, closes or

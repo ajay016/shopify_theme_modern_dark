@@ -46,6 +46,7 @@
         "id": "font_pairing",
         "label": "Font Pairing",
         "options": [
+          { "value": "newsreader_geist",      "label": "Newsreader + Geist (Default)" },
           { "value": "instrument_intertight", "label": "Modern — Instrument Serif + Inter Tight" },
           { "value": "intertight_solo",       "label": "Modern — Inter Tight (one family)" },
           { "value": "bodoni_jost",           "label": "Modern — Bodoni Moda + Jost" },
@@ -54,10 +55,10 @@
           { "value": "bodoni_instrument", "label": "Bodoni Moda + Instrument Sans" },
           { "value": "playfair_inter",    "label": "Playfair Display + Inter" },
           { "value": "libre_raleway",     "label": "Libre Baskerville + Raleway" },
-          { "value": "dm_serif_dm_sans",  "label": "DM Serif Display + DM Sans (Default)" },
+          { "value": "dm_serif_dm_sans",  "label": "DM Serif Display + DM Sans" },
           { "value": "custom",            "label": "Custom — choose from Shopify's font library" }
         ],
-        "default": "dm_serif_dm_sans"
+        "default": "newsreader_geist"
       },
       {
         "type": "font_picker",

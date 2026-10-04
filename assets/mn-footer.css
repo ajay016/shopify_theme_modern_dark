@@ -1,0 +1,76 @@
+/* Ported from docs/claude_design_ref/mn/footer.css by scripts/port-design.py.
+   Edit the reference or the script, not this file. */
+/* ==== Footer ==== */
+.site-footer{background:var(--bg);color:var(--fg);transition:background-color var(--dur),color var(--dur)}
+.footer__band{display:none;border-bottom:1px solid var(--line)}
+.footer__band-inner{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:48px;align-items:end;padding-block:clamp(56px,7vw,104px)}
+.footer__band-title{font-family:var(--font-display);font-size:clamp(42px,5.4vw,84px);font-weight:400;line-height:.96;letter-spacing:var(--ls-display)}
+.footer__band-title em{font-style:italic}
+.footer__main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.7fr);gap:clamp(32px,6vw,120px);padding-block:clamp(48px,6vw,88px)}
+.footer__brand{display:grid;gap:22px;align-content:start;max-width:420px}
+.footer__logo{font-weight:var(--fw-semibold);font-size:18px;letter-spacing:var(--ls-logo);text-transform:uppercase}
+.footer__logo:hover{color:inherit}
+.footer__desc{font-size:14px;color:var(--muted);max-width:40ch}
+.mn-newsletter{display:grid;gap:10px}
+.mn-newsletter__label{font-size:var(--fs-sm);font-weight:var(--fw-medium)}
+.mn-newsletter--band .mn-newsletter__label{font-weight:400;color:var(--muted);font-size:15px}
+.mn-newsletter__field{display:flex;align-items:center;border-bottom:1px solid var(--line-strong);transition:border-color var(--dur-fast)}
+.mn-newsletter__field:focus-within{border-color:var(--fg)}
+.mn-newsletter__field input{flex:1;min-width:0;border:0;background:none;padding:14px 0;outline:none;font-size:14px}
+.mn-newsletter__field input::placeholder{color:var(--muted)}
+.mn-newsletter__field button{display:flex;align-items:center;gap:8px;padding:8px 0 8px 12px;font-size:var(--fs-sm);font-weight:var(--fw-medium);white-space:nowrap}
+.mn-newsletter__field button .icon{transition:transform var(--dur) var(--ease-out)}
+.mn-newsletter__field button:hover .icon{transform:translateX(4px)}
+.mn-newsletter--band .mn-newsletter__field input{font-size:18px;padding:18px 0}
+.mn-newsletter__note{font-size:11.5px;color:var(--muted)}
+.mn-newsletter__done{display:none;align-items:center;gap:8px;font-size:var(--fs-sm);padding:12px 0}
+.mn-newsletter.is-done .mn-newsletter__field,.mn-newsletter.is-done .mn-newsletter__note{display:none}
+.mn-newsletter.is-done .mn-newsletter__done{display:flex;animation:fadeUp var(--dur-slow) var(--ease-out)}
+.footer__cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.footer__col{border:0}
+.footer__col>.acc__trigger{pointer-events:none;padding:0 0 18px;font-size:var(--fs-xs);letter-spacing:var(--ls-caps);text-transform:uppercase;color:var(--muted)}
+.footer__col .acc__icon{display:none}
+.footer__col>.acc__panel{grid-template-rows:1fr}
+.footer__col .acc__content,.footer__col .acc__content>*{opacity:1;transform:none;filter:none;padding:0}
+.footer__col ul{display:grid;gap:11px;font-size:14px}
+.footer__linkrow{display:none;flex-wrap:wrap;justify-content:center;gap:10px 28px;font-size:14px}
+.footer__wordmark{display:none;overflow:hidden;text-align:center;line-height:.8;padding:0 var(--gutter);user-select:none}
+.footer__wordmark span{display:inline-block;font-family:var(--font-display);font-size:13vw;letter-spacing:-.01em;text-transform:uppercase;white-space:nowrap;transform:translateY(.06em)}
+.footer__bottom{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;padding-block:18px 22px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.footer__selects{display:flex;gap:8px}
+.footer__selects .select__trigger{min-height:36px;font-size:12px;border-color:var(--line);color:var(--fg)}
+.footer__pay{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
+.to-top{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--fg)}
+.to-top>span:last-child{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-strong);display:grid;place-items:center;transition:transform var(--dur) var(--ease-out),background-color var(--dur-fast)}
+.to-top:hover>span:last-child{transform:translateY(-3px);background:var(--bg-raise)}
+.to-top .icon{width:16px;height:16px}
+html[data-footer=statement] .footer__band{display:block}
+html[data-footer=statement] .footer__main{grid-template-columns:minmax(0,1fr);gap:40px}
+html[data-footer=statement] .footer__brand{order:2;max-width:none;display:flex;align-items:center;justify-content:space-between}
+html[data-footer=statement] .footer__brand .mn-newsletter,html[data-footer=statement] .footer__desc,html[data-footer=statement] .footer__logo{display:none}
+html[data-footer=statement] .footer__wordmark{display:block}
+html[data-footer=minimal] .footer__main{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}
+html[data-footer=minimal] .footer__brand{justify-items:center;max-width:560px;gap:26px}
+html[data-footer=minimal] .footer__desc,html[data-footer=minimal] .mn-newsletter__label,html[data-footer=minimal] .mn-newsletter__note,html[data-footer=minimal] .footer__cols{display:none}
+html[data-footer=minimal] .footer__linkrow{display:flex}
+html[data-footer=minimal] .mn-newsletter{width:min(420px,100%)}
+html[data-footer=minimal] .mn-newsletter__field{border:1px solid var(--line-strong);border-radius:var(--r-btn);padding:0 8px 0 18px}
+html[data-footer=minimal] .mn-newsletter__field input{padding:12px 0}
+html[data-footer=minimal] .social{margin:0}
+html[data-footer=minimal] .footer__bottom{justify-content:center}
+html[data-footer=minimal] .footer__pay{margin-left:0}
+@media (max-width:749px){
+.footer__main{grid-template-columns:minmax(0,1fr)}
+.footer__band-inner{grid-template-columns:minmax(0,1fr);gap:28px}
+.footer__cols{grid-template-columns:minmax(0,1fr);gap:0}
+.footer__col{border-bottom:1px solid var(--line)}
+.footer__col:first-child{border-top:1px solid var(--line)}
+.footer__col>.acc__trigger{pointer-events:auto;padding:18px 0;font-size:12px;color:var(--fg)}
+.footer__col .acc__icon{display:block}
+.footer__col>.acc__panel{grid-template-rows:0fr}
+.footer__col.is-open>.acc__panel{grid-template-rows:1fr}
+.footer__col .acc__content{padding-bottom:20px}
+html[data-footer=statement] .footer__brand{justify-content:center}
+.footer__bottom{justify-content:center;text-align:center}
+.footer__pay{margin-left:0;justify-content:center}
+}

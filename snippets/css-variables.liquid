@@ -381,14 +381,18 @@
 
     /* Typography */
     {%- liquid
-      assign pairing = settings.font_pairing | default: 'dm_serif_dm_sans'
+      assign pairing = settings.font_pairing | default: 'newsreader_geist'
       assign body_size = settings.type_body_size | default: 14
       assign hscale = settings.type_heading_size_scale | default: 'medium'
     -%}
     /* --fw-display is the heading weight each display face reads best at;
        --ls-display its tracking. Headings used a fixed 300, which only
        Cormorant has -- every other face fell back to 400 anyway. */
-    {%- if pairing == 'custom' -%}
+    {%- if pairing == 'newsreader_geist' -%}
+      --ff-display: "Newsreader", Georgia, serif;
+      --ff-body: "Geist", system-ui, sans-serif;
+      --fw-display: 400; --ls-display: -0.015em;
+    {%- elsif pairing == 'custom' -%}
       --ff-display: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
       --ff-body: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
       --fw-display: {{ settings.type_heading_font.weight | default: 400 }}; --ls-display: -0.01em;
@@ -432,7 +436,7 @@
 
     /* Numerals -- filter counts, size counts, pagination -- are set in mono.
        It is a deliberate part of the look, not a fallback. */
-    --ff-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --ff-mono: {% if pairing == 'newsreader_geist' %}"Geist Mono"{% else %}"IBM Plex Mono"{% endif %}, ui-monospace, "SF Mono", Menlo, monospace;
 
     --fs-base: {{ body_size }}px;
     --fs-scale: {{ body_size | times: 1.0 | divided_by: 14.0 }};
@@ -472,7 +476,7 @@
         when 'rounded'
           assign r_xs = 6
           assign r_sm = 12
-          assign r_md = 18
+          assign r_md = 20
           assign r_lg = 24
         else
           assign r_xs = 4
@@ -542,6 +546,14 @@
     --z-modal: 500;
     --z-cursor: 9999;
   }
+  /* Design system (assets/mn-core.css) inputs that come from settings */
+  :root {
+    --cu-base: {{ settings.color_black }};
+    --cu-text: {{ settings.color_cream }};
+    --cu-accent: {{ settings.color_gold }};
+    --cu-sale: {{ settings.color_sale_bg }};
+  }
+  html[data-motion-level="subtle"] { --dur-fast: 120ms; --dur: 200ms; --dur-slow: 360ms; }
   {%- if settings.font_pairing == 'custom' -%}
     {%- liquid
       assign body_medium = settings.type_body_font | font_modify: 'weight', '500'

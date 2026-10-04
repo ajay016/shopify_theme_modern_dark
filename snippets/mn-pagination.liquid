@@ -1,0 +1,28 @@
+{%- comment -%}
+  Numbered pagination in the design's language, shared by the collection
+  and search pages. Pass the `paginate` object.
+
+  A non-link part is either the current page or an ellipsis. part.title is
+  a string and paginate.current_page an integer ("1" == 1 is false in
+  Liquid), so the current page is told apart by casting the title.
+{%- endcomment -%}
+<nav class="pagination" aria-label="{{ 'accessibility.pagination' | t }}">
+  {%- if paginate.previous -%}
+    <a href="{{ paginate.previous.url }}" class="pagination__item pagination__item--prev" aria-label="{{ 'general.pagination.previous' | t }}"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-left"></use></svg><span>{{ 'general.pagination.previous' | t }}</span></a>
+  {%- endif -%}
+  {%- for part in paginate.parts -%}
+    {%- if part.is_link -%}
+      <a href="{{ part.url }}" class="pagination__item">{{ part.title }}</a>
+    {%- else -%}
+      {%- assign part_num = part.title | plus: 0 -%}
+      {%- if part_num > 0 -%}
+        <span class="pagination__item pagination__item--current" aria-current="page">{{ part.title }}</span>
+      {%- else -%}
+        <span class="pagination__item pagination__item--gap">{{ part.title }}</span>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if paginate.next -%}
+    <a href="{{ paginate.next.url }}" class="pagination__item pagination__item--next" aria-label="{{ 'general.pagination.next' | t }}"><span>{{ 'general.pagination.next' | t }}</span><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-right"></use></svg></a>
+  {%- endif -%}
+</nav>

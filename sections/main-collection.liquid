@@ -71,6 +71,7 @@
   id="section-{{ section.id }}"
   data-sidebar="{{ sidebar_position }}"
   data-filter-style="{{ filter_style }}"
+  {%- case scheme -%}{%- when 'light' %} data-surface="soft"{%- when 'warm' %} data-surface="deep"{%- when 'dark' %} data-surface="invert"{%- endcase %}
 >
 
   {%- comment -%}
@@ -112,10 +113,18 @@
     and an accessibility fault.
   {%- endcomment -%}
   {%- unless banner_on -%}
+  {%- capture cl_crumbs -%}
+    <nav class="mn-breadcrumb" aria-label="{{ 'mn.pdp.breadcrumb' | t }}">
+      <a href="{{ routes.root_url }}">{{ 'mn.pdp.home' | t }}</a><span class="sep">/</span>
+      <span aria-current="page">{{ collection.title }}</span>
+    </nav>
+  {%- endcapture -%}
+  {%- capture cl_count -%}{{ 'collections.general.items' | t: count: collection.products_count }}{%- endcapture -%}
   <div class="collection-title collection-title--{{ title_style }}">
     {%- case title_style -%}
       {%- when 'style-1' -%}
         <div class="container">
+          {{ cl_crumbs }}
           <h1 class="collection-title__text">{{ collection.title }}</h1>
           {%- if collection.description != blank -%}
             <div class="collection-title__desc rte">{{ collection.description }}</div>
@@ -124,31 +133,42 @@
       {%- when 'style-2' -%}
         <div class="collection-title__banner" {% if collection.image %}style="background-image:url({{ collection.image | image_url: width: 1600 }})"{% endif %}>
           <div class="container">
+            <span class="mn-eyebrow">{{ cl_count }}</span>
             <h1 class="collection-title__text">{{ collection.title }}</h1>
           </div>
         </div>
       {%- when 'style-3' -%}
         <div class="container">
-          <nav class="breadcrumb" aria-label="breadcrumb">
-            <a href="/">{{ 'general.home' | t }}</a>
-            <span>{{ 'general.breadcrumb_separator' | t }}</span>
-            <span>{{ collection.title }}</span>
-          </nav>
+          {{ cl_crumbs }}
           <h1 class="collection-title__text collection-title__text--large">{{ collection.title }}</h1>
+          {%- if collection.description != blank -%}
+            <div class="collection-title__desc rte">{{ collection.description }}</div>
+          {%- endif -%}
         </div>
       {%- when 'style-4' -%}
         <div class="collection-title__centered">
           <div class="container">
-            <p class="eyebrow">{{ 'collections.general.collection' | t }}</p>
+            <span class="mn-eyebrow">{{ 'collections.general.collection' | t }}</span>
             <h1 class="collection-title__text">{{ collection.title }}</h1>
+            {%- if collection.description != blank -%}
+              <div class="collection-title__desc rte">{{ collection.description }}</div>
+            {%- endif -%}
           </div>
         </div>
       {%- when 'style-5' -%}
         <div class="collection-title__split">
-          <div class="container">
-            <h1 class="collection-title__text">{{ collection.title }}</h1>
-            <p class="collection-title__count">{{ 'collections.general.items' | t: count: collection.products_count }}</p>
-          </div>
+          <div class="container"><div class="collection-title__row">
+            <div>
+              <span class="mn-eyebrow">{{ 'collections.general.collection' | t }}</span>
+              <h1 class="collection-title__text">{{ collection.title }}</h1>
+            </div>
+            <div class="collection-title__aside">
+              <p class="collection-title__count">{{ cl_count }}</p>
+              {%- if collection.description != blank -%}
+                <div class="collection-title__desc rte">{{ collection.description }}</div>
+              {%- endif -%}
+            </div>
+          </div></div>
         </div>
     {%- endcase -%}
   </div>
@@ -164,13 +184,13 @@
       {%- endcomment -%}
       {%- if filter_style == 'dropdown' or filter_style == 'panel' -%}
         <button type="button" class="toolbar-btn toolbar-btn--mobile-filters" data-open-filter-drawer aria-controls="filter-drawer-{{ section.id }}">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-sliders"></use></svg>
           {{ 'collections.filtering.filter_button' | t }}
         </button>
       {%- endif -%}
       {%- if filter_style == 'drawer' -%}
         <button type="button" class="toolbar-btn" data-open-filter-drawer aria-controls="filter-drawer-{{ section.id }}">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-sliders"></use></svg>
           {{ 'collections.filtering.filter_button' | t }}
           {%- assign active_count = 0 -%}
           {%- for f in collection.filters -%}{%- assign active_count = active_count | plus: f.active_values.size -%}{%- endfor -%}
@@ -210,7 +230,7 @@
         {%- for f in collection.filters -%}{%- assign active_count = active_count | plus: f.active_values.size -%}{%- endfor -%}
         <button type="button" class="toolbar-btn" data-toggle-filter-panel
                 aria-controls="filter-panel-{{ section.id }}" aria-expanded="false">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-sliders"></use></svg>
           {{ 'collections.filtering.filter_button' | t }}
           {%- if active_count > 0 -%}<span class="filter-count">{{ active_count }}</span>{%- endif -%}
         </button>
@@ -238,8 +258,8 @@
             {%- render 'collection-filter-groups', filter_style: 'panel', swatch_style: section.settings.swatch_style -%}
           </div>
           <div class="filter-panel__foot">
-            <a href="{{ collection.url }}" class="filter-panel__clear">{{ 'collections.filtering.clear_all' | t }}</a>
-            <button type="button" class="filter-panel__close" data-toggle-filter-panel aria-controls="filter-panel-{{ section.id }}">{{ 'collections.filtering.show_results' | t: count: collection.products_count }}</button>
+            <a href="{{ collection.url }}" class="filter-panel__clear link-quiet">{{ 'collections.filtering.clear_all' | t }}</a>
+            <button type="button" class="mn-btn mn-btn--sm filter-panel__close" data-toggle-filter-panel aria-controls="filter-panel-{{ section.id }}">{{ 'collections.filtering.show_results' | t: count: collection.products_count }}</button>
           </div>
         </div>
       </div>
@@ -295,13 +315,13 @@
             <button type="button" class="toolbar-btn toolbar-btn--sidebar" data-toggle-sidebar aria-expanded="false"
                     data-label-show="{{ 'collections.filtering.show_filters' | t }}"
                     data-label-hide="{{ 'collections.filtering.hide_filters' | t }}">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+              <svg class="icon icon--sm" aria-hidden="true"><use href="#i-sliders"></use></svg>
               <span data-toggle-sidebar-label>{{ 'collections.filtering.show_filters' | t }}</span>
             </button>
           {%- endif -%}
           {%- if sidebar_column != 'none' -%}
             <button type="button" class="toolbar-btn toolbar-btn--mobile-filters" data-open-filter-drawer aria-controls="filter-drawer-{{ section.id }}">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+              <svg class="icon icon--sm" aria-hidden="true"><use href="#i-sliders"></use></svg>
               {{ 'collections.filtering.filter_button' | t }}
             </button>
           {%- endif -%}
@@ -354,17 +374,17 @@
         <div class="active-filters">
           {%- for filter in collection.filters -%}
             {%- for value in filter.active_values -%}
-              <a href="{{ value.url_to_remove }}" class="filter-chip filter-chip--active">
-                {{ value.label }} ×
+              <a href="{{ value.url_to_remove }}" class="filter-chip filter-chip--active" aria-label="{{ 'mn.collection.remove_filter' | t: label: value.label | escape }}">
+                {{ value.label }}<svg class="icon icon--sm" aria-hidden="true"><use href="#i-close"></use></svg>
               </a>
             {%- endfor -%}
             {%- if filter.min_value.value or filter.max_value.value -%}
               <a href="{{ filter.url_to_remove }}" class="filter-chip filter-chip--active">
-                {{ filter.min_value.value | default: filter.range_min | money }} – {{ filter.max_value.value | default: filter.range_max | money }} ×
+                {{ filter.min_value.value | default: filter.range_min | money }} – {{ filter.max_value.value | default: filter.range_max | money }}<svg class="icon icon--sm" aria-hidden="true"><use href="#i-close"></use></svg>
               </a>
             {%- endif -%}
           {%- endfor -%}
-          <a href="{{ collection.url }}" class="filter-chip filter-chip--clear">{{ 'collections.filtering.clear_all' | t }}</a>
+          <a href="{{ collection.url }}" class="filter-chip filter-chip--clear link-quiet">{{ 'collections.filtering.clear_all' | t }}</a>
         </div>
       {%- endif -%}
 
@@ -409,9 +429,12 @@
 
       {%- elsif collection.products.size == 0 -%}
         <div class="collection-empty">
+          <span class="collection-empty__icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-search"></use></svg></span>
           <p>{{ 'collections.general.no_matches' | t }}</p>
           {%- if has_active_filters -%}
-            <a href="{{ collection.url }}" class="btn-ghost">{{ 'collections.filtering.clear_all' | t }}</a>
+            <a href="{{ collection.url }}" class="mn-btn mn-btn--secondary mn-btn--sm">{{ 'collections.filtering.clear_all' | t }}</a>
+          {%- else -%}
+            <a href="{{ routes.all_products_collection_url }}" class="mn-btn mn-btn--sm">{{ 'mn.collection.browse_all' | t }}</a>
           {%- endif -%}
         </div>
       {%- else -%}
@@ -430,7 +453,7 @@
           {%- if pagination_style == 'load_more' -%}
             <div class="pagination-load-more">
               {%- if paginate.next -%}
-                <button class="btn-ghost" data-load-more data-next-url="{{ paginate.next.url }}">
+                <button type="button" class="mn-btn mn-btn--secondary" data-load-more data-next-url="{{ paginate.next.url }}">
                   {{ 'collections.general.load_more' | t }}
                   <span class="load-more-count">({{ paginate.next.title }})</span>
                 </button>
@@ -441,34 +464,7 @@
               <span class="pagination-spinner"></span>
             </div>
           {%- else -%}
-            <nav class="pagination" aria-label="{{ 'accessibility.pagination' | t }}">
-              {%- if paginate.previous -%}
-                <a href="{{ paginate.previous.url }}" class="pagination__item pagination__item--prev">← {{ 'general.pagination.previous' | t }}</a>
-              {%- endif -%}
-              {%- for part in paginate.parts -%}
-                {%- comment -%}
-                  A non-link part is either the current page or an ellipsis.
-                  Comparing part.title to paginate.current_page never matched,
-                  because the title is a string and current_page an integer
-                  ("1" == 1 is false in Liquid), so the current page always
-                  fell through to the gap branch and rendered as a muted,
-                  unclickable number instead of the highlighted page.
-                {%- endcomment -%}
-                {%- if part.is_link -%}
-                  <a href="{{ part.url }}" class="pagination__item">{{ part.title }}</a>
-                {%- else -%}
-                  {%- assign part_num = part.title | plus: 0 -%}
-                  {%- if part_num > 0 -%}
-                    <span class="pagination__item pagination__item--current" aria-current="page">{{ part.title }}</span>
-                  {%- else -%}
-                    <span class="pagination__item pagination__item--gap">{{ part.title }}</span>
-                  {%- endif -%}
-                {%- endif -%}
-              {%- endfor -%}
-              {%- if paginate.next -%}
-                <a href="{{ paginate.next.url }}" class="pagination__item pagination__item--next">{{ 'general.pagination.next' | t }} →</a>
-              {%- endif -%}
-            </nav>
+            {%- render 'mn-pagination', paginate: paginate -%}
           {%- endif -%}
         {%- endif -%}
       {%- endif -%}
@@ -498,7 +494,7 @@
          aria-label="{{ 'collections.filtering.filters' | t }}">
       <div class="filter-drawer__header">
         <h2>{{ 'collections.filtering.filters' | t }}</h2>
-        <button type="button" class="filter-drawer__close" data-close-filter-drawer aria-label="{{ 'accessibility.close' | t }}">{%- render 'icon-close' -%}</button>
+        <button type="button" class="icon-btn filter-drawer__close" data-close-filter-drawer aria-label="{{ 'accessibility.close' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
       </div>
       <div class="filter-drawer__body">
         {%- if use_builtin_filters -%}
@@ -507,8 +503,8 @@
         {%- render 'collection-filter-groups', filter_style: 'drawer', swatch_style: section.settings.swatch_style -%}
       </div>
       <div class="filter-drawer__footer">
-        <a href="{{ collection.url }}" class="btn-ghost">{{ 'collections.filtering.clear_all' | t }}</a>
-        <button type="button" class="btn-primary" data-close-filter-drawer>{{ 'collections.filtering.apply' | t }}</button>
+        <a href="{{ collection.url }}" class="mn-btn mn-btn--secondary">{{ 'collections.filtering.clear_all' | t }}</a>
+        <button type="button" class="mn-btn" data-close-filter-drawer>{{ 'collections.filtering.apply' | t }}</button>
       </div>
     </div>
     <div class="filter-drawer__overlay" data-close-filter-drawer></div>

@@ -1,107 +1,148 @@
-{%- paginate search.results by section.settings.results_per_page -%}
-<div class="search-page" id="section-{{ section.id }}">
-  <div class="container">
-    <div class="search-page__header">
-      <h1 class="search-page__title">
+{%- comment -%}
+  Search page, in the Claude Design reference's language: the cart page's
+  head (eyebrow + display title), the design's field and button, type tabs,
+  product results as the design's cards and journal / page results as
+  editorial rows. With no query or no results it offers suggestion links
+  and a few pieces from a chosen collection.
+{%- endcomment -%}
+{%- liquid
+  assign ss = section.settings
+  assign type_list = ss.search_type | split: ','
+  assign active_type = 'all'
+  if search.performed and search.types.size == 1 and type_list.size > 1
+    assign active_type = search.types.first
+  endif
+  assign terms = search.terms | escape
+-%}
+{%- paginate search.results by ss.results_per_page -%}
+<div class="search-page mn-searchpage" id="section-{{ section.id }}">
+  <div class="mn-container">
+    <div class="mn-searchpage__head">
+      <span class="mn-eyebrow">{{ 'general.search.title' | t }}</span>
+      <h1 class="section-title">
         {%- if search.performed -%}
-          {{ 'general.search.results_for' | t: terms: search.terms | escape }}
+          {{ 'mn.searchpage.results_for_html' | t: terms: terms }}
         {%- else -%}
-          {{ 'general.search.title' | t }}
+          {{ 'mn.searchpage.title_html' | t }}
         {%- endif -%}
       </h1>
+      {%- if search.performed and search.results_count > 0 -%}<p class="mn-searchpage__count">{{ 'general.search.results_count' | t: count: search.results_count }}</p>{%- endif -%}
     </div>
 
-    <form action="{{ routes.search_url }}" method="get" role="search" class="search-page__form">
-      <input type="hidden" name="type" value="{{ section.settings.search_type }}">
-      <div class="search-page__input-wrap">
-        <input
-          type="search"
-          name="q"
-          value="{{ search.terms | escape }}"
-          placeholder="{{ 'general.search.placeholder' | t }}"
-          aria-label="{{ 'general.search.placeholder' | t }}"
-          autocorrect="off" autocomplete="off" spellcheck="false"
-        >
-        <button type="submit" aria-label="{{ 'general.search.submit' | t }}">{%- render 'icon-search' -%}</button>
-      </div>
+    <form action="{{ routes.search_url }}" method="get" role="search" class="mn-searchpage__form">
+      <input type="hidden" name="type" value="{{ ss.search_type }}">
+      <input type="hidden" name="options[prefix]" value="last">
+      <label class="mn-searchpage__field">
+        <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+        <input type="search" name="q" value="{{ terms }}" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.placeholder' | t }}" autocorrect="off" autocomplete="off" spellcheck="false">
+      </label>
+      <button type="submit" class="mn-btn">{{ 'general.search.submit' | t }}</button>
     </form>
 
-    {%- if search.performed -%}
-      {%- if search.results_count == 0 -%}
-        <div class="search-no-results">
-          <p>{{ 'general.search.no_results' | t: terms: search.terms }}</p>
-        </div>
-      {%- else -%}
-        <p class="search-count">{{ 'general.search.results_count' | t: count: search.results_count }}</p>
-        <div class="product-grid product-grid--{{ section.settings.columns }}">
+    {%- if search.performed and type_list.size > 1 -%}{%- unless search.results_count == 0 and active_type == 'all' -%}
+      <nav class="mn-searchpage__tabs" aria-label="{{ 'mn.searchpage.types' | t }}">
+        {%- assign q = search.terms | url_encode -%}
+        <a href="{{ routes.search_url }}?q={{ q }}&type={{ ss.search_type | url_encode }}&options%5Bprefix%5D=last"{% if active_type == 'all' %} aria-current="true"{% endif %}>{{ 'mn.searchpage.all' | t }}</a>
+        {%- for ty in type_list -%}
+          <a href="{{ routes.search_url }}?q={{ q }}&type={{ ty }}&options%5Bprefix%5D=last"{% if active_type == ty %} aria-current="true"{% endif %}>{%- case ty -%}{%- when 'product' -%}{{ 'mn.searchpage.type_product' | t }}{%- when 'article' -%}{{ 'mn.searchpage.type_article' | t }}{%- else -%}{{ 'mn.searchpage.type_page' | t }}{%- endcase -%}</a>
+        {%- endfor -%}
+      </nav>
+    {%- endunless -%}{%- endif -%}
+
+    {%- if search.performed and search.results_count > 0 -%}
+      {%- liquid
+        assign n_products = 0
+        assign n_other = 0
+        for item in search.results
+          if item.object_type == 'product'
+            assign n_products = n_products | plus: 1
+          else
+            assign n_other = n_other | plus: 1
+          endif
+        endfor
+      -%}
+      {%- if n_products > 0 -%}
+        <div class="product-grid product-grid--{{ ss.columns }} mn-searchpage__grid" id="product-grid" data-view="grid">
           {%- for item in search.results -%}
-            {%- case item.object_type -%}
-              {%- when 'product' -%}
-                {%- render 'product-card', product: item -%}
-              {%- when 'article' -%}
-                <article class="blog-card">
-                  {%- if item.image -%}
-                    <a href="{{ item.url }}" class="blog-card__media">
-                      {{ item.image | image_url: width: 600 | image_tag: class: 'blog-card__img', loading: 'lazy', alt: item.title }}
-                    </a>
-                  {%- endif -%}
-                  <div class="blog-card__info">
-                    <p class="blog-card__meta">{{ item.published_at | date: '%B %-d, %Y' }}</p>
-                    <h2 class="blog-card__title"><a href="{{ item.url }}">{{ item.title }}</a></h2>
-                    <p class="blog-card__excerpt">{{ item.content | strip_html | truncate: 120 }}</p>
-                  </div>
-                </article>
-              {%- when 'page' -%}
-                <div class="search-page-result">
-                  <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
-                  <p>{{ item.content | strip_html | truncate: 160 }}</p>
-                </div>
-            {%- endcase -%}
+            {%- if item.object_type == 'product' -%}{%- render 'product-card', product: item -%}{%- endif -%}
           {%- endfor -%}
         </div>
-
-        {%- if paginate.pages > 1 -%}
-          <nav class="pagination" aria-label="{{ 'accessibility.pagination' | t }}">
-            {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" class="pagination__item pagination__item--prev">← {{ 'general.pagination.previous' | t }}</a>{%- endif -%}
-            {%- for part in paginate.parts -%}
-              {%- if part.is_link -%}
-                <a href="{{ part.url }}" class="pagination__item">{{ part.title }}</a>
-              {%- elsif part.title == paginate.current_page -%}
-                <span class="pagination__item pagination__item--current" aria-current="page">{{ part.title }}</span>
-              {%- else -%}
-                <span class="pagination__item pagination__item--gap">{{ part.title }}</span>
-              {%- endif -%}
-            {%- endfor -%}
-            {%- if paginate.next -%}<a href="{{ paginate.next.url }}" class="pagination__item pagination__item--next">{{ 'general.pagination.next' | t }} →</a>{%- endif -%}
-          </nav>
+      {%- endif -%}
+      {%- if n_other > 0 -%}
+        <div class="mn-searchpage__entries">
+          {%- if n_products > 0 -%}<h2 class="mn-searchpage__sub">{{ 'mn.searchpage.journal_pages' | t }}</h2>{%- endif -%}
+          {%- for item in search.results -%}
+            {%- unless item.object_type == 'product' -%}
+              <a href="{{ item.url }}" class="mn-entry">
+                {%- if item.image -%}
+                  <span class="mn-entry__img">{{ item.image | image_url: width: 400 | image_tag: loading: 'lazy', alt: '', class: 'mn-fill', sizes: '120px' }}</span>
+                {%- endif -%}
+                <span class="mn-entry__text">
+                  <span class="mn-eyebrow">
+                    {%- if item.object_type == 'article' -%}{{ 'mn.searchpage.type_article' | t }} · {{ item.published_at | date: '%B %-d, %Y' }}{%- else -%}{{ 'mn.searchpage.entry_page' | t }}{%- endif -%}
+                  </span>
+                  <span class="mn-entry__title">{{ item.title }}</span>
+                  <span class="mn-entry__excerpt">{{ item.content | strip_html | truncatewords: 26 }}</span>
+                </span>
+                <svg class="icon mn-entry__arrow" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+              </a>
+            {%- endunless -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      {%- if paginate.pages > 1 -%}{%- render 'mn-pagination', paginate: paginate -%}{%- endif -%}
+    {%- else -%}
+      <div class="mn-searchpage__empty">
+        {%- if search.performed -%}
+          <span class="mn-searchpage__empty-icon"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-search"></use></svg></span>
+          <p class="mn-searchpage__empty-title">{{ 'mn.searchpage.none_html' | t: terms: terms }}</p>
+          <p class="mn-searchpage__empty-note">{{ 'mn.searchpage.none_note' | t }}</p>
         {%- endif -%}
+        {%- liquid
+          assign sugg_n = 0
+          if ss.suggestions_menu != blank
+            assign sugg = linklists[ss.suggestions_menu]
+            capture sugg_probe
+              echo sugg.links.size
+            endcapture
+            assign sugg_n = sugg_probe | plus: 0
+          endif
+        -%}
+        {%- if sugg_n > 0 -%}
+          <div class="mn-searchpage__suggest">
+            <span class="mn-eyebrow">{{ 'mn.searchpage.suggestions' | t }}</span>
+            <div class="search__chips">
+              {%- for link in sugg.links -%}<a href="{{ link.url }}" class="chip">{{ link.title }}</a>{%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+      {%- liquid
+        assign pick = collections[ss.empty_collection]
+        capture pick_probe
+          echo pick.id
+        endcapture
+        if pick_probe == ''
+          assign pick = collections['all']
+        endif
+        capture pick_probe
+          echo pick.products.size
+        endcapture
+        assign pick_n = pick_probe | plus: 0
+      -%}
+      {%- if ss.show_empty_products and pick_n > 0 -%}
+        <div class="mn-section__head mn-searchpage__picks-head">
+          <div><span class="mn-eyebrow">{{ 'mn.searchpage.picks_eyebrow' | t }}</span><h2 class="section-title">{{ ss.empty_heading }}</h2></div>
+          <a href="{{ pick.url }}" class="link-arrow">{{ 'mn.searchpage.view_all' | t }}<svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a>
+        </div>
+        <div class="product-grid product-grid--{{ ss.columns }}" data-view="grid">
+          {%- for product in pick.products limit: ss.columns -%}{%- render 'product-card', product: product -%}{%- endfor -%}
+        </div>
       {%- endif -%}
     {%- endif -%}
   </div>
 </div>
 {%- endpaginate -%}
-
-<style>
-  .search-page { padding: var(--section-spacing) 0; }
-  .search-page__header { text-align: center; margin-bottom: 40px; }
-  .search-page__title { font-family: var(--ff-display); font-size: calc(clamp(24px, 3vw, 44px) * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); }
-  .search-page__form { max-width: 640px; margin: 0 auto 48px; }
-  .search-page__input-wrap { display: flex; border: 1px solid var(--border, rgba(200,169,110,.18)); }
-  .search-page__input-wrap input[type="search"] {
-    flex: 1; background: transparent; border: none; color: var(--cream, #F5F0E8);
-    font-family: var(--ff-body); font-size: calc(15px * var(--fs-scale, 1)); padding: 16px 20px; outline: none;
-  }
-  .search-page__input-wrap input[type="search"]::placeholder { color: var(--muted, rgba(245,240,232,.62)); }
-  .search-page__input-wrap button { background: transparent; border: none; border-left: 1px solid var(--border, rgba(200,169,110,.18)); color: var(--muted, rgba(245,240,232,.62)); padding: 0 20px; cursor: pointer; transition: color 0.2s; }
-  .search-page__input-wrap button:hover { color: var(--gold, #C8A96E); }
-  .search-count { font-size: calc(12px * var(--fs-scale, 1)); letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); margin-bottom: 32px; }
-  .search-no-results { text-align: center; padding: 60px 0; opacity: 0.6; font-size: calc(15px * var(--fs-scale, 1)); }
-  .search-page-result { padding: 24px 0; border-bottom: 1px solid var(--border, rgba(200,169,110,.18)); }
-  .search-page-result h2 { font-family: var(--ff-display); font-size: calc(20px * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); margin-bottom: 8px; }
-  .search-page-result h2 a { color: var(--cream, #F5F0E8); }
-  .search-page-result h2 a:hover { color: var(--gold, #C8A96E); }
-  .search-page-result p { font-size: calc(13px * var(--fs-scale, 1)); opacity: 0.6; line-height: 1.7; }
-</style>
 
 {% schema %}
 {
@@ -124,9 +165,14 @@
         { "value": "3", "label": "3" },
         { "value": "4", "label": "4" }
       ],
-      "default": "3"
+      "default": "4"
     },
-    { "type": "range", "id": "results_per_page", "label": "Results Per Page", "min": 6, "max": 24, "step": 3, "default": 12 }
+    { "type": "range", "id": "results_per_page", "label": "Results Per Page", "min": 6, "max": 24, "step": 3, "default": 24 },
+    { "type": "header", "content": "No results" },
+    { "type": "link_list", "id": "suggestions_menu", "label": "Suggestion links", "info": "Shown as chips when a search finds nothing, and before a search." },
+    { "type": "checkbox", "id": "show_empty_products", "label": "Show products", "default": true },
+    { "type": "collection", "id": "empty_collection", "label": "Products from", "info": "Empty uses all products." },
+    { "type": "inline_richtext", "id": "empty_heading", "label": "Heading", "default": "Perhaps <em>these</em>" }
   ],
   "presets": [{ "name": "Search Results" }]
 }

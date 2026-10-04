@@ -144,6 +144,20 @@ is left and what I need to check").
       Recommendations from the first item, behind both the section setting and Theme
       settings → Cart → Show product recommendations in cart. Tests in
       `scripts/cart-check.py` + `scripts/cart-test.js` (34 checks).
+- [x] **D7b Collection + search** — `assets/mn-collection.css` points the collection's
+      colour, type and shape tokens at the design system (it carried its own dark-gold
+      palette), and restyles the parts the design has a component for: breadcrumb and
+      display title on all five title styles, toolbar buttons, sort as the design select,
+      grid / list as the design's segmented control, checkbox rows as `.check`, size pills
+      as `.sw-text`, colour chips with the outline ring, price slider and fields, active
+      filters as `.chip`, the filter drawer / dropdown bar / top panel, round pagination
+      (`snippets/mn-pagination.liquid`, shared), load more and the empty state. The
+      section's colour setting now maps to the design surfaces (soft / deep / inverted).
+      Filter behaviour is unchanged. `sections/main-search.liquid` rewritten: eyebrow +
+      display title with the query, the design field and button, type tabs, design cards,
+      journal / page rows, and a no-results state with suggestion chips (menu setting) and
+      products from a chosen collection. Test `scripts/collection-check.py` +
+      `scripts/collection-test.js` (40 checks).
 - [ ] **D7 Other pages** — collection, cart page, search, account, blog, pages,
       homepages: same tokens, type, buttons, fields, cards and motion.
 - [ ] **D8 Verification** — every setting renders and works (audit), editor re-render,

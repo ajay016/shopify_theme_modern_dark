@@ -105,23 +105,24 @@ def page(name, body, scheme='light', settings=None):
     open(os.path.join(OUT, name + '.html'), 'w').write(html)
 
 grid = lambda c, inner, view='grid': f'<div class="product-grid" data-view="{view}" style="grid-template-columns:repeat({c},minmax(0,1fr))">{inner}</div>'
-page('cd_default', '<h2>Design defaults</h2>' + grid(6, cards(SET)))
-body = ''
-for style in ('minimal', 'overlay', 'bordered', 'plaque'):
-    body += f'<h2>Style: {style}</h2>' + grid(6, cards(dict(SET, product_card_style=style)), )
-page('cd_styles', body)
-page('cd_variants', '<h2>Centre · heading title · square · rounded · number · category · material</h2>' + grid(6, cards(dict(SET, product_card_text_align='center', product_card_title_font='heading', product_card_image_ratio='square', product_card_radius='rounded', product_card_show_number=True, product_card_show_category=True, product_card_show_material=True)))
-     + '<h2>Landscape · no radius · zoom · always visible add</h2>' + grid(6, cards(dict(SET, product_card_image_ratio='landscape', product_card_radius='none', product_card_media_hover='zoom', product_card_quickadd_style='always')))
-     + '<h2>Carousel hover · minimal facts</h2>' + grid(6, cards(dict(SET, product_card_media_hover='carousel', product_card_show_vendor=False, product_card_show_rating=False, product_card_show_sizes=False, product_card_show_swatches=False, product_card_show_compare=False, product_card_show_wishlist=False, product_card_show_quickview=False))))
-page('cd_list', '<h2>List view</h2>' + grid(1, cards(SET), 'list'))
-page('cd_dark', '<h2>Dark scheme</h2>' + grid(6, cards(SET)), scheme='dark')
-page('cd_phone', grid(2, cards(SET)))
+if __name__ == '__main__':
+    page('cd_default', '<h2>Design defaults</h2>' + grid(6, cards(SET)))
+    body = ''
+    for style in ('minimal', 'overlay', 'bordered', 'plaque'):
+        body += f'<h2>Style: {style}</h2>' + grid(6, cards(dict(SET, product_card_style=style)), )
+    page('cd_styles', body)
+    page('cd_variants', '<h2>Centre · heading title · square · rounded · number · category · material</h2>' + grid(6, cards(dict(SET, product_card_text_align='center', product_card_title_font='heading', product_card_image_ratio='square', product_card_radius='rounded', product_card_show_number=True, product_card_show_category=True, product_card_show_material=True)))
+         + '<h2>Landscape · no radius · zoom · always visible add</h2>' + grid(6, cards(dict(SET, product_card_image_ratio='landscape', product_card_radius='none', product_card_media_hover='zoom', product_card_quickadd_style='always')))
+         + '<h2>Carousel hover · minimal facts</h2>' + grid(6, cards(dict(SET, product_card_media_hover='carousel', product_card_show_vendor=False, product_card_show_rating=False, product_card_show_sizes=False, product_card_show_swatches=False, product_card_show_compare=False, product_card_show_wishlist=False, product_card_show_quickview=False))))
+    page('cd_list', '<h2>List view</h2>' + grid(1, cards(SET), 'list'))
+    page('cd_dark', '<h2>Dark scheme</h2>' + grid(6, cards(SET)), scheme='dark')
+    page('cd_phone', grid(2, cards(SET)))
 
-DATA = re.sub(r'\{%-?\s*layout\s+none\s*-?%\}', '', src('templates/product.mn-data.liquid'))
-for p in P:
-    out = env.from_string(DATA).render(product=p, settings=SET)
-    json.loads(out)
-    open(os.path.join(OUT, 'data', p['handle'] + '.json'), 'w').write(out)
-for f in ('theme.css', 'mn-core.css', 'mn-header.css', 'mn-product.css', 'mn-footer.css', 'mn-motion.css', 'mn-shopify.css', 'theme.js', 'mn.js'):
-    shutil.copy(os.path.join('assets', f), OUT)
-print(f'6 pages and {len(P)} product data files written to {OUT}')
+    DATA = re.sub(r'\{%-?\s*layout\s+none\s*-?%\}', '', src('templates/product.mn-data.liquid'))
+    for p in P:
+        out = env.from_string(DATA).render(product=p, settings=SET)
+        json.loads(out)
+        open(os.path.join(OUT, 'data', p['handle'] + '.json'), 'w').write(out)
+    for f in ('theme.css', 'mn-core.css', 'mn-header.css', 'mn-product.css', 'mn-footer.css', 'mn-motion.css', 'mn-shopify.css', 'theme.js', 'mn.js'):
+        shutil.copy(os.path.join('assets', f), OUT)
+    print(f'6 pages and {len(P)} product data files written to {OUT}')

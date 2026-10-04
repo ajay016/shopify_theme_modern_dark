@@ -285,6 +285,23 @@
       "sizes": "Sizes"
     },
     "recent": { "clear": "Clear" },
+    "collection": { "remove_filter": "Remove filter: {{ label }}", "browse_all": "Browse all pieces" },
+    "searchpage": {
+      "title_html": "What are you <em>looking for?</em>",
+      "results_for_html": "Results for <em>“{{ terms }}”</em>",
+      "types": "Result types",
+      "all": "All",
+      "type_product": "Products",
+      "type_article": "Journal",
+      "type_page": "Pages",
+      "entry_page": "Page",
+      "journal_pages": "From the journal and pages",
+      "none_html": "Nothing found for <em>“{{ terms }}”</em>",
+      "none_note": "Check the spelling, try a broader word, or start from one of these.",
+      "suggestions": "Popular searches",
+      "picks_eyebrow": "Not sure yet",
+      "view_all": "View all"
+    },
     "cartpage": {
       "eyebrow": "Shopping bag",
       "title_html": "Your <em>bag</em>",

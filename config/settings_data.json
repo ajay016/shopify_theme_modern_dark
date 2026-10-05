@@ -29,7 +29,7 @@
     "header_style": "v4",
     "mega_menu_style": "v3",
     "header_transparent_home": true,
-    "header_sticky": false,
+    "header_sticky": true,
     "logo_width": 140,
     "logo_text": "MAIS",
     "menu": "main-menu",

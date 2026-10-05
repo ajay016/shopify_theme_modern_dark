@@ -10,7 +10,6 @@
 {
   "current": {
     "color_scheme": "olive",
-    "corner_radius": "rounded",
     "color_black": "#f2f1ea",
     "color_charcoal": "#e9e8e1",
     "color_cream": "#1f2620",
@@ -26,10 +25,11 @@
     "layout_container_width": "100%",
     "layout_section_spacing": 140,
     "layout_side_padding": 80,
+    "corner_radius": "rounded",
     "header_style": "v4",
     "mega_menu_style": "v3",
     "header_transparent_home": true,
-    "header_sticky": true,
+    "header_sticky": false,
     "logo_width": 140,
     "logo_text": "MAIS",
     "menu": "main-menu",
@@ -44,16 +44,16 @@
     "product_card_style": "atelier",
     "product_card_image_ratio": "portrait",
     "product_card_media_hover": "second_image",
+    "product_card_show_category": false,
     "product_card_show_vendor": true,
+    "product_card_show_number": false,
     "product_card_show_material": false,
     "product_card_show_sizes": true,
     "product_card_show_swatches": true,
+    "product_card_show_rating": true,
     "product_card_show_wishlist": true,
     "product_card_show_quickview": true,
-    "product_card_show_number": false,
-    "product_card_show_category": false,
     "product_card_show_compare": true,
-    "product_card_show_rating": true,
     "product_card_quickadd_style": "slide_up",
     "quickview_enabled": true,
     "quickview_show_description": true,
@@ -78,7 +78,15 @@
       },
       "header": {
         "type": "header",
-        "settings": {}
+        "settings": {
+          "search_field_text": "Search silk, cashmere, coats",
+          "nav_tag_item": "New In",
+          "nav_tag_text": "NEW",
+          "search_chips": "Silk, Slip dress, Cashmere, Bordeaux, Leather bag",
+          "search_trending": "",
+          "search_collections_menu": "",
+          "search_pages_menu": ""
+        }
       },
       "cart-drawer": {
         "type": "cart-drawer",

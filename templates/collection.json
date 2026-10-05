@@ -17,7 +17,7 @@
         "filter_style": "sidebar",
         "swatch_style": "chips",
         "scheme": "theme",
-        "container_style": "boxed",
+        "container_style": "full",
         "grid_columns": "4",
         "view_default": "grid",
         "pagination_style": "numbered",

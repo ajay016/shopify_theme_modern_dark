@@ -1,9 +1,3 @@
-/* Collection and search pages in the Claude Design reference's language.
-   Loaded after theme.css and the mn-* files. The collection's own rules in
-   theme.css (layout, filter modes, drawer, slider) stay; this file re-points
-   their colour, type and shape tokens at the design system and restyles the
-   parts the design has a component for: breadcrumb, display title, eyebrow,
-   checkbox, size and colour pickers, chips, segmented control, buttons. */
 
 /* ---- tokens ----------------------------------------------------------- */
 .collection-page,.search-page{
@@ -77,8 +71,8 @@
 .collection-page .sidebar-clear{font-size:12px;letter-spacing:0;text-transform:none;color:var(--muted);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line-strong)}
 .collection-page .sidebar-clear:hover{color:var(--fg)}
 .collection-page .filter-group,.collection-page .cfilter-group{border-color:var(--line)}
-.collection-page .filter-group__toggle,.collection-page .cfilter-group__toggle{font-family:var(--font-sans);font-size:var(--fs-sm);font-weight:var(--fw-medium);letter-spacing:.02em;text-transform:none;color:var(--fg)}
-.collection-page .filter-group__toggle[aria-expanded=true],.collection-page .cfilter-group__toggle[aria-expanded=true]{color:var(--fg)}
+.collection-page .filter-group__toggle {font-family:var(--font-sans);font-size:var(--fs-sm);font-weight:var(--fw-medium);letter-spacing:.02em;text-transform:none;color:var(--fg)}
+.collection-page .filter-group__toggle[aria-expanded=true] {color:var(--fg)}
 .collection-page .fgrp-pm{color:var(--fg)}
 
 /* checkbox rows: the design's .check */

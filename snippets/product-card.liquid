@@ -88,7 +88,7 @@
   {%- comment -%}— Demo card (no collection connected) —{%- endcomment -%}
   {%- liquid
     assign d_title = demo_title | default: 'Atelier Piece'
-    assign d_url   = demo_url   | default: '/collections/all'
+    assign d_url   = demo_url   | default: routes.all_products_collection_url
     assign d_cat   = demo_category | default: 'Atelier'
     assign d_price = demo_price | default: '$0'
     assign d_img   = demo_image
@@ -134,7 +134,7 @@
     <script type="application/json" class="product-card__json">{"id":0,"title":{{ d_title | json }},"vendor":{{ shop.name | json }},"url":{{ d_url | json }},"price":{{ d_cents }},"compare_at_price":0,"body_html":"Demo product: connect a collection in the theme editor to show your own pieces.","images":[{{ d_img | json }}],"options":["Title"],"variants":[{"id":0,"price":{{ d_cents }},"compare_at_price":0,"available":true,"options":["Default Title"]}]}</script>
     <div class="card__media">
       <a href="{{ d_url }}" class="card__img card__img--a" aria-label="{{ d_title | escape }}">
-        {%- if d_img != blank -%}<img class="mn-fill" src="{{ d_img }}" alt="" loading="{{ img_loading }}">{%- endif -%}
+        {%- if d_img != blank -%}<img class="mn-fill" src="{{ d_img }}" alt="" width="700" height="933" loading="{{ img_loading }}">{%- endif -%}
       </a>
       {%- if show_number and demo_index != blank -%}
         <span class="card__num">{{ demo_index | plus: 1 | prepend: '0' | slice: -2, 2 }}</span>

@@ -53,14 +53,14 @@
             demo_price: demo_prices[idx],
             demo_category: demo_cats[idx],
             demo_image: demo_imgs[idx],
-            demo_url: '/collections/all' -%}
+            demo_url: routes.all_products_collection_url -%}
       {%- endfor -%}
     {%- endif -%}
   </div>
 
   {%- if s.cta_label != blank -%}
     <div class="prl-foot reveal">
-      <a href="{{ s.cta_url | default: '/collections/all' }}" class="prl-cta">{{ s.cta_label }}</a>
+      <a href="{{ s.cta_url | default: routes.all_products_collection_url }}" class="prl-cta">{{ s.cta_label }}</a>
     </div>
   {%- endif -%}
 </section>

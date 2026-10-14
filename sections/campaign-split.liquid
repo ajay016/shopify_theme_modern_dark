@@ -25,7 +25,7 @@
     <div class="csp-copy__bottom">
       {%- if s.description != blank -%}<p class="csp-desc">{{ s.description }}</p>{%- endif -%}
       {%- if s.link_label != blank -%}
-        <a class="csp-link" href="{{ s.link | default: '/collections/all' }}">
+        <a class="csp-link" href="{{ s.link | default: routes.all_products_collection_url }}">
           {{ s.link_label }}<span class="csp-link__arrow" aria-hidden="true">&#8594;</span>
         </a>
       {%- endif -%}

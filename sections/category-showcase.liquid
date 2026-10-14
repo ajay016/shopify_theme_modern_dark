@@ -35,7 +35,7 @@
             assign href = col.url
           endif
           if href == blank
-            assign href = '/collections/all'
+            assign href = routes.all_products_collection_url
           endif
         -%}
         <a class="cshow-card reveal{% if forloop.first %} cshow-card--lead{% endif %}" href="{{ href }}" {{ block.shopify_attributes }}>

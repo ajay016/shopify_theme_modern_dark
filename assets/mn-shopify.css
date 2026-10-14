@@ -95,14 +95,14 @@
 /* filters hide cards with [hidden] */
 .product-grid [data-pcard][hidden]{display:none!important}
 /* list view (collection → view toggle) */
-.product-grid[data-view=list] .card,.product-grid.grid-list .card{display:grid;grid-template-columns:minmax(160px,280px) minmax(0,1fr);gap:32px;align-items:center;padding-bottom:28px;border-bottom:1px solid var(--line)}
-.product-grid[data-view=list] .card__body,.product-grid.grid-list .card__body{padding:0;gap:10px;align-content:center}
-.product-grid[data-view=list] .card__title,.product-grid.grid-list .card__title{font-family:var(--font-display);font-weight:400;font-size:28px;line-height:1.15}
-.product-grid[data-view=list] .card__desc,.product-grid.grid-list .card__desc{display:block;max-width:60ch;color:var(--muted);font-size:var(--fs-sm);line-height:1.6}
+.product-grid[data-view=list] .card {display:grid;grid-template-columns:minmax(160px,280px) minmax(0,1fr);gap:32px;align-items:center;padding-bottom:28px;border-bottom:1px solid var(--line)}
+.product-grid[data-view=list] .card__body {padding:0;gap:10px;align-content:center}
+.product-grid[data-view=list] .card__title {font-family:var(--font-display);font-weight:400;font-size:28px;line-height:1.15}
+.product-grid[data-view=list] .card__desc {display:block;max-width:60ch;color:var(--muted);font-size:var(--fs-sm);line-height:1.6}
 .product-grid[data-view=list] .card[data-style=overlay] .card__body{position:static;padding:0;color:inherit;background:none;opacity:1}
 @media (max-width:700px){
-  .product-grid[data-view=list] .card,.product-grid.grid-list .card{grid-template-columns:120px minmax(0,1fr);gap:16px}
-  .product-grid[data-view=list] .card__title,.product-grid.grid-list .card__title{font-size:20px}
+  .product-grid[data-view=list] .card {grid-template-columns:120px minmax(0,1fr);gap:16px}
+  .product-grid[data-view=list] .card__title {font-size:20px}
   .product-grid[data-view=list] .card__desc{display:none}
 }
 

@@ -165,7 +165,7 @@
   /* Side labels */
   #section-{{ section.id }} .hmod__side {
     position: absolute; top: 50%;
-    font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.45em; text-transform: uppercase;
+    font-size: var(--fs-xs); letter-spacing: var(--ls-caps); text-transform: uppercase;
     color: var(--cream, #F5F0E8); opacity: 0.45; white-space: nowrap; z-index: 2;
   }
   #section-{{ section.id }} .hmod__side--left {
@@ -196,8 +196,8 @@
   #section-{{ section.id }} .hmod__eyebrow {
     display: inline-flex; align-items: center; gap: 14px;
     font-family: var(--ff-body);
-    font-size: calc(11px * var(--fs-scale, 1)); letter-spacing: 0.4em; text-transform: uppercase;
-    color: var(--gold, #C8A96E); margin-bottom: 28px;
+    font-size: var(--fs-xs); letter-spacing: var(--ls-caps); text-transform: uppercase;
+    color: color-mix(in oklab, currentColor 64%, transparent); margin-bottom: 28px;
   }
   #section-{{ section.id }} .hmod__eyebrow::before {
     content: ''; width: 44px; height: 1px; background: var(--gold, #C8A96E);
@@ -234,7 +234,7 @@
   #section-{{ section.id }} .hmod__ctas { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
   #section-{{ section.id }} .hmod__text-link {
     display: inline-flex; align-items: center; gap: 12px;
-    font-size: calc(11px * var(--fs-scale, 1)); font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase;
+    font-size: var(--fs-btn); font-weight: 500; letter-spacing: .01em;
     color: var(--cream, #F5F0E8); transition: gap var(--transition), color var(--transition);
   }
   #section-{{ section.id }} .hmod__text-link:hover { gap: 18px; color: var(--gold, #C8A96E); }
@@ -250,7 +250,7 @@
     font-family: var(--ff-display); font-size: calc(clamp(28px, 3vw, 40px) * var(--fs-scale, 1)); font-weight: 400; color: var(--gold, #C8A96E);
   }
   #section-{{ section.id }} .hmod__stat-label {
-    font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.28em; text-transform: uppercase; color: var(--cream, #F5F0E8); opacity: 0.55;
+    font-size: var(--fs-xs); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream, #F5F0E8); opacity: 0.55;
   }
 
   /* Rotating badge */

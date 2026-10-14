@@ -28,7 +28,7 @@
     </h2>
     {%- if s.description != blank -%}<p class="cno-desc">{{ s.description }}</p>{%- endif -%}
     {%- if s.btn_label != blank -%}
-      <a href="{{ s.btn_link | default: '/collections/all' }}" class="cno-btn">{{ s.btn_label }}</a>
+      <a href="{{ s.btn_link | default: routes.all_products_collection_url }}" class="cno-btn">{{ s.btn_label }}</a>
     {%- endif -%}
 
     {%- if section.blocks.size > 0 -%}

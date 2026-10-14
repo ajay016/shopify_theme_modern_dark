@@ -36,7 +36,7 @@
         {%- if show_view_all and collection != blank -%}
           <a href="{{ collection.url }}" class="section-link">{{ 'collections.general.view_all' | t }}</a>
         {%- elsif show_view_all -%}
-          <a href="/collections/all" class="section-link">View All New In</a>
+          <a href="{{ routes.all_products_collection_url }}" class="section-link">View All New In</a>
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -57,7 +57,7 @@
               demo_price: demo_prices[idx],
               demo_category: demo_cats[idx],
               demo_image: demo_imgs[idx],
-              demo_url: '/collections/all' -%}
+              demo_url: routes.all_products_collection_url -%}
         {%- endfor -%}
       {%- endif -%}
     </div>

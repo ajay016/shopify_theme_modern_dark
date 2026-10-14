@@ -25,7 +25,7 @@
             endif
           -%}
           <a
-            href="{{ block.settings.link | default: '/collections/all' }}"
+            href="{{ block.settings.link | default: routes.all_products_collection_url }}"
             class="crv-row reveal"
             data-crv-row
             data-crv-img="{{ row_img }}"
@@ -42,7 +42,7 @@
         {%- assign demo_titles = 'Eveningwear,Tailoring,Silks & Satin,Outerwear,Jewellery' | split: ',' -%}
         {%- assign demo_meta = '18 pieces,24 pieces,12 pieces,16 pieces,30 pieces' | split: ',' -%}
         {%- for i in (0..4) -%}
-          <a href="/collections/all" class="crv-row reveal" data-crv-row data-crv-img="{{ fallbacks[i] }}">
+          <a href="{{ routes.all_products_collection_url }}" class="crv-row reveal" data-crv-row data-crv-img="{{ fallbacks[i] }}">
             <span class="crv-row__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
             <span class="crv-row__title">{{ demo_titles[i] }}</span>
             <span class="crv-row__thumb" aria-hidden="true"><img src="{{ fallbacks[i] }}" alt="" loading="lazy" /></span>
@@ -58,7 +58,7 @@
 
     {%- if s.cta_label != blank -%}
       <div class="crv-foot reveal">
-        <a href="{{ s.cta_url | default: '/collections/all' }}" class="crv-cta">{{ s.cta_label }} <span aria-hidden="true">&#8594;</span></a>
+        <a href="{{ s.cta_url | default: routes.all_products_collection_url }}" class="crv-cta">{{ s.cta_label }} <span aria-hidden="true">&#8594;</span></a>
       </div>
     {%- endif -%}
   </div>

@@ -22,7 +22,7 @@
         {%- if s.heading != blank -%}<h2 class="psc-head__heading">{{ s.heading }}</h2>{%- endif -%}
       </div>
       {%- if s.cta_label != blank -%}
-        <a href="{{ collection.url | default: s.cta_url | default: '/collections/all' }}" class="psc-head__cta">
+        <a href="{{ collection.url | default: s.cta_url | default: routes.all_products_collection_url }}" class="psc-head__cta">
           {{ s.cta_label }}
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 5l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
@@ -44,7 +44,7 @@
               demo_price: demo_prices[i],
               demo_category: demo_cats[i],
               demo_image: fb[i],
-              demo_url: '/collections/all' -%}</div>
+              demo_url: routes.all_products_collection_url -%}</div>
         {%- endfor -%}
       {%- endif -%}
     </div>

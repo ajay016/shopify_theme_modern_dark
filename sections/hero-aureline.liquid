@@ -27,10 +27,10 @@
       {%- if s.btn1_label != blank or s.btn2_label != blank -%}
         <div class="hau-actions">
           {%- if s.btn1_label != blank -%}
-            <a href="{{ s.btn1_link | default: '/collections/all' }}" class="hau-btn">{{ s.btn1_label }}</a>
+            <a href="{{ s.btn1_link | default: routes.all_products_collection_url }}" class="hau-btn">{{ s.btn1_label }}</a>
           {%- endif -%}
           {%- if s.btn2_label != blank -%}
-            <a href="{{ s.btn2_link | default: '/collections/all' }}" class="hau-link">
+            <a href="{{ s.btn2_link | default: routes.all_products_collection_url }}" class="hau-link">
               {{ s.btn2_label }}<span class="hau-link__arrow" aria-hidden="true">&#8594;</span>
             </a>
           {%- endif -%}

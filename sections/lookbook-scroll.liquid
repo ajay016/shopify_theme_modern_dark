@@ -29,7 +29,7 @@
       {%- assign fb = fallbacks[forloop.index0] | default: fallbacks[0] -%}
       {%- assign img = block.settings.image -%}
       <article class="lbs-frame{% if block.settings.tall %} lbs-frame--tall{% endif %}" {{ block.shopify_attributes }}>
-        <a href="{{ block.settings.link | default: '/collections/all' }}" class="lbs-frame__media">
+        <a href="{{ block.settings.link | default: routes.all_products_collection_url }}" class="lbs-frame__media">
           {%- if img != blank -%}
             {{ img | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'lbs-frame__img', widths: '500,750,1000', alt: block.settings.title }}
           {%- else -%}
@@ -40,7 +40,7 @@
         <div class="lbs-frame__cap">
           {%- if block.settings.kicker != blank -%}<span class="lbs-frame__kicker">{{ block.settings.kicker }}</span>{%- endif -%}
           {%- if block.settings.title != blank -%}<span class="lbs-frame__title">{{ block.settings.title }}</span>{%- endif -%}
-          {%- if block.settings.link_label != blank -%}<a href="{{ block.settings.link | default: '/collections/all' }}" class="lbs-frame__link">{{ block.settings.link_label }} <span aria-hidden="true">&#8594;</span></a>{%- endif -%}
+          {%- if block.settings.link_label != blank -%}<a href="{{ block.settings.link | default: routes.all_products_collection_url }}" class="lbs-frame__link">{{ block.settings.link_label }} <span aria-hidden="true">&#8594;</span></a>{%- endif -%}
         </div>
       </article>
     {%- else -%}
@@ -48,14 +48,14 @@
       {%- assign demo_kick = 'Look 01,Look 02,Look 03,Look 04,Look 05' | split: ',' -%}
       {%- for i in (0..4) -%}
         <article class="lbs-frame{% if forloop.index0 == 1 or forloop.index0 == 3 %} lbs-frame--tall{% endif %}">
-          <a href="/collections/all" class="lbs-frame__media">
+          <a href="{{ routes.all_products_collection_url }}" class="lbs-frame__media">
             <img class="lbs-frame__img" src="{{ fallbacks[i] }}" alt="{{ demo_titles[i] }}" loading="lazy" />
             <span class="lbs-frame__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
           </a>
           <div class="lbs-frame__cap">
             <span class="lbs-frame__kicker">{{ demo_kick[i] }}</span>
             <span class="lbs-frame__title">{{ demo_titles[i] }}</span>
-            <a href="/collections/all" class="lbs-frame__link">Shop the look <span aria-hidden="true">&#8594;</span></a>
+            <a href="{{ routes.all_products_collection_url }}" class="lbs-frame__link">Shop the look <span aria-hidden="true">&#8594;</span></a>
           </div>
         </article>
       {%- endfor -%}

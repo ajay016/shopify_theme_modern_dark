@@ -21,7 +21,7 @@
       {%- if section.blocks.size > 0 -%}
         {%- for block in section.blocks -%}
           {%- assign fb = fallbacks[forloop.index0] | default: fallbacks[0] -%}
-          <a href="{{ block.settings.link | default: '/collections/all' }}" class="stc-cover reveal" {{ block.shopify_attributes }}>
+          <a href="{{ block.settings.link | default: routes.all_products_collection_url }}" class="stc-cover reveal" {{ block.shopify_attributes }}>
             <span class="stc-cover__mast">{{ block.settings.masthead | default: 'Maison Noir' }}</span>
             <span class="stc-cover__media">
               {%- if block.settings.image != blank -%}
@@ -40,7 +40,7 @@
       {%- else -%}
         {%- assign demo_titles = 'Eveningwear,Tailoring,Jewellery,Outerwear' | split: ',' -%}
         {%- for i in (0..3) -%}
-          <a href="/collections/all" class="stc-cover reveal">
+          <a href="{{ routes.all_products_collection_url }}" class="stc-cover reveal">
             <span class="stc-cover__mast">Maison Noir</span>
             <span class="stc-cover__media">
               <img class="stc-cover__img" src="{{ fallbacks[i] }}" alt="{{ demo_titles[i] }}" loading="lazy" />

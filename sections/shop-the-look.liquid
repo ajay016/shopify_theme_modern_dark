@@ -53,13 +53,13 @@
               demo_price: demo_prices[i],
               demo_category: demo_cats[i],
               demo_image: demo_imgs[i],
-              demo_url: '/collections/all' -%}</div>
+              demo_url: routes.all_products_collection_url -%}</div>
           {%- endfor -%}
         {%- endif -%}
       </div>
 
       {%- if s.cta_label != blank -%}
-        <a href="{{ col.url | default: s.cta_url | default: '/collections/all' }}" class="stl-cta reveal">{{ s.cta_label }} <span aria-hidden="true">&#8594;</span></a>
+        <a href="{{ col.url | default: s.cta_url | default: routes.all_products_collection_url }}" class="stl-cta reveal">{{ s.cta_label }} <span aria-hidden="true">&#8594;</span></a>
       {%- endif -%}
     </div>
   </div>

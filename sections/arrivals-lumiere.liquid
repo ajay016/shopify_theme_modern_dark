@@ -30,7 +30,7 @@
         {%- if s.heading != blank -%}<h2 class="arl-heading">{{ s.heading }}</h2>{%- endif -%}
       </div>
       {%- if s.cta_label != blank -%}
-        <a href="{{ col.url | default: s.cta_url | default: '/collections/all' }}" class="arl-cta">{{ s.cta_label }} <span aria-hidden="true">&#8594;</span></a>
+        <a href="{{ col.url | default: s.cta_url | default: routes.all_products_collection_url }}" class="arl-cta">{{ s.cta_label }} <span aria-hidden="true">&#8594;</span></a>
       {%- endif -%}
     </div>
 
@@ -50,7 +50,7 @@
             demo_price: demo_prices[idx],
             demo_category: demo_cats[idx],
             demo_image: demo_imgs[idx],
-            demo_url: '/collections/all' -%}</div>
+            demo_url: routes.all_products_collection_url -%}</div>
         {%- endfor -%}
       {%- endif -%}
     </div>

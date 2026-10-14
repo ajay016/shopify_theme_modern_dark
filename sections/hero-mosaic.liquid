@@ -175,8 +175,8 @@
 
   /* Eyebrow */
   #section-{{ section.id }} .hmos__eyebrow {
-    font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.38em; text-transform: uppercase;
-    color: var(--gold, #C8A96E); display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+    font-size: var(--fs-xs); letter-spacing: var(--ls-caps); text-transform: uppercase;
+    color: color-mix(in oklab, currentColor 64%, transparent); display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
   }
   #section-{{ section.id }} .hmos__eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--gold, #C8A96E); flex-shrink: 0; }
 
@@ -196,7 +196,7 @@
   #section-{{ section.id }} .hmos__stats { display: flex; gap: 28px; margin-bottom: 24px; padding-top: 24px; border-top: 1px solid var(--border, rgba(200,169,110,.18)); }
   #section-{{ section.id }} .hmos__stat { display: flex; flex-direction: column; gap: 4px; }
   #section-{{ section.id }} .hmos__stat-val { font-family: var(--ff-display); font-size: calc(clamp(22px, 2.2vw, 30px) * var(--fs-scale, 1)); color: var(--gold, #C8A96E); font-weight: 400; }
-  #section-{{ section.id }} .hmos__stat-lbl { font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: 0.25em; text-transform: uppercase; color: var(--cream, #F5F0E8); opacity: 0.55; }
+  #section-{{ section.id }} .hmos__stat-lbl { font-size: var(--fs-xs); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream, #F5F0E8); opacity: 0.55; }
 
   /* Season label */
   #section-{{ section.id }} .hmos__season { font-size: calc(9px * var(--fs-scale, 1)); letter-spacing: 0.42em; text-transform: uppercase; color: var(--cream, #F5F0E8); opacity: 0.45; }

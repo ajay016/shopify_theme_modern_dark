@@ -57,7 +57,7 @@
 </head>
 
 <body
-  class="template-{{ request.page_type }}{% unless settings.animations_hover %} anim-hover-off{% endunless %}"
+  class="template-{{ request.page_type }}{% unless settings.animations_hover %} anim-hover-off{% endunless %}{% if settings.custom_cursor %} custom-cursor-enabled{% endif %}"
   data-cursor-style="{{ settings.custom_cursor_style }}"
   data-scroll-reveal="{{ settings.animations_scroll_reveal }}"
   data-reveal-style="{{ settings.animations_reveal_style }}"
@@ -182,12 +182,12 @@
     {%- render 'demo-explorer' -%}
   {%- endif -%}
 
-  {{ 'theme.js' | asset_url | script_tag }}
-  {{ 'mn.js' | asset_url | script_tag }}
-  {{ 'mn-product.js' | asset_url | script_tag }}
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  <script src="{{ 'mn.js' | asset_url }}" defer></script>
+  <script src="{{ 'mn-product.js' | asset_url }}" defer></script>
 
   {%- if settings.custom_cursor -%}
-    {{ 'custom-cursor.js' | asset_url | script_tag }}
+    <script src="{{ 'custom-cursor.js' | asset_url }}" defer></script>
   {%- endif -%}
 
 </body>

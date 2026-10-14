@@ -25,7 +25,7 @@
       <div class="blog-posts__grid blog-posts__grid--{{ layout }}">
         {%- for article in blog_obj.articles limit: posts_to_show -%}
           {%- assign article_img_alt = article.title | escape -%}
-          <article class="blog-card reveal reveal-delay-{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+          <article class="blog-card reveal reveal-delay-{{ forloop.index0 }}">
             <a href="{{ article.url }}" class="blog-card__media-link" tabindex="-1" aria-hidden="true">
               <div class="blog-card__media">
                 {%- if article.image != blank -%}

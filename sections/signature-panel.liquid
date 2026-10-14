@@ -18,7 +18,7 @@
         <div class="sigp-panel__foot">
           {%- if s.description != blank -%}<p class="sigp-desc">{{ s.description }}</p>{%- endif -%}
           {%- if s.btn_label != blank -%}
-            <a class="sigp-btn" href="{{ s.btn_link | default: '/collections/all' }}">{{ s.btn_label }}</a>
+            <a class="sigp-btn" href="{{ s.btn_link | default: routes.all_products_collection_url }}">{{ s.btn_label }}</a>
           {%- endif -%}
         </div>
       </div>

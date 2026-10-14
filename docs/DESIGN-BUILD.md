@@ -208,5 +208,20 @@ is left and what I need to check").
       `scripts/home-test.js` (51 checks).
 - [x] **D7 Other pages** — collection, cart page, search, account, blog, pages,
       homepages: same tokens, type, buttons, fields, cards and motion (D7a–D7e).
+- [x] **Clean-up + Theme Check** — Theme Check errors 7 → 0: the theme's four scripts load
+      with `defer` (no inline script calls them while the page parses; all three wait for
+      DOMContentLoaded, which still fires after deferred scripts), the demo card image and
+      the lightbox images have sizes (the lightbox now gets a responsive srcset). Hardcoded
+      `/collections/all` links use `routes.all_products_collection_url` (11 places), a
+      stray `block` reference in `blog-posts` removed, the 13 old `icon-*` snippets nothing
+      rendered deleted (the design's sprite replaced them). Dead CSS removed with
+      `scripts/css-prune.py` (a rule goes only when one of its classes appears in no
+      template, snippet, script or setting; Shopify- and app-generated classes are kept):
+      `theme.css` 2349 → 1879 lines (old cart page, blog, contact, account, quick view,
+      drawers, search overlay, mobile menu), plus leftovers in `mn-shopify.css` and
+      `mn-collection.css`. Bug found doing it: the custom cursor's "hide the normal
+      pointer" class was never set, so both pointers showed; it is now set when the
+      setting is on. The four homepage sections no template uses (still in Add section)
+      got the same button / eyebrow treatment as the other 54.
 - [ ] **D8 Verification** — every setting renders and works (audit), editor re-render,
       390 / 1024 / 1440, all schemes, reduced motion, screenshots against the reference.

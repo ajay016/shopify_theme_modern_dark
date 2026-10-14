@@ -24,7 +24,7 @@
           {%- assign fb = fallbacks[forloop.index0] | default: fallbacks[0] -%}
           {%- assign img = block.settings.image -%}
           <a
-            href="{{ block.settings.link | default: '/collections/all' }}"
+            href="{{ block.settings.link | default: routes.all_products_collection_url }}"
             class="cix-panel{% if forloop.first %} is-open{% endif %}"
             data-cix-panel
             {{ block.shopify_attributes }}
@@ -50,7 +50,7 @@
         {%- assign demo_titles = 'Outerwear,Tailoring,Knitwear,Accessories' | split: ',' -%}
         {%- assign demo_kick = 'The Structure,The Cut,The Comfort,The Detail' | split: ',' -%}
         {%- for i in (0..3) -%}
-          <a href="/collections/all" class="cix-panel{% if forloop.first %} is-open{% endif %}" data-cix-panel>
+          <a href="{{ routes.all_products_collection_url }}" class="cix-panel{% if forloop.first %} is-open{% endif %}" data-cix-panel>
             <span class="cix-panel__media">
               <img class="cix-panel__img" src="{{ fallbacks[i] }}" alt="{{ demo_titles[i] }}" loading="lazy" />
             </span>

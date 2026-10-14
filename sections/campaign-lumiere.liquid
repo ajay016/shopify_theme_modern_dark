@@ -26,8 +26,8 @@
     </h2>
     {%- if s.description != blank -%}<p class="clm-desc">{{ s.description }}</p>{%- endif -%}
     <div class="clm-ctas">
-      {%- if s.btn_label != blank -%}<a href="{{ s.btn_link | default: '/collections/all' }}" class="clm-btn">{{ s.btn_label }}</a>{%- endif -%}
-      {%- if s.link_label != blank -%}<a href="{{ s.link_url | default: '/collections/all' }}" class="clm-link">{{ s.link_label }} <span aria-hidden="true">&#8599;</span></a>{%- endif -%}
+      {%- if s.btn_label != blank -%}<a href="{{ s.btn_link | default: routes.all_products_collection_url }}" class="clm-btn">{{ s.btn_label }}</a>{%- endif -%}
+      {%- if s.link_label != blank -%}<a href="{{ s.link_url | default: routes.all_products_collection_url }}" class="clm-link">{{ s.link_label }} <span aria-hidden="true">&#8599;</span></a>{%- endif -%}
     </div>
   </div>
 </section>

@@ -377,7 +377,7 @@
       <div class="lb__bar"><span class="lb__count" id="lbCount">01 / 01</span><button type="button" class="icon-btn" data-close aria-label="{{ 'mn.pdp.close_gallery' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button></div>
       <div class="lb__track" id="lbTrack">
         {%- for m in product.media -%}{%- if m.media_type == 'image' -%}
-          <div class="lb__slide" data-media-id="{{ m.id }}"><div class="lb__img" style="aspect-ratio:{{ m.preview_image.aspect_ratio | default: 0.8 }}"><img class="mn-fill" src="{{ m.preview_image | image_url: width: 2400 }}" alt="{{ m.alt | escape }}" loading="lazy"></div></div>
+          <div class="lb__slide" data-media-id="{{ m.id }}"><div class="lb__img" style="aspect-ratio:{{ m.preview_image.aspect_ratio | default: 0.8 }}">{{ m.preview_image | image_url: width: 2400 | image_tag: class: 'mn-fill', alt: m.alt, loading: 'lazy', sizes: '100vw', widths: '800,1200,1600,2400' }}</div></div>
         {%- endif -%}{%- endfor -%}
       </div>
       <button type="button" class="icon-btn lb__nav lb__nav--prev" data-lb-step="-1" aria-label="{{ 'mn.pdp.prev_image' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-chevron-left"></use></svg></button>
@@ -385,7 +385,7 @@
       <div class="lb__thumbs" id="lbThumbs">
         {%- assign k = 0 -%}
         {%- for m in product.media -%}{%- if m.media_type == 'image' -%}
-          <button type="button" class="lb__thumb" data-lb="{{ k }}" aria-label="{{ 'mn.pdp.image_n' | t: n: k | plus: 1 }}"><img class="mn-fill" src="{{ m.preview_image | image_url: width: 160 }}" alt="" loading="lazy"></button>
+          <button type="button" class="lb__thumb" data-lb="{{ k }}" aria-label="{{ 'mn.pdp.image_n' | t: n: k | plus: 1 }}">{{ m.preview_image | image_url: width: 160 | image_tag: class: 'mn-fill', alt: '', loading: 'lazy', sizes: '80px' }}</button>
           {%- assign k = k | plus: 1 -%}
         {%- endif -%}{%- endfor -%}
       </div>

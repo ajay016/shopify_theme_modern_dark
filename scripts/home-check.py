@@ -129,26 +129,33 @@ FONTS = '<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500
 ICONS = env.from_string(snips['mn-icons']).render()
 attrs = env.from_string(snips['mn-html-attrs']).render(settings=SETTINGS, request={'locale': {'iso_code': 'en'}})
 VARS = env.from_string(snips['css-variables']).render(settings=SETTINGS)
-errors = {}
-names = sys.argv[2:] or [os.path.basename(f)[:-5] for pat in ('index*', 'page.about*', 'list-collections*') for f in sorted(glob.glob(f'templates/{pat}.json'))]
-for name in names:
-    t = jload(f'templates/{name}.json')
-    parts = []
-    for key in t['order']:
-        sec = t['sections'][key]
-        if sec.get('disabled'): continue
-        html, err = section_html(key, sec)
-        if err: errors[f'{name}/{key}'] = err
-        parts.append(html)
-    css = ''.join(f'<link rel="stylesheet" href="/{c}">' for c in CSS + tuple(EXTRA))
-    page = (f'<!doctype html><html {attrs}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">{FONTS}{VARS}{css}</head>'
-            f'<body class="template-index" data-scroll-reveal="false">{ICONS}<main id="MainContent" class="content-for-layout">{"".join(parts)}</main>'
-            '<script>window.MN_STRINGS={cmp:{},wish:{}};window.routes={root_url:"/",cart_url:"/cart",cart_add_url:"/cart/add",cart_change_url:"/cart/change"};'
-            'window.theme_settings={cart_type:"none",money_format:"${{amount}}"};window.theme_strings={}</script>'
-            '<script src="/theme.js"></script><script src="/mn.js"></script><script src="/mn-product.js"></script></body></html>')
-    tag = name.replace('index.', '').replace('index', 'default') if name.startswith('index') else name.replace('.', '_')
-    open(os.path.join(OUT, f'hm_{tag}.html'), 'w').write(page)
-for f in CSS + tuple(EXTRA) + ('theme.js', 'mn.js', 'mn-product.js'):
-    shutil.copy(os.path.join('assets', f), OUT)
-for k, e in errors.items(): print('RENDER ERROR', k, e[:300])
-print(f'{len(names)} homepages written to {OUT}, {len(errors)} render errors')
+def scheme_vars(scheme):
+    """The <html> attributes and CSS variables the store emits for a colour scheme."""
+    st = dict(SETTINGS, color_scheme=scheme)
+    return (env.from_string(snips['mn-html-attrs']).render(settings=st, request={'locale': {'iso_code': 'en'}}),
+            env.from_string(snips['css-variables']).render(settings=st))
+
+if __name__ == '__main__':
+    errors = {}
+    names = sys.argv[2:] or [os.path.basename(f)[:-5] for pat in ('index*', 'page.about*', 'list-collections*') for f in sorted(glob.glob(f'templates/{pat}.json'))]
+    for name in names:
+        t = jload(f'templates/{name}.json')
+        parts = []
+        for key in t['order']:
+            sec = t['sections'][key]
+            if sec.get('disabled'): continue
+            html, err = section_html(key, sec)
+            if err: errors[f'{name}/{key}'] = err
+            parts.append(html)
+        css = ''.join(f'<link rel="stylesheet" href="/{c}">' for c in CSS + tuple(EXTRA))
+        page = (f'<!doctype html><html {attrs}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">{FONTS}{VARS}{css}</head>'
+                f'<body class="template-index" data-scroll-reveal="false">{ICONS}<main id="MainContent" class="content-for-layout">{"".join(parts)}</main>'
+                '<script>window.MN_STRINGS={cmp:{},wish:{}};window.routes={root_url:"/",cart_url:"/cart",cart_add_url:"/cart/add",cart_change_url:"/cart/change"};'
+                'window.theme_settings={cart_type:"none",money_format:"${{amount}}"};window.theme_strings={}</script>'
+                '<script src="/theme.js"></script><script src="/mn.js"></script><script src="/mn-product.js"></script></body></html>')
+        tag = name.replace('index.', '').replace('index', 'default') if name.startswith('index') else name.replace('.', '_')
+        open(os.path.join(OUT, f'hm_{tag}.html'), 'w').write(page)
+    for f in CSS + tuple(EXTRA) + ('theme.js', 'mn.js', 'mn-product.js'):
+        shutil.copy(os.path.join('assets', f), OUT)
+    for k, e in errors.items(): print('RENDER ERROR', k, e[:300])
+    print(f'{len(names)} homepages written to {OUT}, {len(errors)} render errors')

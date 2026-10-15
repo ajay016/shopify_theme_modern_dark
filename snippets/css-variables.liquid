@@ -65,9 +65,10 @@
     --cream: #1A1A1A;
     --muted: rgba(26,26,26,0.66);
     --ivory: #0A0A0A;
-    --gold: #9B7B3F;
+    {%- comment -%} The older sections set small text in --gold; the design's #9B7B3F reads 3.96:1 on white, so this legacy alias is a step deeper (5.6:1). The design's own accent (--c-accent) is unchanged. {%- endcomment -%}
+    --gold: #82642F;
     --gold-light: #C8A96E;
-    --on-gold: #0A0A0A;
+    --on-gold: #FFFFFF;
     --sale-text: #8B1A1A;
     --sale-bg: #FFD5D5;
 
@@ -105,8 +106,8 @@
     --badge-bg: #C8A96E;
     --badge-fg: #0A0A0A;
 
-    --btn-primary-bg: #9B7B3F;
-    --btn-primary-fg: #0A0A0A;
+    --btn-primary-bg: #1A1A1A;
+    --btn-primary-fg: #FFFFFF;
     --btn-ghost-fg: #1A1A1A;
     --btn-ghost-bdr: rgba(26,26,26,0.28);
   }
@@ -250,15 +251,15 @@
     --s1-bg: {{ c_black }};
     --lift: color-mix(in srgb, {{ c_cream }} 4%, transparent);
     --s1-fg: {{ c_cream }};
-    --s1-mut: color-mix(in srgb, {{ c_cream }} 66%, transparent);
+    --s1-mut: color-mix(in srgb, {{ c_cream }} 72%, transparent);
     --s1-bdr: color-mix(in srgb, {{ c_cream }} 18%, transparent);
     --s2-bg: {{ c_charcoal }};
     --s2-fg: {{ c_cream }};
-    --s2-mut: color-mix(in srgb, {{ c_cream }} 66%, transparent);
+    --s2-mut: color-mix(in srgb, {{ c_cream }} 72%, transparent);
     --s2-bdr: color-mix(in srgb, {{ c_cream }} 18%, transparent);
     --s3-bg: color-mix(in srgb, {{ c_charcoal }} 88%, {{ c_cream }});
     --s3-fg: {{ c_cream }};
-    --s3-mut: color-mix(in srgb, {{ c_cream }} 66%, transparent);
+    --s3-mut: color-mix(in srgb, {{ c_cream }} 72%, transparent);
     --s3-bdr: color-mix(in srgb, {{ c_cream }} 18%, transparent);
     --s4-bg: {{ c_cream }};
     --s4-fg: {{ c_black }};
@@ -286,7 +287,7 @@
 
     --hdr-bg: {{ c_black }};
     --hdr-fg: {{ c_cream }};
-    --hdr-mut: color-mix(in srgb, {{ c_cream }} 66%, transparent);
+    --hdr-mut: color-mix(in srgb, {{ c_cream }} 72%, transparent);
     --hdr-bdr: color-mix(in srgb, {{ c_cream }} 18%, transparent);
     --hdr-bg-scroll: color-mix(in srgb, {{ c_black }} 96%, transparent);
     --hdr-bg-trans: color-mix(in srgb, {{ c_black }} 40%, transparent);
@@ -294,13 +295,13 @@
 
     --modal-bg: {{ c_black }};
     --modal-fg: {{ c_cream }};
-    --modal-mut: color-mix(in srgb, {{ c_cream }} 66%, transparent);
+    --modal-mut: color-mix(in srgb, {{ c_cream }} 72%, transparent);
     --modal-bdr: color-mix(in srgb, {{ c_cream }} 18%, transparent);
     --modal-surface: {{ c_charcoal }};
 
     --drawer-bg: {{ c_black }};
     --drawer-fg: {{ c_cream }};
-    --drawer-mut: color-mix(in srgb, {{ c_cream }} 66%, transparent);
+    --drawer-mut: color-mix(in srgb, {{ c_cream }} 72%, transparent);
     --drawer-bdr: color-mix(in srgb, {{ c_cream }} 18%, transparent);
 
     --field-bg: color-mix(in srgb, {{ c_cream }} 5%, transparent);

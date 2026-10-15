@@ -236,3 +236,13 @@ tr.is-current td{background:var(--bg-soft);font-weight:var(--fw-medium)}
   .mn-cartpage__line{grid-template-columns:84px minmax(0,1fr) auto;gap:14px}
   .mn-cartpage__summary{padding:20px}
 }
+/* Reduced motion, across every section's own reveal styles (section CSS is
+   scoped to its id, so these need !important to win).
+   Motion: Off, and Strict for shoppers whose device asks for reduced motion:
+   content that animates in is simply there. Gentle (the default) for those
+   shoppers: reveals still fade, but in place, without travel or blur. */
+[data-motion=reduced] .reveal{opacity:1!important;transform:none!important;filter:none!important}
+@media (prefers-reduced-motion:reduce){
+  [data-motion=system] .reveal,html.motion-strict .reveal{opacity:1!important;transform:none!important;filter:none!important}
+  [data-motion=full]:not(.motion-strict) .reveal{transform:none!important;filter:none!important}
+}

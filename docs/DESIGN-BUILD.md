@@ -233,5 +233,21 @@ is left and what I need to check").
       check no longer depends on how an empty setting compares. `scripts/home-check.py`
       now also renders the About and collections-list templates (`home-test.js`, 110
       checks).
+- [x] **D8a Automated verification** — four new sweeps over the harness output:
+      `scripts/scheme-sweep.py` + `scheme-test.js` (every page type in all six colour
+      schemes with the store's real CSS variables, at 1440 and 390: WCAG text contrast,
+      text over photos skipped; 913 checks), `editor-test.js` (the theme editor's
+      unload / swap / re-run scripts / load, twice, on the product, collection, header,
+      homepage tabs and countdown, addresses, and every section of every homepage, About
+      and collections-list template: 32 checks), `motion-sweep.js` (Motion Off, Strict and
+      Gentle with the device's reduced-motion switch: 28 checks), plus a static audit
+      that every one of the 114 theme settings and 796 section / block settings is read
+      somewhere. Fixes from it: Classic hero's italic line was pale accent on the page
+      colour (1.9:1); Light scheme's legacy `--gold` text (3.96:1) is a step deeper and its
+      primary button is the design's dark button; Olive / Custom muted text on the deep
+      surface raised (4.17 → passes); Motion Off and Strict left section reveals hidden
+      until scrolled, and Gentle still slid them in — both now as the settings describe;
+      the countdown added another timer on every editor re-render; the product page's
+      restart now also accepts the product root itself.
 - [ ] **D8 Verification** — every setting renders and works (audit), editor re-render,
       390 / 1024 / 1440, all schemes, reduced motion, screenshots against the reference.

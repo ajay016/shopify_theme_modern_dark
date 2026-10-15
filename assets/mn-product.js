@@ -501,7 +501,9 @@
     }
   });
 
-  const boot = root => $$('[data-pdp]', root || document).forEach(P.init);
+  // the editor fires section:load on the section's own element, which can be
+  // the product root itself
+  const boot = root => (root && root.matches && root.matches('[data-pdp]') ? [root] : $$('[data-pdp]', root || document)).forEach(P.init);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => boot()); else boot();
   document.addEventListener('shopify:section:load', e => boot(e.target));
 })();

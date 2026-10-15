@@ -385,6 +385,9 @@
     letter-spacing: -0.01em;
   }
   .hero__title em { font-style: italic; color: var(--gold-light, #E8D4A8); display: block; }
+  /* Split and Classic set the title on the page colour, not over a photo:
+     the pale accent meant for photos was unreadable there. */
+  .hero--split .hero__title em, .hero--classic .hero__title em { color: var(--gold, #9B7B3F); }
   .hero__title--center { text-align: center; }
   .hero__title--bold { font-size: calc(clamp(72px, 10vw, 140px) * var(--fs-scale, 1)); }
 

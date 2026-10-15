@@ -165,7 +165,11 @@
 <script>
 (function(){
   var SEC='{{ section.id }}';
+  // The editor runs this script again on every re-render; keep one timer per
+  // section across runs instead of adding another each time.
+  window.__ocdTimers=window.__ocdTimers||{};
   var timer=null;
+  function stop(){clearInterval(timer);clearInterval(window.__ocdTimers[SEC]);}
 
   function root(){return document.getElementById('section-'+SEC);}
   function pad(n){return (n<10?'0':'')+n;}
@@ -186,7 +190,7 @@
     function tick(){
       var diff=end.getTime()-Date.now();
       if(diff<=0){
-        clearInterval(timer);
+        stop();
         box.setAttribute('hidden','');
         if(expired)expired.removeAttribute('hidden');
         return;
@@ -199,9 +203,9 @@
       m.textContent=pad(Math.floor(sec%3600/60));
       s.textContent=pad(sec%60);
     }
+    stop();
     tick();
-    clearInterval(timer);
-    timer=setInterval(tick,1000);
+    timer=window.__ocdTimers[SEC]=setInterval(tick,1000);
   }
 
   function arm(r){
@@ -221,7 +225,7 @@
     r.querySelectorAll('.reveal').forEach(function(el){el.classList.add('is-visible');});
   });
   document.addEventListener('shopify:section:unload',function(e){
-    if(e.detail.sectionId===SEC)clearInterval(timer);
+    if(e.detail.sectionId===SEC)stop();
   });
 })();
 </script>

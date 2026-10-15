@@ -249,5 +249,61 @@ is left and what I need to check").
       until scrolled, and Gentle still slid them in — both now as the settings describe;
       the countdown added another timer on every editor re-render; the product page's
       restart now also accepts the product root itself.
-- [ ] **D8 Verification** — every setting renders and works (audit), editor re-render,
-      390 / 1024 / 1440, all schemes, reduced motion, screenshots against the reference.
+- [ ] **D8b Visual comparison** — screenshots of the product page, header variants, cart
+      drawer and footer at 390 / 1024 / 1440 next to the reference; fix what differs.
+
+---
+
+## Next: review fixes and homepage 2 (planned 2026-10-15)
+
+### Codex review (2026-10-15): all six points checked against the code: all valid
+
+| # | Point | Cause found |
+|---|---|---|
+| 1 | Size guide opens an almost empty panel | `templates/product.json` saved the size-guide *page* setting as `""`; an empty string is truthy in Liquid, so the panel renders that (empty) page instead of the size chart that is configured. |
+| 2 | Summary flattens the description and its measurement table above the buy button | The Summary block falls back to the whole description, strips the HTML (table included) and cuts at 40 words. |
+| 3 | Homepage product names and images don't match; links go to /collections/all | The New arrivals tabs have no collection chosen, so they show built-in demo cards whose names and photos are paired arbitrarily ("No. 03 Soft Bag" with a shoe photo), all linking to the catalogue. Same pattern in Complete the look and the empty-collection demo. |
+| 4 | Floating Layouts tab overlaps mobile controls | The demo layout explorer is on by default for every visitor, fixed to the right edge, with no way to hide it. |
+| 5 | Add to bag disabled until terms are accepted | The product template includes the Terms block and the buy button waits for it; there is no setting to make it optional. |
+| 6 | Season / promotion copy mismatched | Announcement says "SS 2025 Collection Now Live", hero says "Summer 2026" over a coat image, the "for a week only" countdown runs to 31 December (~77 days). |
+
+### Phases (each built, tested, pushed and reported on its own)
+
+- [ ] **R1 Product page fixes** (points 1, 2, 5)
+      Size guide: show the configured chart unless a page with real content is chosen;
+      hide the link when neither exists. Summary: the `custom.summary` metafield, else the
+      description's first paragraph only, never tables or lists; the full description and
+      measurements stay in Details and the size guide. Terms: new block setting "Required
+      before adding to bag", off by default (shown as a note when off); removed from the
+      demo product template for a simpler purchase flow.
+- [ ] **R2 Demo content and copy** (points 3, 4, 6)
+      Homepage product sections point at real collections so real products, images and
+      links show. Every built-in demo card gets a name and photo that match and a link to
+      search for that piece, not the catalogue. Season copy aligned to Autumn / Winter
+      2026 across announcement, hero and promotion; the private-sale countdown copy matches
+      its date. Layouts tab: off for shoppers by default (a theme setting), compact
+      bottom pill on phones, dismissible and remembered.
+- [ ] **H0 Receive the design** — the owner pushes Claude Design's homepage 2 files
+      (`index.html`, `styles.css`, `script.js`, palette list) to
+      `docs/claude_design_ref_home2/`.
+- [ ] **H1 Foundation** — read the design; section-by-section mapping table (design
+      section → Shopify section, settings, blocks); its palette as tokens scoped to the
+      new homepage only (`data-palette` on its sections), so other pages and homepages
+      keep their colours; `assets/mn-home2.css` + `assets/mn-home2.js` ported from the
+      design with only Shopify-required changes (as for D1); a pixel-diff harness that
+      renders the design and our template at 390 / 1024 / 1440 and compares section by
+      section (header, footer, product cards and quick view excluded: those stay the
+      store's own, as instructed).
+- [ ] **H2 Sections, part 1** — hero, ticker, shop by category, new arrivals.
+- [ ] **H3 Sections, part 2** — campaign, best sellers, shop the look, limited drop,
+      collection spotlight.
+- [ ] **H4 Sections, part 3** — craft story, lookbook, press, journal, social grid,
+      services, newsletter (and any extra sections the design has).
+- [ ] **H5 Template and verification** — `templates/index.<name>.json` with every
+      section in the design's order; default images chosen for this palette and
+      checked one by one (subject matches its label, not the usual stock set); pixel
+      diff within tolerance at all three widths; editor re-render, motion, contrast and
+      phone sweeps; other homepages and pages unchanged (their tests still pass).
+- [ ] **H6 Palette as a theme scheme** (only if the owner likes it) — add the new
+      palette to Theme settings → Colors as a scheme for the whole store.
+- [ ] **D8b Visual comparison** (above), last.

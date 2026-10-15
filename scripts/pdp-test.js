@@ -99,17 +99,21 @@ const dir = process.argv[2] || '.';
 
   // ---- Gallery: arrows, thumbs, lightbox, video, zoom
   await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(300);
-  await p.click('.gallery__thumbs .thumb >> nth=0'); await p.waitForTimeout(1500);
+  // the gallery shows only the chosen colour (Wine): its three photos, the film and the 3D model
+  const k0 = await p.evaluate(() => { const t = [...document.querySelectorAll('.gallery__thumbs .thumb')], tr = [...document.querySelector('.gallery__track').children]; const k = t.findIndex((x, i) => !x.hidden && tr[i].classList.contains('media--image')); t[k].click(); return k; });
+  await p.waitForTimeout(1500);
+  const vis = await p.evaluate(() => [...document.querySelectorAll('.gallery__thumbs .thumb')].filter(t => !t.hidden).length);
+  check('gallery shows only the chosen colour: 3 photos, film, 3D', vis === 5, String(vis));
   await p.hover('.gallery__main'); await p.click('.gallery__arrow--next'); await p.waitForTimeout(600);
   const ga = await p.evaluate(() => ({ thumb: [...document.querySelectorAll('.gallery__thumbs .thumb')].findIndex(t => t.classList.contains('is-active')), sy: scrollY, stack: MN.overlay.stack.map(x => x.id), top: document.elementFromPoint(720, 450)?.className?.toString().slice(0, 60), hidden: [...document.querySelectorAll('.gallery__track > *')].filter(x => x.hidden).length }));
-  check('gallery arrow moves to the next media', ga.thumb === 1, JSON.stringify(ga));
+  check('gallery arrow moves to the next media', ga.thumb === k0 + 1, JSON.stringify({ k0, ...ga }));
   await p.mouse.move(400, 600); await p.waitForTimeout(100);
   check('hovering an image zooms in place', await p.evaluate(() => !!document.querySelector('.media--image.is-zooming')));
   await p.click('.gallery__expand'); await p.waitForTimeout(600);
   const lb = await p.evaluate(() => ({ open: document.getElementById('ov-lightbox').classList.contains('is-open'), count: document.getElementById('lbCount').textContent }));
-  check('expand opens the lightbox at that image', lb.open && lb.count === '02 / 09', JSON.stringify(lb));
+  check('expand opens the lightbox at that image', lb.open && lb.count === '02 / 03', JSON.stringify(lb));
   await p.keyboard.press('ArrowRight'); await p.waitForTimeout(600);
-  check('arrow keys page the lightbox', await p.evaluate(() => document.getElementById('lbCount').textContent) === '03 / 09');
+  check('arrow keys page the lightbox', await p.evaluate(() => document.getElementById('lbCount').textContent) === '03 / 03');
   await p.keyboard.press('Escape'); await p.waitForTimeout(400);
   await p.click('[data-film]'); await p.waitForTimeout(500);
   check('Watch the film opens the video popup with the product video', await p.evaluate(() => document.getElementById('ov-video').classList.contains('is-open') && !!document.querySelector('#videoBody video')));

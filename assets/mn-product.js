@@ -221,11 +221,17 @@
     const mediaIndex = id => [...track().children].findIndex(x => +x.dataset.mediaId === id);
     const groupMedia = () => {
       const c = (colour() || '').toLowerCase(); if (!c) return;
-      const all = [...track().children], has = all.some(x => (x.dataset.colour || '').includes(c));
-      all.forEach((x, k) => { const hide = has && !(x.dataset.colour || '').includes(c) && !!x.dataset.colour; x.hidden = hide; const th = strip()?.querySelectorAll('.thumb')[k]; if (th) th.hidden = hide; const dt = $$('.gallery__dot', g)[k]; if (dt) dt.hidden = hide; });
+      // an image belongs to a colour when its alt text starts with it ("Black, back view")
+      const mine = x => (x.dataset.colour || '').startsWith(c);
+      const all = [...track().children], has = all.some(mine);
+      all.forEach((x, k) => { const hide = has && !mine(x) && !!x.dataset.colour; x.hidden = hide; const th = strip()?.querySelectorAll('.thumb')[k]; if (th) th.hidden = hide; const dt = $$('.gallery__dot', g)[k]; if (dt) dt.hidden = hide; });
       if (all[cur]?.hidden) go(all.findIndex(x => !x.hidden), false);
+      // the lightbox pages through the same photos
+      const lbt = $('#lbTrack', sec); if (!lbt) return;
+      const off = new Set(all.filter(x => x.hidden).map(x => x.dataset.mediaId));
+      [...lbt.children].forEach((x, k) => { x.hidden = off.has(x.dataset.mediaId); const th = $$('.lb__thumb', sec)[k]; if (th) th.hidden = x.hidden; });
     };
-    const imgIndex = i => [...track().children].slice(0, i + 1).filter(x => x.classList.contains('media--image')).length - 1;
+    const imgIndex = i => [...track().children].slice(0, i + 1).filter(x => x.classList.contains('media--image') && !x.hidden).length - 1;
     const playVideo = el => {
       if (d.video === 'inline') {
         if (!el.classList.contains('is-playing')) {
@@ -272,14 +278,15 @@
     /* ---- lightbox ---- */
     let lbi = 0;
     const lbTrack = $('#lbTrack', sec);
-    const lbPaint = () => { const n = lbTrack.children.length; $('#lbCount', sec).textContent = `${String(lbi + 1).padStart(2, '0')} / ${String(n).padStart(2, '0')}`; $$('.lb__thumb', sec).forEach((t, k) => t.classList.toggle('is-active', k === lbi)); $$('.lb__img.is-zoomed', sec).forEach(z => z.classList.remove('is-zoomed')); };
-    const lbGo = (i, smooth = true) => { const n = lbTrack.children.length; if (!n) return; lbi = (i + n) % n; lbTrack.scrollTo({ left: lbi * lbTrack.clientWidth, behavior: smooth ? 'smooth' : 'auto' }); lbPaint(); };
+    const lbSlides = () => [...lbTrack.children].filter(x => !x.hidden);
+    const lbPaint = () => { const n = lbSlides().length, at = [...lbTrack.children].indexOf(lbSlides()[lbi]); $('#lbCount', sec).textContent = `${String(lbi + 1).padStart(2, '0')} / ${String(n).padStart(2, '0')}`; $$('.lb__thumb', sec).forEach((t, k) => t.classList.toggle('is-active', k === at)); $$('.lb__img.is-zoomed', sec).forEach(z => z.classList.remove('is-zoomed')); };
+    const lbGo = (i, smooth = true) => { const n = lbSlides().length; if (!n) return; lbi = (i + n) % n; lbTrack.scrollTo({ left: lbi * lbTrack.clientWidth, behavior: smooth ? 'smooth' : 'auto' }); lbPaint(); };
     MN.lightbox = i => { if (!lbTrack || !lbTrack.children.length) return; MN.overlay.open('ov-lightbox'); requestAnimationFrame(() => lbGo(i, false)); };
     if (lbTrack) {
       lbTrack.addEventListener('scroll', () => { const i = Math.round(lbTrack.scrollLeft / lbTrack.clientWidth); if (i !== lbi) { lbi = i; lbPaint(); } }, { passive: true });
       lbTrack.addEventListener('dblclick', e => { const im = e.target.closest('.lb__img'); if (im) im.classList.toggle('is-zoomed'); });
       lbTrack.addEventListener('click', e => { const im = e.target.closest('.lb__img'); if (im && e.detail === 1 && matchMedia('(hover:hover)').matches) im.classList.toggle('is-zoomed'); });
-      $('#ov-lightbox', sec).addEventListener('click', e => { const s2 = e.target.closest('[data-lb-step]'); if (s2) lbGo(lbi + +s2.dataset.lbStep); const t2 = e.target.closest('[data-lb]'); if (t2) lbGo(+t2.dataset.lb); });
+      $('#ov-lightbox', sec).addEventListener('click', e => { const s2 = e.target.closest('[data-lb-step]'); if (s2) lbGo(lbi + +s2.dataset.lbStep); const t2 = e.target.closest('[data-lb]'); if (t2) lbGo(lbSlides().indexOf(lbTrack.children[+t2.dataset.lb])); });
       document.addEventListener('keydown', e => { if (!$('#ov-lightbox', sec).classList.contains('is-open')) return; if (e.key === 'ArrowRight') lbGo(lbi + 1); if (e.key === 'ArrowLeft') lbGo(lbi - 1); });
     }
     $('#ov-video', sec)?.addEventListener('overlay:close', () => { const pl = $('#videoBody .player', sec); if (pl) { pl.innerHTML = ''; pl.classList.remove('is-playing'); } });

@@ -139,7 +139,7 @@
         "media_size": "screen",
         "video": "popup",
         "zoom": true,
-        "group_by_colour": false,
+        "group_by_colour": true,
         "colour_type": "colour",
         "size_type": "text",
         "colour_names": "Color, Colour",

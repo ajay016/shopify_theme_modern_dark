@@ -249,8 +249,28 @@ is left and what I need to check").
       until scrolled, and Gentle still slid them in — both now as the settings describe;
       the countdown added another timer on every editor re-render; the product page's
       restart now also accepts the product root itself.
-- [ ] **D8b Visual comparison** — screenshots of the product page, header variants, cart
+- [x] **D8b Visual comparison** — screenshots of the product page, header variants, cart
       drawer and footer at 390 / 1024 / 1440 next to the reference; fix what differs.
+      *Done (2026-10-15):* `scripts/d8b-check.py` builds the theme's product page in the
+      reference's own defaults (light, soft corners, classic header, ticker, gallery left,
+      image swatches, terms on, sale countdown, deep footer) from the real sections;
+      `scripts/d8b-compare.js` puts it next to `docs/claude_design_ref/Product Page.html`
+      region by region (header, product, details, footer, cart drawer) at 1440, 1024 and
+      390, and diffs the computed styles of every element class both share, keyed by the
+      region it sits in. Header, footer, details and drawer match. Fixed from it: the
+      gallery now shows only the chosen colour's photos by default, as the reference
+      does (setting on; an image belongs to a colour when its alt text starts with it;
+      products whose images name no colour show everything), and the lightbox pages
+      through the same photos; the footer and menu country / language selectors are
+      full-size, not compact; swatch colours for black, ivory, champagne, bordeaux, camel,
+      charcoal, gold, stone, navy, sage and blush use the reference's values.
+      Left as is, on purpose: prices show the store's money format ("$890.00" with the
+      default; the reference shows "$890", which is the store's own setting in Shopify
+      admin → Settings → General → Store currency → Change formatting, e.g.
+      `${{amount_no_decimals}}`); the 3D model fills its frame with Shopify's real viewer
+      instead of the reference's mock stage; the express-checkout row and "Buy it now" are
+      drawn by Shopify. Everything else in the diff is content or state (selected size,
+      placeholder art, count badges from the reference's demo cart).
 
 ---
 
@@ -339,4 +359,4 @@ is left and what I need to check").
       phone sweeps; other homepages and pages unchanged (their tests still pass).
 - [ ] **H6 Palette as a theme scheme** (only if the owner likes it) — add the new
       palette to Theme settings → Colors as a scheme for the whole store.
-- [ ] **D8b Visual comparison** (above), last.
+- [x] **D8b Visual comparison** (above).

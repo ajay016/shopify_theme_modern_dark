@@ -173,6 +173,10 @@ page('pdp_countdown', DRESS, bover={'urgency': {'countdown_end': '2030-12-31 23:
 page('pdp_dark', DRESS, scheme='dark'); n += 1
 # R1: terms required (off by default), summary never flattens a size table,
 # size guide drawer only with real content
+# D8b: the reference's own defaults (scheme light, corners soft, gallery left,
+# image swatches, terms on, sale countdown), assembled with the classic header
+# and the deep footer by scripts/d8b-check.py
+page('pdp_ref', DRESS, {'gallery': 'left', 'colour_type': 'image'}, bover={'terms': {'must_tick': True}, 'urgency': {'countdown_end': '2030-12-31 23:59'}}, scheme='light', corners='soft'); n += 1
 page('pdp_terms', DRESS, bover={'terms': {'must_tick': True}}); n += 1
 TABLE_DESC = ('<h3>Size chart</h3><table><tr><th>Size</th><th>Bust</th></tr><tr><td><p>XS</p></td><td>80</td></tr></table>'
               '<p><strong>Details</strong></p><p>Cut on the bias from 22-momme mulberry silk, then washed in Como until it turns soft.</p>'

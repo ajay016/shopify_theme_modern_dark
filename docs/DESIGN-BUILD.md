@@ -269,13 +269,22 @@ is left and what I need to check").
 
 ### Phases (each built, tested, pushed and reported on its own)
 
-- [ ] **R1 Product page fixes** (points 1, 2, 5)
+- [x] **R1 Product page fixes** (points 1, 2, 5)
       Size guide: show the configured chart unless a page with real content is chosen;
       hide the link when neither exists. Summary: the `custom.summary` metafield, else the
       description's first paragraph only, never tables or lists; the full description and
       measurements stay in Details and the size guide. Terms: new block setting "Required
       before adding to bag", off by default (shown as a note when off); removed from the
       demo product template for a simpler purchase flow.
+      *Done:* `snippets/mn-summary.liquid` (drops tables, lists and definition lists, then
+      takes the first paragraph of 6+ words) is shared by the product page, quick view and
+      the list-view card. The size-guide drawer counts a page only when its content has
+      text, an image, a table or an embed; a page saved as `""` now shows the chart.
+      Terms block settings: `must_tick` (Required before adding to bag, off), `text`
+      (checkbox), `note` (shown when off). `templates/product.json` no longer has the terms
+      block or the empty `size_guide_page`; the other product templates show the note.
+      Tests: pdp 88 (7 new: note by default, required gate, summary vs a size table,
+      size guide with a blank page, an empty page, a real page, and nothing set).
 - [ ] **R2 Demo content and copy** (points 3, 4, 6)
       Homepage product sections point at real collections so real products, images and
       links show. Every built-in demo card gets a name and photo that match and a link to

@@ -29,7 +29,7 @@ def _forms(s):
     out = ac.src(tmp); os.unlink(tmp); return out
 
 FONTS = '<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..500&display=swap" rel="stylesheet">'
-NAMES = ('mn-icons', 'mn-password', 'mn-pagination', 'mn-article-card', 'product-card', 'swatch-style', 'mn-html-attrs', 'mn-wishlist')
+NAMES = ('mn-icons', 'mn-password', 'mn-pagination', 'mn-article-card', 'product-card', 'swatch-style', 'mn-html-attrs', 'mn-wishlist', 'mn-summary')
 loader = {n: src(f'snippets/{n}.liquid') for n in NAMES}
 loader.update({'css-variables': '<style>:root{--ff-display:"Newsreader",Georgia,serif;--ff-body:"Geist",system-ui,sans-serif;--ff-mono:"Geist Mono",monospace}</style>', 'mn-fonts': FONTS})
 env = Environment(loader=DictLoader(loader))

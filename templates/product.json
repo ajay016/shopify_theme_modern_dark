@@ -60,12 +60,6 @@
             "visitors_max": 26
           }
         },
-        "terms": {
-          "type": "terms",
-          "settings": {
-            "text": "I agree to the <a href=\"/policies/terms-of-service\">terms of sale</a> and the <a href=\"/policies/refund-policy\">returns policy</a>."
-          }
-        },
         "buy": {
           "type": "buy",
           "settings": {
@@ -129,7 +123,6 @@
         "summary",
         "badges",
         "urgency",
-        "terms",
         "buy",
         "pickup",
         "offer",
@@ -170,7 +163,6 @@
         "sticky_bar": true,
         "low_stock": 5,
         "stock_full": 20,
-        "size_guide_page": "",
         "size_chart": "Size,UK,US,Bust,Waist,Hip,Length\nXS,6,2,80,62,88,116\nS,8,4,84,66,92,118\nM,10,6,88,70,96,120\nL,12,8,93,75,101,122\nXL,14,10,98,80,106,124",
         "size_cm_from": 4,
         "size_fit": "Fits true to size. Between sizes, take the larger for a looser fall.",

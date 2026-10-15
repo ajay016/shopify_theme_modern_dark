@@ -20,7 +20,7 @@ def src(path):
     s = open(path, encoding='utf-8').read()
     return re.sub(r'\{%\s*schema\s*%\}.*?\{%\s*endschema\s*%\}', '', s, flags=re.S)
 
-snips = {n: src(f'snippets/{n}.liquid') for n in ('product-card', 'swatch-style', 'mn-icons', 'mn-compare', 'mn-wishlist')}
+snips = {n: src(f'snippets/{n}.liquid') for n in ('product-card', 'swatch-style', 'mn-icons', 'mn-compare', 'mn-wishlist', 'mn-summary')}
 env = Environment(loader=DictLoader(snips))
 TONE = {'black': '151515', 'ivory': 'E9E2D3', 'wine': '5A1F2B', 'sand': 'C9B89A', 'camel': '9A7350', 'gold': 'B48A3C', 'charcoal': '3A3A3A', 'navy': '1F2A44', 'olive': '5B5B3A', 'rose': 'C99A9A'}
 def svg(c, alt=False):

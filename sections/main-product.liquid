@@ -124,7 +124,7 @@
                 </div>
 
               {%- when 'summary' -%}
-                {%- assign summary = product.metafields.custom.summary.value | default: product.description | replace: '</p>', ' </p>' | replace: '</li>', ' </li>' | replace: '<br', ' <br' | strip_html | strip | truncatewords: bs.words -%}
+                {%- capture summary -%}{%- render 'mn-summary', product: product, words: bs.words -%}{%- endcapture -%}
                 {%- if summary != blank -%}
                   <div class="block pi-summary" {{ block.shopify_attributes }}>
                     <p>{{ summary }}</p>
@@ -170,7 +170,11 @@
                 <div class="block pi-qty" {{ block.shopify_attributes }}><span class="mn-field__label">{{ 'cart.quantity' | t }}</span><div data-qty data-form="{{ form_id }}"><input type="number" name="quantity" value="1" min="1" form="{{ form_id }}" class="input" aria-label="{{ 'cart.quantity' | t }}"></div></div>
 
               {%- when 'terms' -%}
-                <label class="block check pi-terms" {{ block.shopify_attributes }}><input type="checkbox" data-terms><span>{{ bs.text }}</span></label>
+                {%- if bs.must_tick -%}
+                  <label class="block check pi-terms" {{ block.shopify_attributes }}><input type="checkbox" data-terms><span>{{ bs.text }}</span></label>
+                {%- elsif bs.note != blank -%}
+                  <p class="block pi-terms-note" {{ block.shopify_attributes }}>{{ bs.note }}</p>
+                {%- endif -%}
 
               {%- when 'buy' -%}
                 <div class="block buy" {{ block.shopify_attributes }}>
@@ -279,8 +283,17 @@
 
   {%- comment -%}— Drawers and modals —{%- endcomment -%}
   {%- liquid
-    assign size_ok = false
-    if ss.size_guide_page or ss.size_chart != blank
+    # A page counts only when it has real content: a page setting saved as ""
+    # is truthy in Liquid and used to open an empty drawer.
+    assign sg_page = false
+    capture sg_text
+      echo ss.size_guide_page.content | strip_html | strip
+    endcapture
+    if sg_text.size > 0 or ss.size_guide_page.content contains '<img' or ss.size_guide_page.content contains '<table' or ss.size_guide_page.content contains '<iframe'
+      assign sg_page = true
+    endif
+    assign size_ok = sg_page
+    if ss.size_chart != blank
       assign size_ok = true
     endif
   -%}
@@ -290,7 +303,7 @@
       <div class="overlay__panel" style="width:min(560px,calc(100vw - 16px))">
         <div class="overlay__head"><h2 class="overlay__title" id="ov-size-t">{{ 'mn.pdp.size_guide' | t }}</h2><button type="button" class="icon-btn" data-close aria-label="{{ 'mn.pdp.close' | t }}"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button></div>
         <div class="overlay__body" id="sizeBody">
-          {%- if ss.size_guide_page -%}
+          {%- if sg_page -%}
             <div class="prose rte">{{ ss.size_guide_page.content }}</div>
           {%- else -%}
             <div class="sg__top">
@@ -551,7 +564,7 @@
       { "type": "checkbox", "id": "show_notes", "label": "Show unit price, tax and shipping notes", "default": true }
     ] },
     { "type": "summary", "name": "Short description", "limit": 1, "settings": [
-      { "type": "paragraph", "content": "Reads the custom.summary metafield, else the start of the description." },
+      { "type": "paragraph", "content": "Reads the custom.summary metafield, else the first paragraph of the description. Tables and lists are left out; they stay in Details." },
       { "type": "range", "id": "words", "label": "Words", "min": 10, "max": 80, "step": 2, "default": 40 },
       { "type": "checkbox", "id": "show_link", "label": "Show \"Read the full description\"", "default": true }
     ] },
@@ -571,8 +584,10 @@
       { "type": "checkbox", "id": "show_compare", "label": "Compare colours link", "default": true }
     ] },
     { "type": "quantity", "name": "Quantity", "limit": 1, "settings": [] },
-    { "type": "terms", "name": "Terms checkbox", "limit": 1, "settings": [
-      { "type": "inline_richtext", "id": "text", "label": "Text", "default": "I agree to the <a href=\"/policies/terms-of-service\">terms of sale</a> and the <a href=\"/policies/refund-policy\">returns policy</a>." }
+    { "type": "terms", "name": "Terms", "limit": 1, "settings": [
+      { "type": "checkbox", "id": "must_tick", "label": "Required before adding to bag", "info": "Shoppers must tick a box before the buy buttons work. Off shows the note below instead, which keeps buying one step shorter.", "default": false },
+      { "type": "inline_richtext", "id": "text", "label": "Checkbox text", "info": "Used when required.", "default": "I agree to the <a href=\"/policies/terms-of-service\">terms of sale</a> and the <a href=\"/policies/refund-policy\">returns policy</a>." },
+      { "type": "inline_richtext", "id": "note", "label": "Note", "info": "Used when not required. Leave blank to show nothing.", "default": "By ordering you accept our <a href=\"/policies/terms-of-service\">terms of sale</a> and <a href=\"/policies/refund-policy\">returns policy</a>." }
     ] },
     { "type": "buy", "name": "Buy buttons", "limit": 1, "settings": [
       { "type": "checkbox", "id": "show_dynamic", "label": "Show dynamic checkout buttons", "info": "Buy it now and express payment buttons, set in your Shopify payment settings.", "default": true },

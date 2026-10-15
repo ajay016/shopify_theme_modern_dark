@@ -22,7 +22,7 @@ def src(path):
     s = re.sub(r'\{%-?\s*paginate[^%]*%\}', '', s)
     return re.sub(r'\{%-?\s*endpaginate\s*-?%\}', '', s)
 
-NAMES = ('product-card', 'swatch-style', 'mn-icons', 'mn-compare', 'mn-wishlist', 'collection-filters', 'collection-filter-groups',
+NAMES = ('product-card', 'mn-summary', 'swatch-style', 'mn-icons', 'mn-compare', 'mn-wishlist', 'collection-filters', 'collection-filter-groups',
          'collection-filter-values', 'collection-sort', 'collection-view-toggle', 'icon-close', 'icon-chevron-down', 'icon-search', 'mn-pagination')
 snips = {n: src(f'snippets/{n}.liquid') for n in NAMES if os.path.exists(f'snippets/{n}.liquid')}
 env = Environment(loader=DictLoader(snips))

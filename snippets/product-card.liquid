@@ -407,8 +407,9 @@
       {%- endif -%}
 
       {%- comment -%}Short description for the collection list view; hidden in grids.{%- endcomment -%}
-      {%- if product.description != blank -%}
-        <p class="card__desc">{{ product.description | strip_html | truncatewords: 22 }}</p>
+      {%- capture card_desc -%}{%- render 'mn-summary', product: product, words: 22 -%}{%- endcapture -%}
+      {%- if card_desc != blank -%}
+        <p class="card__desc">{{ card_desc }}</p>
       {%- endif -%}
 
       <div class="price{% if on_sale and show_price_compare %} price--sale{% endif %}">

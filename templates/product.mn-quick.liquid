@@ -14,11 +14,11 @@
   if product.tags contains 'new' or product.tags contains 'New'
     assign is_new = true
   endif
-  assign summary = product.metafields.custom.summary.value | default: product.description | replace: '</p>', ' </p>' | replace: '</li>', ' </li>' | strip_html | strip | truncatewords: 34
   assign mat = product.metafields.custom.material.value
   assign ori = product.metafields.custom.origin.value
   assign care = product.metafields.custom.care.value
 -%}
+{%- capture summary -%}{%- render 'mn-summary', product: product, words: 34 -%}{%- endcapture -%}
 <div class="qv" data-qv data-colour-type="{{ settings.quickview_colour_type | default: 'colour' }}" data-size-type="{{ settings.quickview_size_type | default: 'text' }}" data-low="{{ settings.product_card_low_stock_threshold | default: 5 }}">
   <script type="application/json" data-product-json>{%- render 'mn-product-json', product: product -%}</script>
   {%- assign qv_atc = 'mn.card.add' | t -%}

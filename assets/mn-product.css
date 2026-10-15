@@ -153,6 +153,8 @@
 .pi-qty{display:grid;gap:8px;max-width:140px}
 .pi-terms{padding:14px 16px;border-radius:var(--r-card);border:1px solid var(--line);transition:border-color var(--dur)}
 .pi-terms.is-required{border-color:var(--line-strong)}
+.pi-terms-note{font-size:12.5px;line-height:1.55;color:var(--muted)}
+.pi-terms-note a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 .pi-terms.is-shake{animation:shake .45s var(--ease);border-color:var(--sale)}
 /* buy */
 .buy{display:grid;gap:10px}

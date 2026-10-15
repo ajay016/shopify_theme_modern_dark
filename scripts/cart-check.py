@@ -20,7 +20,7 @@ def src(path):
     s = re.sub(r"\{%-?\s*form\s+'(\w+)',\s*id:\s*'(\w+)',\s*class:\s*'([\w-]+)'\s*-?%\}", r'<form id="\2" class="\3" data-form="\1">', s)
     return re.sub(r'\{%-?\s*endform\s*-?%\}', '</form>', s)
 
-snips = {n: src(f'snippets/{n}.liquid') for n in ('mn-mega', 'mn-social', 'mn-localization', 'mn-icons', 'mn-payments', 'product-card', 'swatch-style')}
+snips = {n: src(f'snippets/{n}.liquid') for n in ('mn-mega', 'mn-social', 'mn-localization', 'mn-icons', 'mn-payments', 'product-card', 'swatch-style', 'mn-summary')}
 env = Environment(loader=DictLoader(snips))
 TONES = {'scarf': '%23E9E2D3', 'hoops': '%23B48A3C', 'dress': '%23151515', 'coat': '%238A6A4A'}
 def svg(c): return f'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 3 4%22%3E%3Crect width=%223%22 height=%224%22 fill=%22{c}%22/%3E%3C/svg%3E'

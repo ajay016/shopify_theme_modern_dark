@@ -43,13 +43,38 @@ const dir = process.argv[2] || '.';
   check('colour dropdown: Wine chosen, gallery jumps to its image', s.labels === 'Wine|S' && s.thumb === 7, JSON.stringify(s));
   check('L is sold out: struck, still selectable', await p.evaluate(() => { const b = document.querySelector('.sw-text[data-val="L"]'); return b.classList.contains('is-soldout') && !b.disabled; }));
 
-  // ---- Terms gate the buy buttons
-  check('terms unticked: buy disabled, hint shown, dynamic checkout greyed', s.atcDis === 'true' && await p.evaluate(() => document.querySelector('[data-hint]').classList.contains('is-open') && document.querySelector('.buy__dynamic').classList.contains('is-disabled')));
-  await p.click('#mainAtc', { force: true }); await p.waitForTimeout(150);
-  check('clicking the disabled button shakes the terms', await p.evaluate(() => document.querySelector('.pi-terms').classList.contains('is-shake')) && !calls.some(c => c.path === '/cart/add.js'));
-  await p.click('.pi-terms input'); await p.waitForTimeout(100);
+  // ---- Terms: a note by default, a gate only when the block says required
   s = await state(p);
-  check('terms ticked: buy enabled, hint gone', s.atcDis === 'false' && await p.evaluate(() => !document.querySelector('[data-hint]').classList.contains('is-open') && !document.querySelector('.buy__dynamic').classList.contains('is-disabled')));
+  check('terms off by default: a note, no checkbox, buy enabled, no hint', s.atcDis === 'false' && await p.evaluate(() => !!document.querySelector('.pi-terms-note a') && !document.querySelector('[data-terms]') && !document.querySelector('[data-hint]').classList.contains('is-open') && !document.querySelector('.buy__dynamic').classList.contains('is-disabled')), JSON.stringify(s));
+  {
+    const t = await open('pdp_terms');
+    let ts = await state(t);
+    check('terms required: buy disabled, hint shown, dynamic checkout greyed', ts.atcDis === 'true' && await t.evaluate(() => document.querySelector('[data-hint]').classList.contains('is-open') && document.querySelector('.buy__dynamic').classList.contains('is-disabled') && !document.querySelector('.pi-terms-note')));
+    await t.click('#mainAtc', { force: true }); await t.waitForTimeout(150);
+    check('clicking the disabled button shakes the terms', await t.evaluate(() => document.querySelector('.pi-terms').classList.contains('is-shake')) && !calls.some(c => c.path === '/cart/add.js'));
+    await t.click('.pi-terms input'); await t.waitForTimeout(100);
+    ts = await state(t);
+    check('terms ticked: buy enabled, hint gone', ts.atcDis === 'false' && await t.evaluate(() => !document.querySelector('[data-hint]').classList.contains('is-open') && !document.querySelector('.buy__dynamic').classList.contains('is-disabled')));
+    await t.close();
+  }
+
+  // ---- Summary: first real paragraph only, never a table or list
+  {
+    const t = await open('pdp_sumtable');
+    const sum = await t.evaluate(() => document.querySelector('.pi-summary p')?.textContent.trim());
+    check('summary is the first paragraph, no size table or list', /^Cut on the bias/.test(sum || '') && !/XS|Bust|Length|Second/.test(sum), JSON.stringify(sum));
+    check('the full description still has the table, in Details', await t.evaluate(() => [...document.querySelectorAll('.prose table')].some(x => /XS/.test(x.textContent))));
+    await t.close();
+  }
+
+  // ---- Size guide drawer: the chart unless a page with real content is set
+  for (const [f, want] of [['pdp_sg_blankpage', 'chart'], ['pdp_sg_emptypage', 'chart'], ['pdp_sg_page', 'page'], ['pdp_sg_none', 'none']]) {
+    const t = await open(f);
+    const g = await t.evaluate(() => { const o = document.getElementById('ov-size'); return { drawer: !!o, rows: o ? o.querySelectorAll('tr[data-size]').length : 0, prose: o ? (o.querySelector('.prose')?.textContent.trim() || '') : '', link: !!document.querySelector('[data-open="ov-size"]') }; });
+    const good = want === 'chart' ? g.drawer && g.rows >= 5 && !g.prose && g.link : want === 'page' ? g.drawer && /run true to size/.test(g.prose) && g.rows === 0 && g.link : !g.drawer && !g.link;
+    check(`size guide ${f.replace('pdp_sg_', '')}: shows the ${want === 'none' ? 'no drawer and no link' : want}`, good, JSON.stringify(g));
+    await t.close();
+  }
 
   // ---- Quantity + add to bag → drawer
   await p.click('.pi-qty [data-q="1"]'); await p.waitForTimeout(100);
@@ -149,7 +174,7 @@ const dir = process.argv[2] || '.';
   p = await open('pdp_btn');
   const bs = await p.evaluate(() => { const a = document.getElementById('mainAtc'); return { accent: a.classList.contains('atc--accent'), noicon: a.classList.contains('atc--noicon'), label: a.querySelector('.atc__label').textContent, anim: document.querySelector('.mn-pdp').dataset.atcAnim, qty: document.querySelector('.pi-qty .qty')?.className }; });
   check('button settings: accent, no icon, own label, lift; pill quantity', bs.accent && bs.noicon && bs.label === 'Reserve yours' && bs.anim === 'lift' && /qty--pill/.test(bs.qty), JSON.stringify(bs));
-  await p.click('.pi-terms input'); await p.click('#mainAtc'); await p.waitForTimeout(800);
+  await p.click('#mainAtc'); await p.waitForTimeout(800);
   check('after adding: notification instead of the drawer', await p.evaluate(() => document.getElementById('cartNotify').classList.contains('is-open') && !document.getElementById('ov-cart').classList.contains('is-open')));
   await p.click('.media--video'); await p.waitForTimeout(300);
   check('inline video plays inside the gallery', await p.evaluate(() => document.querySelector('.media--video').classList.contains('is-playing') && !!document.querySelector('.media--video video') && !document.getElementById('ov-video').classList.contains('is-open')));

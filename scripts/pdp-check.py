@@ -31,7 +31,7 @@ def src(path):
     s = s.replace('product.gift_card?', 'false')
     return s
 
-SN = ['mn-pdp-gallery', 'mn-pdp-details', 'mn-pdp-strings', 'mn-product-json', 'mn-payments', 'swatch-style', 'mn-icons', 'product-card', 'mn-social', 'mn-localization', 'mn-mega', 'mn-compare', 'mn-wishlist']
+SN = ['mn-pdp-gallery', 'mn-pdp-details', 'mn-pdp-strings', 'mn-product-json', 'mn-payments', 'swatch-style', 'mn-icons', 'product-card', 'mn-social', 'mn-localization', 'mn-mega', 'mn-compare', 'mn-wishlist', 'mn-summary']
 env = Environment(loader=DictLoader({n: src(f'snippets/{n}.liquid') for n in SN}))
 TONE = {'black': '151515', 'ivory': 'E9E2D3', 'wine': '5A1F2B', 'sand': 'C9B89A', 'camel': '9A7350', 'gold': 'B48A3C', 'charcoal': '3A3A3A'}
 def svg(c, k=0):
@@ -171,6 +171,17 @@ page('pdp_soldout', COAT); n += 1
 page('pdp_single', SCARF, blocks=[b for b in ORDER if b != 'terms']); n += 1
 page('pdp_countdown', DRESS, bover={'urgency': {'countdown_end': '2030-12-31 23:59', 'show_visitors': True}}); n += 1
 page('pdp_dark', DRESS, scheme='dark'); n += 1
+# R1: terms required (off by default), summary never flattens a size table,
+# size guide drawer only with real content
+page('pdp_terms', DRESS, bover={'terms': {'must_tick': True}}); n += 1
+TABLE_DESC = ('<h3>Size chart</h3><table><tr><th>Size</th><th>Bust</th></tr><tr><td><p>XS</p></td><td>80</td></tr></table>'
+              '<p><strong>Details</strong></p><p>Cut on the bias from 22-momme mulberry silk, then washed in Como until it turns soft.</p>'
+              '<ul><li>Bust 80 cm</li><li>Length 116 cm</li></ul><p>Second paragraph stays in Details.</p>')
+page('pdp_sumtable', dict(DRESS, description=TABLE_DESC)); n += 1
+page('pdp_sg_blankpage', DRESS, {'size_guide_page': ''}); n += 1
+page('pdp_sg_emptypage', DRESS, {'size_guide_page': {'content': '<p> </p>', 'title': 'Size guide'}}); n += 1
+page('pdp_sg_page', DRESS, {'size_guide_page': {'content': '<h2>Fit notes</h2><p>Our pieces run true to size.</p>', 'title': 'Size guide'}}); n += 1
+page('pdp_sg_none', DRESS, {'size_guide_page': '', 'size_chart': ''}); n += 1
 
 PICK = src('sections/mn-pickup.liquid')
 for v in DRESS['variants']:

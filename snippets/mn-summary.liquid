@@ -1,0 +1,61 @@
+{%- comment -%}
+  Short product description: the custom.summary metafield, else the
+  description's first real paragraph (6+ words, else the first non-empty one).
+  Tables and lists (size charts, specs) are dropped first, so measurements
+  never end up in the summary; they stay in Details and the size guide.
+  Usage: {% render 'mn-summary', product: product, words: 40 %}
+{%- endcomment -%}
+{%- liquid
+  assign words = words | default: 40
+  assign s = product.metafields.custom.summary.value | strip_html | strip
+  if s == blank
+    assign d = product.description | default: ''
+    assign drop = 'table,ul,ol,dl' | split: ','
+    for tag in drop
+      assign open = '<' | append: tag
+      assign close = '</' | append: tag | append: '>'
+      unless d contains open
+        continue
+      endunless
+      assign chunks = d | split: open
+      capture d
+        for c in chunks
+          if forloop.first
+            echo c
+          elsif c contains close
+            echo c | append: ' ' | split: close | last
+          endif
+        endfor
+      endcapture
+    endfor
+    if d contains '<p'
+      assign first_t = ''
+      assign paras = d | split: '</p>'
+      for para in paras
+        if para contains '<p'
+          assign inner = para | split: '<p' | last
+          assign t = '<p' | append: inner | replace: '<br', ' <br' | strip_html | strip
+        else
+          assign t = para | strip_html | strip
+        endif
+        if t == blank
+          continue
+        endif
+        if first_t == blank
+          assign first_t = t
+        endif
+        assign wc = t | split: ' ' | size
+        if wc >= 6
+          assign s = t
+          break
+        endif
+      endfor
+      if s == blank
+        assign s = first_t
+      endif
+    else
+      assign s = d | replace: '<br', ' <br' | replace: '</h', ' </h' | strip_html | strip
+    endif
+  endif
+  echo s | truncatewords: words
+-%}

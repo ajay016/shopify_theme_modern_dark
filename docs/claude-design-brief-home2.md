@@ -6,23 +6,11 @@ Paste everything below the line into Claude Design.
 
 Design a **new homepage** for **Maison Noir**, a luxury fashion house (womenswear, tailoring, silk, knitwear, leather goods, fine jewellery). It must look **elegant, modern and unique**: unlike a template, unlike the usual luxury-store homepage, and unlike the existing Maison Noir homepages. Restraint and confidence over decoration. Every section should have its own layout idea. No two sections should look like the same grid with different photos.
 
-## Colour: your choice
-Choose your own colour palette for this homepage: one that makes it feel modern, elegant and distinctive for a luxury fashion house. It is your decision; commit to it fully.
-
-So it does not repeat the store's existing schemes, avoid these families:
-- olive green with ivory
-- wine or burgundy with white
-- dark brown or taupe with gold
-- black with gold
-- plain white with gold
-
-Keep every text and background combination at WCAG AA (4.5:1 for body text, 3:1 for large text and buttons).
-
-Colour rules, so the palette can be added to the theme later:
-- Define the palette once on `:root` as a small set of tokens: `--c-base` (page background), `--c-soft` and `--c-deep` (alternate backgrounds), `--c-text`, `--c-muted`, `--c-contrast` (dark or strong bands), `--c-on-contrast` (text on those bands), `--c-accent`, `--c-accent-ink` (accent for small text, if the accent is too light), `--c-sale`. Add one or two more only if the design truly needs them.
+## How to organise the colours
+- Define all colours once on `:root` as a small set of tokens: `--c-base` (page background), `--c-soft` and `--c-deep` (alternate backgrounds), `--c-text`, `--c-muted`, `--c-contrast` (dark or strong bands), `--c-on-contrast` (text on those bands), `--c-accent`, `--c-accent-ink` (accent for small text, if the accent is too light), `--c-sale`. Add one or two more only if the design truly needs them.
 - Use only these tokens everywhere: no other hex or rgb values in the CSS, except pure white or black on photos.
 - Derived shades (borders, hovers, overlays) use `color-mix()` from these tokens.
-- Use both light and strong bands down the page, so the palette shows both ways.
+- Keep every text and background combination at WCAG AA (4.5:1 for body text, 3:1 for large text and buttons).
 
 ## Type
 Keep the store's fonts so the header and footer still match: **Newsreader** (display, including italics), **Geist** (body and interface) and **Geist Mono** (small labels and numbers), all from Google Fonts. Make it unique through scale, rhythm and layout, not new fonts.
@@ -32,7 +20,7 @@ Keep the store's fonts so the header and footer still match: **Newsreader** (dis
 2. **Thin ticker or marquee:** values or seasonal message.
 3. **Shop by category:** an unconventional layout (offset tiles, a large list with a hover image preview, or arches), with 4–6 categories.
 4. **New arrivals (required):** 8 product cards with tabs (All / Ready-to-wear / Accessories), image swap on hover, quick add, wishlist heart, colour dots and a "View all" link.
-5. **Editorial campaign:** a big image with a short story and one link, on a strong band.
+5. **Editorial campaign:** a big image with a short story and one link.
 6. **Best sellers:** a horizontal rail with arrows and numbered cards (01, 02…).
 7. **Shop the look:** a styled photo with 3 hotspots, each linked to a product card beside it, plus "Add all".
 8. **Limited drop:** a countdown, a short text, a product or image and a button.
@@ -43,7 +31,7 @@ Keep the store's fonts so the header and footer still match: **Newsreader** (dis
 13. **Journal:** 3 articles with date, title and "Read".
 14. **Social / community grid:** a 6-image mosaic and a follow link.
 15. **Services strip:** delivery, returns, appointments and gift wrap, with small icons.
-16. **Newsletter:** on a strong band, with an email field, a button and a small privacy note.
+16. **Newsletter:** an email field, a button and a small privacy note.
 
 You may add sections, but don't drop any of these.
 
@@ -60,4 +48,4 @@ You may add sections, but don't drop any of these.
 - **Accessibility:** real buttons and links, alt text, visible focus states, AA contrast.
 
 ## Deliverable
-The finished homepage, as `index.html`, `styles.css` and `script.js`, plus the palette: each token with its final value and one line on why you chose it.
+The finished homepage, as `index.html`, `styles.css` and `script.js`, plus a list of the colour tokens with their final values.

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Maison Noir · Responsive preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--c-base:#F3F0E9;--c-soft:#EAE5DA;--c-text:#1D1C19;--c-muted:#5D5850}
+*{box-sizing:border-box}body{margin:0;background:color-mix(in oklab,var(--c-soft),var(--c-text) 6%);color:var(--c-text);font:400 14px/1.5 "Geist",system-ui,sans-serif}
+a{color:inherit}a:hover{color:var(--c-muted)}
+.bar{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:14px 24px;background:var(--c-base);border-bottom:1px solid color-mix(in oklab,var(--c-text) 14%,transparent)}
+.bar b{font:500 11px "Geist Mono",monospace;letter-spacing:.12em;text-transform:uppercase;margin-right:8px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chips button{font:inherit;font-size:12px;padding:6px 10px;border:1px solid color-mix(in oklab,var(--c-text) 18%,transparent);background:none;border-radius:999px;cursor:pointer;color:var(--c-text)}
+.chips button[aria-pressed=true]{background:var(--c-text);color:var(--c-base)}
+.stage{display:flex;flex-wrap:wrap;gap:32px;padding:32px 24px;align-items:flex-start}
+.dev{display:grid;gap:10px}
+.dev p{margin:0;font:500 11px "Geist Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--c-muted)}
+.box{overflow:hidden;background:var(--c-base);box-shadow:0 20px 50px -20px color-mix(in oklab,var(--c-text) 40%,transparent);outline:1px solid color-mix(in oklab,var(--c-text) 14%,transparent)}
+.box iframe{border:0;display:block;transform-origin:0 0}
+</style>
+</head>
+<body>
+<div class="bar"><b>Jump all frames to</b><div class="chips" id="chips"></div><a href="index.html" target="_blank" style="margin-left:auto;font-size:12px">Open index.html ↗</a></div>
+<div class="stage">
+<div class="dev"><p>Phone · 390 × 844</p><div class="box" style="width:390px;height:844px"><iframe src="index.html" width="390" height="844" title="Phone 390"></iframe></div></div>
+<div class="dev"><p>Tablet · 1024 × 768 (shown at 60%)</p><div class="box" style="width:614px;height:461px"><iframe src="index.html" width="1024" height="768" style="transform:scale(.6)" title="Tablet 1024"></iframe></div></div>
+<div class="dev"><p>Desktop · 1440 × 900 (shown at 50%)</p><div class="box" style="width:720px;height:450px"><iframe src="index.html" width="1440" height="900" style="transform:scale(.5)" title="Desktop 1440"></iframe></div></div>
+</div>
+<script>
+const frames=[...document.querySelectorAll('iframe')],chips=document.getElementById('chips');
+frames[0].addEventListener('load',()=>{
+  const secs=[...frames[0].contentDocument.querySelectorAll('main [data-section]')];
+  secs.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.textContent=String(i+1).padStart(2,'0')+' '+s.dataset.section.replace(/-/g,' ');b.setAttribute('aria-pressed','false');
+    b.onclick=()=>{chips.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+      frames.forEach(f=>{const d=f.contentDocument,el=d&&d.querySelector('[data-section="'+s.dataset.section+'"]');if(!el)return;const w=f.contentWindow;
+        el.querySelectorAll('.rv').forEach(r=>r.classList.add('is-in'));
+        w.scrollTo(0,el.getBoundingClientRect().top+w.pageYOffset-(s.dataset.section==='hero'?999:68));});};
+    chips.appendChild(b);});
+});
+</script>
+</body>
+</html>

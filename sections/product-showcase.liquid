@@ -2,10 +2,12 @@
   assign s = section.settings
   assign scheme_class = 'psc--' | append: s.scheme
   assign collection = collections[s.collection]
-  assign fb = 'https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?auto=format&fit=crop&w=800&q=85|https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=85|https://images.unsplash.com/photo-1496217590455-aa63a8350eea?auto=format&fit=crop&w=800&q=85|https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=85|https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=800&q=85|https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=800&q=85|https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&q=85|https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=85' | split: '|'
-  assign demo_names = 'The Atelier Coat,Sculptural Blazer,Cashmere Turtleneck,Wide-Leg Trousers,Silk Midi Dress,Tailored Waistcoat,Wool Overcoat,Pleated Skirt' | split: ','
-  assign demo_prices = '$1,290|$890|$640|$580|$740|$420|$1,150|$390' | split: '|'
-  assign demo_cats = 'Outerwear,Tailoring,Knitwear,Trousers,Dresses,Tailoring,Outerwear,Skirts' | split: ','
+  # no collection chosen (or it is empty): the store's own products, so
+  # names, photos and links are real. Demo pieces only in an empty store.
+  assign col_n = collection.products.size | default: 0
+  if col_n == 0
+    assign collection = collections.all
+  endif
 -%}
 
 <section
@@ -39,12 +41,7 @@
           {%- if forloop.index > s.products_to_show -%}{%- break -%}{%- endif -%}
           <div class="reveal">{%- render 'product-card',
               scheme: s.scheme,
-              demo_index: i,
-              demo_title: demo_names[i],
-              demo_price: demo_prices[i],
-              demo_category: demo_cats[i],
-              demo_image: fb[i],
-              demo_url: routes.all_products_collection_url -%}</div>
+              demo_index: i -%}</div>
         {%- endfor -%}
       {%- endif -%}
     </div>

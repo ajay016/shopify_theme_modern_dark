@@ -28,7 +28,9 @@
   Groups whose target does not exist on the store are dropped
   entirely, so no entry here can 404.
 
-  Turn off in Theme settings → Demo → Show layout explorer.
+  Theme settings → Demo → Layout explorer: off, theme editor only
+  (default) or everyone. Shoppers can hide the button (remembered in
+  this browser); ?layouts=1 on any URL brings it back.
   ============================================================
 {%- endcomment -%}
 
@@ -47,9 +49,14 @@
 -%}
 
 <div class="lxp" data-lxp>
-  <button class="lxp-tab" type="button" data-lxp-toggle aria-expanded="false" aria-controls="lxp-panel">
-    <span class="lxp-tab__text">Layouts</span>
-  </button>
+  <div class="lxp-dock" data-lxp-dock>
+    <button class="lxp-tab" type="button" data-lxp-toggle aria-expanded="false" aria-controls="lxp-panel">
+      <span class="lxp-tab__text">Layouts</span>
+    </button>
+    <button class="lxp-hide" type="button" data-lxp-hide aria-label="Hide the Layouts button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
 
   <aside class="lxp-panel" id="lxp-panel" aria-label="Theme layouts" hidden>
     <div class="lxp-head">
@@ -63,7 +70,7 @@
     </div>
 
     <div class="lxp-body">
-      <p class="lxp-intro">Every layout in this theme, with a link to each. Hide this panel in <strong>Theme settings &rarr; Demo</strong> before going live.</p>
+      <p class="lxp-intro">Every layout in this theme, with a link to each. Hide this panel in <strong>Theme settings &rarr; Demo</strong> before going live. If you hide the button, add <code>?layouts=1</code> to any address to bring it back.</p>
 
       {%- comment -%}——— HOME ———{%- endcomment -%}
       {%- assign home_entries = 'Current homepage|/|index||ready' | split: '~~' -%}
@@ -137,11 +144,11 @@ Default|{{ blog_url }}|blog||ready~~Sidebar left|{{ blog_url }}?view=sidebar-lef
 
 <style>
   .lxp { position: fixed; z-index: var(--z-explorer, 300); inset: 0; pointer-events: none; }
-  .lxp-tab, .lxp-panel { pointer-events: auto; }
+  .lxp-dock, .lxp-panel { pointer-events: auto; }
+  .lxp[hidden] { display: none; }
+  .lxp-dock { position: fixed; top: 50%; right: 0; transform: translateY(-50%); }
 
   .lxp-tab {
-    position: fixed; top: 50%; right: 0;
-    transform: translateY(-50%);
     display: flex; align-items: center; justify-content: center;
     padding: 18px 9px; border: 0; border-right: 0; cursor: pointer;
     background: var(--gold, #C8A96E);
@@ -158,7 +165,16 @@ Default|{{ blog_url }}|blog||ready~~Sidebar left|{{ blog_url }}?view=sidebar-lef
     font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
     writing-mode: vertical-rl; text-orientation: mixed;
   }
-  .lxp[data-open="true"] .lxp-tab { display: none; }
+  .lxp-hide {
+    position: absolute; top: -9px; left: -9px;
+    display: grid; place-items: center; width: 22px; height: 22px; padding: 0;
+    border: 1px solid var(--modal-bdr, rgba(245,240,232,.18)); border-radius: 50%;
+    background: var(--modal-bg, #111); color: var(--modal-fg, #F5F0E8); cursor: pointer;
+    opacity: 0; transition: opacity .2s ease;
+  }
+  .lxp-dock:hover .lxp-hide, .lxp-hide:focus-visible { opacity: 1; }
+  .lxp-hide:focus-visible { outline: 2px solid var(--gold, #C8A96E); outline-offset: 2px; }
+  .lxp[data-open="true"] .lxp-dock { display: none; }
 
   .lxp-panel {
     position: fixed; top: 0; right: 0; bottom: 0;
@@ -254,9 +270,26 @@ Default|{{ blog_url }}|blog||ready~~Sidebar left|{{ blog_url }}?view=sidebar-lef
     white-space: nowrap;
   }
 
+  /* Phones: a small pill in the bottom corner, lifted above the product
+     page's sticky bar and the compare tray, never over the page controls */
   @media (max-width: 700px) {
     .lxp-panel { width: min(310px, 88%); }
-    .lxp-tab { padding: 14px 8px; }
+    .lxp-dock {
+      top: auto; right: auto; transform: none;
+      left: 12px; bottom: calc(12px + var(--sticky-h, 0px) + env(safe-area-inset-bottom, 0px));
+      display: flex; align-items: center;
+      transition: bottom .3s ease;
+    }
+    body:has(.cmp-tray.is-visible) .lxp-dock { bottom: calc(84px + var(--sticky-h, 0px) + env(safe-area-inset-bottom, 0px)); }
+    .lxp-tab { padding: 7px 12px; border-radius: 999px 0 0 999px; box-shadow: 0 6px 18px -8px rgba(0,0,0,.5); }
+    .lxp-tab:hover { padding-right: 12px; }
+    .lxp-tab__text { writing-mode: horizontal-tb; font-size: calc(10px * var(--fs-scale, 1)); letter-spacing: .14em; }
+    .lxp-hide {
+      position: static; opacity: 1; width: 29px; height: 29px;
+      border: 0; border-left: 1px solid color-mix(in oklab, var(--on-gold, #0A0A0A) 25%, transparent); border-radius: 0 999px 999px 0;
+      background: var(--gold, #C8A96E); color: var(--on-gold, #0A0A0A);
+      box-shadow: 0 6px 18px -8px rgba(0,0,0,.5);
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     html.motion-strict .lxp-panel { transition: none; }
@@ -270,6 +303,15 @@ Default|{{ blog_url }}|blog||ready~~Sidebar left|{{ blog_url }}?view=sidebar-lef
   var tab   = wrap.querySelector('[data-lxp-toggle]');
   var panel = wrap.querySelector('#lxp-panel');
   var KEY   = 'maison-layout-explorer-open';
+  var HIDE  = 'maison-layout-explorer-hidden';
+  var store = function(k, v){ try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} return null; };
+  // ?layouts=1 brings a hidden button back; the theme editor always shows it
+  if (/[?&]layouts=1\b/.test(location.search)) store(HIDE, null);
+  var editor = !!(window.Shopify && Shopify.designMode);
+  if (store(HIDE) === '1' && !editor) { wrap.hidden = true; return; }
+  wrap.querySelector('[data-lxp-hide]').addEventListener('click', function(){
+    store(HIDE, '1'); store(KEY, '0'); wrap.hidden = true;
+  });
 
   function open(){
     panel.removeAttribute('hidden');

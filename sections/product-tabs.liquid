@@ -1,19 +1,6 @@
 {%- liquid
   assign s = section.settings
 
-  assign demo_names = 'Alba Draped Coat,Sera Silk Dress,No. 03 Soft Bag,Linea Leather Mule,Vela Wool Blazer,Onda Pleated Skirt,Rive Cashmere Knit,Sable Leather Tote' | split: ','
-  assign demo_prices = '$890|$540|$620|$390|$760|$420|$480|$690' | split: '|'
-  assign demo_cats = 'Outerwear,Dresses,Leather goods,Shoes,Tailoring,Skirts,Knitwear,Leather goods' | split: ','
-  assign d1 = 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=700&q=80'
-  assign d2 = 'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=700&q=80'
-  assign d3 = 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=700&q=80'
-  assign d4 = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=700&q=80'
-  assign d5 = 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=700&q=80'
-  assign d6 = 'https://images.unsplash.com/photo-1520975954732-35dd22299614?auto=format&fit=crop&w=700&q=80'
-  assign d7 = 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=700&q=80'
-  assign d8 = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80'
-  assign demo_imgs_str = d1 | append: '||' | append: d2 | append: '||' | append: d3 | append: '||' | append: d4 | append: '||' | append: d5 | append: '||' | append: d6 | append: '||' | append: d7 | append: '||' | append: d8
-  assign demo_imgs = demo_imgs_str | split: '||'
 -%}
 
 <section
@@ -51,6 +38,18 @@
       {%- liquid
         assign col = collections[block.settings.collection]
         assign tab_shift = forloop.index0 | times: 2
+        # no collection on this tab: the store's own products, a different
+        # slice per tab when there are enough of them
+        assign p_skip = 0
+        assign col_n = col.products.size | default: 0
+        if col_n == 0
+          assign col = collections.all
+          assign p_skip = forloop.index0 | times: s.products_to_show
+          assign p_need = p_skip | plus: s.products_to_show
+          if col.products_count < p_need
+            assign p_skip = 0
+          endif
+        endif
       -%}
       <div
         class="ptab-panel{% if forloop.first %} is-active{% endif %}"
@@ -62,7 +61,7 @@
       >
         <div class="ptab-grid" style="--ptab-cols: {{ s.columns }};">
           {%- if col != blank and col.products.size > 0 -%}
-            {%- for product in col.products limit: s.products_to_show -%}
+            {%- for product in col.products limit: s.products_to_show offset: p_skip -%}
               <div class="ptab-item reveal">{%- render 'product-card', product: product, scheme: s.scheme -%}</div>
             {%- endfor -%}
           {%- else -%}
@@ -71,12 +70,7 @@
               {%- assign idx = forloop.index0 | plus: tab_shift | modulo: 8 -%}
               <div class="ptab-item reveal">{%- render 'product-card',
                 scheme: s.scheme,
-                demo_index: idx,
-                demo_title: demo_names[idx],
-                demo_price: demo_prices[idx],
-                demo_category: demo_cats[idx],
-                demo_image: demo_imgs[idx],
-                demo_url: routes.all_products_collection_url -%}</div>
+                demo_index: idx -%}</div>
             {%- endfor -%}
           {%- endif -%}
         </div>
@@ -263,7 +257,7 @@
       "name": "Tab",
       "settings": [
         { "type": "text", "id": "label", "label": "Tab label", "default": "View all" },
-        { "type": "collection", "id": "collection", "label": "Collection", "info": "Leave empty to show demo products." }
+        { "type": "collection", "id": "collection", "label": "Collection", "info": "Leave empty to show your newest products." }
       ]
     }
   ],

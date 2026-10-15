@@ -285,13 +285,34 @@ is left and what I need to check").
       block or the empty `size_guide_page`; the other product templates show the note.
       Tests: pdp 88 (7 new: note by default, required gate, summary vs a size table,
       size guide with a blank page, an empty page, a real page, and nothing set).
-- [ ] **R2 Demo content and copy** (points 3, 4, 6)
+- [x] **R2 Demo content and copy** (points 3, 4, 6)
       Homepage product sections point at real collections so real products, images and
       links show. Every built-in demo card gets a name and photo that match and a link to
       search for that piece, not the catalogue. Season copy aligned to Autumn / Winter
       2026 across announcement, hero and promotion; the private-sale countdown copy matches
       its date. Layouts tab: off for shoppers by default (a theme setting), compact
       bottom pill on phones, dismissible and remembered.
+      *Done:* the 9 homepage product sections (arrivals-lumiere, complete-the-look,
+      featured-products, product-noir, product-rail, product-showcase, product-tabs,
+      product-vitrine, shop-the-look) fall back to `collections.all` when no collection
+      is chosen, so the live store shows its own products; demo cards appear only in a
+      store with no products. Demo cards come from one catalogue in
+      `snippets/product-card.liquid` (12 pieces: name, category, price, photo, sizes,
+      colours), linked to `/search?type=product&q=<name>`; the per-section demo lists are
+      gone. The photos could not be viewed from the build machine (image hosts are
+      blocked), so each was chosen from Unsplash's research dataset where the photo's own
+      description and its AI keywords agree on the piece (e.g. "woman wearing brown
+      trench coat" + coat/overcoat). Shop the look and Complete the look use a look photo
+      whose pieces are in the catalogue. Copy: announcement, all heroes and section
+      defaults now say Autumn / Winter 2026; the countdown reads "The winter archive,
+      until 31 December" for its 31 December end date; demo journal dates are recent.
+      Layouts: Theme settings → Demo → Layout explorer = Off / Theme editor only
+      (default) / Everyone; this demo store is set to Everyone. Phones get a pill in the
+      bottom-left corner that rides above the sticky add-to-bag bar and the compare tray;
+      × hides it (remembered), `?layouts=1` brings it back.
+      Tests: `scripts/r2-test.js` (13), with `MN_EMPTY=1 scripts/home-check.py` for an
+      empty store and `scripts/explorer-check.py`. The home harness now treats an unset
+      collection as nil and `nil == blank` as true, as Shopify does.
 - [ ] **H0 Receive the design** — the owner pushes Claude Design's homepage 2 files
       (`index.html`, `styles.css`, `script.js`, palette list) to
       `docs/claude_design_ref_home2/`.
@@ -308,8 +329,11 @@ is left and what I need to check").
       collection spotlight.
 - [ ] **H4 Sections, part 3** — craft story, lookbook, press, journal, social grid,
       services, newsletter (and any extra sections the design has).
-- [ ] **H5 Template and verification** — `templates/index.<name>.json` with every
-      section in the design's order; default images chosen for this palette and
+- [ ] **H5 Template and verification** — the new homepage becomes the store's default
+      home: `templates/index.json` (what Shopify renders at "/"), with a named copy
+      `templates/index.<name>.json` so `scripts/use-home.sh` can switch back and forth.
+      The current default is already kept as `templates/index.aureline.json`, so nothing
+      is lost. Every section in the design's order; default images chosen for this palette and
       checked one by one (subject matches its label, not the usual stock set); pixel
       diff within tolerance at all three widths; editor re-render, motion, contrast and
       phone sweeps; other homepages and pages unchanged (their tests still pass).

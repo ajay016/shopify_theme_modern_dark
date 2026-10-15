@@ -1,15 +1,16 @@
 {%- liquid
   assign s = section.settings
   assign col = collections[s.collection]
-  assign look_fallback = 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1100&q=85'
+  # no collection chosen (or it is empty): the store's own products, so
+  # names, photos and links are real. Demo pieces only in an empty store.
+  assign col_n = col.products.size | default: 0
+  if col_n == 0
+    assign col = collections.all
+  endif
+  assign look_fallback = 'https://images.unsplash.com/photo-1576825989290-834718163c82?auto=format&fit=crop&w=1100&q=85'
+  # demo pieces from that look: the trench coat and a hat
+  assign look_pieces = '0,9' | split: ','
 
-  assign demo_names = 'Champagne Silk Gown,Drop Pearl Earrings' | split: ','
-  assign demo_prices = '$1,480|$340' | split: '|'
-  assign demo_cats = 'Eveningwear,Jewellery' | split: ','
-  assign l1 = 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=700&q=80'
-  assign l2 = 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=700&q=80'
-  assign demo_imgs_str = l1 | append: '||' | append: l2
-  assign demo_imgs = demo_imgs_str | split: '||'
 -%}
 
 <section
@@ -48,12 +49,7 @@
           {%- for i in (0..1) -%}
             <div class="stl-card reveal">{%- render 'product-card',
               scheme: s.scheme, number: forloop.index,
-              demo_index: i,
-              demo_title: demo_names[i],
-              demo_price: demo_prices[i],
-              demo_category: demo_cats[i],
-              demo_image: demo_imgs[i],
-              demo_url: routes.all_products_collection_url -%}</div>
+              demo_index: look_pieces[i] -%}</div>
           {%- endfor -%}
         {%- endif -%}
       </div>
@@ -149,7 +145,7 @@
       ],
       "default": "light"
     },
-    { "type": "paragraph", "content": "The first two products of the chosen collection appear as shoppable cards beside the look. Cards follow Theme settings → Product Cards; demo items show until a collection is connected." },
+    { "type": "paragraph", "content": "The first two products of the chosen collection appear as shoppable cards beside the look. Cards follow Theme settings → Product Cards; with no collection chosen, your newest products show." },
     { "type": "image_picker", "id": "image", "label": "Look image" },
     { "type": "text", "id": "tag_label", "label": "Image tag", "default": "Look 05 — Eveningwear" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Shop the Look" },

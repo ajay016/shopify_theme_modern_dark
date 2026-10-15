@@ -97,7 +97,7 @@
       {%- liquid
         assign placeholder_titles   = 'The Art of Understated Luxury|How to Build a Considered Wardrobe|Inside Our Milan Atelier' | split: '|'
         assign placeholder_excerpts = 'A deep dive into what quiet luxury means for the modern wardrobe — and why restraint is the ultimate statement.|The capsule wardrobe is not about minimalism for its own sake. It is about choosing with intention, piece by lasting piece.|We open the doors of our workshop to share the craft behind every seam, every decision, every detail.'  | split: '|'
-        assign placeholder_dates    = 'May 12, 2025|April 28, 2025|April 10, 2025' | split: ','
+        assign placeholder_dates    = 'September 28, 2026|September 9, 2026|August 21, 2026' | split: ','
       -%}
       <div class="blog-posts__grid blog-posts__grid--{{ layout }}">
         {%- for i in (1..posts_to_show) -%}
@@ -133,7 +133,7 @@
             </a>
 
             <div class="blog-card__body">
-              <time class="blog-card__date">{{ placeholder_dates[pi] | default: 'May 2025' }}</time>
+              <time class="blog-card__date">{{ placeholder_dates[pi] | default: 'September 2026' }}</time>
               <h3 class="blog-card__title">
                 <a href="#">{{ placeholder_titles[pi] | default: 'From the Atelier' }}</a>
               </h3>

@@ -533,8 +533,8 @@
   {
     "name": "Demo",
     "settings": [
-      { "type": "paragraph", "content": "The Layout Explorer is a panel pinned to the edge of the screen listing every layout this theme ships, each one a link. It exists because a Shopify theme cannot install a navigation menu — so on a freshly installed store nothing else shows the buyer what layouts they have. Turn it off before going live." },
-      { "type": "checkbox", "id": "show_layout_explorer", "label": "Show layout explorer", "default": true }
+      { "type": "paragraph", "content": "The Layout Explorer is a panel pinned to the edge of the screen listing every layout this theme ships, each one a link. It exists because a Shopify theme cannot install a navigation menu — so on a freshly installed store nothing else shows the buyer what layouts they have. Keep it to the theme editor (or off) once the store is live." },
+      { "type": "select", "id": "layout_explorer", "label": "Layout explorer", "options": [ { "value": "off", "label": "Off" }, { "value": "editor", "label": "Theme editor only" }, { "value": "everyone", "label": "Everyone (demo stores)" } ], "default": "editor", "info": "Shoppers can hide the button; add ?layouts=1 to any address to bring it back." }
     ]
   },
   {

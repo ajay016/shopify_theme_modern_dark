@@ -178,7 +178,7 @@
     };
   </script>
 
-  {%- if settings.show_layout_explorer -%}
+  {%- if settings.layout_explorer == 'everyone' or settings.layout_explorer == 'editor' and request.design_mode -%}
     {%- render 'demo-explorer' -%}
   {%- endif -%}
 

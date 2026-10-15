@@ -11,6 +11,13 @@ scripts/content-check.py.
 """
 import glob, json, os, re, shutil, sys, importlib.util
 from liquid import Environment, DictLoader
+from liquid.builtin.expressions.primitive import Blank
+from liquid import Undefined
+# Shopify: nil == blank is true. python-liquid says false, which would send
+# every demo product card down the real-product branch.
+_blank_eq = Blank.__eq__
+Blank.__eq__ = lambda self, other: other is None or isinstance(other, Undefined) or _blank_eq(self, other)
+Blank.__hash__ = object.__hash__
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else '.'
 os.makedirs(OUT, exist_ok=True)
@@ -75,13 +82,17 @@ def _col(t, n, d=''):
             'image': None, 'featured_image': None, 'description': d}
 LIST = [_col(t, n, d) for t, n, d in (('Ready-to-wear', 42, 'Tailoring, silk and knitwear for every season.'), ('Dresses', 18, 'Slip dresses, wraps and evening pieces.'),
         ('Knitwear', 26, 'Cashmere and merino, knitted in Scotland.'), ('Leather goods', 14, 'Bags and small leather goods.'), ('Shoes', 12, ''), ('Jewellery', 22, 'Gold vermeil and pearls.'))]
+# MN_EMPTY=1: a store with no products yet, so sections show their demo cards
+EMPTY = bool(os.environ.get('MN_EMPTY'))
 class Coll(list):
     """Shopify's `collections`: loops over every collection, and also answers collections['handle']."""
     def __init__(self): super().__init__(LIST)
     def __getitem__(self, k):
         if isinstance(k, (int, slice)): return list.__getitem__(self, k)
-        return {'id': 1, 'handle': str(k or 'all'), 'title': str(k or 'New arrivals').replace('-', ' ').title(), 'url': f'/collections/{k or "all"}', 'products': cc.P,
-                'products_count': len(cc.P), 'image': None, 'featured_image': None, 'description': 'Considered pieces in silk, cashmere and leather.'}
+        if not k: return None  # an unset collection setting is nil in Shopify
+        prods = [] if EMPTY else cc.P
+        return {'id': 1, 'handle': str(k), 'title': str(k).replace('-', ' ').title(), 'url': f'/collections/{k}', 'products': prods,
+                'products_count': len(prods), 'image': None, 'featured_image': None, 'description': 'Considered pieces in silk, cashmere and leather.'}
     def get(self, k, d=None): return self[k]
     def __contains__(self, k): return True
     @property

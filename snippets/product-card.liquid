@@ -23,7 +23,9 @@
     - lazy {Boolean}              lazy-load images (default true)
 
   Demo fallback (when product is blank):
-    - demo_title, demo_price, demo_category, demo_image, demo_url, demo_index
+    - demo_index: picks a piece from the shared demo catalogue below
+      (name, photo, price, sizes and colours always belong together)
+    - demo_title, demo_price, demo_category, demo_image: only without demo_index
 
   Hooks kept for theme.js: [data-pcard] + data-* facets (built-in filters),
   .product-card__json (quick view), [data-wishlist-id], [data-open-quickview],
@@ -87,11 +89,35 @@
 {%- if product == blank -%}
   {%- comment -%}— Demo card (no collection connected) —{%- endcomment -%}
   {%- liquid
+    # One demo catalogue for every section, so a name always matches its
+    # photo. Photos are chosen from Unsplash's dataset where the photo's
+    # description and its keywords agree on the piece. Sections pass
+    # demo_index; demo_title etc. are only used without one.
+    assign dc_titles = 'Camel Trench Coat~Black Tailored Blazer~Ivory Silk Gown~Linen Market Tote~Tobacco Wool Blazer~Gold Silk Scarf~Diamond Stacking Rings~Leather Court Pump~Brown Wool Overcoat~Felt Fedora~Leather Shoulder Bag~Shearling-Lined Coat' | split: '~'
+    assign dc_cats   = 'Outerwear~Tailoring~Eveningwear~Bags~Tailoring~Accessories~Jewellery~Shoes~Outerwear~Accessories~Bags~Outerwear' | split: '~'
+    assign dc_prices = '$1,290~$860~$2,450~$320~$790~$260~$1,850~$540~$1,150~$280~$1,480~$2,100' | split: '~'
+    assign dc_photos = '1576825989290-834718163c82~1597571557303-a7a16dfeb22d~1745270093288-b6613a4030fe~1745389501313-450f73911264~1552760647-0a848d97bff3~1572696607346-f2305721ccca~1571614796598-f87df30b2ce7~1569296279933-5a010ac6c333~1584099671756-219b1e15c3ff~1588847051290-19b23c74e76c~1745284300322-1789f1718463~1553302567-3e5cce2c7917' | split: '~'
+    assign dc_sizes  = 'XS|S|M|L|XL~XS|S|M|L~XS|S|M|L~One size~S|M|L|XL~One size~5|6|7|8~36|37|38|39|40~XS|S|M|L~S|M|L~One size~S|M|L' | split: '~'
+    assign dc_cols   = 'Camel|Black~Black|Navy~Ivory|Champagne~Ecru|Black~Chocolate|Charcoal~Gold|Ivory~Gold|Silver~Black|Nude~Brown|Camel~Brown|Black~Black|Cognac~Black|Brown' | split: '~'
+
     assign d_title = demo_title | default: 'Atelier Piece'
-    assign d_url   = demo_url   | default: routes.all_products_collection_url
     assign d_cat   = demo_category | default: 'Atelier'
     assign d_price = demo_price | default: '$0'
     assign d_img   = demo_image
+    assign d_size_s = 'XS|S|M|L'
+    assign d_col_s  = 'Black|Ivory'
+    if demo_index != blank
+      assign ci = demo_index | modulo: 12
+      assign d_title = dc_titles[ci]
+      assign d_cat   = dc_cats[ci]
+      assign d_price = dc_prices[ci]
+      assign d_img   = 'https://images.unsplash.com/photo-' | append: dc_photos[ci] | append: '?auto=format&fit=crop&w=700&h=933&q=80'
+      assign d_size_s = dc_sizes[ci]
+      assign d_col_s  = dc_cols[ci]
+    endif
+    # a demo piece links to a search for it, never to the whole catalogue
+    assign d_title_q = d_title | url_encode
+    assign d_url = routes.search_url | default: '/search' | append: '?type=product&q=' | append: d_title_q
     # derive cents from the display price so the quick-view popup shows it
     assign d_cents = d_price | remove: '$' | remove: '€' | remove: '£' | remove: ',' | strip | times: 100
 
@@ -99,22 +125,20 @@
     # panel on a store with no catalogue is a working demonstration. Values
     # are deterministic from demo_index, so the filters and cards agree.
     assign di = demo_index | default: 0 | modulo: 6
-    assign d_sizes_all = 'XS|S|M|L~S|M|L|XL~XS|S|M~M|L|XL~S|M|L~XS|S|M|L|XL' | split: '~'
-    assign d_cols_all  = 'Black|Ivory~Ivory|Sand~Black|Wine~Sand|Charcoal~Black|Ivory|Sand~Charcoal|Wine' | split: '~'
     assign d_vendors   = 'Maison Noir~Atelier Series~Maison Noir~Maison Noir~Atelier Series~Maison Noir' | split: '~'
     assign d_tagsets   = 'new|essentials~sale|archive~new|limited~essentials~sale|essentials~new|limited' | split: '~'
     assign d_discounts = '0~30~0~20~50~0' | split: '~'
     assign d_ages      = '7~120~21~200~45~9' | split: '~'
     assign d_ratings   = '5~4~4~3~5~4' | split: '~'
 
-    assign d_opts = d_sizes_all[di] | append: '|' | append: d_cols_all[di] | append: '|'
+    assign d_opts = d_size_s | append: '|' | append: d_col_s | append: '|'
     assign d_disc = d_discounts[di] | plus: 0
     assign d_onsale = false
     if d_disc > 0
       assign d_onsale = true
     endif
-    assign d_cols = d_cols_all[di] | split: '|'
-    assign d_sizes = d_sizes_all[di] | split: '|'
+    assign d_cols = d_col_s | split: '|'
+    assign d_sizes = d_size_s | split: '|'
   -%}
   <article class="card product-card{% if rail %} card--rail{% endif %}" {{ card_attrs }}
     data-pcard

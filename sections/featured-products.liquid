@@ -2,23 +2,16 @@
   assign heading      = section.settings.heading
   assign subheading   = section.settings.subheading
   assign collection   = collections[section.settings.collection]
+  # no collection chosen (or it is empty): the store's own products, so
+  # names, photos and links are real. Demo pieces only in an empty store.
+  assign col_n = collection.products.size | default: 0
+  if col_n == 0
+    assign collection = collections.all
+  endif
   assign products_to_show = section.settings.products_to_show
   assign columns      = section.settings.columns
   assign show_view_all = section.settings.show_view_all
 
-  assign demo_names  = 'Oversized Wool Coat,Structured Calfskin Tote,Column Gown in Silk,Tailored Blazer,Cashmere Roll Neck,Pleated Midi Skirt,Leather Ankle Boot,Wide-Leg Trouser' | split: ','
-  assign demo_prices = '$1,240|$890|$2,150|$960|$540|$420|$780|$610' | split: '|'
-  assign demo_cats   = 'Outerwear,Leather Goods,Eveningwear,Tailoring,Knitwear,Skirts,Footwear,Trousers' | split: ','
-  assign f1 = 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=700&q=80'
-  assign f2 = 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=700&q=80'
-  assign f3 = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=700&q=80'
-  assign f4 = 'https://images.unsplash.com/photo-1520975954732-35dd22299614?auto=format&fit=crop&w=700&q=80'
-  assign f5 = 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=700&q=80'
-  assign f6 = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80'
-  assign f7 = 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=700&q=80'
-  assign f8 = 'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=700&q=80'
-  assign demo_imgs_str = f1 | append: '||' | append: f2 | append: '||' | append: f3 | append: '||' | append: f4 | append: '||' | append: f5 | append: '||' | append: f6 | append: '||' | append: f7 | append: '||' | append: f8
-  assign demo_imgs = demo_imgs_str | split: '||'
 %}
 
 <section class="section featured-products" id="section-{{ section.id }}">
@@ -47,17 +40,12 @@
           {%- render 'product-card', product: product, number: forloop.index -%}
         {%- endfor -%}
       {%- else -%}
-        {%- comment -%}Demo cards — same unified product card, shown until a collection is connected{%- endcomment -%}
+        {%- comment -%}Demo cards — same unified product card, shown only in a store with no products yet{%- endcomment -%}
         {%- for i in (1..8) -%}
           {%- if forloop.index > products_to_show -%}{%- break -%}{%- endif -%}
           {%- assign idx = forloop.index0 -%}
           {%- render 'product-card',
-              demo_index: idx,
-              demo_title: demo_names[idx],
-              demo_price: demo_prices[idx],
-              demo_category: demo_cats[idx],
-              demo_image: demo_imgs[idx],
-              demo_url: routes.all_products_collection_url -%}
+              demo_index: idx -%}
         {%- endfor -%}
       {%- endif -%}
     </div>

@@ -1,20 +1,13 @@
 {%- liquid
   assign s = section.settings
   assign col = collections[s.collection]
+  # no collection chosen (or it is empty): the store's own products, so
+  # names, photos and links are real. Demo pieces only in an empty store.
+  assign col_n = col.products.size | default: 0
+  if col_n == 0
+    assign col = collections.all
+  endif
 
-  assign demo_names = 'Sculpted Wool Coat,Bias-Cut Slip Dress,Pointed Leather Heels,Structured Tote,Merino Roll Neck,Tailored Trouser,Silk Twill Scarf,Tortoise Eyewear' | split: ','
-  assign demo_prices = '€890,€420,€380,€640,€260,€310,€150,€220' | split: ','
-  assign demo_cats = 'Outerwear,Dresses,Footwear,Leather Goods,Knitwear,Tailoring,Accessories,Eyewear' | split: ','
-  assign d1 = 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=700&q=80'
-  assign d2 = 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=700&q=80'
-  assign d3 = 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=700&q=80'
-  assign d4 = 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=700&q=80'
-  assign d5 = 'https://images.unsplash.com/photo-1520975954732-35dd22299614?auto=format&fit=crop&w=700&q=80'
-  assign d6 = 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=700&q=80'
-  assign d7 = 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?auto=format&fit=crop&w=700&q=80'
-  assign d8 = 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=700&q=80'
-  assign demo_imgs_str = d1 | append: '||' | append: d2 | append: '||' | append: d3 | append: '||' | append: d4 | append: '||' | append: d5 | append: '||' | append: d6 | append: '||' | append: d7 | append: '||' | append: d8
-  assign demo_imgs = demo_imgs_str | split: '||'
 -%}
 
 <section
@@ -48,12 +41,7 @@
         {%- assign idx = forloop.index0 -%}
         {%- render 'product-card',
             scheme: s.scheme, rail: true,
-            demo_index: idx,
-            demo_title: demo_names[idx],
-            demo_price: demo_prices[idx],
-            demo_category: demo_cats[idx],
-            demo_image: demo_imgs[idx],
-            demo_url: routes.all_products_collection_url -%}
+            demo_index: idx -%}
       {%- endfor -%}
     {%- endif -%}
   </div>
@@ -162,7 +150,7 @@
     { "type": "paragraph", "content": "Card design, image ratio, hover behaviour, wishlist and quick view all follow Theme settings → Product Cards." },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "New This Week" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "The Latest Arrivals" },
-    { "type": "collection", "id": "collection", "label": "Collection (demo items shown if empty)" },
+    { "type": "collection", "id": "collection", "label": "Collection", "info": "Leave empty to show your newest products." },
     { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 4, "max": 8, "step": 1, "default": 8 },
     { "type": "text", "id": "cta_label", "label": "Button label", "default": "Shop All New Arrivals" },
     { "type": "url",  "id": "cta_url",   "label": "Button link" }

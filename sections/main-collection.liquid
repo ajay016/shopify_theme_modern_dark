@@ -391,25 +391,6 @@
       {%- if section.settings.bestsellers_position == 'above' -%}{{ bestsellers_row }}{%- endif -%}
 
       {%- if use_demo and has_active_filters == false -%}
-        {%- liquid
-          assign demo_names = 'Alba Draped Coat,Sera Silk Dress,No. 03 Soft Bag,Linea Leather Mule,Vela Wool Blazer,Onda Pleated Skirt,Rive Cashmere Knit,Sable Leather Tote,Structured Wool Coat,Tailored Trouser,Cashmere Roll Neck,Belted Trench' | split: ','
-          assign demo_prices = '$890|$540|$620|$390|$760|$420|$480|$690|$1,290|$420|$540|$1,150' | split: '|'
-          assign demo_cats = 'Outerwear,Dresses,Leather goods,Shoes,Tailoring,Skirts,Knitwear,Leather goods,Outerwear,Tailoring,Knitwear,Outerwear' | split: ','
-          assign k1 = 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=700&q=80'
-          assign k2 = 'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=700&q=80'
-          assign k3 = 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=700&q=80'
-          assign k4 = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=700&q=80'
-          assign k5 = 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=700&q=80'
-          assign k6 = 'https://images.unsplash.com/photo-1520975954732-35dd22299614?auto=format&fit=crop&w=700&q=80'
-          assign k7 = 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=700&q=80'
-          assign k8 = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80'
-          assign k9 = 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=700&q=80'
-          assign k10 = 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=700&q=80'
-          assign k11 = 'https://images.unsplash.com/photo-1496217590455-aa63a8350eea?auto=format&fit=crop&w=700&q=80'
-          assign k12 = 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=700&q=80'
-          assign demo_imgs_str = k1 | append: '||' | append: k2 | append: '||' | append: k3 | append: '||' | append: k4 | append: '||' | append: k5 | append: '||' | append: k6 | append: '||' | append: k7 | append: '||' | append: k8 | append: '||' | append: k9 | append: '||' | append: k10 | append: '||' | append: k11 | append: '||' | append: k12
-          assign demo_imgs = demo_imgs_str | split: '||'
-        -%}
         <p class="collection-demo-note">
           Showing demo products — this collection has no products yet. Turn this off in
           <strong>Collection &rarr; Show demo products when empty</strong>.
@@ -418,12 +399,7 @@
           {%- for i in (1..12) -%}
             {%- assign idx = forloop.index0 -%}
             {%- render 'product-card',
-              demo_index: idx,
-              demo_title: demo_names[idx],
-              demo_price: demo_prices[idx],
-              demo_category: demo_cats[idx],
-              demo_image: demo_imgs[idx],
-              demo_url: routes.all_products_collection_url -%}
+              demo_index: idx -%}
           {%- endfor -%}
         </div>
 

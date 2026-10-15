@@ -28,7 +28,18 @@
 {%- liquid
   assign scheme = settings.color_scheme | default: 'olive'
   # Olive is the Claude Design default palette, fixed; Custom reads the pickers.
-  if scheme == 'olive'
+  if scheme == 'maison'
+    # Maison: the homepage design's palette, fixed (for the older sections' aliases)
+    assign c_black = '#F3F0E9'
+    assign c_charcoal = '#EAE5DA'
+    assign c_cream = '#1D1C19'
+    assign c_gold = '#8A3A1C'
+    assign c_gold_light = '#E39A7A'
+    assign c_muted = '#5D5850'
+    assign c_ivory = '#F8F6F1'
+    assign c_sale = '#FFFFFF'
+    assign c_sale_bg = '#9A2A1D'
+  elsif scheme == 'olive'
     assign c_black = '#F2F1EA'
     assign c_charcoal = '#E9E8E1'
     assign c_cream = '#1F2620'
@@ -246,7 +257,7 @@
     --btn-ghost-bdr: rgba(237,224,204,0.28);
   }
 
-{%- when 'custom', 'olive' -%}
+{%- when 'custom', 'olive', 'maison' -%}
   :root {
     --s1-bg: {{ c_black }};
     --lift: color-mix(in srgb, {{ c_cream }} 4%, transparent);

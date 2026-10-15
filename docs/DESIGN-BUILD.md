@@ -375,6 +375,15 @@ is left and what I need to check").
       48 checks, 0.00–0.3 % of pixels differ for most; lookbook 2.8 % at 1024 from the
       reworded captions); `scripts/home2-test.js` (53 behaviour checks, stocked and empty
       store, editor re-render, Motion Off, no sideways scroll); all other suites rerun.
-- [ ] **H6 Palette as a theme scheme** (only if the owner likes it) — add the new
-      palette to Theme settings → Colors as a scheme for the whole store.
+- [x] **H6 Palette as a theme scheme** — Theme settings → Colors → Color Scheme →
+      "Maison (parchment, ink and terracotta)", for the whole store. Tokens in
+      `assets/mn-core.css` (`[data-scheme=maison]`): base #F3F0E9, soft #EAE5DA, deep
+      #DCD4C3, text #1D1C19, muted #5D5850, contrast band #20221D / #EEE9DE, sale
+      #9A2A1D. The theme sets small text (labels, links, prices) in its accent, so the
+      scheme's accent is the design's accent-ink #8A3A1C (7.6:1 on the base), as the
+      design does for small type; the bright terracotta #B4532F stays as
+      `--c-accent-bright` and in the Maison sections' own palette. On the dark band the
+      accent is #E39A7A. The older sections' aliases (`snippets/css-variables.liquid`)
+      come from the same nine colours through the Olive / Custom ladder. The store is
+      not switched: the owner chooses it in Customize. Sweep: 7 schemes.
 - [x] **D8b Visual comparison** (above).

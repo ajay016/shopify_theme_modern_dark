@@ -134,6 +134,8 @@ HEAD = f'''/* ==================================================================
    define the three extra tokens the design needs. */
 .mh{{--c-muted:color-mix(in oklab,var(--c-text) 62%,var(--c-base));--c-on-contrast:var(--c-base);--c-accent-ink:var(--c-accent)}}
 .mh.mh--own{{{palette}}}
+/* the store-wide Maison scheme carries the same three tokens exactly */
+[data-scheme=maison] .mh{{--c-muted:#5D5850;--c-on-contrast:#EEE9DE;--c-accent-ink:#8A3A1C}}
 .mh{{
 --mh-line:color-mix(in oklab,var(--c-text) 14%,transparent);--mh-line-strong:color-mix(in oklab,var(--c-text) 34%,transparent);
 --mh-muted-inv:color-mix(in oklab,var(--c-on-contrast) 72%,var(--c-contrast));--mh-line-inv:color-mix(in oklab,var(--c-on-contrast) 20%,transparent);

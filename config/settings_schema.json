@@ -17,6 +17,7 @@
         "info": "Applies a preset palette. You can still override individual colors below.",
         "options": [
           { "value": "olive", "label": "Olive (Claude Design default)" },
+          { "value": "maison", "label": "Maison (parchment, ink and terracotta)" },
           { "value": "dark",  "label": "Dark" },
           { "value": "light", "label": "Light" },
           { "value": "ivory-wine", "label": "Wine" },

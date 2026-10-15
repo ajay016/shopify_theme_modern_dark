@@ -17,7 +17,7 @@ ROOT = sys.argv[1]
 spec = importlib.util.spec_from_file_location('hc', 'scripts/home-check.py')
 hc = importlib.util.module_from_spec(spec); sys.argv = sys.argv[:1] + [os.path.join(ROOT, 'hm')]; spec.loader.exec_module(hc)
 
-SCHEMES = ('olive', 'light', 'ivory-wine', 'dark', 'warm', 'custom')
+SCHEMES = ('olive', 'maison', 'light', 'ivory-wine', 'dark', 'warm', 'custom')
 PAGES = {
     'hm': ['hm_default', 'hm_atelier', 'hm_blanc', 'hm_classic', 'hm_lumiere', 'hm_noir', 'hm_page_about-v1', 'hm_list-collections'],
     't_collection': ['cl_sidebar', 'cl_active', 'cl_panel', 'cl_title2', 'sr_results', 'sr_empty'],

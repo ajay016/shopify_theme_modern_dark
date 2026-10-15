@@ -223,5 +223,15 @@ is left and what I need to check").
       pointer" class was never set, so both pointers showed; it is now set when the
       setting is on. The four homepage sections no template uses (still in Add section)
       got the same button / eyebrow treatment as the other 54.
+- [x] **About pages + collections list** — `stats-row` and `team-grid` rewritten in the
+      design's language (display numerals with muted labels; portrait cards with an
+      initial when there is no photo, name, role, bio, social icons only when a link is
+      set; eyebrow / heading / intro, alignment and background surface settings). Both
+      About templates shipped with no blocks, so the stats row and the team grid
+      rendered empty; they now carry four figures and four people to edit. The
+      collections list's tiles take the design's card radius; its "Limit to a menu"
+      check no longer depends on how an empty setting compares. `scripts/home-check.py`
+      now also renders the About and collections-list templates (`home-test.js`, 110
+      checks).
 - [ ] **D8 Verification** — every setting renders and works (audit), editor re-render,
       390 / 1024 / 1440, all schemes, reduced motion, screenshots against the reference.

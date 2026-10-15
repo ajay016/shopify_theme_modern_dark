@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Render every homepage template (templates/index*.json) as saved: each
+"""Render every homepage template (templates/index*.json), the About pages and
+the collections list as saved: each
 section with its schema defaults, the template's settings and blocks, the
 store's theme settings (config/settings_data.json) and their CSS variables,
 into pages that load the real theme CSS/JS. Products, collections and the
@@ -69,13 +70,23 @@ env.filters['color_modify'] = lambda v, *a, **k: str(v)
 env.filters['color_mix'] = lambda v, *a, **k: str(v)
 env.filters['t'] = rc._translate
 
-class Coll(dict):
+def _col(t, n, d=''):
+    return {'id': n, 'handle': t.lower().replace(' ', '-'), 'title': t, 'url': '/collections/' + t.lower().replace(' ', '-'), 'products': cc.P, 'products_count': n,
+            'image': None, 'featured_image': None, 'description': d}
+LIST = [_col(t, n, d) for t, n, d in (('Ready-to-wear', 42, 'Tailoring, silk and knitwear for every season.'), ('Dresses', 18, 'Slip dresses, wraps and evening pieces.'),
+        ('Knitwear', 26, 'Cashmere and merino, knitted in Scotland.'), ('Leather goods', 14, 'Bags and small leather goods.'), ('Shoes', 12, ''), ('Jewellery', 22, 'Gold vermeil and pearls.'))]
+class Coll(list):
+    """Shopify's `collections`: loops over every collection, and also answers collections['handle']."""
+    def __init__(self): super().__init__(LIST)
     def __getitem__(self, k):
-        if dict.__contains__(self, k): return dict.__getitem__(self, k)
+        if isinstance(k, (int, slice)): return list.__getitem__(self, k)
         return {'id': 1, 'handle': str(k or 'all'), 'title': str(k or 'New arrivals').replace('-', ' ').title(), 'url': f'/collections/{k or "all"}', 'products': cc.P,
                 'products_count': len(cc.P), 'image': None, 'featured_image': None, 'description': 'Considered pieces in silk, cashmere and leather.'}
     def get(self, k, d=None): return self[k]
     def __contains__(self, k): return True
+    @property
+    def size(self): return len(self)
+PAGE = {'title': 'Our story', 'handle': 'about', 'url': '/pages/about', 'content': '<p>Maison Noir began in a small atelier in Milan in 2009, with one idea: fewer pieces, made properly.</p><h2>How we work</h2><p>Every garment is cut in Italy from fabrics we choose at the mill, and finished by hand.</p><blockquote><p>Buy less, choose well, make it last.</p></blockquote><p>We publish where each piece is made and what it costs to make it.</p>'}
 LOREM = '<p>Mulberry silk is the most forgiving fibre we work with. Treated well it lasts for decades and softens with every wear.</p>'
 ARTS = [{'id': i, 'title': t, 'url': f'/blogs/journal/{i}', 'tags': [g], 'image': None, 'author': 'Clara Rossi', 'published_at': 'x', 'excerpt': '', 'content': LOREM}
         for i, (t, g) in enumerate((('Caring for silk, season after season', 'Care'), ('Inside the Como atelier', 'Atelier'), ('The wrap coat, cut three ways', 'Style')), 1)]
@@ -104,7 +115,7 @@ def section_html(key, sec):
     ctx = dict(section={'id': key, 'settings': st, 'blocks': blocks}, settings=SETTINGS, collections=Coll(), blogs=Blogs(), routes=ROUTES, forms=FORMS,
                shop={'name': 'Maison Noir', 'url': 'https://maison-noir.example', 'currency': 'USD', 'money_format': '${{amount}}'}, request={'page_type': 'index', 'design_mode': False},
                template={'name': 'index'}, linklists={}, cart={'item_count': 0, 'items': []}, localization={'available_countries': [], 'available_languages': []},
-               all_products=Coll(), product=None, customer=None, canonical_url='/', powered_by_link='')
+               all_products=Coll(), product=None, customer=None, canonical_url='/', powered_by_link='', page=PAGE)
     try:
         body = env.from_string(src(path)).render(**ctx)
     except Exception as e:
@@ -119,7 +130,7 @@ ICONS = env.from_string(snips['mn-icons']).render()
 attrs = env.from_string(snips['mn-html-attrs']).render(settings=SETTINGS, request={'locale': {'iso_code': 'en'}})
 VARS = env.from_string(snips['css-variables']).render(settings=SETTINGS)
 errors = {}
-names = sys.argv[2:] or [os.path.basename(f)[:-5] for f in sorted(glob.glob('templates/index*.json'))]
+names = sys.argv[2:] or [os.path.basename(f)[:-5] for pat in ('index*', 'page.about*', 'list-collections*') for f in sorted(glob.glob(f'templates/{pat}.json'))]
 for name in names:
     t = jload(f'templates/{name}.json')
     parts = []
@@ -135,7 +146,8 @@ for name in names:
             '<script>window.MN_STRINGS={cmp:{},wish:{}};window.routes={root_url:"/",cart_url:"/cart",cart_add_url:"/cart/add",cart_change_url:"/cart/change"};'
             'window.theme_settings={cart_type:"none",money_format:"${{amount}}"};window.theme_strings={}</script>'
             '<script src="/theme.js"></script><script src="/mn.js"></script><script src="/mn-product.js"></script></body></html>')
-    open(os.path.join(OUT, f'hm_{name.replace("index.", "").replace("index", "default")}.html'), 'w').write(page)
+    tag = name.replace('index.', '').replace('index', 'default') if name.startswith('index') else name.replace('.', '_')
+    open(os.path.join(OUT, f'hm_{tag}.html'), 'w').write(page)
 for f in CSS + tuple(EXTRA) + ('theme.js', 'mn.js', 'mn-product.js'):
     shutil.copy(os.path.join('assets', f), OUT)
 for k, e in errors.items(): print('RENDER ERROR', k, e[:300])

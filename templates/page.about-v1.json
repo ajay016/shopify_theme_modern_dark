@@ -2,16 +2,104 @@
   "sections": {
     "main": {
       "type": "main-page",
-      "settings": { "layout": "v1" }
+      "settings": {
+        "layout": "v1"
+      }
     },
     "team": {
       "type": "team-grid",
-      "settings": {}
+      "settings": {},
+      "blocks": {
+        "member_1": {
+          "type": "member",
+          "settings": {
+            "name": "Isabelle Moreau",
+            "role": "Creative Director",
+            "bio": "Twenty years in Paris and Milan ateliers before founding the house."
+          }
+        },
+        "member_2": {
+          "type": "member",
+          "settings": {
+            "name": "Luca Ferri",
+            "role": "Head of Atelier",
+            "bio": "Oversees every pattern and fitting."
+          }
+        },
+        "member_3": {
+          "type": "member",
+          "settings": {
+            "name": "Amara Chen",
+            "role": "Fabric Sourcing",
+            "bio": "Works with our two mills in Como and Biella."
+          }
+        },
+        "member_4": {
+          "type": "member",
+          "settings": {
+            "name": "Jonas Weber",
+            "role": "Client Care",
+            "bio": "Answers every message within one working day."
+          }
+        }
+      },
+      "block_order": [
+        "member_1",
+        "member_2",
+        "member_3",
+        "member_4"
+      ]
     },
     "stats": {
       "type": "stats-row",
-      "settings": {}
+      "settings": {
+        "eyebrow": "The house in numbers"
+      },
+      "blocks": {
+        "stat_1": {
+          "type": "stat",
+          "settings": {
+            "value": "2009",
+            "label": "Founded",
+            "description": "A small atelier in Milan"
+          }
+        },
+        "stat_2": {
+          "type": "stat",
+          "settings": {
+            "value": "47",
+            "label": "Artisans",
+            "description": "Cutters, tailors and finishers"
+          }
+        },
+        "stat_3": {
+          "type": "stat",
+          "settings": {
+            "value": "32",
+            "label": "Countries",
+            "description": "Shipped with care"
+          }
+        },
+        "stat_4": {
+          "type": "stat",
+          "settings": {
+            "value": "100%",
+            "label": "Made in Italy",
+            "description": "From mill to final stitch"
+          }
+        }
+      },
+      "block_order": [
+        "stat_1",
+        "stat_2",
+        "stat_3",
+        "stat_4"
+      ]
     }
   },
-  "order": ["main", "stats", "team"]
+  "order": [
+    "main",
+    "stats",
+    "team"
+  ]
 }

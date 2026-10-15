@@ -47,13 +47,19 @@ const check = (n, c, extra = '') => { console.log((c ? 'PASS ' : 'FAIL ') + n + 
       return { n: secs.length, errors: document.querySelectorAll('.render-error').length, actions: actions.length, upperActions, bigEyebrows, upperHeads, rails, lowContrast,
                w: Math.max(document.documentElement.scrollWidth, innerWidth) };
     });
-    check(`${n}: ${r.n} sections render`, r.n > 3 && r.errors === 0);
+    check(`${n}: ${r.n} sections render`, r.n > (/^hm_(page|list)/.test(n) ? 0 : 3) && r.errors === 0);
     check(`${n}: buttons and links in sentence case (${r.actions})`, r.upperActions.length === 0, r.upperActions.join(' '));
     check(`${n}: eyebrows at the design size`, r.bigEyebrows.length === 0, r.bigEyebrows.join(' '));
     check(`${n}: section headings not in capitals`, r.upperHeads.length === 0, r.upperHeads.join(' '));
     check(`${n}: filled buttons legible (contrast ≥ 3)`, r.lowContrast.length === 0, r.lowContrast.join(' '));
     if (r.rails.length) check(`${n}: rail cards at least 200px`, Math.min(...r.rails) >= 200, r.rails.join(','));
     check(`${n}: no sideways scroll at 1440`, r.w <= 1440, String(r.w));
+    if (n === 'hm_page_about-v1') {
+      const a = await p.evaluate(() => ({ stats: document.querySelectorAll('.mn-stat').length, team: document.querySelectorAll('.mn-member').length, social: document.querySelectorAll('.mn-member__social').length, title: getComputedStyle(document.querySelector('.mn-stat__value')).fontFamily }));
+      check('about: four figures in the display face', a.stats === 4 && /Newsreader/.test(a.title));
+      check('about: four team members', a.team === 4);
+      check('about: no social buttons without links', a.social === 0);
+    }
     await p.close();
     p = await open(n, 390);
     const w = await p.evaluate(() => Math.max(document.documentElement.scrollWidth, innerWidth));

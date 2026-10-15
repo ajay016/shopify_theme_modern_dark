@@ -2,16 +2,66 @@
   "sections": {
     "hero": {
       "type": "image-with-text",
-      "settings": { "layout": "right" }
+      "settings": {
+        "layout": "right"
+      }
     },
     "main": {
       "type": "main-page",
-      "settings": { "layout": "v2" }
+      "settings": {
+        "layout": "v2"
+      }
     },
     "stats": {
       "type": "stats-row",
-      "settings": {}
+      "settings": {
+        "eyebrow": "The house in numbers"
+      },
+      "blocks": {
+        "stat_1": {
+          "type": "stat",
+          "settings": {
+            "value": "2009",
+            "label": "Founded",
+            "description": "A small atelier in Milan"
+          }
+        },
+        "stat_2": {
+          "type": "stat",
+          "settings": {
+            "value": "47",
+            "label": "Artisans",
+            "description": "Cutters, tailors and finishers"
+          }
+        },
+        "stat_3": {
+          "type": "stat",
+          "settings": {
+            "value": "32",
+            "label": "Countries",
+            "description": "Shipped with care"
+          }
+        },
+        "stat_4": {
+          "type": "stat",
+          "settings": {
+            "value": "100%",
+            "label": "Made in Italy",
+            "description": "From mill to final stitch"
+          }
+        }
+      },
+      "block_order": [
+        "stat_1",
+        "stat_2",
+        "stat_3",
+        "stat_4"
+      ]
     }
   },
-  "order": ["hero", "main", "stats"]
+  "order": [
+    "hero",
+    "main",
+    "stats"
+  ]
 }

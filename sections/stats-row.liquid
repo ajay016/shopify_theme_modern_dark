@@ -1,33 +1,56 @@
-<section class="section stats-row" id="section-{{ section.id }}">
-  <div class="container">
-    <div class="stats-row__grid">
+{%- comment -%}
+  A row of figures in the design's language: an optional eyebrow and heading,
+  large display numerals with small muted labels, on any of the design's
+  surfaces.
+{%- endcomment -%}
+{%- assign ss = section.settings -%}
+<section class="mn-stats mn-stats--{{ ss.align }}" id="section-{{ section.id }}"{% if ss.surface != 'base' %} data-surface="{{ ss.surface }}"{% endif %}>
+  <div class="mn-container">
+    {%- if ss.eyebrow != blank or ss.heading != blank -%}
+      <div class="mn-stats__head">
+        {%- if ss.eyebrow != blank -%}<span class="mn-eyebrow">{{ ss.eyebrow }}</span>{%- endif -%}
+        {%- if ss.heading != blank -%}<h2 class="section-title">{{ ss.heading }}</h2>{%- endif -%}
+      </div>
+    {%- endif -%}
+    <dl class="mn-stats__grid" style="--stats:{{ section.blocks.size | at_least: 1 }}">
       {%- for block in section.blocks -%}
-        <div class="stat-item" {{ block.shopify_attributes }}>
-          <span class="stat-item__value">{{ block.settings.value }}</span>
-          <span class="stat-item__label">{{ block.settings.label }}</span>
-          {%- if block.settings.description != blank -%}
-            <p class="stat-item__desc">{{ block.settings.description }}</p>
-          {%- endif -%}
+        <div class="mn-stat" {{ block.shopify_attributes }}>
+          <dt class="mn-stat__value">{{ block.settings.value }}</dt>
+          <dd class="mn-stat__text">
+            <span class="mn-stat__label">{{ block.settings.label }}</span>
+            {%- if block.settings.description != blank -%}<span class="mn-stat__desc">{{ block.settings.description }}</span>{%- endif -%}
+          </dd>
         </div>
       {%- endfor -%}
-    </div>
+    </dl>
   </div>
 </section>
-
-<style>
-  .stats-row { padding: var(--section-spacing) 0; border-top: 1px solid var(--border, rgba(200,169,110,.18)); border-bottom: 1px solid var(--border, rgba(200,169,110,.18)); }
-  .stats-row__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 40px; text-align: center; }
-  .stat-item__value { display: block; font-family: var(--ff-display); font-size: calc(clamp(36px, 5vw, 64px) * var(--fs-scale, 1)); font-weight: var(--fw-display, 300); color: var(--gold, #C8A96E); line-height: 1; margin-bottom: 8px; }
-  .stat-item__label { display: block; font-size: var(--fs-xs); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--muted, rgba(245,240,232,.62)); }
-  .stat-item__desc { font-size: calc(12px * var(--fs-scale, 1)); color: var(--muted, rgba(245,240,232,.62)); margin-top: 8px; line-height: 1.5; }
-</style>
 
 {% schema %}
 {
   "name": "Stats Row",
-  "tag": "section",
+  "tag": "div",
+  "class": "section-stats-row",
   "max_blocks": 6,
-  "settings": [],
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading" },
+    {
+      "type": "select", "id": "align", "label": "Alignment",
+      "options": [ { "value": "center", "label": "Centre" }, { "value": "left", "label": "Left" } ],
+      "default": "center"
+    },
+    {
+      "type": "select", "id": "surface", "label": "Background",
+      "options": [
+        { "value": "base", "label": "Page colour" },
+        { "value": "soft", "label": "Soft" },
+        { "value": "deep", "label": "Deep" },
+        { "value": "invert", "label": "Inverted" }
+      ],
+      "default": "base"
+    }
+  ],
   "blocks": [
     {
       "type": "stat",
@@ -43,10 +66,10 @@
     {
       "name": "Stats Row",
       "blocks": [
-        { "type": "stat", "settings": { "value": "1998", "label": "Founded" } },
-        { "type": "stat", "settings": { "value": "100+", "label": "Global Stockists" } },
-        { "type": "stat", "settings": { "value": "50+", "label": "Countries" } },
-        { "type": "stat", "settings": { "value": "14", "label": "Awards" } }
+        { "type": "stat", "settings": { "value": "2009", "label": "Founded" } },
+        { "type": "stat", "settings": { "value": "47", "label": "Artisans" } },
+        { "type": "stat", "settings": { "value": "32", "label": "Countries" } },
+        { "type": "stat", "settings": { "value": "100%", "label": "Made in Italy" } }
       ]
     }
   ]

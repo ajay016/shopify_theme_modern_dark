@@ -1,0 +1,95 @@
+{%- comment -%}Maison homepage · Community mosaic of six (design section "community"){%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tid = 'mh-so-' | append: section.id
+-%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-so{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="community" data-surface aria-labelledby="{{ tid }}">
+  <div class="mh-wrap">
+    <div class="mh-so__head">
+      <div class="mh-reveal">
+        {%- if s.eyebrow != blank -%}<span class="mh-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+        <h2 class="mh-h2" id="{{ tid }}">{{ s.heading }}</h2>
+      </div>
+      {%- if s.link_label != blank -%}<a class="mh-lnk mh-reveal" href="{{ s.link | default: settings.social_instagram | default: '#' }}"{% if s.link == blank and settings.social_instagram != blank %} target="_blank" rel="noopener"{% endif %}>{{ s.link_label }} {% render 'mh-icon', name: 'arrow' %}</a>{%- endif -%}
+    </div>
+    <ul class="mh-so__grid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          case b.handle
+            when '@claire.v'
+              assign ph = '1579197708675-52ebac41f16a'
+              assign alt = 'smiling in a brown coat and a pale hat under blossom'
+              assign tone = 2
+            when '@atelier.ren'
+              assign ph = '1745242395967-c69b5af856a6'
+              assign alt = 'white curtains framing a bright window'
+              assign tone = 5
+            when '@margaux_l'
+              assign ph = '1744638628542-12578d73179b'
+              assign alt = 'coffee and pastries on a wooden tray'
+              assign tone = 4
+            when '@studio.ines'
+              assign ph = '1584262473475-97f18c672138'
+              assign alt = 'a blue stone ring on a hand'
+              assign tone = 3
+            when '@noor.k'
+              assign ph = '1568191865467-aee587b22f9c'
+              assign alt = 'walking on the beach at sunset'
+              assign tone = 1
+            when '@lea.marchand'
+              assign ph = '1586732748737-c6e2298271d1'
+              assign alt = 'black coat and umbrella on a snowy road'
+              assign tone = 6
+            else
+              assign ph = ''
+              assign alt = b.text
+              assign tone = forloop.index0 | modulo: 6 | plus: 1
+          endcase
+          if b.text != blank
+            assign alt = b.text
+          endif
+          assign delay = forloop.index0 | times: 0.06
+        -%}
+        <li class="mh-so__tile mh-reveal"{% unless forloop.first %} style="--mh-d:{{ delay }}s"{% endunless %} {{ block.shopify_attributes }}>
+          <a href="{{ b.link | default: settings.social_instagram | default: '#' }}" aria-label="{{ 'mn.mh.post_by' | t: handle: b.handle, text: alt | escape }}">
+            {%- render 'mh-img', image: b.image, photo: ph, tone: tone, sizes: '(max-width: 720px) 50vw, 33vw', deco: true -%}
+            <span class="mh-so__over">{%- render 'mh-icon', name: 'insta' -%}<span>{{ b.handle }}</span></span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Community",
+  "class": "mh-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Community" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Worn <em>by you</em>" },
+    { "type": "text", "id": "link_label", "label": "Link", "default": "Follow @maisonnoir" },
+    { "type": "url", "id": "link", "label": "Link to", "info": "Leave blank to use your Instagram from Theme settings → Social media." }
+  ],
+  "blocks": [
+    { "type": "tile", "name": "Post", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Image" },
+      { "type": "text", "id": "handle", "label": "Handle", "default": "@claire.v" },
+      { "type": "text", "id": "text", "label": "What the photo shows", "info": "For screen readers." },
+      { "type": "url", "id": "link", "label": "Link", "info": "The post. Leave blank for your Instagram." }
+    ] }
+  ],
+  "presets": [{ "name": "Maison · Community", "blocks": [
+    { "type": "tile", "settings": { "handle": "@claire.v" } },
+    { "type": "tile", "settings": { "handle": "@atelier.ren" } },
+    { "type": "tile", "settings": { "handle": "@margaux_l" } },
+    { "type": "tile", "settings": { "handle": "@studio.ines" } },
+    { "type": "tile", "settings": { "handle": "@noor.k" } },
+    { "type": "tile", "settings": { "handle": "@lea.marchand" } }
+  ] }]
+}
+{% endschema %}

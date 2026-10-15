@@ -1,0 +1,87 @@
+{%- comment -%}Maison homepage · Collection spotlight: a sticky panel that follows the chapters (design section "collection-spotlight"){%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tid = 'mh-sp-' | append: section.id
+  assign c0 = section.blocks.first.settings
+-%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-sp{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="collection-spotlight" data-surface aria-labelledby="{{ tid }}">
+  <div class="mh-sp__grid mh-wrap">
+    <div class="mh-sp__panel">
+      <div class="mh-sp__intro mh-reveal">
+        {%- if s.eyebrow != blank -%}<span class="mh-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+        <h2 class="mh-h2" id="{{ tid }}">{{ s.heading }}</h2>
+        {%- if s.text != blank -%}<p>{{ s.text }}</p>{%- endif -%}
+      </div>
+      <div class="mh-sp__now" aria-hidden="true"><span class="mh-sp__numeral" data-numeral>{{ c0.numeral }}</span><span class="mh-sp__ctitle" data-ctitle>{{ c0.title }}</span></div>
+      <div class="mh-sp__foot">
+        <ol class="mh-sp__steps" data-steps></ol>
+        {%- if s.link_label != blank -%}<a class="mh-lnk" href="{{ s.link | default: routes.all_products_collection_url }}">{{ s.link_label }} {% render 'mh-icon', name: 'arrow' %}</a>{%- endif -%}
+      </div>
+    </div>
+    <div class="mh-sp__chapters">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          case b.title
+            when 'The thread'
+              assign ph = '1574883140236-2e2cb0835792'
+              assign alt = 'Spools and skeins of thread'
+              assign tone = 4
+            when 'The cut'
+              assign ph = '1579372650773-dcfbf74b446e'
+              assign alt = 'A pair of scissors beside dried flowers'
+              assign tone = 2
+            when 'The hand'
+              assign ph = '1745270093288-b6613a4030fe'
+              assign alt = 'Hands clasped over an ivory silk dress'
+              assign tone = 1
+            when 'The wear'
+              assign ph = '1552644867-3c98a63f38eb'
+              assign alt = 'Woman in a long dress among autumn leaves'
+              assign tone = 5
+            else
+              assign ph = ''
+              assign alt = b.title
+              assign tone = forloop.index0 | modulo: 6 | plus: 1
+          endcase
+        -%}
+        <figure class="mh-sp__ch mh-reveal" data-num="{{ b.numeral | escape }}" data-title="{{ b.title | escape }}" {{ block.shopify_attributes }}>
+          {%- render 'mh-img', image: b.image, photo: ph, alt: alt, tone: tone, class: 'mh-sp__img', sizes: '(max-width: 720px) 100vw, 46vw' -%}
+          <figcaption class="mh-sp__cap"><span class="mh-sp__cap-n">{{ b.numeral }} · {{ b.place }}</span><span class="mh-sp__cap-t">{{ b.title }}</span>{%- if b.text != blank -%}<p>{{ b.text }}</p>{%- endif -%}</figcaption>
+        </figure>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Spotlight",
+  "class": "mh-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Collection spotlight" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Soie, <em>slowly</em>" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "The silk edit in four chapters: from a mill on Lake Como to the hem you feel at the wrist." },
+    { "type": "text", "id": "link_label", "label": "Link", "default": "Explore the silk edit" },
+    { "type": "url", "id": "link", "label": "Link to" }
+  ],
+  "blocks": [
+    { "type": "chapter", "name": "Chapter", "settings": [
+      { "type": "text", "id": "numeral", "label": "Numeral", "default": "I" },
+      { "type": "text", "id": "title", "label": "Title", "default": "The thread" },
+      { "type": "text", "id": "place", "label": "Place", "default": "Como, Italy" },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "Our silk is woven at a family mill on Lake Como, at 22 momme, so it falls rather than clings." },
+      { "type": "image_picker", "id": "image", "label": "Image", "info": "Portrait, 4:5 (the third chapter is square)." }
+    ] }
+  ],
+  "presets": [{ "name": "Maison · Spotlight", "blocks": [
+    { "type": "chapter", "settings": { "numeral": "I", "title": "The thread", "place": "Como, Italy", "text": "Our silk is woven at a family mill on Lake Como, at 22 momme, so it falls rather than clings." } },
+    { "type": "chapter", "settings": { "numeral": "II", "title": "The cut", "place": "Paris atelier", "text": "Every slip is cut on the true bias by hand, one layer at a time, so the fabric moves with the body." } },
+    { "type": "chapter", "settings": { "numeral": "III", "title": "The hand", "place": "Rolled hems", "text": "Hems are rolled and stitched by hand to four millimetres. A single dress takes a full afternoon." } },
+    { "type": "chapter", "settings": { "numeral": "IV", "title": "The wear", "place": "For decades", "text": "Silk this dense softens with wear. We clean and repair every piece, for life." } }
+  ] }]
+}
+{% endschema %}

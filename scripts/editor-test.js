@@ -72,7 +72,7 @@ const RERENDER = sel => {
   await p.close();
 
   // ---- homepage: product tabs, countdown
-  p = await open('hm', 'hm_default');
+  p = await open('hm', 'hm_aureline');
   check('home: product tabs re-rendered twice', await twice(p, '[data-section-type="product-tabs"]'));
   const ptab = p.locator('[data-section-type="product-tabs"] .ptab-tab').nth(1);
   await ptab.scrollIntoViewIfNeeded(); await ptab.click(); await p.waitForTimeout(300);

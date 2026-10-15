@@ -1,0 +1,45 @@
+{%- comment -%}Maison homepage · Newsletter, Shopify's customer form (design section "newsletter"){%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tid = 'mh-nl-' | append: section.id
+  assign fid = 'mh-nl-email-' | append: section.id
+-%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-nl{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="newsletter" data-surface aria-labelledby="{{ tid }}" id="mh-newsletter-{{ section.id }}">
+  <div class="mh-nl__grid mh-wrap">
+    <h2 class="mh-nl__title mh-reveal" id="{{ tid }}">{{ s.title_1 }}{%- if s.title_2 != blank -%} <em>{{ s.title_2 }}</em>{%- endif -%}</h2>
+    {%- form 'customer', class: 'mh-nl__form mh-reveal', novalidate: 'novalidate' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <input type="hidden" name="return_to" value="{{ request.path | default: '/' }}#mh-newsletter-{{ section.id }}">
+      {%- if s.text != blank -%}<p class="mh-nl__lede">{{ s.text }}</p>{%- endif -%}
+      <label class="mh-eyebrow" for="{{ fid }}">{{ s.label }}</label>
+      <div class="mh-nl__row">
+        <input id="{{ fid }}" type="email" name="contact[email]" autocomplete="email" required placeholder="{{ s.placeholder | escape }}" aria-describedby="{{ fid }}-msg {{ fid }}-note"{% if form.errors %} aria-invalid="true"{% endif %}>
+        <button class="mh-btn" type="submit">{{ s.button }}</button>
+      </div>
+      <p class="mh-nl__msg{% if form.errors %} is-error{% endif %}" id="{{ fid }}-msg" role="status" aria-live="polite" data-invalid="{{ 'mn.mh.invalid_email' | t | escape }}">
+        {%- if form.posted_successfully? -%}{{ s.success }}{%- elsif form.errors -%}{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}{%- endif -%}
+      </p>
+      {%- if s.note != blank -%}<div class="mh-nl__note" id="{{ fid }}-note">{{ s.note }}</div>{%- endif -%}
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Newsletter",
+  "class": "mh-section",
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "text", "id": "title_1", "label": "Heading", "default": "Letters from" },
+    { "type": "text", "id": "title_2", "label": "Heading, second line (italic)", "default": "the atelier" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "One letter a month: new collections, private appointments and the occasional story from the workroom." },
+    { "type": "text", "id": "label", "label": "Field label", "default": "Email address" },
+    { "type": "text", "id": "placeholder", "label": "Placeholder", "default": "you@example.com" },
+    { "type": "text", "id": "button", "label": "Button", "default": "Subscribe" },
+    { "type": "text", "id": "success", "label": "After subscribing", "default": "Thank you. Your first letter arrives at the start of next month." },
+    { "type": "richtext", "id": "note", "label": "Privacy note", "default": "<p>We respect your privacy and never share your address. Unsubscribe at any time. <a href=\"/policies/privacy-policy\">Privacy policy</a></p>" }
+  ],
+  "presets": [{ "name": "Maison · Newsletter" }]
+}
+{% endschema %}

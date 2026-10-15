@@ -54,6 +54,7 @@
   {{ 'mn-collection.css' | asset_url | stylesheet_tag }}
   {{ 'mn-pages.css' | asset_url | stylesheet_tag }}
   {{ 'mn-home.css' | asset_url | stylesheet_tag }}
+  {%- if content_for_layout contains 'data-mh=' -%}{{ 'mn-home2.css' | asset_url | stylesheet_tag }}{%- endif -%}
 </head>
 
 <body
@@ -185,6 +186,7 @@
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
   <script src="{{ 'mn.js' | asset_url }}" defer></script>
   <script src="{{ 'mn-product.js' | asset_url }}" defer></script>
+  {%- if content_for_layout contains 'data-mh=' or request.design_mode -%}<script src="{{ 'mn-home2.js' | asset_url }}" defer></script>{%- endif -%}
 
   {%- if settings.custom_cursor -%}
     <script src="{{ 'custom-cursor.js' | asset_url }}" defer></script>

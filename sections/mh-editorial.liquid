@@ -1,0 +1,38 @@
+{%- comment -%}Maison homepage · Editorial campaign (design section "editorial"){%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tid = 'mh-ed-' | append: section.id
+-%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-ed{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="editorial" data-surface aria-labelledby="{{ tid }}">
+  <div class="mh-ed__frame mh-reveal">
+    {%- render 'mh-img', image: s.image, photo: '1558713401-c5e413754159', alt: "An old fisherman's hut, whitewashed, by the sea", tone: 5, class: 'mh-ed__img', sizes: '100vw' -%}
+  </div>
+  <div class="mh-ed__story mh-wrap">
+    {%- if s.credit != blank -%}<span class="mh-ed__credit mh-eyebrow">{{ s.credit }}</span>{%- else -%}<span></span>{%- endif -%}
+    <div class="mh-ed__card mh-reveal">
+      {%- if s.eyebrow != blank -%}<span class="mh-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+      <h2 class="mh-h2" id="{{ tid }}">{{ s.heading }}</h2>
+      {%- if s.text != blank -%}<p>{{ s.text }}</p>{%- endif -%}
+      {%- if s.link_label != blank -%}<a class="mh-lnk" href="{{ s.link | default: routes.root_url }}">{{ s.link_label }} {% render 'mh-icon', name: 'arrow' %}</a>{%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Campaign",
+  "class": "mh-section",
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Wide, 21:9 on computers (4:5 on phones, from the centre)." },
+    { "type": "text", "id": "credit", "label": "Photo credit", "default": "Photography · Inès Varga" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Campaign · Autumn–Winter 2026" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "A house on <em>the Île de Ré</em>" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Four days on the island in late September, when the light turns low and silver. The collection was photographed in a fisherman's house with whitewashed walls, between the salt marshes and the sea." },
+    { "type": "text", "id": "link_label", "label": "Link", "default": "Read the story" },
+    { "type": "url", "id": "link", "label": "Link to" }
+  ],
+  "presets": [{ "name": "Maison · Campaign" }]
+}
+{% endschema %}

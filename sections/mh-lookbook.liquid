@@ -1,0 +1,113 @@
+{%- comment -%}Maison homepage · Lookbook strip, draggable (design section "lookbook"){%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tid = 'mh-lb-' | append: section.id
+-%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-lb{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="lookbook" data-surface aria-labelledby="{{ tid }}">
+  <div class="mh-lb__head mh-wrap">
+    <div class="mh-reveal">
+      {%- if s.eyebrow != blank -%}<span class="mh-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+      <h2 class="mh-h2" id="{{ tid }}">{{ s.heading }}</h2>
+    </div>
+    <div class="mh-lb__ctrl mh-reveal">
+      {%- if s.hint != blank -%}<span class="mh-lb__hint mh-eyebrow" aria-hidden="true">{{ s.hint }}</span>{%- endif -%}
+      <button class="mh-lb__btn" type="button" data-dir="-1" aria-label="{{ 'mn.mh.prev' | t }}">{%- render 'mh-icon', name: 'left' -%}</button>
+      <button class="mh-lb__btn" type="button" data-dir="1" aria-label="{{ 'mn.mh.next' | t }}">{%- render 'mh-icon', name: 'arrow' -%}</button>
+    </div>
+  </div>
+  <ul class="mh-lb__track" tabindex="0" aria-label="{{ s.heading | strip_html | escape }}">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign b = block.settings
+        case b.look
+          when 'Look 01'
+            assign ph = '1576825989290-834718163c82'
+            assign alt = 'Woman in a trench coat and wide hat walking on ice'
+            assign tone = 3
+          when 'Look 04'
+            assign ph = '1552509345-cc8e169341ec'
+            assign alt = 'Woman in a long gown standing in the middle of a desert road'
+            assign tone = 4
+          when 'Look 06'
+            assign ph = '1575011732056-edc3c7a9a631'
+            assign alt = 'Woman in a white floral dress walking through a dry field'
+            assign tone = 5
+          when 'Look 09'
+            assign ph = '1547232960-809b5c697a6b'
+            assign alt = 'Woman in a green winter coat'
+            assign tone = 2
+          when 'Look 11'
+            assign ph = '1557113180-d3cdf6ed5528'
+            assign alt = 'Woman in a black dress between pink walls'
+            assign tone = 1
+          when 'Look 13'
+            assign ph = '1578858698927-30c19249bc8e'
+            assign alt = 'Woman in a long gown among bare trees'
+            assign tone = 6
+          when 'Look 15'
+            assign ph = '1570468100438-cd4e938b1d11'
+            assign alt = 'Woman in a white slip dress in soft fog'
+            assign tone = 4
+          when 'Look 18'
+            assign ph = '1553302567-3e5cce2c7917'
+            assign alt = 'Woman in a fur-lined black coat in falling snow'
+            assign tone = 3
+          else
+            assign ph = ''
+            assign alt = b.caption
+            assign tone = forloop.index0 | modulo: 6 | plus: 1
+        endcase
+        assign r = b.ratio
+        if b.image != blank and b.ratio == 'auto'
+          assign r = b.image.aspect_ratio | round: 3
+        elsif b.ratio == 'auto'
+          assign r = 0.75
+        endif
+      -%}
+      <li class="mh-lb__frame" style="--mh-r:{{ r }}" {{ block.shopify_attributes }}>
+        {%- if b.link != blank -%}<a href="{{ b.link }}" class="mh-lb__link" draggable="false">{%- endif -%}
+        {%- render 'mh-img', image: b.image, photo: ph, alt: alt, tone: tone, class: 'mh-lb__img', sizes: '(max-width: 720px) 80vw, 34vw' -%}
+        {%- if b.link != blank -%}</a>{%- endif -%}
+        <p class="mh-lb__cap">{%- if b.look != blank -%}<span>{{ b.look }}</span>{%- endif -%}{{ b.caption }}</p>
+      </li>
+    {%- endfor -%}
+  </ul>
+  <div class="mh-wrap"><div class="mh-lb__bar"><span></span></div></div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Lookbook",
+  "class": "mh-section",
+  "max_blocks": 14,
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Lookbook" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Autumn–Winter <em>2026</em>" },
+    { "type": "text", "id": "hint", "label": "Hint", "default": "Drag to explore" }
+  ],
+  "blocks": [
+    { "type": "frame", "name": "Frame", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Image" },
+      { "type": "select", "id": "ratio", "label": "Shape", "options": [
+        { "value": "auto", "label": "As the image" }, { "value": "0.667", "label": "Tall (2:3)" }, { "value": "0.75", "label": "Portrait (3:4)" },
+        { "value": "0.8", "label": "Portrait (4:5)" }, { "value": "1", "label": "Square" }, { "value": "1.333", "label": "Landscape (4:3)" }, { "value": "1.5", "label": "Wide (3:2)" }
+      ], "default": "0.75" },
+      { "type": "text", "id": "look", "label": "Look number", "default": "Look 01" },
+      { "type": "text", "id": "caption", "label": "Caption", "default": "Wrap coat, silk shirt, pleated trouser" },
+      { "type": "url", "id": "link", "label": "Link" }
+    ] }
+  ],
+  "presets": [{ "name": "Maison · Lookbook", "blocks": [
+    { "type": "frame", "settings": { "ratio": "0.75", "look": "Look 01", "caption": "Trench coat, wide-brimmed hat" } },
+    { "type": "frame", "settings": { "ratio": "0.8", "look": "Look 04", "caption": "Silk evening gown, on the road" } },
+    { "type": "frame", "settings": { "ratio": "1.5", "look": "Look 06", "caption": "Printed silk dress, late summer field" } },
+    { "type": "frame", "settings": { "ratio": "0.75", "look": "Look 09", "caption": "Wool coat in moss" } },
+    { "type": "frame", "settings": { "ratio": "1", "look": "Look 11", "caption": "Black crêpe dress" } },
+    { "type": "frame", "settings": { "ratio": "0.667", "look": "Look 13", "caption": "Bias-cut gown among the birches" } },
+    { "type": "frame", "settings": { "ratio": "1.333", "look": "Look 15", "caption": "Evening: white silk slip" } },
+    { "type": "frame", "settings": { "ratio": "0.75", "look": "Look 18", "caption": "Shearling-lined coat, first snow" } }
+  ] }]
+}
+{% endschema %}

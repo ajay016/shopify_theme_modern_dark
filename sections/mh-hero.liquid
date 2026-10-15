@@ -1,0 +1,75 @@
+{%- comment -%}Maison homepage · Hero (design: docs/claude_design_ref_home2, section "hero"){%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tid = 'mh-hr-' | append: section.id
+-%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-hr{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="hero" data-surface aria-labelledby="{{ tid }}">
+  <div class="mh-hr__grid mh-wrap">
+    <div class="mh-hr__meta mh-reveal">
+      {%- if s.marker_left != blank -%}<span class="mh-eyebrow">{{ s.marker_left }}</span>{%- endif -%}
+      {%- if s.ticks > 0 -%}
+        <span class="mh-hr__ticks" aria-hidden="true">{%- for i in (1..s.ticks) -%}<i{% if i == s.tick_on %} class="is-on"{% endif %}></i>{%- endfor -%}</span>
+      {%- endif -%}
+      {%- if s.marker_right != blank -%}<span class="mh-eyebrow">{{ s.marker_right }}</span>{%- endif -%}
+    </div>
+    <h1 class="mh-hr__title mh-reveal" id="{{ tid }}" style="--mh-d:.08s">
+      {%- if s.line_1 != blank -%}<span>{{ s.line_1 }}</span>{%- endif -%}
+      {%- if s.line_2 != blank -%}<span>{{ s.line_2 }}</span>{%- endif -%}
+      {%- if s.line_3 != blank -%}<span>{{ s.line_3 }}</span>{%- endif -%}
+    </h1>
+    <div class="mh-hr__foot mh-reveal" style="--mh-d:.2s">
+      {%- if s.text != blank -%}<p class="mh-hr__text">{{ s.text }}</p>{%- endif -%}
+      <div class="mh-hr__ctas">
+        {%- if s.btn1_label != blank -%}<a class="mh-btn" href="{{ s.btn1_link | default: routes.all_products_collection_url }}">{{ s.btn1_label }}</a>{%- endif -%}
+        {%- if s.btn2_label != blank -%}<a class="mh-btn mh-btn--ghost" href="{{ s.btn2_link | default: routes.root_url }}">{{ s.btn2_label }}</a>{%- endif -%}
+      </div>
+    </div>
+    <figure class="mh-hr__main mh-reveal">
+      {%- render 'mh-img', image: s.image, photo: '1583606784149-993bae4e18a6', alt: 'Woman in a long black coat standing on a bridge', tone: 3, class: 'mh-hr__img', sizes: '(max-width: 720px) 100vw, 50vw', eager: true -%}
+      {%- if s.caption_1 != blank or s.caption_2 != blank -%}
+        <figcaption class="mh-hr__cap">{%- if s.caption_1 != blank -%}<span>{{ s.caption_1 }}</span>{%- endif -%}{%- if s.caption_2 != blank -%}<span>{{ s.caption_2 }}</span>{%- endif -%}</figcaption>
+      {%- endif -%}
+    </figure>
+    {%- if s.show_inset -%}
+      <figure class="mh-hr__inset mh-reveal" style="--mh-d:.32s">
+        {%- render 'mh-img', image: s.inset_image, photo: '1563135305-856ddc91af1c', alt: 'Folded white linen on a table', tone: 2, class: 'mh-hr__img', sizes: '(max-width: 720px) 36vw, 18vw', eager: true -%}
+        {%- if s.inset_caption != blank -%}<figcaption class="mh-eyebrow">{{ s.inset_caption }}</figcaption>{%- endif -%}
+      </figure>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Hero",
+  "class": "mh-section",
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "header", "content": "Top line" },
+    { "type": "text", "id": "marker_left", "label": "Left label", "default": "Collection 03 / 05" },
+    { "type": "range", "id": "ticks", "label": "Progress ticks", "min": 0, "max": 9, "step": 1, "default": 5 },
+    { "type": "range", "id": "tick_on", "label": "Highlighted tick", "min": 1, "max": 9, "step": 1, "default": 3 },
+    { "type": "text", "id": "marker_right", "label": "Right label", "default": "Autumn–Winter 2026" },
+    { "type": "header", "content": "Headline" },
+    { "type": "paragraph", "content": "Three lines; the second is set in from the left. Use italic for the accent word." },
+    { "type": "inline_richtext", "id": "line_1", "label": "Line 1", "default": "The quiet" },
+    { "type": "inline_richtext", "id": "line_2", "label": "Line 2", "default": "<em>weight</em> of" },
+    { "type": "inline_richtext", "id": "line_3", "label": "Line 3", "default": "things." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Double-faced wool, sand-washed silk and leather left to soften. Eleven pieces cut in our Paris atelier, made to be worn for decades." },
+    { "type": "text", "id": "btn1_label", "label": "Button 1", "default": "Shop the collection" },
+    { "type": "url", "id": "btn1_link", "label": "Button 1 link" },
+    { "type": "text", "id": "btn2_label", "label": "Button 2", "default": "Watch the film" },
+    { "type": "url", "id": "btn2_link", "label": "Button 2 link" },
+    { "type": "header", "content": "Main photo" },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Portrait, about 4:5. Without one, a default photo shows." },
+    { "type": "text", "id": "caption_1", "label": "Caption line 1", "default": "Look 07" },
+    { "type": "text", "id": "caption_2", "label": "Caption line 2", "default": "Long coat, black" },
+    { "type": "header", "content": "Inset photo" },
+    { "type": "checkbox", "id": "show_inset", "label": "Show inset photo", "default": true },
+    { "type": "image_picker", "id": "inset_image", "label": "Image", "info": "Portrait, 3:4. A detail works best." },
+    { "type": "text", "id": "inset_caption", "label": "Caption", "default": "Linen, folded by hand" }
+  ],
+  "presets": [{ "name": "Maison · Hero" }]
+}
+{% endschema %}

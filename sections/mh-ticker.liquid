@@ -1,0 +1,43 @@
+{%- comment -%}Maison homepage · Ticker (design section "ticker"){%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-tk{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="ticker" data-surface aria-label="{{ s.label | escape }}">
+  <div class="mh-tk__in">
+    <div class="mh-tk__vp">
+      <div class="mh-tk__track" style="animation-duration:{{ s.speed }}s">
+        <ul class="mh-tk__list">
+          {%- for block in section.blocks -%}
+            <li class="mh-tk__item" {{ block.shopify_attributes }}>{%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{{ block.settings.text }}</a>{%- else -%}{{ block.settings.text }}{%- endif -%}</li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+    <button class="mh-tk__toggle" type="button" aria-pressed="false" aria-label="{{ 'mn.mh.pause_ticker' | t }}" data-pause="{{ 'mn.mh.pause_ticker' | t }}" data-play="{{ 'mn.mh.play_ticker' | t }}">{%- render 'mh-icon', name: 'pause' -%}{%- render 'mh-icon', name: 'play' -%}</button>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Ticker",
+  "class": "mh-section",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "text", "id": "label", "label": "Name for screen readers", "default": "House notes" },
+    { "type": "range", "id": "speed", "label": "One loop takes", "min": 20, "max": 90, "step": 2, "unit": "s", "default": 52 }
+  ],
+  "blocks": [
+    { "type": "item", "name": "Message", "settings": [
+      { "type": "text", "id": "text", "label": "Text", "default": "Collection 03 now available" },
+      { "type": "url", "id": "link", "label": "Link" }
+    ] }
+  ],
+  "presets": [{ "name": "Maison · Ticker", "blocks": [
+    { "type": "item", "settings": { "text": "Collection 03 now available" } },
+    { "type": "item", "settings": { "text": "Made in Paris, Como & Florence" } },
+    { "type": "item", "settings": { "text": "Complimentary delivery over €300" } },
+    { "type": "item", "settings": { "text": "Alterations for life" } },
+    { "type": "item", "settings": { "text": "Private appointments, rue de Turenne" } }
+  ] }]
+}
+{% endschema %}

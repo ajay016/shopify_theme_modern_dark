@@ -1,0 +1,9 @@
+{%- comment -%}
+  The Maison homepage stylesheet and script. layout/theme.liquid loads them
+  whenever a page contains these sections; in the theme editor a section can
+  be added to a page that has none yet, so the editor gets them here too.
+{%- endcomment -%}
+{%- if request.design_mode -%}
+  {{ 'mn-home2.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'mn-home2.js' | asset_url }}" defer></script>
+{%- endif -%}

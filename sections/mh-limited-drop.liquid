@@ -1,0 +1,82 @@
+{%- comment -%}Maison homepage · Limited drop with countdown (design section "limited-drop"){%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tid = 'mh-ld-' | append: section.id
+  # the end time, read in the store's time zone, as epoch milliseconds
+  assign end_ms = ''
+  if s.end_date != blank
+    assign end_ms = s.end_date | date: '%s' | times: 1000
+    if end_ms == 0
+      assign end_ms = s.end_date
+    endif
+  endif
+-%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-ld{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="limited-drop" data-end="{{ end_ms }}" data-surface aria-labelledby="{{ tid }}">
+  <div class="mh-wrap">
+    <div class="mh-ld__top mh-reveal">
+      {%- if s.eyebrow_left != blank -%}<span class="mh-eyebrow">{{ s.eyebrow_left }}</span>{%- endif -%}
+      {%- if s.eyebrow_right != blank -%}<span class="mh-eyebrow">{{ s.eyebrow_right }}</span>{%- endif -%}
+    </div>
+    <div class="mh-ld__count mh-reveal" role="timer" aria-label="{{ 'mn.mh.time_left' | t }}">
+      <div class="mh-ld__unit"><span class="mh-ld__num" data-u="d">00</span><span class="mh-ld__lab">{{ 'mn.mh.days' | t }}</span></div>
+      <div class="mh-ld__unit"><span class="mh-ld__num" data-u="h">00</span><span class="mh-ld__lab">{{ 'mn.mh.hours' | t }}</span></div>
+      <div class="mh-ld__unit"><span class="mh-ld__num" data-u="m">00</span><span class="mh-ld__lab">{{ 'mn.mh.minutes' | t }}</span></div>
+      <div class="mh-ld__unit"><span class="mh-ld__num" data-u="s">00</span><span class="mh-ld__lab">{{ 'mn.mh.seconds' | t }}</span></div>
+    </div>
+    <div class="mh-ld__body">
+      <figure class="mh-ld__media mh-reveal">
+        {%- render 'mh-img', image: s.image, photo: '1746045470133-00c22b9c9911', alt: 'A tote bag resting on a chair by a window', tone: 6, sizes: '(max-width: 720px) 100vw, 42vw' -%}
+        {%- if s.caption != blank -%}<figcaption class="mh-eyebrow">{{ s.caption }}</figcaption>{%- endif -%}
+      </figure>
+      <div class="mh-ld__text mh-reveal">
+        <h2 class="mh-h2" id="{{ tid }}">{{ s.heading }}</h2>
+        {%- if s.text != blank -%}<p>{{ s.text }}</p>{%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <dl class="mh-ld__specs">
+            {%- for block in section.blocks -%}<div {{ block.shopify_attributes }}><dt>{{ block.settings.label }}</dt><dd>{{ block.settings.value }}</dd></div>{%- endfor -%}
+          </dl>
+        {%- endif -%}
+        {%- if s.live_text != blank -%}<p class="mh-ld__live" data-live hidden>{{ s.live_text }}</p>{%- endif -%}
+        <div class="mh-ld__ctas">
+          {%- if s.btn_label != blank -%}<a class="mh-btn mh-btn--inv" href="{{ s.btn_link | default: routes.all_products_collection_url }}">{{ s.btn_label }}</a>{%- endif -%}
+          {%- if s.link_label != blank -%}<a class="mh-lnk" href="{{ s.link | default: routes.root_url }}">{{ s.link_label }} {% render 'mh-icon', name: 'arrow' %}</a>{%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Limited drop",
+  "class": "mh-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "text", "id": "eyebrow_left", "label": "Left label", "default": "Limited drop · 120 pieces" },
+    { "type": "text", "id": "eyebrow_right", "label": "Right label", "default": "Friday 24 October, 10:00 CET" },
+    { "type": "text", "id": "end_date", "label": "Release time", "info": "YYYY-MM-DD HH:MM, in your store's time zone. The countdown stops there and the note below appears.", "default": "2026-10-24 10:00" },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Portrait, 4:5." },
+    { "type": "text", "id": "caption", "label": "Caption", "default": "No. 001 – 120" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "The Atelier Bag, <em>in oxblood</em>" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "One hundred and twenty bags, each numbered inside and made from start to finish by a single artisan in Florence. When they are gone, the oxblood will not return." },
+    { "type": "text", "id": "live_text", "label": "Note once released", "default": "Now available. Numbers are allocated in order of purchase." },
+    { "type": "text", "id": "btn_label", "label": "Button", "default": "Join the release list" },
+    { "type": "url", "id": "btn_link", "label": "Button link" },
+    { "type": "text", "id": "link_label", "label": "Link", "default": "See how it's made" },
+    { "type": "url", "id": "link", "label": "Link to" }
+  ],
+  "blocks": [
+    { "type": "spec", "name": "Detail", "settings": [
+      { "type": "text", "id": "label", "label": "Label", "default": "Leather" },
+      { "type": "text", "id": "value", "label": "Value", "default": "Box calf, Tuscany" }
+    ] }
+  ],
+  "presets": [{ "name": "Maison · Limited drop", "blocks": [
+    { "type": "spec", "settings": { "label": "Leather", "value": "Box calf, Tuscany" } },
+    { "type": "spec", "settings": { "label": "Made by", "value": "One artisan, 22 hours" } },
+    { "type": "spec", "settings": { "label": "Price", "value": "€2,400" } }
+  ] }]
+}
+{% endschema %}

@@ -1,0 +1,99 @@
+{%- comment -%}Maison homepage · Shop by category (design section "categories"){%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tid = 'mh-ct-' | append: section.id
+-%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-ct{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="categories" data-surface aria-labelledby="{{ tid }}">
+  <div class="mh-ct__grid mh-wrap">
+    <div class="mh-ct__head mh-reveal">
+      {%- if s.eyebrow != blank -%}<span class="mh-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+      <h2 class="mh-h2" id="{{ tid }}">{{ s.heading }}</h2>
+      {%- if s.text != blank -%}<p class="mh-ct__lede">{{ s.text }}</p>{%- endif -%}
+      {%- if s.link_label != blank -%}<a class="mh-lnk" href="{{ s.link | default: routes.collections_url }}">{{ s.link_label }} {% render 'mh-icon', name: 'arrow' %}</a>{%- endif -%}
+    </div>
+    <ul class="mh-ct__list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign col = b.collection
+          assign name = b.title | default: col.title
+          assign url = b.link | default: col.url | default: routes.collections_url
+          assign n = b.count
+          assign pc = col.products_count | default: 0
+          if pc > 0
+            assign n = pc
+          endif
+          # default photo and placeholder tone for the design's own six categories
+          assign tone = forloop.index0 | modulo: 6 | plus: 1
+          case b.title
+            when 'Tailoring'
+              assign ph = '1597571557303-a7a16dfeb22d'
+              assign tone = 3
+            when 'Silk'
+              assign ph = '1572696607346-f2305721ccca'
+              assign tone = 4
+            when 'Knitwear'
+              assign ph = '1569762520747-d31464446734'
+              assign tone = 1
+            when 'Leather goods'
+              assign ph = '1745389501313-450f73911264'
+              assign tone = 6
+            when 'Fine jewellery'
+              assign ph = '1571614796598-f87df30b2ce7'
+              assign tone = 2
+            when 'Evening'
+              assign ph = '1744030596874-eb2abdbd9344'
+              assign tone = 5
+            else
+              assign ph = ''
+          endcase
+          assign img = b.image | default: col.featured_image
+        -%}
+        <li class="mh-ct__row mh-reveal" {{ block.shopify_attributes }}>
+          <a class="mh-ct__link" href="{{ url }}">
+            <span class="mh-ct__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+            <span class="mh-ct__name">{{ name }}</span>
+            <span class="mh-ct__meta">{{ b.meta }}{%- if n != blank and n != 0 -%}<b>{{ n }}</b>{%- endif -%}</span>
+            {%- render 'mh-icon', name: 'arrow' -%}
+            {%- render 'mh-img', image: img, photo: ph, tone: tone, class: 'mh-ct__img', sizes: '260px', deco: true -%}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Categories",
+  "class": "mh-section",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Shop by category" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Six ways <em>in</em>" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "From the atelier's tailoring to jewellery set by hand in the Marais." },
+    { "type": "text", "id": "link_label", "label": "Link", "default": "All categories" },
+    { "type": "url", "id": "link", "label": "Link to" }
+  ],
+  "blocks": [
+    { "type": "category", "name": "Category", "settings": [
+      { "type": "collection", "id": "collection", "label": "Collection", "info": "Gives the link, the number of pieces and (without an image below) the photo." },
+      { "type": "text", "id": "title", "label": "Name", "info": "Leave blank to use the collection's title.", "default": "Tailoring" },
+      { "type": "text", "id": "meta", "label": "Short line", "default": "Coats, suits & trousers" },
+      { "type": "text", "id": "count", "label": "Number shown", "info": "Used only without a collection; a collection shows its own count." },
+      { "type": "image_picker", "id": "image", "label": "Hover photo", "info": "Portrait, 3:4. Shows beside the pointer on hover, and as a thumbnail on phones." },
+      { "type": "url", "id": "link", "label": "Link", "info": "Overrides the collection link." }
+    ] }
+  ],
+  "presets": [{ "name": "Maison · Categories", "blocks": [
+    { "type": "category", "settings": { "title": "Tailoring", "meta": "Coats, suits & trousers", "count": "42" } },
+    { "type": "category", "settings": { "title": "Silk", "meta": "Slips, shirts & scarves", "count": "28" } },
+    { "type": "category", "settings": { "title": "Knitwear", "meta": "Cashmere & merino", "count": "31" } },
+    { "type": "category", "settings": { "title": "Leather goods", "meta": "Bags, belts & gloves", "count": "24" } },
+    { "type": "category", "settings": { "title": "Fine jewellery", "meta": "18k gold & vermeil", "count": "19" } },
+    { "type": "category", "settings": { "title": "Evening", "meta": "Bias-cut & velvet", "count": "12" } }
+  ] }]
+}
+{% endschema %}

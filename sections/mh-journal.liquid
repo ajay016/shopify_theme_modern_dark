@@ -1,0 +1,90 @@
+{%- comment -%}
+  Maison homepage · Journal: one featured story and two beside it (design
+  section "journal"). Reads the chosen blog; until it has three articles the
+  design's stories fill the gaps.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tid = 'mh-jr-' | append: section.id
+  assign blog = s.blog
+  if blog == blank
+    assign blog = blogs.news
+  endif
+  assign n_art = blog.articles_count | default: 0
+  assign d_titles = 'Thirty-eight hours inside a single coat|Why our silk is heavier than most|Odile Ferrand on thirty-one years at the cutting table' | split: '|'
+  assign d_dates = '2026-10-02|2026-09-18|2026-09-04' | split: '|'
+  assign d_tags = 'Atelier|Materials|Conversations' | split: '|'
+  assign d_ex = 'From the first chalk line to the final press, we followed one double-faced coat through the Paris workroom.||' | split: '|'
+  assign d_ph = '1554168396-aab725fa9d34|1572187092690-63fffd19feb2|1581125115037-633f6efa5e00' | split: '|'
+  assign d_alt = 'Woven scarves in many colours on display|Folded brown and white woven textiles|Portrait of a woman in a yellow silk shirt' | split: '|'
+  assign tones = '4|2|5' | split: '|'
+-%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-jr{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="journal" data-surface aria-labelledby="{{ tid }}">
+  <div class="mh-wrap">
+    <div class="mh-jr__head">
+      <div class="mh-reveal">
+        {%- if s.eyebrow != blank -%}<span class="mh-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+        <h2 class="mh-h2" id="{{ tid }}">{{ s.heading }}</h2>
+      </div>
+      {%- if s.link_label != blank -%}<a class="mh-lnk mh-reveal" href="{{ blog.url | default: '/blogs/news' }}">{{ s.link_label }} {% render 'mh-icon', name: 'arrow' %}</a>{%- endif -%}
+    </div>
+    <div class="mh-jr__grid">
+      {%- for i in (0..2) -%}
+        {%- liquid
+          assign a = nil
+          if i < n_art
+            assign a = blog.articles[i]
+          endif
+          if a != blank
+            assign title = a.title
+            assign url = a.url
+            assign date_iso = a.published_at | date: '%Y-%m-%d'
+            assign date_txt = a.published_at | date: '%-d %B %Y'
+            assign tag = a.tags.first
+            assign ex = a.excerpt_or_content | strip_html | truncatewords: 24
+            assign img = a.image
+            assign ph = ''
+          else
+            assign title = d_titles[i]
+            assign url = blog.url | default: '/blogs/news'
+            assign date_iso = d_dates[i]
+            assign date_txt = d_dates[i] | date: '%-d %B %Y'
+            assign tag = d_tags[i]
+            assign ex = d_ex[i]
+            assign img = nil
+            assign ph = d_ph[i]
+          endif
+          assign tone = tones[i] | plus: 0
+        -%}
+        {%- if i == 1 -%}<div class="mh-jr__side">{%- endif -%}
+        <article class="mh-jr__card{% if i == 0 %} mh-jr__card--feat{% endif %} mh-reveal">
+          <a class="mh-jr__media" href="{{ url }}" tabindex="-1" aria-hidden="true">{%- render 'mh-img', image: img, photo: ph, alt: d_alt[i], tone: tone, sizes: '(max-width: 900px) 100vw, 56vw', deco: true -%}</a>
+          <div class="mh-jr__body">
+            <p class="mh-jr__meta"><time datetime="{{ date_iso }}">{{ date_txt }}</time>{%- if tag != blank -%}<span>{{ tag }}</span>{%- endif -%}</p>
+            <h3 class="mh-jr__title"><a href="{{ url }}">{{ title }}</a></h3>
+            {%- if i == 0 and ex != blank -%}<p class="mh-jr__ex">{{ ex }}</p>{%- endif -%}
+            <a class="mh-jr__read mh-lnk" href="{{ url }}">{{ s.read_label }}<span class="visually-hidden">: {{ title }}</span> {% render 'mh-icon', name: 'arrow' %}</a>
+          </div>
+        </article>
+        {%- if i == 2 -%}</div>{%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Journal",
+  "class": "mh-section",
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Journal" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Notes from <em>the house</em>" },
+    { "type": "blog", "id": "blog", "label": "Blog", "info": "The latest three articles. Until there are three, the design's stories fill in." },
+    { "type": "text", "id": "link_label", "label": "Link", "default": "All stories" },
+    { "type": "text", "id": "read_label", "label": "Read link", "default": "Read" }
+  ],
+  "presets": [{ "name": "Maison · Journal" }]
+}
+{% endschema %}

@@ -1,0 +1,65 @@
+{%- comment -%}Maison homepage · Atelier / craft story (design section "atelier"){%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tid = 'mh-cr-' | append: section.id
+-%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-cr{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="atelier" data-surface aria-labelledby="{{ tid }}">
+  <div class="mh-wrap">
+    {%- if s.eyebrow != blank -%}<span class="mh-eyebrow mh-reveal">{{ s.eyebrow }}</span>{%- endif -%}
+    <h2 class="mh-cr__manifesto mh-reveal" id="{{ tid }}">{{ s.manifesto }}</h2>
+    <div class="mh-cr__grid">
+      <figure class="mh-cr__portrait mh-reveal">
+        {%- render 'mh-img', image: s.image, photo: '1540222179022-faf9b49479c4', alt: 'Woman seated at a table in a quiet room', tone: 5, sizes: '(max-width: 720px) 100vw, 40vw' -%}
+        {%- if s.caption != blank -%}<figcaption class="mh-eyebrow">{{ s.caption }}</figcaption>{%- endif -%}
+      </figure>
+      <div class="mh-cr__side">
+        {%- if s.text != blank -%}<p class="mh-cr__text mh-reveal">{{ s.text }}</p>{%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <dl class="mh-cr__figs">
+            {%- for block in section.blocks -%}
+              {%- liquid
+                assign v = block.settings.value | strip
+                assign num = v | plus: 0
+                assign back = num | append: ''
+              -%}
+              <div class="mh-cr__fig mh-reveal"{% unless forloop.first %} style="--mh-d:{{ forloop.index0 | times: 0.08 }}s"{% endunless %} {{ block.shopify_attributes }}><dt>{{ block.settings.label }}</dt><dd class="mh-cr__val"{% if block.settings.count_up and back == v %} data-count="{{ num }}"{% endif %}>{{ v }}</dd></div>
+            {%- endfor -%}
+          </dl>
+        {%- endif -%}
+        {%- if s.link_label != blank -%}<a class="mh-lnk mh-reveal" href="{{ s.link | default: routes.root_url }}">{{ s.link_label }} {% render 'mh-icon', name: 'arrow' %}</a>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Atelier",
+  "class": "mh-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The atelier" },
+    { "type": "inline_richtext", "id": "manifesto", "label": "Manifesto", "default": "We make fewer things, by hand, and we make them to <em>outlast</em> the season they were born in." },
+    { "type": "image_picker", "id": "image", "label": "Portrait", "info": "Portrait, 3:4." },
+    { "type": "text", "id": "caption", "label": "Caption", "default": "Odile Ferrand, master cutter · 31 years at the house" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Every piece begins at a cutting table on rue de Turenne. Coats are finished in Paris, silk in Como, leather in Florence and shoes in Porto, by artisans we have worked with for decades." },
+    { "type": "text", "id": "link_label", "label": "Link", "default": "Visit the atelier" },
+    { "type": "url", "id": "link", "label": "Link to" }
+  ],
+  "blocks": [
+    { "type": "figure", "name": "Figure", "settings": [
+      { "type": "text", "id": "label", "label": "Label", "default": "Artisans in our ateliers" },
+      { "type": "text", "id": "value", "label": "Figure", "default": "64" },
+      { "type": "checkbox", "id": "count_up", "label": "Count up when it appears", "info": "For whole numbers only.", "default": true }
+    ] }
+  ],
+  "presets": [{ "name": "Maison · Atelier", "blocks": [
+    { "type": "figure", "settings": { "label": "Founded in Paris", "value": "1987", "count_up": false } },
+    { "type": "figure", "settings": { "label": "Artisans in our ateliers", "value": "64", "count_up": true } },
+    { "type": "figure", "settings": { "label": "Countries we make in", "value": "4", "count_up": true } },
+    { "type": "figure", "settings": { "label": "Hours to finish one coat", "value": "38", "count_up": true } }
+  ] }]
+}
+{% endschema %}

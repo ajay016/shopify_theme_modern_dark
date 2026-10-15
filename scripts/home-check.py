@@ -38,7 +38,12 @@ def src(path):
     s = re.sub(r'\{%\s*schema\s*%\}.*?\{%\s*endschema\s*%\}', '', s, flags=re.S)
     s = re.sub(r'\{%-?\s*(end)?(paginate|javascript|stylesheet)[^%]*%\}', '', s)
     s = s.replace('posted_successfully?', 'posted_successfully').replace('performed?', 'performed').replace('comments_enabled?', 'comments_enabled')
-    s = re.sub(r"\{%-?\s*form\s+'(\w+)'[^%]*%\}", r'{%- assign form = forms.\1 -%}<form method="post" data-form="\1">', s)
+    # keep the class Shopify's form tag would write: class: '...'
+    def _form(m):
+        cl = re.search(r"class:\s*'([^']*)'", m.group(0))
+        nv = ' novalidate' if 'novalidate' in m.group(0) else ''
+        return '{%- assign form = forms.' + m.group(1) + ' -%}<form method="post" data-form="' + m.group(1) + '"' + (f' class="{cl.group(1)}"' if cl else '') + nv + '>'
+    s = re.sub(r"\{%-?\s*form\s+'(\w+)'[^%]*%\}", _form, s)
     return re.sub(r'\{%-?\s*endform\s*-?%\}', '</form>', s)
 
 # theme settings: schema defaults, then the store's saved values
@@ -69,7 +74,15 @@ env.filters['placeholder_svg_tag'] = lambda v, *a, **k: f'<svg class="{a[0] if a
 env.filters['asset_url'] = lambda v, *a, **k: '/' + str(v)
 env.filters['money_without_trailing_zeros'] = lambda v, *a, **k: '$' + format(int(v or 0) / 100, ',.0f')
 env.filters['money_with_currency'] = lambda v, *a, **k: env.filters['money'](v) + ' USD'
-env.filters['date'] = lambda v, *a, **k: 'September 20, 2026'
+def _date(v, fmt=None, *a, **k):
+    """Shopify's date filter on a string or the fixture's dates, in UTC."""
+    import datetime as dt
+    try: d = dt.datetime.fromisoformat(str(v).strip().replace('Z', '').replace(' ', 'T'))
+    except Exception: d = dt.datetime(2026, 9, 20)
+    if not fmt: return d.strftime('%B %-d, %Y')
+    if fmt == '%s': return str(int(d.replace(tzinfo=dt.timezone.utc).timestamp()))
+    return d.strftime(fmt)
+env.filters['date'] = _date
 env.filters['font_modify'] = lambda v, *a, **k: v
 env.filters['color_brightness'] = lambda v, *a, **k: (lambda h: (int(h[0:2],16)*299+int(h[2:4],16)*587+int(h[4:6],16)*114)/1000)(str(v).lstrip('#')[:6].ljust(6,'0')) if str(v).startswith('#') else 200
 env.filters['color_to_rgb'] = lambda v, *a, **k: str(v)
@@ -102,9 +115,10 @@ LOREM = '<p>Mulberry silk is the most forgiving fibre we work with. Treated well
 ARTS = [{'id': i, 'title': t, 'url': f'/blogs/journal/{i}', 'tags': [g], 'image': None, 'author': 'Clara Rossi', 'published_at': 'x', 'excerpt': '', 'content': LOREM}
         for i, (t, g) in enumerate((('Caring for silk, season after season', 'Care'), ('Inside the Como atelier', 'Atelier'), ('The wrap coat, cut three ways', 'Style')), 1)]
 BLOG = {'title': 'Journal', 'url': '/blogs/journal', 'articles': ARTS, 'articles_count': 3}
+EMPTY_BLOG = {'title': 'Journal', 'url': '/blogs/journal', 'articles': [], 'articles_count': 0}
 class Blogs(dict):
-    def __getitem__(self, k): return BLOG
-    def get(self, k, d=None): return BLOG
+    def __getitem__(self, k): return EMPTY_BLOG if EMPTY else BLOG
+    def get(self, k, d=None): return EMPTY_BLOG if EMPTY else BLOG
 ROUTES = {'root_url': '/', 'search_url': '/search', 'cart_url': '/cart', 'cart_add_url': '/cart/add', 'account_url': '/account', 'all_products_collection_url': '/collections/all',
           'collections_url': '/collections', 'product_recommendations_url': '/recommendations/products'}
 FORMS = {k: {'errors': None, 'posted_successfully': False} for k in ('customer', 'contact', 'product', 'localization')}
@@ -135,7 +149,7 @@ def section_html(key, sec):
     return f'<{tag} id="shopify-section-{key}" class="shopify-section {cls}" data-section-type="{sec["type"]}">{body}</{tag}>', None
 
 CSS = ('theme.css', 'mn-core.css', 'mn-header.css', 'mn-product.css', 'mn-footer.css', 'mn-motion.css', 'mn-shopify.css', 'mn-collection.css', 'mn-pages.css')
-EXTRA = [c for c in ('mn-home.css',) if os.path.exists('assets/' + c)]
+EXTRA = [c for c in ('mn-home.css', 'mn-home2.css') if os.path.exists('assets/' + c)]
 FONTS = '<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..500&display=swap" rel="stylesheet">'
 ICONS = env.from_string(snips['mn-icons']).render()
 attrs = env.from_string(snips['mn-html-attrs']).render(settings=SETTINGS, request={'locale': {'iso_code': 'en'}})
@@ -163,10 +177,10 @@ if __name__ == '__main__':
                 f'<body class="template-index" data-scroll-reveal="false">{ICONS}<main id="MainContent" class="content-for-layout">{"".join(parts)}</main>'
                 '<script>window.MN_STRINGS={cmp:{},wish:{}};window.routes={root_url:"/",cart_url:"/cart",cart_add_url:"/cart/add",cart_change_url:"/cart/change"};'
                 'window.theme_settings={cart_type:"none",money_format:"${{amount}}"};window.theme_strings={}</script>'
-                '<script src="/theme.js"></script><script src="/mn.js"></script><script src="/mn-product.js"></script></body></html>')
+                '<script src="/theme.js"></script><script src="/mn.js"></script><script src="/mn-product.js"></script><script src="/mn-home2.js"></script></body></html>')
         tag = name.replace('index.', '').replace('index', 'default') if name.startswith('index') else name.replace('.', '_')
         open(os.path.join(OUT, f'hm_{tag}.html'), 'w').write(page)
-    for f in CSS + tuple(EXTRA) + ('theme.js', 'mn.js', 'mn-product.js'):
+    for f in CSS + tuple(EXTRA) + ('theme.js', 'mn.js', 'mn-product.js', 'mn-home2.js'):
         shutil.copy(os.path.join('assets', f), OUT)
     for k, e in errors.items(): print('RENDER ERROR', k, e[:300])
     print(f'{len(names)} homepages written to {OUT}, {len(errors)} render errors')

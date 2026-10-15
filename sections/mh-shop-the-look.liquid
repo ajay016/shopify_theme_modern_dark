@@ -1,0 +1,105 @@
+{%- comment -%}
+  Maison homepage · Shop the look (design section "shop-the-look").
+  Each block is a piece: a product and the hotspot's place on the photo.
+  "Add all" puts every piece's first available variant in the bag (MN.cart).
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tid = 'mh-sl-' | append: section.id
+  assign total = 0
+  assign real = 0
+  assign all_p = collections.all.products
+  for block in section.blocks
+    assign bp = block.settings.product
+    if bp == blank
+      assign bp = all_p[forloop.index0]
+    endif
+    if bp != blank
+      assign real = real | plus: 1
+      assign total = total | plus: bp.selected_or_first_available_variant.price
+    endif
+  endfor
+  # a piece without a product shows one of the store's own; an empty store
+  # shows demo pieces that belong to the default photo: overcoat, silk scarf, tote
+  assign demo_pieces = '8,5,3' | split: ','
+  assign store_n = collections.all.products.size | default: 0
+-%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-sl{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="shop-the-look" data-surface aria-labelledby="{{ tid }}">
+  <div class="mh-sl__grid mh-wrap">
+    <div class="mh-sl__photo mh-reveal">
+      {%- render 'mh-img', image: s.image, photo: '1584099671756-219b1e15c3ff', alt: 'Woman in a long brown coat under a cherry tree in blossom', tone: 1, class: 'mh-sl__img', sizes: '(max-width: 900px) 100vw, 56vw' -%}
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          if b.product != blank
+            assign label = b.product.title
+          else
+            assign label = b.label
+          endif
+        -%}
+        <button class="mh-sl__spot" type="button" style="--mh-x:{{ b.x }}%;--mh-y:{{ b.y }}%" aria-pressed="false" aria-label="{{ 'mn.mh.look_item' | t: n: forloop.index, name: label | escape }}" {{ block.shopify_attributes }}><span>{{ forloop.index }}</span></button>
+      {%- endfor -%}
+    </div>
+    <div class="mh-sl__side">
+      <div class="mh-reveal">
+        {%- if s.eyebrow != blank -%}<span class="mh-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+        <h2 class="mh-h2" id="{{ tid }}">{{ s.heading }}</h2>
+      </div>
+      <ol class="mh-sl__list">
+        {%- for block in section.blocks -%}
+          {%- assign p = block.settings.product -%}
+          <li class="mh-sl__item mh-reveal">
+            <span class="mh-sl__n">{{ forloop.index }}</span>
+            {%- if p != blank -%}
+              {%- render 'product-card', product: p -%}
+              {%- if p.selected_or_first_available_variant.available -%}<span hidden data-variant="{{ p.selected_or_first_available_variant.id }}"></span>{%- endif -%}
+            {%- elsif store_n > forloop.index0 -%}
+              {%- assign sp = collections.all.products[forloop.index0] -%}
+              {%- render 'product-card', product: sp -%}
+              {%- if sp.selected_or_first_available_variant.available -%}<span hidden data-variant="{{ sp.selected_or_first_available_variant.id }}"></span>{%- endif -%}
+            {%- else -%}
+              {%- assign di = demo_pieces[forloop.index0] | default: forloop.index0 -%}
+              {%- render 'product-card', demo_index: di -%}
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ol>
+      {%- if s.show_total -%}
+        <div class="mh-sl__total mh-reveal">
+          <p>{{ 'mn.mh.pieces' | t: count: section.blocks.size }}{%- if real > 0 -%} <b>{{ total | money }}</b>{%- endif -%}</p>
+          <button class="mh-btn mh-sl__all" type="button" data-added="{{ 'mn.mh.added_all' | t }}" data-fallback="{{ routes.all_products_collection_url }}"><span class="mh-sl__all-t">{{ s.button }}</span></button>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Shop the look",
+  "class": "mh-section",
+  "max_blocks": 5,
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "image_picker", "id": "image", "label": "Look photo", "info": "Portrait, 4:5. Place each piece's hotspot in its block." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Shop the look · Look 11" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Rue de Turenne, <em>8 a.m.</em>" },
+    { "type": "checkbox", "id": "show_total", "label": "Show total and \"Add all\"", "default": true },
+    { "type": "text", "id": "button", "label": "Button", "default": "Add all to bag" }
+  ],
+  "blocks": [
+    { "type": "piece", "name": "Piece", "settings": [
+      { "type": "product", "id": "product", "label": "Product" },
+      { "type": "text", "id": "label", "label": "Name for the hotspot", "info": "Used until a product is chosen.", "default": "Wrap coat, camel" },
+      { "type": "range", "id": "x", "label": "Hotspot across", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 44 },
+      { "type": "range", "id": "y", "label": "Hotspot down", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 34 }
+    ] }
+  ],
+  "presets": [{ "name": "Maison · Shop the look", "blocks": [
+    { "type": "piece", "settings": { "label": "Wrap coat, camel", "x": 44, "y": 34 } },
+    { "type": "piece", "settings": { "label": "Silk shirt, ivory", "x": 55, "y": 22 } },
+    { "type": "piece", "settings": { "label": "Le Pli tote mini", "x": 66, "y": 62 } }
+  ] }]
+}
+{% endschema %}

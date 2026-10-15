@@ -1,0 +1,37 @@
+{%- comment -%}
+  Maison homepage photo slot. The merchant's image when one is chosen, else
+  the default photo for this slot (an Unsplash photo, picked because its own
+  description matches the slot), else the design's toned placeholder.
+    image     image_picker value (optional)
+    photo     default Unsplash photo id, e.g. '1583606784149-993bae4e18a6'
+    alt       text for screen readers (default photo / placeholder)
+    tone      1–6: the placeholder's tone
+    class     extra classes on the frame
+    sizes     sizes attribute
+    eager     true for the first screen
+    deco      true when the photo is decorative (alt="")
+{%- endcomment -%}
+{%- liquid
+  assign t = tone | default: 1
+  if eager
+    assign ld = 'eager'
+  else
+    assign ld = 'lazy'
+  endif
+  assign sz = sizes | default: '(max-width: 720px) 100vw, 50vw'
+  if deco
+    assign a = ''
+  elsif image != blank and image.alt != blank
+    assign a = image.alt
+  else
+    assign a = alt
+  endif
+-%}
+<div class="mh-ph mh-t{{ t }}{% if class %} {{ class }}{% endif %}"{% if image == blank and photo == blank and deco != true %} role="img" aria-label="{{ alt | escape }}"{% endif %}>
+  {%- if image != blank -%}
+    {{ image | image_url: width: 2400 | image_tag: loading: ld, sizes: sz, widths: '480,720,960,1280,1600,2000,2400', alt: a }}
+  {%- elsif photo != blank -%}
+    {%- assign u = 'https://images.unsplash.com/photo-' | append: photo | append: '?auto=format&fit=crop&q=80&w=' -%}
+    <img src="{{ u }}1280" srcset="{{ u }}480 480w, {{ u }}800 800w, {{ u }}1280 1280w, {{ u }}1800 1800w, {{ u }}2400 2400w" sizes="{{ sz }}" width="1280" height="1600" alt="{{ a | escape }}" loading="{{ ld }}"{% if eager %} fetchpriority="high"{% endif %} decoding="async">
+  {%- endif -%}
+</div>

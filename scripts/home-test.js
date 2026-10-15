@@ -38,7 +38,8 @@ const check = (n, c, extra = '') => { console.log((c ? 'PASS ' : 'FAIL ') + n + 
       const upperActions = actions.filter(el => getComputedStyle(el).textTransform === 'uppercase').map(role);
       const eyebrows = [...document.querySelectorAll('[data-section-type] [class*="eyebrow"]')].filter(el => vis(el) && el.textContent.trim());
       const bigEyebrows = eyebrows.filter(el => parseFloat(getComputedStyle(el).fontSize) > 12.5).map(el => [...el.classList][0]);
-      const heads = [...document.querySelectorAll('[data-section-type] h2')].filter(el => vis(el) && el.textContent.trim().length > 3 && !el.closest('.card'));
+      // a design label set as a heading (Maison press: "In the press") is an eyebrow, not a section heading
+      const heads = [...document.querySelectorAll('[data-section-type] h2')].filter(el => vis(el) && el.textContent.trim().length > 3 && !el.closest('.card') && !el.classList.contains('mh-eyebrow'));
       const upperHeads = heads.filter(el => getComputedStyle(el).textTransform === 'uppercase').map(el => el.className);
       const rails = [...document.querySelectorAll('.card--rail')].filter(vis).map(el => Math.round(el.getBoundingClientRect().width));
       const lum = c => { const m = c.match(/[\d.]+/g); if (!m) return 1; const [r, g, bl] = m.slice(0, 3).map(v => { v = v / 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }); return .2126 * r + .7152 * g + .0722 * bl; };

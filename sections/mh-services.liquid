@@ -1,0 +1,52 @@
+{%- comment -%}Maison homepage · Client services strip (design section "services"){%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tid = 'mh-sv-' | append: section.id
+-%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-sv{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="services" data-surface aria-labelledby="{{ tid }}">
+  <div class="mh-wrap">
+    <h2 class="visually-hidden" id="{{ tid }}">{{ s.heading }}</h2>
+    <ul class="mh-sv__grid">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        <li class="mh-sv__item mh-reveal"{% unless forloop.first %} style="--mh-d:{{ forloop.index0 | times: 0.06 }}s"{% endunless %} {{ block.shopify_attributes }}>
+          {%- render 'mh-icon', name: b.icon -%}
+          <h3 class="mh-sv__t">{{ b.title }}</h3>
+          {%- if b.text != blank -%}<p class="mh-sv__d">{{ b.text }}</p>{%- endif -%}
+          {%- if b.link_label != blank -%}<a class="mh-sv__lnk" href="{{ b.link | default: '#' }}">{{ b.link_label }}</a>{%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Services",
+  "class": "mh-section",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "text", "id": "heading", "label": "Heading for screen readers", "default": "Client services" }
+  ],
+  "blocks": [
+    { "type": "service", "name": "Service", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "options": [
+        { "value": "truck", "label": "Delivery" }, { "value": "return", "label": "Returns" }, { "value": "calendar", "label": "Appointment" },
+        { "value": "gift", "label": "Gift" }, { "value": "repair", "label": "Repairs" }, { "value": "chat", "label": "Advice" }
+      ], "default": "truck" },
+      { "type": "text", "id": "title", "label": "Title", "default": "Complimentary delivery" },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "Express delivery on orders over €300, in our signature box." },
+      { "type": "text", "id": "link_label", "label": "Link", "default": "Delivery details" },
+      { "type": "url", "id": "link", "label": "Link to" }
+    ] }
+  ],
+  "presets": [{ "name": "Maison · Services", "blocks": [
+    { "type": "service", "settings": { "icon": "truck", "title": "Complimentary delivery", "text": "Express delivery on orders over €300, in our signature box.", "link_label": "Delivery details" } },
+    { "type": "service", "settings": { "icon": "return", "title": "Returns within 30 days", "text": "Free returns and exchanges, collected from your door.", "link_label": "How returns work" } },
+    { "type": "service", "settings": { "icon": "calendar", "title": "Private appointments", "text": "An hour with a stylist in Paris, or by video call.", "link_label": "Book an appointment" } },
+    { "type": "service", "settings": { "icon": "gift", "title": "Gift wrapping", "text": "Wrapped by hand in tissue and linen ribbon, with a written card.", "link_label": "Gifting services" } }
+  ] }]
+}
+{% endschema %}

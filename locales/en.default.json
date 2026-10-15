@@ -285,6 +285,7 @@
       "sizes": "Sizes"
     },
     "recent": { "clear": "Clear" },
+    "mh": {"pause_ticker": "Pause ticker", "play_ticker": "Play ticker", "prev": "Previous", "next": "Next", "look_item": "Piece {{ n }}: {{ name }}", "pieces": {"one": "1 piece", "other": "{{ count }} pieces"}, "added_all": "Added to bag", "time_left": "Time until release", "days": "Days", "hours": "Hours", "minutes": "Minutes", "seconds": "Seconds", "choose_publication": "Choose a publication", "post_by": "Post by {{ handle }}: {{ text }}", "invalid_email": "Please enter a valid email address."},
     "journal": {"topics": "Topics", "all": "All", "empty": "No stories here yet.", "by": "By {{ author }}", "minutes": {"one": "{{ count }} min read", "other": "{{ count }} min read"}, "copied": "Link copied", "copy_link": "Copy link", "email": "Share by email", "more": "More stories", "previous": "Previous story", "next": "Next story", "moderated": "Thank you. Your comment will appear once it has been approved.", "moderated_note": "Comments are reviewed before they appear.", "leave": "Leave a comment"},
     "contactpage": {"thanks": "Thank you", "order": "Order number"},
     "notfound": {"eyebrow": "Page not found"},

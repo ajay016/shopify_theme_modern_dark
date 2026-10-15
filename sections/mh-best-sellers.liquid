@@ -1,0 +1,61 @@
+{%- comment -%}Maison homepage · Best sellers rail (design section "best-sellers"). Cards: the store's product card.{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tid = 'mh-bs-' | append: section.id
+  assign col = s.collection
+  assign n_col = col.products.size | default: 0
+  if n_col == 0
+    assign col = collections.all
+  endif
+  assign n_all = col.products.size | default: 0
+  if n_all > 0
+    if n_all < s.count
+      assign total = n_all
+    else
+      assign total = s.count
+    endif
+  else
+    assign total = s.count
+  endif
+-%}
+{%- render 'mh-assets' -%}
+<section class="mh mh-bs{% if s.palette != 'theme' %} mh--own{% endif %}" data-mh="best-sellers" data-surface aria-labelledby="{{ tid }}">
+  <div class="mh-bs__head mh-wrap">
+    <div class="mh-reveal">
+      {%- if s.eyebrow != blank -%}<span class="mh-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+      <h2 class="mh-h2" id="{{ tid }}">{{ s.heading }}</h2>
+    </div>
+    <div class="mh-bs__nav mh-reveal">
+      <span class="mh-bs__count" aria-hidden="true"><b data-current>01</b> / {{ total | prepend: '0' | slice: -2, 2 }}</span>
+      <button class="mh-bs__arrow" type="button" data-dir="-1" aria-label="{{ 'mn.mh.prev' | t }}">{%- render 'mh-icon', name: 'left' -%}</button>
+      <button class="mh-bs__arrow" type="button" data-dir="1" aria-label="{{ 'mn.mh.next' | t }}">{%- render 'mh-icon', name: 'arrow' -%}</button>
+    </div>
+  </div>
+  <ol class="mh-bs__rail" tabindex="0" aria-label="{{ s.heading | strip_html | escape }}">
+    {%- if n_all > 0 -%}
+      {%- for product in col.products limit: s.count -%}
+        <li class="mh-bs__item mh-reveal"><span class="mh-bs__num" aria-hidden="true">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span><div class="mh-bs__card">{%- render 'product-card', product: product -%}</div></li>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in (1..s.count) -%}
+        <li class="mh-bs__item mh-reveal"><span class="mh-bs__num" aria-hidden="true">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span><div class="mh-bs__card">{%- render 'product-card', demo_index: forloop.index0 -%}</div></li>
+      {%- endfor -%}
+    {%- endif -%}
+  </ol>
+  <div class="mh-wrap"><div class="mh-bs__bar"><span></span></div></div>
+</section>
+
+{% schema %}
+{
+  "name": "Maison · Best sellers",
+  "class": "mh-section",
+  "settings": [
+    { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Best sellers" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "The pieces we <em>remake</em> every season" },
+    { "type": "collection", "id": "collection", "label": "Collection", "info": "Leave empty to show your newest products. A collection sorted by best selling works well." },
+    { "type": "range", "id": "count", "label": "Products", "min": 4, "max": 12, "step": 1, "default": 8 }
+  ],
+  "presets": [{ "name": "Maison · Best sellers" }]
+}
+{% endschema %}

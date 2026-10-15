@@ -1,34 +1,28 @@
-# Brief for Claude Design — Maison Noir, homepage 2
+# Brief for Claude Design: Maison Noir, homepage 2
 
 Paste everything below the line into Claude Design.
 
 ---
 
-Design a **new homepage** for **Maison Noir**, a luxury fashion house (womenswear, tailoring, silk, knitwear, leather goods, fine jewellery). It must look **elegant, modern and unique**: unlike a template, unlike the usual luxury-store homepage, and unlike the existing Maison Noir homepage (an olive / ivory palette). Restraint and confidence over decoration. Every section should have its own layout idea. No two sections should look like the same grid with different photos.
+Design a **new homepage** for **Maison Noir**, a luxury fashion house (womenswear, tailoring, silk, knitwear, leather goods, fine jewellery). It must look **elegant, modern and unique**: unlike a template, unlike the usual luxury-store homepage, and unlike the existing Maison Noir homepages. Restraint and confidence over decoration. Every section should have its own layout idea. No two sections should look like the same grid with different photos.
 
-## Colour: "Cocoa & Butter"
+## Colour: your choice
+Choose your own colour palette for this homepage: one that makes it feel modern, elegant and distinctive for a luxury fashion house. It is your decision; commit to it fully.
 
-Base the page on deep chocolate and mocha browns with a soft butter-yellow accent. You may refine the exact values, but stay in this family and keep every combination at WCAG AA (4.5:1 for body text, 3:1 for large text and buttons).
+So it does not repeat the store's existing schemes, avoid these families:
+- olive green with ivory
+- wine or burgundy with white
+- dark brown or taupe with gold
+- black with gold
+- plain white with gold
 
-| Token | Role | Starting value |
-|---|---|---|
-| `--c-base` | page background | `#F5EFE6` (warm bone) |
-| `--c-soft` | alternate section background | `#EDE3D6` |
-| `--c-deep` | stronger section background | `#E0D1BF` |
-| `--c-text` | text on light backgrounds | `#2B1D17` (dark cocoa) |
-| `--c-muted` | secondary text | about 68% of `--c-text` |
-| `--c-contrast` | dark bands (hero, campaign, newsletter) | `#3A2620` (cocoa) |
-| `--c-on-contrast` | text on dark bands | `#F5EFE6` |
-| `--c-accent` | fills, large type, rules, highlights | `#A47864` (mocha) |
-| `--c-accent-ink` | accent used for small text | `#7A4E3A` |
-| `--c-highlight` | butter accent, mainly on dark bands | `#E9D79B` |
-| `--c-sale` | sale prices | `#8E2B2B` |
+Keep every text and background combination at WCAG AA (4.5:1 for body text, 3:1 for large text and buttons).
 
-**Colour rules, so the palette can be added to the theme later:**
-- Define the tokens **once on `:root`**.
-- Use **only these tokens** everywhere: no other hex or rgb values in the CSS, except pure white or black on photos.
+Colour rules, so the palette can be added to the theme later:
+- Define the palette once on `:root` as a small set of tokens: `--c-base` (page background), `--c-soft` and `--c-deep` (alternate backgrounds), `--c-text`, `--c-muted`, `--c-contrast` (dark or strong bands), `--c-on-contrast` (text on those bands), `--c-accent`, `--c-accent-ink` (accent for small text, if the accent is too light), `--c-sale`. Add one or two more only if the design truly needs them.
+- Use only these tokens everywhere: no other hex or rgb values in the CSS, except pure white or black on photos.
 - Derived shades (borders, hovers, overlays) use `color-mix()` from these tokens.
-- Alternate light and dark bands down the page so the scheme shows both ways.
+- Use both light and strong bands down the page, so the palette shows both ways.
 
 ## Type
 Keep the store's fonts so the header and footer still match: **Newsreader** (display, including italics), **Geist** (body and interface) and **Geist Mono** (small labels and numbers), all from Google Fonts. Make it unique through scale, rhythm and layout, not new fonts.
@@ -38,7 +32,7 @@ Keep the store's fonts so the header and footer still match: **Newsreader** (dis
 2. **Thin ticker or marquee:** values or seasonal message.
 3. **Shop by category:** an unconventional layout (offset tiles, a large list with a hover image preview, or arches), with 4–6 categories.
 4. **New arrivals (required):** 8 product cards with tabs (All / Ready-to-wear / Accessories), image swap on hover, quick add, wishlist heart, colour dots and a "View all" link.
-5. **Editorial campaign:** a big image with a short story and one link, on a dark cocoa band.
+5. **Editorial campaign:** a big image with a short story and one link, on a strong band.
 6. **Best sellers:** a horizontal rail with arrows and numbered cards (01, 02…).
 7. **Shop the look:** a styled photo with 3 hotspots, each linked to a product card beside it, plus "Add all".
 8. **Limited drop:** a countdown, a short text, a product or image and a button.
@@ -49,7 +43,7 @@ Keep the store's fonts so the header and footer still match: **Newsreader** (dis
 13. **Journal:** 3 articles with date, title and "Read".
 14. **Social / community grid:** a 6-image mosaic and a follow link.
 15. **Services strip:** delivery, returns, appointments and gift wrap, with small icons.
-16. **Newsletter:** on the dark band, with an email field, a button and a small privacy note.
+16. **Newsletter:** on a strong band, with an email field, a button and a small privacy note.
 
 You may add sections, but don't drop any of these.
 
@@ -66,4 +60,4 @@ You may add sections, but don't drop any of these.
 - **Accessibility:** real buttons and links, alt text, visible focus states, AA contrast.
 
 ## Deliverable
-The finished homepage, as `index.html`, `styles.css` and `script.js`, plus a short list of the colour tokens with their final values.
+The finished homepage, as `index.html`, `styles.css` and `script.js`, plus the palette: each token with its final value and one line on why you chose it.

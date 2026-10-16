@@ -83,14 +83,8 @@
     {%- section 'announcement-bar' -%}
   {%- endif -%}
 
-  {%- comment -%}
-    Header. Shopify wraps a section in its own <div>, exactly the header's
-    height, so position:sticky on the header itself has no room to stick;
-    this wrapper's parent is the page, so it is the element that sticks.
-  {%- endcomment -%}
-  <div class="mn-header-wrap{% if settings.header_sticky %} is-sticky{% endif %}">
-    {%- section 'header' -%}
-  </div>
+  {%- comment -%}Header{%- endcomment -%}
+  {%- section 'header' -%}
 
   {%- comment -%}Cart drawer + notification (drawer and notification modes){%- endcomment -%}
   {%- unless settings.cart_type == 'page' -%}

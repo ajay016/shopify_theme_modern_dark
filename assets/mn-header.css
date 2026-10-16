@@ -25,9 +25,9 @@
 .announce__rotate .icon-btn:hover{background:color-mix(in oklab,var(--fg) 14%,transparent)}
 .announce__static{text-align:center;padding:0 16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* ==== Header ==== */
-/* The sticky element is the wrapper in layout/theme.liquid: Shopify's own section <div> around the header is only as tall as the header, which leaves position:sticky no room. */
-.mn-header-wrap{position:relative;z-index:50}
-.mn-header-wrap.is-sticky{position:sticky;top:0}
+/* Shopify wraps the header in its own section div, only as tall as the header, so position:sticky on .site-header has no room: that div is the one that sticks. */
+.shopify-section:has(> .site-header){position:relative;z-index:50}
+.shopify-section:has(> .site-header[data-sticky="true"]){position:sticky;top:0}
 .site-header{position:sticky;top:0;z-index:50;transition:transform var(--dur-slow) var(--ease-out)}
 .site-header.is-hidden{transform:translateY(calc(-100% - 16px))}
 .header__bar{position:relative;background:var(--bg);color:var(--fg);border-bottom:1px solid var(--line);transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease),border-color var(--dur),box-shadow var(--dur)}

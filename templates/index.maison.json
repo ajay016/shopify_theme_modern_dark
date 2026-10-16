@@ -162,25 +162,25 @@
         "piece-1": {
           "type": "piece",
           "settings": {
-            "label": "Wrap coat, camel",
-            "x": 44,
-            "y": 34
+            "label": "Wide-brimmed hat",
+            "x": 42,
+            "y": 24
           }
         },
         "piece-2": {
           "type": "piece",
           "settings": {
-            "label": "Silk shirt, ivory",
-            "x": 55,
-            "y": 22
+            "label": "Silk evening dress",
+            "x": 54,
+            "y": 55
           }
         },
         "piece-3": {
           "type": "piece",
           "settings": {
-            "label": "Le Pli tote mini",
-            "x": 66,
-            "y": 62
+            "label": "Leather court shoe",
+            "x": 50,
+            "y": 92
           }
         }
       },
@@ -230,36 +230,36 @@
           "type": "chapter",
           "settings": {
             "numeral": "I",
-            "title": "The thread",
-            "place": "Como, Italy",
-            "text": "Our silk is woven at a family mill on Lake Como, at 22 momme, so it falls rather than clings."
+            "title": "The coat",
+            "place": "Outerwear",
+            "text": "Double-faced wool and alpaca, cut long, with a soft shoulder and a silk lining. From €1,890."
           }
         },
         "chapter-2": {
           "type": "chapter",
           "settings": {
             "numeral": "II",
-            "title": "The cut",
-            "place": "Paris atelier",
-            "text": "Every slip is cut on the true bias by hand, one layer at a time, so the fabric moves with the body."
+            "title": "The knit",
+            "place": "Knitwear",
+            "text": "Scottish cashmere in a loose rib, knitted to keep its shape winter after winter. Six colours, from €720."
           }
         },
         "chapter-3": {
           "type": "chapter",
           "settings": {
             "numeral": "III",
-            "title": "The hand",
-            "place": "Rolled hems",
-            "text": "Hems are rolled and stitched by hand to four millimetres. A single dress takes a full afternoon."
+            "title": "The jewellery",
+            "place": "Fine jewellery",
+            "text": "Silver and 18k gold vermeil, set by hand in our workshop in the Marais. Rings, hoops and chains from €320."
           }
         },
         "chapter-4": {
           "type": "chapter",
           "settings": {
             "numeral": "IV",
-            "title": "The wear",
-            "place": "For decades",
-            "text": "Silk this dense softens with wear. We clean and repair every piece, for life."
+            "title": "The tailoring",
+            "place": "Tailoring",
+            "text": "A black jumpsuit cut like a suit, from the first meeting to dinner. €1,150."
           }
         }
       },

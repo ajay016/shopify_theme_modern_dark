@@ -24,21 +24,21 @@
         {%- liquid
           assign b = block.settings
           case b.title
-            when 'The thread'
-              assign ph = '1574883140236-2e2cb0835792'
-              assign alt = 'Spools and skeins of thread'
+            when 'The coat'
+              assign ph = '1558718699-f36d8a294bbb'
+              assign alt = 'Woman in a brown coat'
               assign tone = 4
-            when 'The cut'
-              assign ph = '1579372650773-dcfbf74b446e'
-              assign alt = 'A pair of scissors beside dried flowers'
+            when 'The knit'
+              assign ph = '1491245257527-395e9c480145'
+              assign alt = 'A folded cream sweater on a wooden board'
               assign tone = 2
-            when 'The hand'
-              assign ph = '1745270093288-b6613a4030fe'
-              assign alt = 'Hands clasped over an ivory silk dress'
+            when 'The jewellery'
+              assign ph = '1580461118826-91da2d5cf0ea'
+              assign alt = 'Silver and gold jewellery on grey linen'
               assign tone = 1
-            when 'The wear'
-              assign ph = '1552644867-3c98a63f38eb'
-              assign alt = 'Woman in a long dress among autumn leaves'
+            when 'The tailoring'
+              assign ph = '1546032188-77743214827f'
+              assign alt = 'Woman in a black tailored jumpsuit, in profile'
               assign tone = 5
             else
               assign ph = ''
@@ -63,25 +63,25 @@
   "settings": [
     { "type": "select", "id": "palette", "label": "Colours", "options": [{ "value": "own", "label": "Maison palette" }, { "value": "theme", "label": "Theme colour scheme" }], "default": "own" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Collection spotlight" },
-    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Soie, <em>slowly</em>" },
-    { "type": "textarea", "id": "text", "label": "Text", "default": "The silk edit in four chapters: from a mill on Lake Como to the hem you feel at the wrist." },
-    { "type": "text", "id": "link_label", "label": "Link", "default": "Explore the silk edit" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "The winter <em>edit</em>" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Four pieces to build the season around: a coat, a knit, a little gold and one perfect black suit." },
+    { "type": "text", "id": "link_label", "label": "Link", "default": "Shop the winter edit" },
     { "type": "url", "id": "link", "label": "Link to" }
   ],
   "blocks": [
     { "type": "chapter", "name": "Chapter", "settings": [
       { "type": "text", "id": "numeral", "label": "Numeral", "default": "I" },
-      { "type": "text", "id": "title", "label": "Title", "default": "The thread" },
-      { "type": "text", "id": "place", "label": "Place", "default": "Como, Italy" },
-      { "type": "textarea", "id": "text", "label": "Text", "default": "Our silk is woven at a family mill on Lake Como, at 22 momme, so it falls rather than clings." },
+      { "type": "text", "id": "title", "label": "Title", "default": "The coat" },
+      { "type": "text", "id": "place", "label": "Category", "default": "Outerwear" },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "Double-faced wool and alpaca, cut long, with a soft shoulder and a silk lining. From €1,890." },
       { "type": "image_picker", "id": "image", "label": "Image", "info": "Portrait, 4:5 (the third chapter is square)." }
     ] }
   ],
   "presets": [{ "name": "Maison · Spotlight", "blocks": [
-    { "type": "chapter", "settings": { "numeral": "I", "title": "The thread", "place": "Como, Italy", "text": "Our silk is woven at a family mill on Lake Como, at 22 momme, so it falls rather than clings." } },
-    { "type": "chapter", "settings": { "numeral": "II", "title": "The cut", "place": "Paris atelier", "text": "Every slip is cut on the true bias by hand, one layer at a time, so the fabric moves with the body." } },
-    { "type": "chapter", "settings": { "numeral": "III", "title": "The hand", "place": "Rolled hems", "text": "Hems are rolled and stitched by hand to four millimetres. A single dress takes a full afternoon." } },
-    { "type": "chapter", "settings": { "numeral": "IV", "title": "The wear", "place": "For decades", "text": "Silk this dense softens with wear. We clean and repair every piece, for life." } }
+    { "type": "chapter", "settings": { "numeral": "I", "title": "The coat", "place": "Outerwear", "text": "Double-faced wool and alpaca, cut long, with a soft shoulder and a silk lining. From €1,890." } },
+    { "type": "chapter", "settings": { "numeral": "II", "title": "The knit", "place": "Knitwear", "text": "Scottish cashmere in a loose rib, knitted to keep its shape winter after winter. Six colours, from €720." } },
+    { "type": "chapter", "settings": { "numeral": "III", "title": "The jewellery", "place": "Fine jewellery", "text": "Silver and 18k gold vermeil, set by hand in our workshop in the Marais. Rings, hoops and chains from €320." } },
+    { "type": "chapter", "settings": { "numeral": "IV", "title": "The tailoring", "place": "Tailoring", "text": "A black jumpsuit cut like a suit, from the first meeting to dinner. €1,150." } }
   ] }]
 }
 {% endschema %}

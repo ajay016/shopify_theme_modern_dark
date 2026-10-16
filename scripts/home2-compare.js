@@ -16,10 +16,13 @@ const ONLY = process.argv[4] || '';
 const LIMIT = Number(process.env.LIMIT || 1.5); // % of pixels
 // phone emulation rasterises text edges a little differently on the two pages
 const limitFor = (name, w) => Math.max(w < 500 ? 2.5 : LIMIT, EXPECT[name] || 0);
-// known, intended differences in copy: the lookbook captions describe the
-// default photos (the design's captions describe its placeholders), and are
-// shorter, so the strip is one caption line lower
-const EXPECT = { lookbook: 3 };
+// known, intended differences in copy. The design's placeholder copy was
+// rewritten for a fashion house and to describe the default photos: hero
+// (headline, text, captions), campaign (the coat story), shop the look,
+// spotlight (the winter edit), atelier caption and lookbook captions. The
+// texts keep the design's lengths, so desktop heights match; on phones a
+// heading or caption can wrap one line differently.
+const EXPECT = { hero: 7, editorial: 7, 'shop-the-look': 3, 'collection-spotlight': 4, atelier: 1.5, lookbook: 3 };
 const DESIGN = path.join(__dirname, '..', 'docs', 'claude_design_ref_home2');
 const OUT = path.join(ROOT, 'h2'); fs.mkdirSync(OUT, { recursive: true });
 const PNG1 = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=', 'base64');
@@ -51,7 +54,9 @@ async function shots(b, side, w) {
   if (side === 'design') await p.addStyleTag({ content: 'header.hd,footer.ft,.skip{display:none!important}' });
   await p.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 400) { scrollTo(0, y); await new Promise(r => setTimeout(r, 40)); } scrollTo(0, 0); });
   await p.evaluate(() => document.querySelectorAll('.rv,.mh-reveal').forEach(e => e.classList.add('is-in')));
-  await p.waitForTimeout(1300);
+  // every reveal finished (opacity 1, no transform), however busy the machine is
+  await p.waitForFunction(() => [...document.querySelectorAll('.rv,.mh-reveal')].every(e => { const c = getComputedStyle(e); return c.opacity === '1' && (c.transform === 'none' || c.transform === 'matrix(1, 0, 0, 1, 0, 0)'); }), null, { timeout: 15000 }).catch(() => {});
+  await p.waitForTimeout(300);
   const secs = await p.evaluate(sel => [...document.querySelectorAll(sel)].map(e => { const r = e.getBoundingClientRect(); return { name: e.dataset.section || e.dataset.mh, y: r.top + scrollY, h: r.height }; }),
     side === 'design' ? 'main > section[data-section]' : 'section.mh[data-mh]');
   const out = {};

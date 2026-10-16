@@ -375,6 +375,19 @@ is left and what I need to check").
       48 checks, 0.00–0.3 % of pixels differ for most; lookbook 2.8 % at 1024 from the
       reworded captions); `scripts/home2-test.js` (53 behaviour checks, stocked and empty
       store, editor re-render, Motion Off, no sideways scroll); all other suites rerun.
+- [x] **H7 Fashion-led photos and copy** (2026-10-16, owner's review: the hero, shop the
+      look, campaign, spotlight and atelier read as a lifestyle blog, not a fashion house).
+      Layout and styles unchanged. Photos now chosen with a second signal: Unsplash's
+      collections table (photos people saved into "Fashion", "Couture", "Editorial",
+      "Fashioned", "clothing and pose" collections), on top of the photo's own description and
+      keywords, and none of the usual stock set (1.5–10k downloads each). Hero: woman in a black
+      suede hat; inset: a felt hat beside an ikebana vase; shop the look: full-length evening
+      dress with a wide-brimmed hat (pieces hat, dress, court shoe); campaign: a brown fur coat
+      with sunglasses ("The coat, reconsidered", link to the collections); spotlight: "The
+      winter edit" (coat, knit, jewellery, tailoring, each with a price line); atelier: a
+      tailored blazer portrait (head of tailoring). New copy keeps the design's text lengths,
+      so desktop heights match the design exactly; `scripts/home2-compare.js` records the
+      intended copy differences and now waits for every reveal to finish.
 - [x] **H6 Palette as a theme scheme** — Theme settings → Colors → Color Scheme →
       "Maison (parchment, ink and terracotta)", for the whole store. Tokens in
       `assets/mn-core.css` (`[data-scheme=maison]`): base #F3F0E9, soft #EAE5DA, deep

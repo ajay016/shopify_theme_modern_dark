@@ -21,19 +21,19 @@
     <div class="mh-hr__foot mh-reveal" style="--mh-d:.2s">
       {%- if s.text != blank -%}<p class="mh-hr__text">{{ s.text }}</p>{%- endif -%}
       <div class="mh-hr__ctas">
-        {%- if s.btn1_label != blank -%}<a class="mh-btn" href="{{ s.btn1_link | default: routes.all_products_collection_url }}">{{ s.btn1_label }}</a>{%- endif -%}
-        {%- if s.btn2_label != blank -%}<a class="mh-btn mh-btn--ghost" href="{{ s.btn2_link | default: routes.root_url }}">{{ s.btn2_label }}</a>{%- endif -%}
+        {%- if s.btn1_label != blank -%}<a class="mh-btn" href="{{ s.btn1_link | default: routes.collections_url }}">{{ s.btn1_label }}</a>{%- endif -%}
+        {%- if s.btn2_label != blank -%}<a class="mh-btn mh-btn--ghost" href="{{ s.btn2_link | default: routes.all_products_collection_url }}">{{ s.btn2_label }}</a>{%- endif -%}
       </div>
     </div>
     <figure class="mh-hr__main mh-reveal">
-      {%- render 'mh-img', image: s.image, photo: '1583606784149-993bae4e18a6', alt: 'Woman in a long black coat standing on a bridge', tone: 3, class: 'mh-hr__img', sizes: '(max-width: 720px) 100vw, 50vw', eager: true -%}
+      {%- render 'mh-img', image: s.image, photo: '1559562622-f830b488f4a8', alt: 'Woman in a black suede hat', tone: 3, class: 'mh-hr__img', sizes: '(max-width: 720px) 100vw, 50vw', eager: true -%}
       {%- if s.caption_1 != blank or s.caption_2 != blank -%}
         <figcaption class="mh-hr__cap">{%- if s.caption_1 != blank -%}<span>{{ s.caption_1 }}</span>{%- endif -%}{%- if s.caption_2 != blank -%}<span>{{ s.caption_2 }}</span>{%- endif -%}</figcaption>
       {%- endif -%}
     </figure>
     {%- if s.show_inset -%}
       <figure class="mh-hr__inset mh-reveal" style="--mh-d:.32s">
-        {%- render 'mh-img', image: s.inset_image, photo: '1563135305-856ddc91af1c', alt: 'Folded white linen on a table', tone: 2, class: 'mh-hr__img', sizes: '(max-width: 720px) 36vw, 18vw', eager: true -%}
+        {%- render 'mh-img', image: s.inset_image, photo: '1566331126664-f1cf3be4d5f4', alt: 'A brown felt hat on a table beside a vase of flowers', tone: 2, class: 'mh-hr__img', sizes: '(max-width: 720px) 36vw, 18vw', eager: true -%}
         {%- if s.inset_caption != blank -%}<figcaption class="mh-eyebrow">{{ s.inset_caption }}</figcaption>{%- endif -%}
       </figure>
     {%- endif -%}
@@ -53,22 +53,22 @@
     { "type": "text", "id": "marker_right", "label": "Right label", "default": "Autumn–Winter 2026" },
     { "type": "header", "content": "Headline" },
     { "type": "paragraph", "content": "Three lines; the second is set in from the left. Use italic for the accent word." },
-    { "type": "inline_richtext", "id": "line_1", "label": "Line 1", "default": "The quiet" },
-    { "type": "inline_richtext", "id": "line_2", "label": "Line 2", "default": "<em>weight</em> of" },
-    { "type": "inline_richtext", "id": "line_3", "label": "Line 3", "default": "things." },
-    { "type": "textarea", "id": "text", "label": "Text", "default": "Double-faced wool, sand-washed silk and leather left to soften. Eleven pieces cut in our Paris atelier, made to be worn for decades." },
+    { "type": "inline_richtext", "id": "line_1", "label": "Line 1", "default": "The winter" },
+    { "type": "inline_richtext", "id": "line_2", "label": "Line 2", "default": "<em>wardrobe</em>," },
+    { "type": "inline_richtext", "id": "line_3", "label": "Line 3", "default": "edited." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Coats in double-faced wool, cashmere knits and leather goods made in Florence. The Autumn–Winter 2026 collection is here." },
     { "type": "text", "id": "btn1_label", "label": "Button 1", "default": "Shop the collection" },
     { "type": "url", "id": "btn1_link", "label": "Button 1 link" },
-    { "type": "text", "id": "btn2_label", "label": "Button 2", "default": "Watch the film" },
+    { "type": "text", "id": "btn2_label", "label": "Button 2", "default": "New arrivals" },
     { "type": "url", "id": "btn2_link", "label": "Button 2 link" },
     { "type": "header", "content": "Main photo" },
     { "type": "image_picker", "id": "image", "label": "Image", "info": "Portrait, about 4:5. Without one, a default photo shows." },
     { "type": "text", "id": "caption_1", "label": "Caption line 1", "default": "Look 07" },
-    { "type": "text", "id": "caption_2", "label": "Caption line 2", "default": "Long coat, black" },
+    { "type": "text", "id": "caption_2", "label": "Caption line 2", "default": "Suede hat, black" },
     { "type": "header", "content": "Inset photo" },
     { "type": "checkbox", "id": "show_inset", "label": "Show inset photo", "default": true },
     { "type": "image_picker", "id": "inset_image", "label": "Image", "info": "Portrait, 3:4. A detail works best." },
-    { "type": "text", "id": "inset_caption", "label": "Caption", "default": "Linen, folded by hand" }
+    { "type": "text", "id": "inset_caption", "label": "Caption", "default": "Felt hat, hand-blocked" }
   ],
   "presets": [{ "name": "Maison · Hero" }]
 }

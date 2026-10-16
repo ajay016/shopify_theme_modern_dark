@@ -31,7 +31,7 @@
         {%- endif -%}
 
         {%- comment -%}Featured editorial image keeps the sticky column visually full{%- endcomment -%}
-        {%- assign panel_fallback = 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=700&q=80' -%}
+        {%- assign panel_fallback = 'https://burst.shopifycdn.com/photos/pearl-earrings-on-table.jpg?width=700&format=pjpg&exif=0&iptc=0' -%}
         <span class="pvt-panel__media">
           {%- if s.panel_image != blank -%}
             {{ s.panel_image | image_url: width: 700 | image_tag: loading: 'lazy', class: 'pvt-panel__img', sizes: '(max-width:900px) 92vw, 26vw', widths: '350,500,700', alt: s.heading | default: 'Editorial' }}

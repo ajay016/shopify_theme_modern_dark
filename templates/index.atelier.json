@@ -137,7 +137,7 @@
         "l1": {
           "type": "look",
           "settings": {
-            "caption": "Wool overcoat, camel"
+            "caption": "Long wool coat, rust"
           }
         },
         "l2": {
@@ -149,13 +149,13 @@
         "l3": {
           "type": "look",
           "settings": {
-            "caption": "Boxy blazer, pinstripe"
+            "caption": "Pinstripe suit, navy"
           }
         },
         "l4": {
           "type": "look",
           "settings": {
-            "caption": "Oversized shades, tort"
+            "caption": "Oversized shades, ivory"
           }
         },
         "l5": {
@@ -167,7 +167,7 @@
         "l6": {
           "type": "look",
           "settings": {
-            "caption": "Street tailoring, sand"
+            "caption": "Soft suiting, black"
           }
         }
       },

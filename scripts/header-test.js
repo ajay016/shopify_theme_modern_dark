@@ -33,6 +33,19 @@ const dir = process.argv[2] || '.';
     check(`${f}: hover opens on screen, leave closes`, s.open && s.vis === 'visible' && s.aria === 'true' && s.l >= 0 && s.r <= 1440 && !c.open, `[${s.l},${s.r}]`);
     await p.close();
   }
+  // sticky inside Shopify's own section <div> (the store's real markup), and an opaque bar
+  const pinned = p => p.evaluate(async () => { scrollTo(0, 2200); await new Promise(r => setTimeout(r, 350));
+    const bar = document.querySelector('.header__bar'), r = bar.getBoundingClientRect(), cs = getComputedStyle(bar);
+    const a = (cs.backgroundColor.match(/[\d.]+/g) || []).map(Number); const alpha = a.length > 3 ? a[3] : 1;
+    return { top: Math.round(r.top), bottom: Math.round(r.bottom), alpha, blur: cs.backdropFilter }; });
+  for (const style of ['classic', 'centred', 'minimal', 'floating']) {
+    const q = await page(`hd_${style}_columns_img`); const r = await pinned(q);
+    check(`${style}: stays pinned at the top after scrolling (inside Shopify's section wrapper)`, r.top >= 0 && r.top <= 16 && r.bottom > 30, JSON.stringify(r));
+    check(`${style}: bar is opaque, no glass blur`, r.alpha === 1 && (r.blur === 'none' || r.blur === ''), JSON.stringify(r));
+    await q.close();
+  }
+  { const q = await page('hd_nosticky'); const r = await pinned(q);
+    check('sticky off: the header scrolls away with the page', r.bottom < 0, JSON.stringify(r)); await q.close(); }
   let p = await page('hd_minimal_columns_img');
   check('minimal: no inline menu, menu button visible', await p.evaluate(() => getComputedStyle(document.querySelector('.header__nav')).display === 'none' && getComputedStyle(document.querySelector('.header__menu-btn')).display !== 'none'));
   await p.close();

@@ -72,6 +72,8 @@ def page(style, mega, images, extra='', settings_extra=None, home=False):
                              'country': {'iso_code': 'US'}, 'available_languages': [], 'language': {'iso_code': 'en'}})
     ann = env.from_string(src('sections/announcement-bar.liquid')).render(**ctx)
     hd = env.from_string(src('sections/header.liquid')).render(**ctx)
+    # as on the store: layout/theme.liquid's sticky wrapper around Shopify's own section <div>
+    wrap_open = f'<div class="mn-header-wrap{" is-sticky" if settings.get("header_sticky") else ""}"><div id="shopify-section-header" class="shopify-section">'
     hero = '<div class="shopify-section"><section style="height:620px;background:linear-gradient(160deg,#8a7a66,#3d342b)"></section></div>' if home else ''
     content = ''.join(f'<div class="shopify-section"><section style="height:480px;margin:0 48px;border-bottom:1px solid #ddd;display:grid;place-items:center;color:#999;font:28px serif">Content {i}</section></div>' for i in range(5))
     attrs = f'data-scheme="light" data-corners="soft" data-buttons="default" data-motion="full" data-header="{style}" data-announce="{settings["announcement_style"] if settings["announcement_style"] != "rotating" else "rotate"}" data-mega="{mega}" data-mega-images="{"on" if images else "off"}" data-footer="columns"'
@@ -79,7 +81,7 @@ def page(style, mega, images, extra='', settings_extra=None, home=False):
     css = ''.join(f'<link rel="stylesheet" href="{c}">' for c in ('theme.css', 'mn-core.css', 'mn-header.css', 'mn-product.css', 'mn-footer.css', 'mn-motion.css', 'mn-shopify.css'))
     return (f'<!doctype html><html {attrs}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">{fonts}{css}'
             f'<style>:root{{--ff-display:"Newsreader",Georgia,serif;--ff-body:"Geist",system-ui,sans-serif;--ff-mono:"Geist Mono",monospace}}</style></head>'
-            f'<body class="template-{"index" if home else "product"}" data-scroll-reveal="false">{ICONS}{ann}{hd}<main id="MainContent" class="content-for-layout">{hero}{content}</main>{extra}'
+            f'<body class="template-{"index" if home else "product"}" data-scroll-reveal="false">{ICONS}{ann}{wrap_open}{hd}</div></div><main id="MainContent" class="content-for-layout">{hero}{content}</main>{extra}'
             f'<script>window.MN_STRINGS={{products:"Products",collections:"Collections",pages:"Pages",view_all_results:"View all results for “__TERMS__”",no_results:"No results for “__TERMS__”."}};window.routes={{search_url:"/search"}}</script>'
             f'<script src="theme.js"></script><script src="mn.js"></script></body></html>')
 
@@ -92,6 +94,7 @@ for a in ('rotating', 'static'):
     open(os.path.join(OUT, f'hd_announce_{a}.html'), 'w').write(page('classic', 'columns', True, settings_extra={'announcement_style': a})); n += 1
 open(os.path.join(OUT, 'hd_transparent.html'), 'w').write(page('floating', 'columns', True, home=True)); n += 1
 open(os.path.join(OUT, 'hd_hide.html'), 'w').write(page('classic', 'columns', True, settings_extra={'header_hide_on_scroll': True})); n += 1
+open(os.path.join(OUT, 'hd_nosticky.html'), 'w').write(page('floating', 'columns', True, settings_extra={'header_sticky': False})); n += 1
 import shutil
 for js in ('theme.js', 'mn.js'):
     shutil.copy(os.path.join('assets', js), OUT)

@@ -25,6 +25,9 @@
 .announce__rotate .icon-btn:hover{background:color-mix(in oklab,var(--fg) 14%,transparent)}
 .announce__static{text-align:center;padding:0 16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* ==== Header ==== */
+/* The sticky element is the wrapper in layout/theme.liquid: Shopify's own section <div> around the header is only as tall as the header, which leaves position:sticky no room. */
+.mn-header-wrap{position:relative;z-index:50}
+.mn-header-wrap.is-sticky{position:sticky;top:0}
 .site-header{position:sticky;top:0;z-index:50;transition:transform var(--dur-slow) var(--ease-out)}
 .site-header.is-hidden{transform:translateY(calc(-100% - 16px))}
 .header__bar{position:relative;background:var(--bg);color:var(--fg);border-bottom:1px solid var(--line);transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease),border-color var(--dur),box-shadow var(--dur)}
@@ -61,7 +64,7 @@ html[data-header=minimal] .header__menu-btn{display:flex}
 html[data-header=minimal] .header__nav{display:none}
 html[data-header=minimal] .header__logo{justify-self:center;font-size:20px;letter-spacing:.34em;margin-right:-.34em}
 html[data-header=floating] .site-header{padding:12px var(--gutter) 0}
-html[data-header=floating] .header__bar{max-width:calc(var(--container-wide) - 2 * var(--gutter));margin:0 auto;border:1px solid var(--line);border-radius:calc(var(--r-modal) + 4px);background:color-mix(in oklab,var(--bg) 88%,transparent);backdrop-filter:blur(18px) saturate(1.2);box-shadow:0 14px 40px -22px rgba(0,0,0,.35)}
+html[data-header=floating] .header__bar{max-width:calc(var(--container-wide) - 2 * var(--gutter));margin:0 auto;border:1px solid var(--line);border-radius:calc(var(--r-modal) + 4px);background:var(--bg);box-shadow:0 14px 40px -22px rgba(0,0,0,.35)}
 html[data-header=floating] .header__inner{padding:0 14px 0 24px;height:66px}
 html[data-header=floating] .site-header.is-compact .header__inner{height:56px}
 /* transparent over hero */

@@ -210,7 +210,7 @@
         "info": "It slides back as soon as the shopper scrolls up. Needs the sticky header.",
         "default": false
       },
-      { "type": "checkbox", "id": "header_transparent_home",   "label": "Transparent header on homepage hero",  "default": true },
+      { "type": "checkbox", "id": "header_transparent_home",   "label": "Transparent header on homepage hero", "info": "The header starts clear over the first section and turns solid on scroll. Use it with a full-width photo hero; leave it off for a light hero such as Maison's.", "default": false },
       { "type": "checkbox", "id": "header_sticky",              "label": "Sticky header on scroll",             "default": true },
       { "type": "image_picker", "id": "logo",                   "label": "Logo Image" },
       {

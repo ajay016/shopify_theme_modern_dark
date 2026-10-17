@@ -93,6 +93,8 @@ for style in ('classic', 'centred', 'minimal', 'floating'):
 for a in ('rotating', 'static'):
     open(os.path.join(OUT, f'hd_announce_{a}.html'), 'w').write(page('classic', 'columns', True, settings_extra={'announcement_style': a})); n += 1
 open(os.path.join(OUT, 'hd_transparent.html'), 'w').write(page('floating', 'columns', True, home=True)); n += 1
+# the default: homepage with the transparent option off
+open(os.path.join(OUT, 'hd_home_solid.html'), 'w').write(page('floating', 'columns', True, home=True, settings_extra={'header_transparent_home': False})); n += 1
 open(os.path.join(OUT, 'hd_hide.html'), 'w').write(page('classic', 'columns', True, settings_extra={'header_hide_on_scroll': True})); n += 1
 open(os.path.join(OUT, 'hd_nosticky.html'), 'w').write(page('floating', 'columns', True, settings_extra={'header_sticky': False})); n += 1
 import shutil

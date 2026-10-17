@@ -29,7 +29,7 @@
     "corner_radius": "rounded",
     "header_style": "v4",
     "mega_menu_style": "v3",
-    "header_transparent_home": true,
+    "header_transparent_home": false,
     "header_sticky": true,
     "logo_width": 140,
     "logo_text": "MAIS",

@@ -132,6 +132,12 @@ const dir = process.argv[2] || '.';
   const t1 = await p.evaluate(() => document.getElementById('siteHeader').classList.contains('is-transparent'));
   check('transparent over the homepage hero, solid after it', t0.tr && t0.mainTop <= 40 && !t1, JSON.stringify(t0));
   await p.close();
+  // default (option off): solid from the first paint, and the page starts below the header
+  p = await page('hd_home_solid');
+  const s0 = await p.evaluate(() => { const h = document.getElementById('siteHeader'), bar = h.querySelector('.header__bar'); const bg = getComputedStyle(bar).backgroundColor; const a = (bg.match(/rgba?\(([^)]+)\)/) || [, '0,0,0,0'])[1].split(',').map(Number);
+    return { tr: h.classList.contains('is-transparent'), alpha: a.length > 3 ? a[3] : 1, bg, under: Math.round(document.getElementById('MainContent').getBoundingClientRect().top) >= Math.round(bar.getBoundingClientRect().bottom) - 1 }; });
+  check('homepage, transparent option off: header opaque on load, content below it', !s0.tr && s0.alpha === 1 && s0.under, JSON.stringify(s0));
+  await p.close();
 
   await b.close();
   console.log(`\n${ok} passed, ${bad} failed. JS errors: ${errs.length ? errs.join(' | ') : 'none'}`);

@@ -90,7 +90,7 @@ Default|/collections/all|collection||ready~~Sidebar left|/collections/all?view=s
       {%- render 'demo-explorer-group', title: 'Shop — grid', entries: grid_entries, tname: tname, tsuffix: tsuffix -%}
 
       {%- capture filter_raw -%}
-Sidebar filters|/collections/all?view=filter-sidebar|collection|filter-sidebar|ready~~Drawer filters|/collections/all?view=filter-drawer|collection|filter-drawer|ready~~Dropdown filters|/collections/all?view=filter-dropdown|collection|filter-dropdown|ready~~Collapsed groups|/collections/all?view=filter-toggle|collection|filter-toggle|ready
+Sidebar filters|/collections/all?view=filter-sidebar|collection|filter-sidebar|ready~~Drawer filters|/collections/all?view=filter-drawer|collection|filter-drawer|ready~~Dropdown filters|/collections/all?view=filter-dropdown|collection|filter-dropdown|ready~~Collapsed groups|/collections/all?view=filter-toggle|collection|filter-toggle|ready~~Hidden sidebar|/collections/all?view=filter-hidden|collection|filter-hidden|ready~~Top panel|/collections/all?view=filter-panel|collection|filter-panel|ready
       {%- endcapture -%}
       {%- assign filter_entries = filter_raw | strip | split: '~~' -%}
       {%- render 'demo-explorer-group', title: 'Shop — filters', entries: filter_entries, tname: tname, tsuffix: tsuffix, note: 'Filters work with no app installed — the theme builds them from your own products. Shopify’s Search &amp; Discovery app, if installed, takes over automatically.' -%}

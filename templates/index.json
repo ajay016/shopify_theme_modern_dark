@@ -11,40 +11,62 @@
   "sections": {
     "hero": {
       "type": "mh-hero",
-      "settings": {}
+      "settings": {
+        "palette": "own",
+        "marker_left": "Collection 03 / 05",
+        "ticks": 5,
+        "tick_on": 3,
+        "marker_right": "Autumn–Winter 2026",
+        "line_1": "The winter",
+        "line_2": "<em>wardrobe</em>,",
+        "line_3": "edited.",
+        "text": "Coats in double-faced wool, cashmere knits and leather goods made in Florence. The Autumn–Winter 2026 collection is here.",
+        "btn1_label": "Shop the collection",
+        "btn1_link": "",
+        "btn2_label": "New arrivals",
+        "btn2_link": "",
+        "caption_1": "Look 07",
+        "caption_2": "Suede hat, black",
+        "show_inset": true,
+        "inset_caption": "Felt hat, hand-blocked"
+      }
     },
     "ticker": {
       "type": "mh-ticker",
-      "settings": {},
       "blocks": {
         "item-1": {
           "type": "item",
           "settings": {
-            "text": "Collection 03 now available"
+            "text": "Collection 03 now available",
+            "link": ""
           }
         },
         "item-2": {
           "type": "item",
           "settings": {
-            "text": "Made in Paris, Como & Florence"
+            "text": "Made in Paris, Como & Florence",
+            "link": ""
           }
         },
         "item-3": {
           "type": "item",
           "settings": {
-            "text": "Complimentary delivery over €300"
+            "text": "Complimentary delivery over €300",
+            "link": ""
           }
         },
         "item-4": {
           "type": "item",
           "settings": {
-            "text": "Alterations for life"
+            "text": "Alterations for life",
+            "link": ""
           }
         },
         "item-5": {
           "type": "item",
           "settings": {
-            "text": "Private appointments, rue de Turenne"
+            "text": "Private appointments, rue de Turenne",
+            "link": ""
           }
         }
       },
@@ -54,58 +76,74 @@
         "item-3",
         "item-4",
         "item-5"
-      ]
+      ],
+      "settings": {
+        "palette": "own",
+        "label": "House notes",
+        "speed": 52
+      }
     },
     "categories": {
       "type": "mh-categories",
-      "settings": {},
       "blocks": {
         "category-1": {
           "type": "category",
           "settings": {
+            "collection": "",
             "title": "Tailoring",
             "meta": "Coats, suits & trousers",
-            "count": "42"
+            "count": "42",
+            "link": ""
           }
         },
         "category-2": {
           "type": "category",
           "settings": {
+            "collection": "",
             "title": "Silk",
             "meta": "Slips, shirts & scarves",
-            "count": "28"
+            "count": "28",
+            "link": ""
           }
         },
         "category-3": {
           "type": "category",
           "settings": {
+            "collection": "",
             "title": "Knitwear",
             "meta": "Cashmere & merino",
-            "count": "31"
+            "count": "31",
+            "link": ""
           }
         },
         "category-4": {
           "type": "category",
           "settings": {
+            "collection": "",
             "title": "Leather goods",
             "meta": "Bags, belts & gloves",
-            "count": "24"
+            "count": "24",
+            "link": ""
           }
         },
         "category-5": {
           "type": "category",
           "settings": {
+            "collection": "",
             "title": "Fine jewellery",
             "meta": "18k gold & vermeil",
-            "count": "19"
+            "count": "19",
+            "link": ""
           }
         },
         "category-6": {
           "type": "category",
           "settings": {
+            "collection": "",
             "title": "Evening",
             "meta": "Bias-cut & velvet",
-            "count": "12"
+            "count": "12",
+            "link": ""
           }
         }
       },
@@ -116,28 +154,38 @@
         "category-4",
         "category-5",
         "category-6"
-      ]
+      ],
+      "settings": {
+        "palette": "own",
+        "eyebrow": "Shop by category",
+        "heading": "Six ways <em>in</em>",
+        "text": "From the atelier's tailoring to jewellery set by hand in the Marais.",
+        "link_label": "All categories",
+        "link": ""
+      }
     },
     "new-arrivals": {
       "type": "mh-new-arrivals",
-      "settings": {},
       "blocks": {
         "tab-1": {
           "type": "tab",
           "settings": {
-            "label": "All"
+            "label": "All",
+            "collection": ""
           }
         },
         "tab-2": {
           "type": "tab",
           "settings": {
-            "label": "Ready-to-wear"
+            "label": "Ready-to-wear",
+            "collection": ""
           }
         },
         "tab-3": {
           "type": "tab",
           "settings": {
-            "label": "Accessories"
+            "label": "Accessories",
+            "collection": ""
           }
         }
       },
@@ -145,23 +193,46 @@
         "tab-1",
         "tab-2",
         "tab-3"
-      ]
+      ],
+      "settings": {
+        "palette": "own",
+        "eyebrow": "New arrivals",
+        "heading": "Just in, <em>this week</em>",
+        "count": 8,
+        "tabs_label": "Filter new arrivals",
+        "link_label": "View all",
+        "link": "shopify://collections/new-arrival"
+      }
     },
     "editorial": {
       "type": "mh-editorial",
-      "settings": {}
+      "settings": {
+        "palette": "own",
+        "credit": "Photography · Inès Varga",
+        "eyebrow": "Campaign · Autumn–Winter 2026",
+        "heading": "The coat, <em>reconsidered</em>",
+        "text": "Eleven coats this season, in double-faced wool, alpaca and shearling. Long lines, soft shoulders and linings in sand-washed silk, each one finished by hand in our Paris atelier and made to be worn for decades.",
+        "link_label": "Shop outerwear",
+        "link": ""
+      }
     },
     "best-sellers": {
       "type": "mh-best-sellers",
-      "settings": {}
+      "settings": {
+        "palette": "own",
+        "eyebrow": "Best sellers",
+        "heading": "The pieces we <em>remake</em> every season",
+        "collection": "",
+        "count": 8
+      }
     },
     "shop-the-look": {
       "type": "mh-shop-the-look",
-      "settings": {},
       "blocks": {
         "piece-1": {
           "type": "piece",
           "settings": {
+            "product": "",
             "label": "Wide-brimmed hat",
             "x": 42,
             "y": 24
@@ -170,6 +241,7 @@
         "piece-2": {
           "type": "piece",
           "settings": {
+            "product": "",
             "label": "Silk evening dress",
             "x": 54,
             "y": 55
@@ -178,6 +250,7 @@
         "piece-3": {
           "type": "piece",
           "settings": {
+            "product": "",
             "label": "Leather court shoe",
             "x": 50,
             "y": 92
@@ -188,11 +261,17 @@
         "piece-1",
         "piece-2",
         "piece-3"
-      ]
+      ],
+      "settings": {
+        "palette": "own",
+        "eyebrow": "Shop the look · Look 11",
+        "heading": "The long dress, <em>at dusk</em>",
+        "show_total": true,
+        "button": "Add all to bag"
+      }
     },
     "limited-drop": {
       "type": "mh-limited-drop",
-      "settings": {},
       "blocks": {
         "spec-1": {
           "type": "spec",
@@ -220,11 +299,24 @@
         "spec-1",
         "spec-2",
         "spec-3"
-      ]
+      ],
+      "settings": {
+        "palette": "own",
+        "eyebrow_left": "Limited drop · 120 pieces",
+        "eyebrow_right": "Friday 24 October, 10:00 CET",
+        "end_date": "2026-10-24 10:00",
+        "caption": "No. 001 – 120",
+        "heading": "The Atelier Bag, <em>in oxblood</em>",
+        "text": "One hundred and twenty bags, each numbered inside and made from start to finish by a single artisan in Florence. When they are gone, the oxblood will not return.",
+        "live_text": "Now available. Numbers are allocated in order of purchase.",
+        "btn_label": "Join the release list",
+        "btn_link": "",
+        "link_label": "See how it's made",
+        "link": ""
+      }
     },
     "spotlight": {
       "type": "mh-spotlight",
-      "settings": {},
       "blocks": {
         "chapter-1": {
           "type": "chapter",
@@ -268,11 +360,18 @@
         "chapter-2",
         "chapter-3",
         "chapter-4"
-      ]
+      ],
+      "settings": {
+        "palette": "own",
+        "eyebrow": "Collection spotlight",
+        "heading": "The winter <em>edit</em>",
+        "text": "Four pieces to build the season around: a coat, a knit, a little gold and one perfect black suit.",
+        "link_label": "Shop the winter edit",
+        "link": ""
+      }
     },
     "atelier": {
       "type": "mh-atelier",
-      "settings": {},
       "blocks": {
         "figure-1": {
           "type": "figure",
@@ -312,18 +411,27 @@
         "figure-2",
         "figure-3",
         "figure-4"
-      ]
+      ],
+      "settings": {
+        "palette": "own",
+        "eyebrow": "The atelier",
+        "manifesto": "We make fewer things, by hand, and we make them to <em>outlast</em> the season they were born in.",
+        "caption": "Odile Ferrand, head of tailoring · 31 years at the house",
+        "text": "Every piece begins at a cutting table on rue de Turenne. Coats are finished in Paris, silk in Como, leather in Florence and shoes in Porto, by artisans we have worked with for decades.",
+        "link_label": "Visit the atelier",
+        "link": ""
+      }
     },
     "lookbook": {
       "type": "mh-lookbook",
-      "settings": {},
       "blocks": {
         "frame-1": {
           "type": "frame",
           "settings": {
             "ratio": "0.75",
             "look": "Look 01",
-            "caption": "Trench coat, wide-brimmed hat"
+            "caption": "Trench coat, wide-brimmed hat",
+            "link": ""
           }
         },
         "frame-2": {
@@ -331,7 +439,8 @@
           "settings": {
             "ratio": "0.8",
             "look": "Look 04",
-            "caption": "Silk evening gown, on the road"
+            "caption": "Silk evening gown, on the road",
+            "link": ""
           }
         },
         "frame-3": {
@@ -339,7 +448,8 @@
           "settings": {
             "ratio": "1.5",
             "look": "Look 06",
-            "caption": "Printed silk dress, late summer field"
+            "caption": "Printed silk dress, late summer field",
+            "link": ""
           }
         },
         "frame-4": {
@@ -347,7 +457,8 @@
           "settings": {
             "ratio": "0.75",
             "look": "Look 09",
-            "caption": "Wool coat in moss"
+            "caption": "Wool coat in moss",
+            "link": ""
           }
         },
         "frame-5": {
@@ -355,7 +466,8 @@
           "settings": {
             "ratio": "1",
             "look": "Look 11",
-            "caption": "Black crêpe dress"
+            "caption": "Black crêpe dress",
+            "link": ""
           }
         },
         "frame-6": {
@@ -363,7 +475,8 @@
           "settings": {
             "ratio": "0.667",
             "look": "Look 13",
-            "caption": "Bias-cut gown among the birches"
+            "caption": "Bias-cut gown among the birches",
+            "link": ""
           }
         },
         "frame-7": {
@@ -371,7 +484,8 @@
           "settings": {
             "ratio": "1.333",
             "look": "Look 15",
-            "caption": "Evening: white silk slip"
+            "caption": "Evening: white silk slip",
+            "link": ""
           }
         },
         "frame-8": {
@@ -379,7 +493,8 @@
           "settings": {
             "ratio": "0.75",
             "look": "Look 18",
-            "caption": "Shearling-lined coat, first snow"
+            "caption": "Shearling-lined coat, first snow",
+            "link": ""
           }
         }
       },
@@ -392,11 +507,16 @@
         "frame-6",
         "frame-7",
         "frame-8"
-      ]
+      ],
+      "settings": {
+        "palette": "own",
+        "eyebrow": "Lookbook",
+        "heading": "Autumn–Winter <em>2026</em>",
+        "hint": "Drag to explore"
+      }
     },
     "press": {
       "type": "mh-press",
-      "settings": {},
       "blocks": {
         "quote-1": {
           "type": "quote",
@@ -450,50 +570,72 @@
         "quote-3",
         "quote-4",
         "quote-5"
-      ]
+      ],
+      "settings": {
+        "palette": "own",
+        "heading": "In the press"
+      }
     },
     "journal": {
       "type": "mh-journal",
-      "settings": {}
+      "settings": {
+        "palette": "own",
+        "eyebrow": "Journal",
+        "heading": "Notes from <em>the house</em>",
+        "blog": "",
+        "link_label": "All stories",
+        "read_label": "Read"
+      }
     },
     "community": {
       "type": "mh-community",
-      "settings": {},
       "blocks": {
         "tile-1": {
           "type": "tile",
           "settings": {
-            "handle": "@claire.v"
+            "handle": "@claire.v",
+            "text": "",
+            "link": ""
           }
         },
         "tile-2": {
           "type": "tile",
           "settings": {
-            "handle": "@atelier.ren"
+            "handle": "@atelier.ren",
+            "text": "",
+            "link": ""
           }
         },
         "tile-3": {
           "type": "tile",
           "settings": {
-            "handle": "@margaux_l"
+            "handle": "@margaux_l",
+            "text": "",
+            "link": ""
           }
         },
         "tile-4": {
           "type": "tile",
           "settings": {
-            "handle": "@studio.ines"
+            "handle": "@studio.ines",
+            "text": "",
+            "link": ""
           }
         },
         "tile-5": {
           "type": "tile",
           "settings": {
-            "handle": "@noor.k"
+            "handle": "@noor.k",
+            "text": "",
+            "link": ""
           }
         },
         "tile-6": {
           "type": "tile",
           "settings": {
-            "handle": "@lea.marchand"
+            "handle": "@lea.marchand",
+            "text": "",
+            "link": ""
           }
         }
       },
@@ -504,11 +646,17 @@
         "tile-4",
         "tile-5",
         "tile-6"
-      ]
+      ],
+      "settings": {
+        "palette": "own",
+        "eyebrow": "Community",
+        "heading": "Worn <em>by you</em>",
+        "link_label": "Follow @maisonnoir",
+        "link": ""
+      }
     },
     "services": {
       "type": "mh-services",
-      "settings": {},
       "blocks": {
         "service-1": {
           "type": "service",
@@ -516,7 +664,8 @@
             "icon": "truck",
             "title": "Complimentary delivery",
             "text": "Express delivery on orders over €300, in our signature box.",
-            "link_label": "Delivery details"
+            "link_label": "Delivery details",
+            "link": ""
           }
         },
         "service-2": {
@@ -525,7 +674,8 @@
             "icon": "return",
             "title": "Returns within 30 days",
             "text": "Free returns and exchanges, collected from your door.",
-            "link_label": "How returns work"
+            "link_label": "How returns work",
+            "link": ""
           }
         },
         "service-3": {
@@ -534,7 +684,8 @@
             "icon": "calendar",
             "title": "Private appointments",
             "text": "An hour with a stylist in Paris, or by video call.",
-            "link_label": "Book an appointment"
+            "link_label": "Book an appointment",
+            "link": ""
           }
         },
         "service-4": {
@@ -543,7 +694,8 @@
             "icon": "gift",
             "title": "Gift wrapping",
             "text": "Wrapped by hand in tissue and linen ribbon, with a written card.",
-            "link_label": "Gifting services"
+            "link_label": "Gifting services",
+            "link": ""
           }
         }
       },
@@ -552,11 +704,25 @@
         "service-2",
         "service-3",
         "service-4"
-      ]
+      ],
+      "settings": {
+        "palette": "own",
+        "heading": "Client services"
+      }
     },
     "newsletter": {
       "type": "mh-newsletter",
-      "settings": {}
+      "settings": {
+        "palette": "own",
+        "title_1": "Letters from",
+        "title_2": "the atelier",
+        "text": "One letter a month: new collections, private appointments and the occasional story from the workroom.",
+        "label": "Email address",
+        "placeholder": "you@example.com",
+        "button": "Subscribe",
+        "success": "Thank you. Your first letter arrives at the start of next month.",
+        "note": "<p>We respect your privacy and never share your address. Unsubscribe at any time. <a href=\"/policies/privacy-policy\">Privacy policy</a></p>"
+      }
     }
   },
   "order": [

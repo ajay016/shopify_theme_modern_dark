@@ -3,7 +3,7 @@
 // with Shopify's endpoints mocked (scripts/pdp-serve.js).
 //   python3 scripts/pdp-check.py OUT && node scripts/pdp-test.js OUT
 const { chromium } = require('playwright');
-const path = require('path');
+const path = require('path'), fs = require('fs');
 const serve = require('./pdp-serve'), routeFonts = require('./fonts-route');
 const dir = process.argv[2] || '.';
 (async () => {
@@ -231,6 +231,22 @@ const dir = process.argv[2] || '.';
   await p.click('#mainAtc'); await p.waitForTimeout(600);
   check('and adds its variant', calls.filter(c => c.path === '/cart/add.js').pop().body.includes(String(V.scarf[0].id)));
   await p.close();
+
+  // ---- Every product template (the ?view= pages): its layout and gallery,
+  // media, buy button, no sideways scroll on desktop and phone
+  for (const f of fs.readdirSync(path.join(__dirname, '..', 'templates')).filter(f => /^product(\..+)?\.json$/.test(f)).sort()) {
+    const t = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'templates', f), 'utf8').replace(/^\s*\/\*[\s\S]*?\*\//, ''));
+    const want = t.sections.main.settings, name = 'pdp_tpl_' + (f.slice(8, -5) || 'default');
+    for (const w of [1440, 390]) {
+      p = await open(name, w, w < 500 ? { hasTouch: true, isMobile: true } : undefined);
+      const g = await p.evaluate(() => { const s = document.querySelector('[data-layout]'); const imgs = [...document.querySelectorAll('.gallery img')];
+        return { layout: s && s.dataset.layout, gallery: s && s.dataset.gallery, media: imgs.length, shown: imgs.some(i => i.getBoundingClientRect().width > 50), atc: !!document.getElementById('mainAtc'), over: document.documentElement.scrollWidth - innerWidth }; });
+      check(`${f} @${w}: layout ${want.layout}, gallery ${want.gallery}, media, buy button, no sideways scroll`,
+        g.layout === want.layout && g.gallery === want.gallery && g.media > 0 && g.shown && g.atc && g.over <= 0, JSON.stringify(g));
+      if (w === 1440) await p.screenshot({ path: path.join(dir, `tpl_${f.slice(0, -5)}.png`) });
+      await p.close();
+    }
+  }
 
   // ---- Dark, phone
   p = await open('pdp_dark'); await p.screenshot({ path: path.join(dir, 's_dark.png') }); await p.close();

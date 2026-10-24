@@ -186,6 +186,17 @@ page('pdp_sg_blankpage', DRESS, {'size_guide_page': ''}); n += 1
 page('pdp_sg_emptypage', DRESS, {'size_guide_page': {'content': '<p> </p>', 'title': 'Size guide'}}); n += 1
 page('pdp_sg_page', DRESS, {'size_guide_page': {'content': '<h2>Fit notes</h2><p>Our pieces run true to size.</p>', 'title': 'Size guide'}}); n += 1
 page('pdp_sg_none', DRESS, {'size_guide_page': '', 'size_chart': ''}); n += 1
+# every product template in the theme, rendered with its own settings and
+# blocks (the ?view= pages linked from the store's menu)
+import glob
+for f in sorted(glob.glob('templates/product*.json')):
+    t = json.loads(re.sub(r'^\s*/\*.*?\*/', '', open(f, encoding='utf-8').read(), flags=re.S))
+    m = t['sections']['main']
+    keep = lambda d: {k: v for k, v in d.items() if not (isinstance(v, str) and v.startswith('shopify://')) and k != 'size_guide_page'}
+    order = m.get('block_order') or list(m['blocks'])
+    bl = [m['blocks'][b]['type'] for b in order]
+    bo = {m['blocks'][b]['type']: keep(m['blocks'][b].get('settings', {})) for b in order}
+    page('pdp_tpl_' + (os.path.basename(f)[len('product.'):-len('.json')] or 'default'), DRESS, keep(m['settings']), bl, bo); n += 1
 
 PICK = src('sections/mn-pickup.liquid')
 for v in DRESS['variants']:

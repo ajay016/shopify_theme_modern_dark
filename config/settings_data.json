@@ -9,7 +9,6 @@
  */
 {
   "current": {
-    "layout_explorer": "everyone",
     "color_scheme": "olive",
     "color_black": "#f2f1ea",
     "color_charcoal": "#e9e8e1",
@@ -28,7 +27,7 @@
     "layout_side_padding": 80,
     "corner_radius": "rounded",
     "header_style": "v4",
-    "mega_menu_style": "v3",
+    "mega_menu_style": "v1",
     "header_transparent_home": false,
     "header_sticky": true,
     "logo_width": 140,
@@ -71,6 +70,7 @@
     "footer_menu_2_title": "Brand",
     "footer_menu_3_title": "Help",
     "footer_show_payment_icons": true,
+    "layout_explorer": "everyone",
     "favicon": "shopify://shop_images/pngwing.com.png",
     "sections": {
       "announcement-bar": {

@@ -105,27 +105,52 @@
 </div>
 
 {%- else -%}
-<div class="mega mega--columns" id="mega-{{ index }}" data-i="{{ index }}">
+{%- liquid
+  # Columns: one per submenu with links, plus one for plain links. Up to two
+  # columns open as a compact card under the item (no wide empty panel);
+  # the feature card shows there only when it has an image.
+  assign ncols = 0
+  if leaves > 0
+    assign ncols = 1
+  endif
+  for child in link.links
+    if child.links.size > 0
+      assign ncols = ncols | plus: 1
+    endif
+  endfor
+  assign compact = false
+  if ncols <= 2
+    assign compact = true
+  endif
+  assign show_feature = true
+  if compact and f_img == nil
+    assign show_feature = false
+  endif
+  assign grid = ncols | at_most: 6 | at_least: 1
+  assign solo = false
+  if ncols == 1 and leaves > 0
+    assign solo = true
+  endif
+-%}
+<div class="mega mega--columns{% if compact %} mega--compact{% endif %}{% if ncols >= 5 %} mega--many{% endif %}{% unless show_feature %} mega--nofeature{% endunless %}" id="mega-{{ index }}" data-i="{{ index }}" style="--mega-cols:{{ ncols }};--mega-grid:{{ grid }}">
   <div class="mega__inner">
     <div class="mega__cols">
       {%- if leaves > 0 -%}
         <div class="mega__col">
-          <a href="{{ link.url }}" class="mega__heading">{{ link.title }}</a>
-          <ul class="mega__links">{%- for child in link.links -%}{%- if child.links.size == 0 -%}<li><a href="{{ child.url }}">{{ child.title }}</a></li>{%- endif -%}{%- endfor -%}</ul>
-          <a href="{{ link.url }}" class="mega__all">{{ 'mn.view_all' | t }}</a>
+          {%- unless solo -%}<a href="{{ link.url }}" class="mega__heading">{{ link.title }}</a>{%- endunless -%}
+          <ul class="mega__links">{%- for child in link.links -%}{%- if child.links.size == 0 -%}<li style="--i:{{ forloop.index0 }}"><a href="{{ child.url }}"><span>{{ child.title }}</span><svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a></li>{%- endif -%}{%- endfor -%}</ul>
         </div>
       {%- endif -%}
       {%- for child in link.links -%}
         {%- if child.links.size > 0 -%}
           <div class="mega__col">
             <a href="{{ child.url }}" class="mega__heading">{{ child.title }}</a>
-            <ul class="mega__links">{%- for g in child.links -%}<li><a href="{{ g.url }}">{{ g.title }}</a></li>{%- endfor -%}</ul>
-            <a href="{{ child.url }}" class="mega__all">{{ 'mn.view_all' | t }}</a>
+            <ul class="mega__links">{%- for g in child.links -%}<li style="--i:{{ forloop.index0 }}"><a href="{{ g.url }}"><span>{{ g.title }}</span><svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a></li>{%- endfor -%}</ul>
           </div>
         {%- endif -%}
       {%- endfor -%}
     </div>
-    {{ feature }}
+    {%- if show_feature -%}{{ feature }}{%- endif -%}
   </div>
 </div>
 {%- endif -%}

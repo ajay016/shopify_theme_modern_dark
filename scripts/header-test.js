@@ -139,6 +139,21 @@ const dir = process.argv[2] || '.';
   check('homepage, transparent option off: header opaque on load, content below it', !s0.tr && s0.alpha === 1 && s0.under, JSON.stringify(s0));
   await p.close();
 
+  // Columns: a short menu opens as a compact card under its item, a long one keeps every column on one row
+  for (const pg of ['hd_floating_columns_img', 'hd_classic_columns_txt']) {
+    p = await page(pg);
+    const idx = await p.$$eval('.nav__item', n => Object.fromEntries(n.map(x => [x.textContent.trim().split(/\s+/)[0], x.dataset.i])));
+    await p.hover(`.nav__item[data-i="${idx.Home}"] > a`); await p.waitForTimeout(700);
+    const h = await p.evaluate(i => { const m = document.getElementById('mega-' + i), r = m.getBoundingClientRect(), it = document.querySelector(`.nav__item[data-i="${i}"]`).getBoundingClientRect();
+      return { compact: m.classList.contains('mega--compact'), w: Math.round(r.width), dx: Math.round(r.left - it.left), feature: !!m.querySelector('.mega__feature'), links: m.querySelectorAll('.mega__links a').length }; }, idx.Home);
+    check(`${pg}: one-column menu is a compact card under its item, no empty feature card`, h.compact && h.w < 420 && Math.abs(h.dx) < 60 && !h.feature && h.links === 7, JSON.stringify(h));
+    await p.mouse.move(700, 700); await p.waitForTimeout(400);
+    await p.hover(`.nav__item[data-i="${idx.Shop}"] > a`); await p.waitForTimeout(700);
+    const s5 = await p.evaluate(i => { const cols = [...document.querySelectorAll(`#mega-${i} .mega__col`)]; return { n: cols.length, rows: new Set(cols.map(c => Math.round(c.getBoundingClientRect().top))).size }; }, idx.Shop);
+    check(`${pg}: five-column menu keeps its columns on one row`, s5.n === 5 && s5.rows === 1, JSON.stringify(s5));
+    await p.close();
+  }
+
   await b.close();
   console.log(`\n${ok} passed, ${bad} failed. JS errors: ${errs.length ? errs.join(' | ') : 'none'}`);
   process.exit(bad ? 1 : 0);

@@ -112,6 +112,9 @@ coll_page('cl_active', active=True)
 coll_page('cl_builtin', app=False)
 coll_page('cl_empty', products=[], app=True, show_demo_when_empty=False)
 coll_page('cl_dark', scheme='dark')
+# the store's own collection.json settings
+coll_page('cl_store', title_style='style-4', sidebar_position='left', filter_style='sidebar', swatch_style='chips', container_style='full', grid_columns='4',
+          products_per_page=12, show_banner=True, banner_height=20)
 search_page('sr_results'); search_page('sr_empty', terms='zzz', results=[], suggestions_menu='sugg'); search_page('sr_start', terms=None, results=[]); search_page('sr_dark', scheme='dark')
 for f in ('theme.css', 'mn-core.css', 'mn-header.css', 'mn-product.css', 'mn-footer.css', 'mn-motion.css', 'mn-shopify.css', 'mn-collection.css', 'theme.js', 'mn.js'):
     shutil.copy(os.path.join('assets', f), OUT)

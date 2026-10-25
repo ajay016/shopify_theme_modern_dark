@@ -246,3 +246,68 @@ tr.is-current td{background:var(--bg-soft);font-weight:var(--fw-medium)}
   [data-motion=system] .reveal,html.motion-strict .reveal{opacity:1!important;transform:none!important;filter:none!important}
   [data-motion=full]:not(.motion-strict) .reveal{transform:none!important;filter:none!important}
 }
+
+/* ============================================================
+   Mega menu, Columns style: a modern restyle (owner's request).
+   Up to two columns open as a compact card under the menu item, so a
+   short menu never leaves a wide empty panel; three or more keep the
+   full-width panel. Headings in sentence case over a hairline, links as
+   soft hover rows with an arrow, staggered fade-in, a pill call to action
+   on the feature card. Visual and Flyout styles are unchanged.
+   ============================================================ */
+.mega--columns .mega__inner { grid-template-columns: minmax(0, 1fr) 280px; gap: 44px; padding: 30px var(--gutter) 34px; }
+html[data-header=floating] .mega--columns .mega__inner { padding: 30px 32px 32px; }
+.mega--columns.mega--nofeature .mega__inner { grid-template-columns: minmax(0, 1fr); }
+.mega--columns .mega__cols { grid-template-columns: repeat(var(--mega-grid, 4), minmax(0, 1fr)); gap: 8px 28px; align-content: start; }
+.mega--columns .mega__heading {
+  font-size: 13px; letter-spacing: .01em; text-transform: none; font-weight: var(--fw-semibold); color: var(--fg);
+  margin: 0 0 8px; padding-bottom: 12px; border-bottom: 1px solid var(--line); transition: color var(--dur-fast);
+}
+.mega--columns .mega__heading:hover { color: var(--accent); }
+.mega--columns .mega__links { gap: 1px; font-size: 14px; }
+.mega--columns .mega__links a {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  padding: 6px 10px; margin: 0 -10px; border-radius: var(--r-control);
+  color: color-mix(in oklab, var(--fg) 74%, transparent);
+  transition: background-color var(--dur-fast), color var(--dur-fast);
+}
+.mega--columns .mega__links a:hover, .mega--columns .mega__links a:focus-visible { transform: none; background: var(--bg-soft); color: var(--fg); }
+.mega--columns .mega__links .icon { width: 14px; height: 14px; flex: none; opacity: 0; transform: translateX(-6px); transition: opacity var(--dur-fast), transform var(--dur) var(--ease-out); }
+.mega--columns .mega__links a:hover .icon, .mega--columns .mega__links a:focus-visible .icon { opacity: 1; transform: none; }
+.mega--columns .mega__links li { opacity: 0; transform: translateY(4px); transition: opacity .32s var(--ease-out), transform .32s var(--ease-out); }
+.mega--columns.is-open .mega__links li { opacity: 1; transform: none; transition-delay: calc(var(--i, 0) * 22ms + 60ms); }
+[data-motion=reduced] .mega--columns .mega__links li { opacity: 1; transform: none; transition: none; }
+@media (prefers-reduced-motion: reduce) { .mega--columns .mega__links li { opacity: 1; transform: none; transition: none; } }
+
+/* panel */
+html[data-header=floating] .mega--columns { border-radius: calc(var(--r-modal) + 6px); border-color: color-mix(in oklab, var(--line) 70%, transparent); box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 28px 60px -24px rgba(0,0,0,.28); }
+
+/* feature card */
+.mega--columns .mega__feature { min-height: 300px; padding: 22px; border-radius: calc(var(--r-card) + 4px); }
+.mega--columns .mega__feature:not(.has-img) { background: linear-gradient(155deg, color-mix(in oklab, var(--accent) 16%, var(--bg-soft)), var(--bg-soft) 72%); }
+.mega--columns .mega__feature-title { font-size: 28px; }
+.mega--columns .mega__feature .link-arrow {
+  margin-top: 4px; padding: 9px 15px; border-radius: 999px; background: var(--fg); color: var(--bg); font-size: 13px;
+  transition: transform var(--dur) var(--ease-out), background-color var(--dur-fast);
+}
+.mega--columns .mega__feature.has-img .link-arrow { background: #fff; color: #111; }
+.mega--columns .mega__feature:hover .link-arrow { background-size: auto; transform: translateY(-1px); }
+.mega--columns .mega__feature:hover .link-arrow .icon { transform: translateX(3px); }
+
+/* smaller laptops: a narrower feature card; with five or more columns the columns get the room */
+@media (max-width: 1280px) {
+  .mega--columns:not(.mega--compact) .mega__inner { grid-template-columns: minmax(0, 1fr) 220px; gap: 28px; }
+  .mega--columns.mega--many .mega__inner { grid-template-columns: minmax(0, 1fr); }
+  .mega--columns.mega--many .mega__feature { display: none; }
+  .mega--columns:not(.mega--compact) .mega__feature-title { font-size: 22px; }
+}
+
+/* compact: a card as wide as its content, placed under the item by mn.js */
+.mega--compact { right: auto; width: max-content; max-width: calc(100vw - 32px); top: 8px; border: 1px solid color-mix(in oklab, var(--line) 70%, transparent); border-radius: calc(var(--r-modal) + 6px); box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 24px 50px -22px rgba(0,0,0,.28); }
+.mega--compact .mega__inner, html[data-header=floating] .mega--compact .mega__inner { max-width: none; margin: 0; grid-template-columns: auto 240px; gap: 24px; padding: 14px 16px 16px; }
+.mega--compact.mega--nofeature .mega__inner, html[data-header=floating] .mega--compact.mega--nofeature .mega__inner { grid-template-columns: auto; }
+.mega--compact .mega__cols { grid-template-columns: repeat(var(--mega-cols, 1), minmax(200px, max-content)); gap: 8px 24px; }
+.mega--compact .mega__heading { margin-top: 6px; padding-left: 10px; padding-right: 10px; margin-left: 0; }
+.mega--compact .mega__links a { margin: 0; }
+.mega--compact .mega__feature { min-height: 260px; padding: 18px; }
+.mega--compact .mega__feature-title { font-size: 24px; }

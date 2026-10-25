@@ -42,7 +42,10 @@ MENU = {'links': [
     ], img=True),
     link('Men', [link('Ready-to-wear', [link(x) for x in ('Coats', 'Knitwear', 'Shirts')], img=True), link('Shoes', [link(x) for x in ('Loafers', 'Boots')], img=True)], img=True),
     link('Accessories', [link('Jewellery', [link(x) for x in ('Earrings', 'Rings')], img=True), link('Gift cards')], img=True),
-    link('Journal'), link('Stores')]}
+    link('Journal'), link('Stores'),
+    # like the store's demo menu: one column of plain links, and five columns
+    link('Home', [link(x) for x in ('Maison', 'Atelier', 'Aureline', 'Blanc', 'Classic', 'Lumière', 'Noir')]),
+    link('Shop', [link(g, [link(f'{g} {i}') for i in range(1, n)]) for g, n in (('Shop layouts', 7), ('Grid', 6), ('Filters', 7), ('Collection titles', 6), ('Shop features', 6))])]}
 PRODUCTS = [{'title': t, 'url': '/products/x', 'price': p, 'featured_media': 'm.jpg'} for t, p in
             (('Silk Charmeuse Camisole', 42000), ('Cashmere Wrap Coat', 189000), ('Leather Slingback Mule', 64000), ('Pleated Satin Midi Skirt', 56000))]
 ICONS = env.from_string(snips['mn-icons']).render()

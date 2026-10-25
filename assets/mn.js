@@ -171,9 +171,11 @@
   H.openMega = i => {
     clearTimeout(H.tm); if (H.cur === i) return; H.closeMega();
     const p = $('#mega-' + i), it = $(`.nav__item[data-i="${i}"]`); if (!p || !it) return;
-    if (p.classList.contains('mega--flyout')) {
-      const hb = $('.header__bar').getBoundingClientRect(), r = it.getBoundingClientRect(), w = Math.min(760, innerWidth - 32);
-      let l = r.left - hb.left - 12; l = Math.max(16, Math.min(l, hb.width - w - 16)); p.style.left = l + 'px';
+    // flyout and compact columns sit under their item; compact ones are as wide as their content
+    const fly = p.classList.contains('mega--flyout');
+    if (fly || p.classList.contains('mega--compact')) {
+      const hb = $('.header__bar').getBoundingClientRect(), r = it.getBoundingClientRect(), w = fly ? Math.min(760, innerWidth - 32) : p.offsetWidth;
+      let l = r.left - hb.left - (fly ? 12 : 24); l = Math.max(16, Math.min(l, hb.width - w - 16)); p.style.left = l + 'px';
     }
     p.classList.add('is-open'); it.classList.add('is-open'); it.firstElementChild.setAttribute('aria-expanded', 'true');
     hdr().classList.add('has-mega'); H.cur = i;

@@ -50,7 +50,7 @@
 .collection-page .collection-banner__eyebrow,.collection-page .collection-banner__count{font-family:var(--font-sans);font-size:var(--fs-xs);font-weight:var(--fw-medium);letter-spacing:var(--ls-caps);text-transform:uppercase;color:rgba(255,255,255,.82)}
 
 /* ---- toolbar ---------------------------------------------------------- */
-.collection-page .collection-toolbar{border-color:var(--line)}
+.collection-page .collection-toolbar{border-bottom:0}
 .collection-page .toolbar-count{font-family:var(--font-sans);font-size:var(--fs-sm);letter-spacing:0;text-transform:none;color:var(--muted)}
 .collection-page .toolbar-btn{min-height:40px;padding:0 16px;gap:8px;border:1px solid var(--line-strong);border-radius:var(--r-btn);background:transparent;color:var(--fg);font-family:var(--font-sans);font-size:12px;font-weight:var(--fw-medium);letter-spacing:var(--ls-btn);text-transform:none;transition:border-color var(--dur-fast),background-color var(--dur-fast)}
 .collection-page .toolbar-btn:hover,.collection-page .toolbar-btn[aria-expanded=true]{border-color:var(--fg);background:var(--bg-raise)}
@@ -148,6 +148,7 @@
 .collection-page .collection-demo-note{border:1px solid var(--line);border-radius:var(--r-card);background:var(--bg-soft);color:var(--muted);font-size:var(--fs-sm)}
 .collection-page .collection-demo-note strong{color:var(--fg)}
 .collection-page .pagination,.search-page .pagination{gap:6px;margin-top:clamp(32px,4vw,56px);padding-top:28px;border-top:1px solid var(--line)}
+.collection-page .pagination{border-top:0;padding-top:0}
 .collection-page .pagination__item,.search-page .pagination__item{min-width:40px;height:40px;padding:0 12px;display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid transparent;border-radius:999px;color:var(--fg);background:transparent;font-family:var(--font-sans);font-size:var(--fs-sm);font-weight:var(--fw-medium);letter-spacing:0;text-transform:none;transition:border-color var(--dur-fast),background-color var(--dur-fast)}
 .collection-page a.pagination__item:hover,.search-page a.pagination__item:hover{border-color:var(--line-strong);background:var(--bg-raise);color:var(--fg)}
 .collection-page .pagination__item--current,.search-page .pagination__item--current{background:var(--fg);border-color:var(--fg);color:var(--bg)}

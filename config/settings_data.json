@@ -44,7 +44,7 @@
     "product_card_style": "atelier",
     "product_card_image_ratio": "portrait",
     "product_card_media_hover": "second_image",
-    "product_card_show_category": false,
+    "product_card_show_category": true,
     "product_card_show_vendor": true,
     "product_card_show_number": false,
     "product_card_show_material": false,
